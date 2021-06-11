@@ -1,4 +1,4 @@
-# Crowd Cow Datawarehouse
+# Crowd Cow Data Warehouse
 
 ## Docs
 
