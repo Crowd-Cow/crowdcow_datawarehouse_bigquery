@@ -9,7 +9,7 @@ with base_ahoy_events as (
     ae.id 	    as event_id,
     ae.visit_id,
     ae.name     as event_name,
-    ae.time     as occurred_at,
+    ae.time     as occurred_at_utc,
     ae.user_id,
     parse_json(ae.properties) as event_json
   from
