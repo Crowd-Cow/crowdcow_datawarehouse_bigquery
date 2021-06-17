@@ -16,9 +16,9 @@ event_page_view as (
     ,visit_id
     ,occurred_at_utc
     ,user_id
-    ,event_json:current_fc::int      as current_fc
     ,event_json:experiments          as experiments
     ,event_json:member::boolean      as is_member
+    ,event_json:current_fc::int      as current_fc
     ,event_json:postal_code::int     as postal_code 
     ,event_json:referrer_url::text   as referrer_url
     ,event_json:url::text            as url
