@@ -2,8 +2,8 @@ version: 2
 
 sources:
   - name: cc
-    database: RAW
-    schema: CC
+    database: raw
+    schema: cc_cc
     tables:
       - name: _sdc_rejected
         description: _sdc_rejected
