@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: base_cc__ahoy_events
+    description: Based on CC_CC.AHOY_EVENTS source, parsed JSON properties column and a few renamed columns
+    columns:
+      - name: event_id
+        description: Uniquely identifies an Ahoy Event
+        tests:
+          - unique
+          - not_null
+
+      - name: visit_id
+        description: Uniquely identifies a Visit to the Crowd Cow app
+
+      - name: event_name
+        description: Name of the Ahoy Event event type
+
+      - name: occurred_at_utc
+        description: Timestamp (UTC) for when the event was published
+
+      - name: user_id
+        description: Uniquely identifies a User
+
+      - name: event_json
+        description: Parsed JSON from the CC_CC.AHOY_EVENTS properties column
