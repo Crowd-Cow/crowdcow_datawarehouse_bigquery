@@ -19,7 +19,7 @@ event_loyalty_reward_added_to_order as (
     ,event_json:experiments         as experiments
     ,event_json:member::boolean     as is_member
     ,event_json:bid_item_name::text as bid_item_name
-    ,event_json:order               as order_json_object  -- order is a keyword, so can't be used as a column name
+    ,event_json:order               as order_json  -- order is a keyword, so can't be used as a column name
     ,event_json:order_estimated_arrival_date::date  as order_estimated_arrival_date
     ,event_json:order_fulfillment_date::date        as order_fulfillment_date
     ,event_json:renewal_order_count::int            as renewal_order_count
