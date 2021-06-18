@@ -18,15 +18,15 @@ event_brightback_cancel as (
     ,user_id
     ,event_json:experiments       as experiments
     ,event_json:member::boolean   as is_member
-    ,event_json:app_id::text      as app_id
-    ,event_json:context           as context 
-    ,event_json:fields            as fields 
-    ,event_json:id::text          as id 
-    ,event_json:name::text        as name 
-    ,event_json:session_id::text  as session_id 
-    ,event_json:survey            as survey
+    ,event_json:app_id::text      as brightback_app_id
+    ,event_json:context           as brightback_context 
+    ,event_json:fields            as brightback_fields 
+    ,event_json:id::text          as brightback_id 
+    ,event_json:name::text        as brightback_name 
+    ,event_json:session_id::text  as brightback_session_id 
+    ,event_json:survey            as brightback_survey
     ,event_json:timestamp::timestamp_ntz  as brightback_timestamp 
-    ,event_json:type::text        as type
+    ,event_json:type::text        as brightback_type
   from 
     base
   where 
