@@ -16,8 +16,8 @@ event_sign_up as (
     ,visit_id
     ,occurred_at_utc
     ,user_id
-    ,event_json:experiments as experiments
-    ,event_json:member      as is_member
+    ,event_json:experiments                 as experiments
+    ,event_json:member::boolean             as is_member
   from 
     base
   where 
