@@ -25,4 +25,3 @@ event_order_viewed_by_customer as (
 )
 
 select * from event_order_viewed_by_customer
-
