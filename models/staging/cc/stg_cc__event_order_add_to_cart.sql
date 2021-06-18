@@ -19,6 +19,7 @@ event_order_add_to_cart as (
     ,event_json:experiments as experiments
     ,event_json:member      as is_member
     ,{{ cents_to_dollars('event_json:amount') }} as amount_dollars
+    
   from 
     base
   where 
