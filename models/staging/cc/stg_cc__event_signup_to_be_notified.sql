@@ -1,14 +1,14 @@
-{
+{{
   config(
     tags=["events"]
   )
-}
+}}
 
 with base as (
   select
     *
   from
-    { ref('base_cc__ahoy_events') }
+    {{ ref('base_cc__ahoy_events') }}
 ),
 event_signup_to_be_notified as (
   select

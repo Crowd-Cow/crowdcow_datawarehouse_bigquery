@@ -17,7 +17,7 @@ event_order_viewed_by_customer as (
     ,occurred_at_utc
     ,user_id
     ,event_json:experiments         as experiments
-    ,event_json:member              as is_member
+    ,event_json:member::boolean     as is_member
     ,event_json:order_id::int       as order_id
     ,event_json:order_token::text   as order_token
     ,event_json:user_id::int        as user_id

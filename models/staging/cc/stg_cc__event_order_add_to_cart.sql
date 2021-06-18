@@ -17,7 +17,7 @@ event_order_add_to_cart as (
     ,occurred_at_utc
     ,user_id
     ,event_json:experiments           as experiments
-    ,event_json:member                as is_member
+    ,event_json:member::boolean       as is_member
     ,{{ cents_to_usd('event_json:amount') }}  as amount_usd
     ,event_json:bid_item_id::int      as bid_item_id
     ,event_json:brands                as brands

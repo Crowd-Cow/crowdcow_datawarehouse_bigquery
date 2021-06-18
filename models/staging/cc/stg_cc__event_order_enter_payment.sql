@@ -17,7 +17,7 @@ event_order_enter_payment as (
     ,occurred_at_utc
     ,user_id
     ,event_json:experiments     as experiments
-    ,event_json:member          as is_member
+    ,event_json:member::boolean as is_member
     ,event_json:order_id::int   as order_id
   from 
     base

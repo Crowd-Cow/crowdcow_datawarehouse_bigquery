@@ -1,14 +1,14 @@
-{
+{{
   config(
     tags=["events"]
   )
-}
+}}
 
 with base as (
   select
     *
   from
-    { ref('base_cc__ahoy_events') }
+    {{ ref('base_cc__ahoy_events') }}
 ),
 event_postal_code_enter as (
   select
@@ -16,8 +16,8 @@ event_postal_code_enter as (
     ,visit_id
     ,occurred_at_utc
     ,user_id
-    ,event_json:experiments as experiments
-    ,event_json:member      as is_member
+    ,event_json:experiments     as experiments
+    ,event_json:member::boolean as is_member
   from 
     base
   where 
@@ -25,4 +25,3 @@ event_postal_code_enter as (
 )
 
 select * from event_postal_code_enter
-

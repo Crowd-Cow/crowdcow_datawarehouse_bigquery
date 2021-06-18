@@ -17,7 +17,7 @@ event_order_rescheduled as (
     ,occurred_at_utc
     ,user_id
     ,event_json:experiments           as experiments
-    ,event_json:member                as is_member
+    ,event_json:member::boolean       as is_member
     ,event_json:"$event_id"::text     as event_id_from_json  -- What is this?
     ,event_json:gift_order::boolean   as gift_order
     ,event_json:new_scheduled_fulfillment_date::date  as new_scheduled_fulfillment_date
