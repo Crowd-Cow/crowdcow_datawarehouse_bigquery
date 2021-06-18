@@ -16,8 +16,10 @@ event_redeem_partner_offer as (
     ,visit_id
     ,occurred_at_utc
     ,user_id
-    ,event_json:experiments                 as experiments
-    ,event_json:member::boolean             as is_member
+    ,event_json:experiments         as experiments
+    ,event_json:member::boolean     as is_member
+    ,event_json:email::text         as email
+    ,event_json:partner_path::text  as partner_path
   from 
     base
   where 
@@ -25,4 +27,3 @@ event_redeem_partner_offer as (
 )
 
 select * from event_redeem_partner_offer
-

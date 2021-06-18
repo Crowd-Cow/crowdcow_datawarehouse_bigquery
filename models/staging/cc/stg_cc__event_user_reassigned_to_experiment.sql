@@ -16,8 +16,10 @@ event_user_reassigned_to_experiment as (
     ,visit_id
     ,occurred_at_utc
     ,user_id
-    ,event_json:experiments                 as experiments
-    ,event_json:member::boolean             as is_member
+    ,event_json:experiments             as experiments
+    ,event_json:member::boolean         as is_member,
+    ,event_json:experiment_token::text  as experiment_token
+    ,event_json:variant::text           as variant
   from 
     base
   where 
@@ -25,4 +27,3 @@ event_user_reassigned_to_experiment as (
 )
 
 select * from event_user_reassigned_to_experiment
-
