@@ -32,7 +32,7 @@ event_order_remove_from_cart as (
     ,event_json:quantity::int         as quantity
     ,event_json:sku::text             as sku
     ,event_json:url::text             as url
-    ,event_json:user_id::int          as user_id
+    ,event_json:user_id::int          as user_id_from_event_json  -- base_cc__ahoy_events already has a user_id column
     ,event_json:variant::text         as variant
   from 
     base

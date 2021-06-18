@@ -22,7 +22,7 @@ event_order_complete as (
     ,{{ cents_to_usd('event_json:"$value"') }}  as value_usd
     ,event_json:brands                as brands
     ,event_json:categories            as categories
-    .event_json:currency::text        as currency
+    ,event_json:currency::text        as currency
     ,{{ cents_to_usd('event_json:discount') }}  as discount_usd
     ,event_json:eligible_for_recurring::boolean     as eligible_for_recurring
     ,event_json:estimated_order_arrival_date::date  as estimated_order_arrival_date
