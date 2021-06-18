@@ -19,7 +19,7 @@ event_user_assigned_to_experiment as (
     ,event_json:experiments               as experiments
     ,event_json:member::boolean           as is_member
     ,event_json:experiment_token::text    as experiment_token
-    ,event_json:variant::text             as variant
+    ,event_json:variant::text             as experiment_variant
   from 
     base
   where 
