@@ -18,7 +18,7 @@ event_order_add_to_cart as (
     ,user_id
     ,event_json:experiments           as experiments
     ,event_json:member                as is_member
-    ,{{ cents_to_dollars('event_json:amount') }}  as amount_dollars
+    ,{{ cents_to_usd('event_json:amount') }}  as amount_usd
     ,event_json:bid_item_id::int      as bid_item_id
     ,event_json:brands                as brands
     ,event_json:categories            as categories
@@ -26,7 +26,7 @@ event_order_add_to_cart as (
     ,event_json:image_url::text       as image_url
     ,event_json:name::text            as name
     ,event_json:order_id::int         as order_id
-    ,{{ cents_to_dollars('event_json:price') }}   as price_dollars
+    ,{{ cents_to_usd('event_json:price') }}   as price_usd
     ,event_json:quantity::int         as quantity
     ,event_json:sku::text             as sku
     ,event_json:url::text             as url
