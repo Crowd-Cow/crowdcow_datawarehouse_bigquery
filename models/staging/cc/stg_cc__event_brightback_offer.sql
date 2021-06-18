@@ -1,14 +1,14 @@
-{
+{{
   config(
     tags=["events"]
   )
-}
+}}
 
 with base as (
   select
     *
   from
-    { ref('base_cc__ahoy_events') }
+    {{ ref('base_cc__ahoy_events') }}
 ),
 event_brightback_offer as (
   select
@@ -28,7 +28,7 @@ event_brightback_offer as (
     ,event_json:offer::text       as brightback_offer
     ,event_json:session_id::text  as brightback_session_id 
     ,event_json:survey            as brightback_survey
-    ,event_json:timestamp::timestamp_ntz  as brightback_timestamp 
+    ,event_json:timestamp::timestamp_ntz  as brightback_timestamp_utc
     ,event_json:type::text        as brightback_type
     ,event_json:url::text         as brightback_url
   from 
