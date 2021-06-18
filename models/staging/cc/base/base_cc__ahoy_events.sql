@@ -6,7 +6,7 @@
 
 with base_ahoy_events as (
   select
-     ae.id        as event_id,
+     ae.id        as event_id
     ,ae.visit_id
     ,ae.name      as event_name
     ,ae.time      as occurred_at_utc
