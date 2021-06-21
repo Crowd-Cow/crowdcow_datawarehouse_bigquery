@@ -51,10 +51,12 @@ models:
         tests:
             - accepted_values:
                 values: [true, false]
+                quote: false
 
       - name: controlled_by_promotion
         description: "Controlled by promotion"
         tests:
             - accepted_values:
                 values: [true, false]
+                quote: false
 
