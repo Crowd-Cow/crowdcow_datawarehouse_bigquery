@@ -31,18 +31,18 @@ event_order_complete as (
     ,event_json:eligible_for_recurring::boolean     as eligible_for_recurring
     ,event_json:estimated_order_arrival_date::date  as estimated_order_arrival_date
     ,event_json:gift_order::boolean   as gift_order
-    ,event_json:order_id::int         as order_id
+    ,try_to_number(event_json:order_id::text)::int  as order_id -- A few order_id are actually order_token and will be null after failing to cast to int
     ,event_json:product_names         as product_names
     ,event_json:products              as products
     ,event_json:recurring::boolean    as recurring
     ,case 
-      when event_json:shipping::text like '$%' then try_to_decimal(event_json:shipping::text, '$9,999.99', 7, 2)
+      when event_json:shipping::text like '$%' then try_to_decimal(event_json:shipping::text, '$9,999.99', 7, 2) -- Some values are dollars like $1.23 and others are cents like 123
       else round(event_json:shipping::float / 100.0, 2)
      end as shipping_usd
     ,event_json:suggested_add_ons     as suggested_add_ons
     ,{{ cents_to_usd('event_json:tax') }}       as tax_usd
     ,case 
-      when event_json:total::text like '$%' then try_to_decimal(event_json:total::text, '$9,999.99', 7, 2)
+      when event_json:total::text like '$%' then try_to_decimal(event_json:total::text, '$9,999.99', 7, 2) -- Some values are dollars like $1.23 and others are cents like 123
       else round(event_json:total::float / 100.0, 2)
      end as total_usd
   from 
