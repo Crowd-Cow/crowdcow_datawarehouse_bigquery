@@ -6,7 +6,7 @@
 
 with source as (
 
-  select * from  {{ source('cc', 'bid_items') }} as b
+  select * from  {{ source('cc', 'bid_items') }} 
 
 ),
 
@@ -42,7 +42,7 @@ renamed as (
     , automated_highlight_text_type
     , always_available as is_always_available
 
-    from source as s
+    from source 
 
 )
 
