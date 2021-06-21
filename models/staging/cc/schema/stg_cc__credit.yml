@@ -45,6 +45,11 @@ models:
 
       - name: discount_percent
         description: "Discount percent"
+        tests:
+            - dbt_utils.accepted_range:
+                min_value: 0
+                max_value: 1
+                inclusive: true
 
       - name: hide_from_user
         description: "Hide credit from user"

@@ -19,7 +19,7 @@ renamed as (
         ,bid_id
         ,updated_at as updated_at_utc
         ,description as credit_description
-        ,discount_percent
+        ,{{ convert_percent('discount_percent') }} as discount_percent
         ,hide_from_user
         ,controlled_by_promotion
     from source
