@@ -21,7 +21,7 @@ renamed as (
     , {{ cents_to_usd('item_price_cents') }} as item_price_usd
     , mix_portion_group_ids
     , order_id
-    , bid_quantity
+    , quantity as bid_quantity
     , updated_at as updated_at_utc
     , user_id
     , product_id
