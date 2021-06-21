@@ -1,0 +1,66 @@
+version: 2
+
+models:
+  - name: stg_cc__cow_cash_entry
+    description: "Stage model for Cow Cash entries"
+    columns:
+      - name: cow_cash_id
+        description: "Cow Cash entry record ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: user_id
+        description: "User ID"
+
+      - name: credit_id
+        description: "Credit ID"
+
+      - name: given_by_user_id
+        description: "User ID of the person that gave Cow Cash"
+
+      - name: cow_cash_message
+        description: "Message attached to Cow Cash"
+
+      - name: amount_frauded_usd
+        description: "Fraud amount in USD"
+
+      - name: amount_expired_usd
+        description: "Expired amount in USD"
+
+      - name: amount_used_usd
+        description: "Used amount in USD"
+
+      - name: frauded_at_utc
+        description: "Fraud timestamp UTC"
+
+      - name: entry_type
+        description: "Entry type"
+
+      - name: gift_card_id
+        description: "Gift card ID"
+
+      - name: finance_reporting_type
+        description: "Finance reporting type"
+
+      - name: updated_at_utc
+        description: "Record updated timestamp UTC"
+
+      - name: cow_cash_entry_source_id
+        description: "Cow Cash entry source ID"
+
+      - name: order_id
+        description: "Associated order ID"
+
+      - name: from_order_id
+        description: "From order ID"
+
+      - name: created_at_utc
+        description: "Record created timestamp UTC"
+
+      - name: cow_cash_amount_usd
+        description: "Cow Cash amount in USD"
+
+      - name: expires_at_utc
+        description: "Expiration timestamp UTC"
+
