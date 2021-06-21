@@ -51,4 +51,3 @@ models:
 
       - name: controlled_by_promotion
         description: "Controlled by promotion"
-
