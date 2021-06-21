@@ -21,8 +21,8 @@ event_order_complete as (
     ,event_json:member::boolean       as is_member
     ,{{ clean_strings('event_json:"$event_id"::text') }}  as order_token
     ,{{ cents_to_usd('event_json:"$value"') }}            as value_usd
-    ,event_json:brands                as brands
-    ,event_json:categories            as categories
+    ,event_json:brands                as brands_for_bid_item
+    ,event_json:categories            as category_for_bid_item
     ,{{ clean_strings('event_json:currency::text') }}     as currency
     ,case 
       when event_json:discount::text like '$%' then try_to_decimal(event_json:discount::text, '$9,999.99', 7, 2) -- Some values are dollars like $1.23 and others are cents like 123

@@ -21,8 +21,8 @@ event_order_paid as (
     ,event_json:member::boolean       as is_member
     ,{{ clean_strings('event_json:"$event_id"') }}  as order_token
     ,{{ cents_to_usd('event_json:"$value"') }}      as value_usd
-    ,event_json:brands                as brands
-    ,event_json:categories            as categories
+    ,event_json:brands                as brands_for_bid_item
+    ,event_json:categories            as category_for_bid_item
     ,{{ clean_strings('event_json:currency::text') }}   as currency
     ,{{ cents_to_usd('event_json:discount') }}          as total_discount_usd
     ,event_json:eligible_for_recurring::boolean         as is_eligible_for_recurring
