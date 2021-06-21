@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: stg_cc__event_viewed_product
+    description: ""
+    columns:
+      - name: event_id
+        description: ""
+
+      - name: visit_id
+        description: ""
+
+      - name: occurred_at_utc
+        description: ""
+
+      - name: user_id
+        description: ""
+
+      - name: experiments
+        description: ""
+
+      - name: is_member
+        description: ""
+
+      - name: brands_for_bid_item
+        description: ""
+
+      - name: category_for_bid_item
+        description: ""
+
+      - name: bid_item_image_url
+        description: ""
+
+      - name: bid_item_name
+        description: ""
+
+      - name: product_page_url
+        description: ""

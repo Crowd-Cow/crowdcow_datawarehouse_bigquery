@@ -1,0 +1,74 @@
+version: 2
+
+models:
+  - name: stg_cc__event_order_complete
+    description: ""
+    columns:
+      - name: event_id
+        description: ""
+
+      - name: visit_id
+        description: ""
+
+      - name: occurred_at_utc
+        description: ""
+
+      - name: user_id
+        description: ""
+
+      - name: experiments
+        description: ""
+
+      - name: is_member
+        description: ""
+
+      - name: order_token
+        description: ""
+
+      - name: value_usd
+        description: ""
+
+      - name: brands_for_bid_item
+        description: ""
+
+      - name: category_for_bid_item
+        description: ""
+
+      - name: currency
+        description: ""
+
+      - name: total_discount_usd
+        description: ""
+
+      - name: is_eligible_for_recurring
+        description: ""
+
+      - name: estimated_order_arrival_date
+        description: ""
+
+      - name: is_gift_order
+        description: ""
+
+      - name: order_id
+        description: ""
+
+      - name: product_names
+        description: ""
+
+      - name: products
+        description: ""
+
+      - name: is_recurring
+        description: ""
+
+      - name: total_shipping_usd
+        description: ""
+
+      - name: suggested_add_ons
+        description: ""
+
+      - name: tax_usd
+        description: ""
+
+      - name: total_usd
+        description: ""

@@ -1,8 +1,8 @@
 version: 2
 
 models:
-  - name: stg_cc__event_checkout_initiated
-    description: Derived from a custom_event
+  - name: stg_cc__event_pdp_added_to_cart
+    description: ""
     columns:
       - name: event_id
         description: ""

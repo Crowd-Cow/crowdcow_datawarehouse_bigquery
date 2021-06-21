@@ -20,9 +20,9 @@ event_page_view as (
     ,event_json:experiments          as experiments
     ,event_json:member::boolean      as is_member
     ,event_json:current_fc::int      as current_fc
-    ,try_to_number(event_json:postal_code::text)::int       as user_postal_code -- A few postal_code are not integers, like H3G and V0B, which will now be NULL
+    ,event_json:postal_code::text    as user_postal_code
     ,{{ clean_strings('event_json:referrer_url::text') }}   as referrer_url
-    ,{{ clean_strings('event_json:url::text') }}            as url_of_page_viewed
+    ,{{ clean_strings('event_json:url::text') }}            as page_viewed_url
   from 
     base
   where 

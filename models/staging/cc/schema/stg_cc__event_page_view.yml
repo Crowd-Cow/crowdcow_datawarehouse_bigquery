@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: stg_cc__event_page_view
+    description: ""
+    columns:
+      - name: event_id
+        description: ""
+
+      - name: visit_id
+        description: ""
+
+      - name: occurred_at_utc
+        description: ""
+
+      - name: user_id
+        description: ""
+
+      - name: experiments
+        description: ""
+
+      - name: is_member
+        description: ""
+
+      - name: current_fc
+        description: ""
+
+      - name: user_postal_code
+        description: ""
+
+      - name: referrer_url
+        description: ""
+
+      - name: url_of_page_viewed
+        description: ""
