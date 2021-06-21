@@ -21,9 +21,9 @@ event_viewed_product as (
     ,event_json:member::boolean   as is_member
     ,event_json:brand             as brands_for_bid_item
     ,event_json:category          as category_for_bid_item
-    ,event_json:image_url::text   as bid_item_image_url
-    ,event_json:title::text       as bid_item_name
-    ,event_json:url::text         as product_page_url
+    ,{{ clean_strings('event_json:image_url::text') }}   as bid_item_image_url
+    ,{{ clean_strings('event_json:title::text') }}       as bid_item_name
+    ,{{ clean_strings('event_json:url::text') }}         as product_page_url
   from 
     base
   where 
