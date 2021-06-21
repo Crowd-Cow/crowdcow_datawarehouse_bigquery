@@ -21,7 +21,10 @@ models:
 
       - name: bid_item_id
         description: Business ID for a bid_item
-
+        tests: 
+          - not_null
+          - unique
+          
       - name: bid_item_photo_url
         description: Url for the item photo
 
