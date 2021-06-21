@@ -10,7 +10,7 @@ with base as (
 
 ),
 
-event_order_enter_address as (
+event_checkout_initiated as (
 
   select
      event_id
@@ -19,12 +19,14 @@ event_order_enter_address as (
     ,user_id
     ,event_json:experiments     as experiments
     ,event_json:member::boolean as is_member
-    ,event_json:order_id::int   as order_id
+    ,event_json:value::text     as value
   from 
     base
   where 
-    event_name = 'order_enter_address'
+    event_name = 'custom_event'
+    and event_json:action::text = 'reached-step' 
+    and event_json:label::text = '1'
 
 )
 
-select * from event_order_enter_address
+select * from event_checkout_initiated
