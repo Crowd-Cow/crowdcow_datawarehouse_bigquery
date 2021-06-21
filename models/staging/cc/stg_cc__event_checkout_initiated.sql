@@ -21,8 +21,9 @@ event_checkout_initiated as (
     base
   where 
     event_name = 'custom_event'
-    and event_json:action::text = 'reached-step' 
-    and event_json:label::text = '1'
+      and event_json:category::text = 'checkout'
+      and event_json:action::text = 'reached-step' 
+      and event_json:label::text = '1'
 
 )
 

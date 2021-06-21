@@ -10,7 +10,7 @@ with base as (
 
 ),
 
-event_checkout_payment_selected as (
+event_pdp_added_to_cart as (
 
   select
      event_id
@@ -21,10 +21,10 @@ event_checkout_payment_selected as (
     base
   where 
     event_name = 'custom_event'
-      and event_json:category::text = 'checkout'
-      and event_json:action::text = 'reached-step' 
-      and event_json:label::text = '2'
+      and event_json:category::text = 'product'
+      and event_json:action::text = 'page-interaction' 
+      and event_json:label::text = 'clicked-add-to-cart'
 
 )
 
-select * from event_checkout_payment_selected
+select * from event_pdp_added_to_cart

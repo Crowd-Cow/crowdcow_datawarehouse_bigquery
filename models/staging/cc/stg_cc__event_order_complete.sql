@@ -19,12 +19,15 @@ event_order_complete as (
     ,user_id
     ,event_json:experiments           as experiments
     ,event_json:member::boolean       as is_member
-    ,event_json:"$event_id"::text     as event_id_from_json  -- What is this?
-    ,{{ cents_to_usd('event_json:"$value"') }}  as value_usd
+    ,{{ clean_strings('event_json:"$event_id"') }}  as order_token -- 
+    ,{{ cents_to_usd('event_json:"$value"') }}      as value_usd
     ,event_json:brands                as brands
     ,event_json:categories            as categories
     ,event_json:currency::text        as currency
-    ,{{ cents_to_usd('event_json:discount') }}  as discount_usd
+    ,case 
+      when event_json:discount::text like '$%' then try_to_decimal(event_json:discount::text, '$9,999.99', 7, 2) -- Some values are dollars like $1.23 and others are cents like 123
+      else round(event_json:discount::float / 100.0, 2)
+     end as discount_usd
     ,event_json:eligible_for_recurring::boolean     as eligible_for_recurring
     ,event_json:estimated_order_arrival_date::date  as estimated_order_arrival_date
     ,event_json:gift_order::boolean   as gift_order
@@ -32,10 +35,16 @@ event_order_complete as (
     ,event_json:product_names         as product_names
     ,event_json:products              as products
     ,event_json:recurring::boolean    as recurring
-    ,{{ cents_to_usd('event_json:shipping') }}  as shipping_usd
+    ,case 
+      when event_json:shipping::text like '$%' then try_to_decimal(event_json:shipping::text, '$9,999.99', 7, 2)
+      else round(event_json:shipping::float / 100.0, 2)
+     end as shipping_usd
     ,event_json:suggested_add_ons     as suggested_add_ons
     ,{{ cents_to_usd('event_json:tax') }}       as tax_usd
-    ,{{ cents_to_usd('event_json:total') }}     as total_usd
+    ,case 
+      when event_json:total::text like '$%' then try_to_decimal(event_json:total::text, '$9,999.99', 7, 2)
+      else round(event_json:total::float / 100.0, 2)
+     end as total_usd
   from 
     base
   where 
