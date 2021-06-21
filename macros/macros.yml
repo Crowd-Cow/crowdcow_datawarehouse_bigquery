@@ -24,4 +24,3 @@ macros:
     arguments:
         - name: column_name
           description: "The column name that contains the string value that needs to be cleaned"
-          
