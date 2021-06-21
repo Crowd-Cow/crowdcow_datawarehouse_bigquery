@@ -13,37 +13,37 @@ with source as (
 , renamed as ( 
 
   select
-    b.id   as bid_id
-    , b.bid_item_id
-    , b.created_at as created_at_utc
-    , b.from_sms_log_entry_id
-    , b.from_user_mail_log_entry_id
-    , {{ cents_to_usd('b.item_price_cents') }} as item_price_usd
-    , b.mix_portion_group_ids
-    , b.order_id
-    , b.quantity
-    , b.updated_at as updated_at_utc
-    , b.user_id
-    , b.product_id
-    , b.promotion_id
-    , b.name as event_name
-    , b.description
-    , b.item_photo_url
-    , b.subscription_id
-    , b.custom_subscription_item_id
-    , b.token
-    , b.reason
-    , b.target_sku_id
-    , b.fill_score
-    , b.reserve_inventory_immediately
-    , b.fill_type
-    , b.fulfillment_at_risk
-    , b.product_permutation_id
-    , b.target_product_permutation_id
-    , b.first_stuck_at as first_stuck_at_utc
+    s.id   as bid_id
+    , s.bid_item_id
+    , s.created_at as created_at_utc
+    , s.from_sms_log_entry_id
+    , s.from_user_mail_log_entry_id
+    , {{ cents_to_usd('s.item_price_cents') }} as item_price_usd
+    , s.mix_portion_group_ids
+    , s.order_id
+    , s.quantity
+    , s.updated_at as updated_at_utc
+    , s.user_id
+    , s.product_id
+    , s.promotion_id
+    , s.name as event_name
+    , s.description
+    , s.item_photo_url
+    , s.subscription_id
+    , s.custom_subscription_item_id
+    , s.token
+    , s.reason
+    , s.target_sku_id
+    , s.fill_score
+    , s.reserve_inventory_immediately
+    , s.fill_type
+    , s.fulfillment_at_risk
+    , s.product_permutation_id
+    , s.target_product_permutation_id
+    , s.first_stuck_at as first_stuck_at_utc
 
-    from source
-    
+    from source as s
+
 )
 
 select * from renamed
