@@ -18,3 +18,9 @@ macros:
 
       - name: precision
         description: "The number of decimal places the converted value should show. The default is 2"
+
+  - name: clean_strings
+    description: "Converts strings to upper case, removes trailing whitespace, and if the string is empty, converts it to `null`"
+    arguments:
+        - name: column_name
+          description: "The column name that contains the string value that needs to be cleaned"
