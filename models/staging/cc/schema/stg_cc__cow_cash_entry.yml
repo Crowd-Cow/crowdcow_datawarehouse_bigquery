@@ -59,8 +59,8 @@ models:
         description: "Record created timestamp UTC"
 
       - name: cow_cash_amount_usd
-        description: ""
+        description: "Cow Cash amount in USD"
 
       - name: expires_at_utc
-        description: ""
+        description: "Expiration timestamp UTC"
 
