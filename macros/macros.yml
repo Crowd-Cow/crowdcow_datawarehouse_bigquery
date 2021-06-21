@@ -1,0 +1,26 @@
+version: 2
+
+macros:
+  - name: cents_to_usd
+    description: "Converts values in cents to dollars"
+    arguments:
+      - name: column_name
+        description: "The column that contains the value to be converted"
+
+      - name: precision
+        description: "The number of decimal places the converted value should show. The default is 2"
+
+  - name: convert_percent
+    description: "Converts whole number values to a number between 0 and 1"
+    arguments:
+      - name: column_name
+        description: "The column that contains the value to be converted"
+
+      - name: precision
+        description: "The number of decimal places the converted value should show. The default is 2"
+
+  - name: clean_strings
+    description: "Converts strings to upper case, removes trailing whitespace, and if the string is empty, converts it to `null`"
+    arguments:
+        - name: column_name
+          description: "The column name that contains the string value that needs to be cleaned"
