@@ -11,12 +11,12 @@ renamed as (
         ,user_id
         ,credit_id
         ,given_by_user_id
-        ,upper(message) as cow_cash_message
+        ,{{ clean_strings('message') }} as cow_cash_message
         ,{{ cents_to_usd('amount_frauded_in_cents') }} as amount_frauded_usd
         ,{{ cents_to_usd('amount_expired_in_cents') }} as amount_expired_usd
         ,{{ cents_to_usd('amount_used_in_cents') }} as amount_used_usd
         ,frauded_at as frauded_at_utc
-        ,upper(entry_type) as entry_type
+        ,{{ clean_strings('entry_type') }} as entry_type
         ,gift_card_id
         ,finance_reporting_type
         ,updated_at as updated_at_utc
