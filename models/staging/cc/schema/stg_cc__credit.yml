@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: stg_cc__credit
+    description: "Staging model for credits"
+    columns:
+      - name: credit_id
+        description: "Credit ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: promotion_id
+        description: "Promotion ID"
+
+      - name: bid_item_id
+        description: "Bid item ID"
+
+      - name: cow_cash_entry_source_id
+        description: "Cow Cash entry source ID"
+
+      - name: credit_discount_usd
+        description: "Credit discount in USD"
+
+      - name: created_at_utc
+        description: "Record created timestamp UTC"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: credit_type
+        description: "Credit type"
+
+      - name: order_id
+        description: "Order ID"
+
+      - name: bid_id
+        description: "Bid ID"
+
+      - name: updated_at_utc
+        description: "Record updated timestamp UTC"
+
+      - name: credit_description
+        description: "Credit description"
+
+      - name: discount_percent
+        description: "Discount percent"
+
+      - name: hide_from_user
+        description: "Hide credit from user"
+        tests:
+            - accepted_values:
+                values: ["true","false"]
+
+      - name: controlled_by_promotion
+        description: "Controlled by promotion"
+        tests:
+            - accepted_values:
+                values: ["true","false"]
+
