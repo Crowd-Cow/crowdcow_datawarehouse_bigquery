@@ -1,0 +1,93 @@
+- name: stg_cc__bids
+    description: Customer "bids"
+    columns:
+      - name: bid_id
+        description: Unique id for the fact_bid table
+        tests:
+          - unique
+          - not_null
+
+      - name: bid_item_id
+        description: Business id for the dim_bid table
+        tests:
+          - not_null
+
+      - name: created_at_utc
+        description: Record created timestamp in UTC
+
+      - name: from_sms_log_entry_id
+        description: from_sms_log_entry_id description
+
+      - name: from_user_mail_log_entry_id
+        description: from_user_mail_log_entry_id description
+
+      - name: item_price_usd
+        description: Price of the item for a single quantity in USD
+
+      - name: mix_portion_group_ids
+        description: Mix portion group ids description
+
+      - name: order_id
+        description: Business id for the fact_order table
+        tests:
+          - not_null
+
+      - name: quantity
+        description: Quantity of the bid in the order
+
+      - name: updated_at_utc
+        description: Record updated at timestamp in UTC. Can be updated either through customer action (increasing quantity) or non-customer action (reservation)
+
+      - name: user_id
+        description: Business ID for the customer creating the bid
+
+      - name: product_id
+        description: Buiness ID for the product
+
+      - name: promotion_id
+        description: Business ID for the promotion
+
+      - name: name
+        description: Product name
+
+      - name: description
+        description: Product description
+
+      - name: item_photo_url
+        description: Url for the item photo
+
+      - name: subscription_id
+        description: Business ID for the subscription
+
+      - name: custom_subscription_item_id
+        description: Custom subscription item id description
+
+      - name: token
+        description: Token description
+
+      - name: reason
+        description: Additional details about the autofill sku choice
+
+      - name: target_sku_id
+        description: Business id for the dim_sku table (for the target sku)
+
+      - name: fill_score
+        description: Quality score of the [auto/pre]fill
+
+      - name: reserve_inventory_immediately
+        description: Flag indicating if inventory should be reserved immediately
+
+      - name: fill_type
+        description: Additional information for [auto/pre]fill
+
+      - name: fulfillment_at_risk
+        description: Fulfillment at risk description
+
+      - name: product_permutation_id
+        description: Product permutation id description
+
+      - name: target_product_permutation_id
+        description: Target product permutation description
+
+      - name: first_stuck_at_utc
+        description: Time in UTC that a bid was first stuck

@@ -26,7 +26,7 @@ with source as (
     , s.user_id
     , s.product_id
     , s.promotion_id
-    , s.name as event_name
+    , s.name 
     , s.description
     , s.item_photo_url
     , s.subscription_id
