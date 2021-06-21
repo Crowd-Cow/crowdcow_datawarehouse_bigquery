@@ -5,12 +5,13 @@
 }}
 
 with base as (
-  select
-    *
-  from
-    {{ ref('base_cc__ahoy_events') }}
+  
+  select * from {{ ref('base_cc__ahoy_events') }}
+
 ),
+
 event_cart_for_wrong_zip_code as (
+
   select
      event_id
     ,visit_id
@@ -23,6 +24,7 @@ event_cart_for_wrong_zip_code as (
     base
   where 
     event_name = 'cart_for_wrong_zip_code'
+
 )
 
 select * from event_cart_for_wrong_zip_code

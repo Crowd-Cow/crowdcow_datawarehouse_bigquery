@@ -5,12 +5,13 @@
 }}
 
 with base as (
-  select
-    *
-  from
-    {{ ref('base_cc__ahoy_events') }}
+  
+  select * from {{ ref('base_cc__ahoy_events') }}
+
 ),
+
 event_unfollow_farm as (
+
   select
      event_id
     ,visit_id
@@ -23,6 +24,7 @@ event_unfollow_farm as (
     base
   where 
     event_name = 'unfollow_farm'
+
 )
 
 select * from event_unfollow_farm

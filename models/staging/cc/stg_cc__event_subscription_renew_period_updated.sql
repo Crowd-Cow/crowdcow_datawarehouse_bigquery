@@ -5,12 +5,13 @@
 }}
 
 with base as (
-  select
-    *
-  from
-    {{ ref('base_cc__ahoy_events') }}
+  
+  select * from {{ ref('base_cc__ahoy_events') }}
+
 ),
+
 event_subscription_renew_period_updated as (
+
   select
      event_id
     ,visit_id
@@ -26,6 +27,7 @@ event_subscription_renew_period_updated as (
     base
   where 
     event_name = 'subscription_renew_period_updated'
+
 )
 
 select * from event_subscription_renew_period_updated

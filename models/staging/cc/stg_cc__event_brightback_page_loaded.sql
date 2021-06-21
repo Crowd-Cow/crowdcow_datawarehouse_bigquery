@@ -5,12 +5,13 @@
 }}
 
 with base as (
-  select
-    *
-  from
-    {{ ref('base_cc__ahoy_events') }}
+  
+  select * from {{ ref('base_cc__ahoy_events') }}
+
 ),
+
 event_brightback_page_loaded as (
+
   select
      event_id
     ,visit_id
@@ -31,6 +32,7 @@ event_brightback_page_loaded as (
     base
   where 
     event_name = 'brightback_page_loaded'
+
 )
 
 select * from event_brightback_page_loaded

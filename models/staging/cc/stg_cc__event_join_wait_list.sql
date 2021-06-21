@@ -5,12 +5,13 @@
 }}
 
 with base as (
-  select
-    *
-  from
-    {{ ref('base_cc__ahoy_events') }}
+  
+  select * from {{ ref('base_cc__ahoy_events') }}
+
 ),
+
 event_join_wait_list as (
+
   select
      event_id
     ,visit_id
@@ -24,6 +25,7 @@ event_join_wait_list as (
     base
   where 
     event_name = 'join_wait_list'
+
 )
 
 select * from event_join_wait_list

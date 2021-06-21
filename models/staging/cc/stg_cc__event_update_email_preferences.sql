@@ -5,12 +5,13 @@
 }}
 
 with base as (
-  select
-    *
-  from
-    {{ ref('base_cc__ahoy_events') }}
+  
+  select * from {{ ref('base_cc__ahoy_events') }}
+
 ),
+
 event_update_email_preferences as (
+
   select
      event_id
     ,visit_id
@@ -24,6 +25,7 @@ event_update_email_preferences as (
     base
   where 
     event_name = 'update_email_preferences'
+
 )
 
 select * from event_update_email_preferences

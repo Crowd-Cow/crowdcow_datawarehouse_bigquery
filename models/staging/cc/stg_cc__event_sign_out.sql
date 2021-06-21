@@ -5,12 +5,13 @@
 }}
 
 with base as (
-  select
-    *
-  from
-    {{ ref('base_cc__ahoy_events') }}
+  
+  select * from {{ ref('base_cc__ahoy_events') }}
+
 ),
+
 event_sign_out as (
+
   select
      event_id
     ,visit_id
@@ -22,6 +23,7 @@ event_sign_out as (
     base
   where 
     event_name = 'sign_out'
+
 )
 
 select * from event_sign_out

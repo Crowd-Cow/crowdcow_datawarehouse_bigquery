@@ -5,12 +5,13 @@
 }}
 
 with base as (
-  select
-    *
-  from
-    {{ ref('base_cc__ahoy_events') }}
+  
+  select * from {{ ref('base_cc__ahoy_events') }}
+
 ),
+
 event_page_view as (
+
   select
      event_id
     ,visit_id
@@ -26,6 +27,7 @@ event_page_view as (
     base
   where 
     event_name = 'page_view'
+
 )
 
 select * from event_page_view

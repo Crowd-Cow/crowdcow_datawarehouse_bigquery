@@ -5,12 +5,13 @@
 }}
 
 with base as (
-  select
-    *
-  from
-    {{ ref('base_cc__ahoy_events') }}
+  
+  select * from {{ ref('base_cc__ahoy_events') }}
+
 ),
+
 event_register_placeholder as (
+
   select
      event_id
     ,visit_id
@@ -23,6 +24,7 @@ event_register_placeholder as (
     base
   where 
     event_name = 'register_placeholder'
+
 )
 
 select * from event_register_placeholder

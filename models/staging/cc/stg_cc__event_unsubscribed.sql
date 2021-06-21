@@ -5,12 +5,13 @@
 }}
 
 with base as (
-  select
-    *
-  from
-    {{ ref('base_cc__ahoy_events') }}
+  
+  select * from {{ ref('base_cc__ahoy_events') }}
+
 ),
+
 event_unsubscribed as (
+
   select
      event_id
     ,visit_id
@@ -25,6 +26,7 @@ event_unsubscribed as (
     base
   where 
     event_name = 'unsubscribed'
+
 )
 
 select * from event_unsubscribed

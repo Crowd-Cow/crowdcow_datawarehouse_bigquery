@@ -5,12 +5,13 @@
 }}
 
 with base as (
-  select
-    *
-  from
-    {{ ref('base_cc__ahoy_events') }}
+  
+  select * from {{ ref('base_cc__ahoy_events') }}
+
 ),
+
 event_postal_code_enter as (
+
   select
      event_id
     ,visit_id
@@ -22,6 +23,7 @@ event_postal_code_enter as (
     base
   where 
     event_name = 'postal_code_enter'
+
 )
 
 select * from event_postal_code_enter

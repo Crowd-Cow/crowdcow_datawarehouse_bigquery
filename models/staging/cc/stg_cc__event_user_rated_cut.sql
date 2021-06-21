@@ -5,12 +5,13 @@
 }}
 
 with base as (
-  select
-    *
-  from
-    {{ ref('base_cc__ahoy_events') }}
+  
+  select * from {{ ref('base_cc__ahoy_events') }}
+
 ),
+
 event_user_rated_cut as (
+
   select
      event_id
     ,visit_id
@@ -26,6 +27,7 @@ event_user_rated_cut as (
     base
   where 
     event_name = 'user_rated_cut'
+
 )
 
 select * from event_user_rated_cut

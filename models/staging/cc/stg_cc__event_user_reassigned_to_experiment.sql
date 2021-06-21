@@ -5,12 +5,13 @@
 }}
 
 with base as (
-  select
-    *
-  from
-    {{ ref('base_cc__ahoy_events') }}
+  
+  select * from {{ ref('base_cc__ahoy_events') }}
+
 ),
+
 event_user_reassigned_to_experiment as (
+
   select
      event_id
     ,visit_id
@@ -24,6 +25,7 @@ event_user_reassigned_to_experiment as (
     base
   where 
     event_name = 'user_reassigned_to_experiment'
+
 )
 
 select * from event_user_reassigned_to_experiment

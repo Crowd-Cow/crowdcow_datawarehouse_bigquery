@@ -5,12 +5,13 @@
 }}
 
 with base as (
-  select
-    *
-  from
-    {{ ref('base_cc__ahoy_events') }}
+  
+  select * from {{ ref('base_cc__ahoy_events') }}
+
 ),
+
 event_brightback_offer as (
+
   select
      event_id
     ,visit_id
@@ -35,6 +36,7 @@ event_brightback_offer as (
     base
   where 
     event_name = 'brightback_offer'
+
 )
 
 select * from event_brightback_offer

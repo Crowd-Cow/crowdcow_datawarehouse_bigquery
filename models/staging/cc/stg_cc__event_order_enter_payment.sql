@@ -5,12 +5,13 @@
 }}
 
 with base as (
-  select
-    *
-  from
-    {{ ref('base_cc__ahoy_events') }}
+  
+  select * from {{ ref('base_cc__ahoy_events') }}
+
 ),
+
 event_order_enter_payment as (
+
   select
      event_id
     ,visit_id
@@ -23,6 +24,7 @@ event_order_enter_payment as (
     base
   where 
     event_name = 'order_enter_payment'
+
 )
 
 select * from event_order_enter_payment
