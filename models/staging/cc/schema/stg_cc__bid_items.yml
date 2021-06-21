@@ -24,7 +24,7 @@ models:
         tests: 
           - not_null
           - unique
-          
+
       - name: bid_item_photo_url
         description: Url for the item photo
 
@@ -49,7 +49,7 @@ models:
       - name: bid_item_subtype
         description: Subtype of a bid item
 
-      - name: token
+      - name: bid_item_token
         description: Token description
 
       - name: updated_at_utc

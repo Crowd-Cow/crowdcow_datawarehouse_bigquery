@@ -35,7 +35,7 @@ models:
       tests:
         - not_null
 
-    - name: quantity
+    - name: bid_quantity
       description: Quantity of the bid in the order
 
     - name: updated_at_utc
@@ -50,10 +50,10 @@ models:
     - name: promotion_id
       description: Business ID for the promotion
 
-    - name: name
+    - name: product_name
       description: Product name
 
-    - name: description
+    - name: product_description
       description: Product description
 
     - name: item_photo_url
@@ -65,10 +65,10 @@ models:
     - name: custom_subscription_item_id
       description: Custom subscription item id description
 
-    - name: token
+    - name: bid_token
       description: Token description
 
-    - name: reason
+    - name: autofill_reason
       description: Additional details about the autofill sku choice
 
     - name: target_sku_id

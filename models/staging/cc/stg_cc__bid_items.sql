@@ -8,9 +8,9 @@ with source as (
 
   select * from  {{ source('cc', 'bid_items') }} as b
 
-)
+),
 
-, renamed as ( 
+renamed as ( 
 
   select 
     created_at as created_at_utc
@@ -27,7 +27,7 @@ with source as (
     , quantity_available
     , {{ cents_to_usd('strike_through_price_cents') }} as strike_through_price_usd
     , {{ clean_strings('subtype') }} as bid_item_subtype
-    , {{ clean_strings('token') }} as token
+    , {{ clean_strings('token') }} as bid_item_token
     , updated_at as updated_at_utc
     , product_variant_id
     , max_dynamic_quantity  
