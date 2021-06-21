@@ -19,7 +19,7 @@ event_order_complete as (
     ,user_id
     ,event_json:experiments           as experiments
     ,event_json:member::boolean       as is_member
-    ,{{ clean_strings('event_json:"$event_id"') }}  as order_token -- 
+    ,{{ clean_strings('event_json:"$event_id"') }}  as order_token
     ,{{ cents_to_usd('event_json:"$value"') }}      as value_usd
     ,event_json:brands                as brands
     ,event_json:categories            as categories
@@ -28,13 +28,13 @@ event_order_complete as (
       when event_json:discount::text like '$%' then try_to_decimal(event_json:discount::text, '$9,999.99', 7, 2) -- Some values are dollars like $1.23 and others are cents like 123
       else round(event_json:discount::float / 100.0, 2)
      end as discount_usd
-    ,event_json:eligible_for_recurring::boolean     as eligible_for_recurring
+    ,event_json:eligible_for_recurring::boolean     as is_eligible_for_recurring
     ,event_json:estimated_order_arrival_date::date  as estimated_order_arrival_date
-    ,event_json:gift_order::boolean   as gift_order
+    ,event_json:gift_order::boolean   as is_gift_order
     ,try_to_number(event_json:order_id::text)::int  as order_id -- A few order_id are actually order_token and will be null after failing to cast to int
     ,event_json:product_names         as product_names
     ,event_json:products              as products
-    ,event_json:recurring::boolean    as recurring
+    ,event_json:recurring::boolean    as is_recurring
     ,case 
       when event_json:shipping::text like '$%' then try_to_decimal(event_json:shipping::text, '$9,999.99', 7, 2) -- Some values are dollars like $1.23 and others are cents like 123
       else round(event_json:shipping::float / 100.0, 2)
