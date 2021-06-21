@@ -20,7 +20,7 @@ event_join_wait_list as (
     ,event_json:experiments           as experiments
     ,event_json:member::boolean       as is_member
     ,event_json:bid_item_token::text  as bid_item_token
-    ,event_json:product               as product
+    ,event_json:product               as product_json
   from 
     base
   where 

@@ -25,7 +25,7 @@ event_order_rescheduled as (
     ,event_json:old_scheduled_fulfillment_date::date  as old_scheduled_fulfillment_date
     ,event_json:order_id::int         as order_id
     ,event_json:order_token::text     as order_token
-    ,event_json:reason::text          as reason
+    ,event_json:reason::text          as order_reschedule_reason
     ,event_json:user_id::int          as user_id_from_event_json  -- base_cc__ahoy_events already has a user_id column
     ,event_json:user_making_change_id::int            as user_making_change_id
     ,event_json:user_token::text      as user_token

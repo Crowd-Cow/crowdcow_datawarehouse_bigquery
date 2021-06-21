@@ -19,10 +19,10 @@ event_custom_event as (
     ,user_id
     ,event_json:experiments     as experiments
     ,event_json:member::boolean as is_member
-    ,event_json:action::text    as action
-    ,event_json:category::text  as category
-    ,event_json:label::text     as label
-    ,event_json:value::text     as value
+    ,event_json:action::text    as event_action
+    ,event_json:category::text  as event_category
+    ,event_json:label::text     as event_label
+    ,event_json:value::text     as event_value
   from 
     base
   where 
