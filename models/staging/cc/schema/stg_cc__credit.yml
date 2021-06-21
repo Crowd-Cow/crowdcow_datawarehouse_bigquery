@@ -50,11 +50,11 @@ models:
         description: "Hide credit from user"
         tests:
             - accepted_values:
-                values: ["true","false"]
+                values: [true, false]
 
       - name: controlled_by_promotion
         description: "Controlled by promotion"
         tests:
             - accepted_values:
-                values: ["true","false"]
+                values: [true, false]
 
