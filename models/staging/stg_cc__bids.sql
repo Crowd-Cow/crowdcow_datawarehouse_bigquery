@@ -26,18 +26,18 @@ with source as (
     , s.user_id
     , s.product_id
     , s.promotion_id
-    , s.name 
-    , s.description
-    , s.item_photo_url
+    , {{ clean_strings('s.name')  }} as name
+    , {{ clean_strings('s.description') }} as description
+    , {{ clean_strings('s.item_photo_url') }} as item_photo_url
     , s.subscription_id
     , s.custom_subscription_item_id
-    , s.token
-    , s.reason
+    , {{ clean_strings('s.token') }} as token
+    , {{ clean_strings('s.reason') }} as reason
     , s.target_sku_id
     , s.fill_score
-    , s.reserve_inventory_immediately
-    , s.fill_type
-    , s.fulfillment_at_risk
+    , s.reserve_inventory_immediately as is_reserve_inventory_immediately
+    , {{ clean_strings('s.fill_type') }} as fill_type
+    , s.fulfillment_at_risk as is_fulfillment_at_risk
     , s.product_permutation_id
     , s.target_product_permutation_id
     , s.first_stuck_at as first_stuck_at_utc
