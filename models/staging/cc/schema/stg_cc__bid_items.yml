@@ -1,0 +1,89 @@
+version: 2
+
+models:
+  - name: stg_cc__bid_items
+    description: Item level information from a customers bid
+    columns:
+      - name: created_at_utc
+        description: Record created timestamp in UTC
+
+      - name: bid_item_description
+        description: Description of bid_item template
+
+      - name: bid_item_description_template
+        description: Description template description
+
+      - name: event_id
+        description: Unique id for the fact_event table (Used on this table to determine FC)
+
+      - name: is_hidden_from_user
+        description: Description for boolean field
+
+      - name: bid_item_id
+        description: Business ID for a bid_item
+
+      - name: bid_item_photo_url
+        description: Url for the item photo
+
+      - name: bid_item_price_usd
+        description: Current item price in USD
+
+      - name: bid_item_type
+        description: Type of the bid item
+
+      - name: bid_item_name
+        description: Name of the bid item
+
+      - name: portion_type
+        description: Portion type of the bid item
+
+      - name: quantity_available
+        description: ""
+
+      - name: strike_through_price_usd
+        description: Pre promotional unit price in USD
+
+      - name: bid_item_subtype
+        description: Subtype of a bid item
+
+      - name: token
+        description: Token description
+
+      - name: updated_at_utc
+        description: Timestamp a record was last updated in UTC
+
+      - name: product_variant_id
+        description: Business id for the dim_product_variant table
+
+      - name: max_dynamic_quantity
+        description: Max Dynamic Quantity description
+
+      - name: highlight_text
+        description: Highlight text description
+
+      - name: is_stackable
+        description: Flag indicating if the bid item is stackable
+
+      - name: is_new_customers_only
+        description: Flag indicating if the bid item is only for new customers
+
+      - name: bid_item_group_id
+        description: Bid item group id description
+
+      - name: limit_one_per_order
+        description: Flag indicating if the bid item is limited to a quantity of one per order
+
+      - name: is_valid_price
+        description: Flag determining whether or not the price is valid
+
+      - name: skus_with_quantities_hash
+        description: Skus with quantities has description
+
+      - name: product_permutation_id
+        description: Business ID for product permutation
+
+      - name: automated_highlight_text_type
+        description: Automated highlight text type description
+
+      - name: is_always_available
+        description: Flag identifying whether or not the bid item is an always available bid item
