@@ -1,0 +1,63 @@
+version: 2
+
+models:
+  - name: stg_cc__gift_card
+    description: "Stagind model for gift cards"
+    columns:
+      - name: gift_card_id
+        description: "Gift card ID"
+        tests:
+            - unique
+            - not_null
+
+      - name: redeemed_at_utc
+        description: "Timestamp for when the gift card was redeemed UTC"
+
+      - name: gift_card_vendor
+        description: "Gift card vendor"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created UTC"
+
+      - name: batch_uuid
+        description: "Batch UUID"
+
+      - name: admin_id
+        description: "Admin ID"
+
+      - name: gift_info_id
+        description: "Gift info ID"
+
+      - name: frauded_at_utc
+        description: "Timestamp when fraud occurred UTC"
+
+      - name: suspicion_reason
+        description: "Reason for suspiciion of fraud"
+
+      - name: gift_card_amount_usd
+        description: "Amount of the gift card in USD"
+
+      - name: suspicion_found_at_utc
+        description: "Timestamp when a gift card is suspected of fraud USD"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: suspicion_resolved_at_utc
+        description: "Timestamp when suspicion of fraud is resolved UTC"
+
+      - name: gift_card_fraud_amount_usd
+        description: "Amount of identified fraud usage in USD"
+
+      - name: image_url
+        description: "Gift card image URL"
+
+      - name: gift_card_code
+        description: "Gift card code"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated UTC"
+
+      - name: sold_at_utc
+        description: "Timestamp when the gift card was sold UTC"
+
