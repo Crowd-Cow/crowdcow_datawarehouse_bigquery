@@ -13,8 +13,8 @@ renamed as (
         ,updated_at as updated_at_utc
         ,product_variant_id
         ,subscription_id
-        ,created_at
-        ,quantity
+        ,created_at as created_at_utc
+        ,quantity as custom_subscription_quantity
 
     from source
 

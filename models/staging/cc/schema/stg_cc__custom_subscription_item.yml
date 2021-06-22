@@ -25,9 +25,9 @@ models:
       - name: subscription_id
         description: "Subscription ID"
 
-      - name: created_at
+      - name: created_at_utc
         description: "Timestamp for when the record was created"
 
-      - name: quantity
+      - name: custom_subscription_quantity
         description: "Quantity of items"
 
