@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: stg_cc__custom_subscription_item
+    description: "Staging model for custom subscription items"
+    columns:
+      - name: custom_subscription_id
+        description: "Custom subscription ID"
+        tests:
+            - unique
+            - not_null
+
+      - name: meat_preference
+        description: "Customer's meat preference"
+
+      - name: product_id
+        description: "Product ID"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated UTC"
+
+      - name: product_variant_id
+        description: "Product variant ID"
+
+      - name: subscription_id
+        description: "Subscription ID"
+
+      - name: created_at
+        description: "Timestamp for when the record was created"
+
+      - name: quantity
+        description: "Quantity of items"
+
