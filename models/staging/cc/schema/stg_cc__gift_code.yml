@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: stg_cc__gift_code
+    description: "Staging model for gift codes"
+    columns:
+      - name: gift_code_id
+        description: "Gift code ID"
+        tests:
+            - unique
+            - not_null
+
+      - name: subscription_id
+        description: "Subscription ID"
+
+      - name: discount_percent
+        description: "Discount percent to be applied to an order"
+
+      - name: order_id
+        description: "Order ID"
+
+      - name: campaign_type
+        description: "Campaign type"
+
+      - name: campaign_name
+        description: "Campaign name"
+
+      - name: minimum_order_amount_usd
+        description: "The minimum amount in USD to receive a discount for an order"
+
+      - name: gift_code_token
+        description: "Gift card token"
+
+      - name: discount_amount_usd
+        description: "Discount amount in USD"
+
+      - name: bid_item_id
+        description: "Bid item ID"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created UTC"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated UTC"
+
+      - name: partner_id
+        description: "Partner ID"
+
+      - name: redeemed_at_utc
+        description: "Timestamp when the gift code was redeemed UTC"
+
