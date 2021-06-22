@@ -6,14 +6,14 @@
 
 with base_ahoy_events as (
   select
-    ae.id 	    as event_id,
-    ae.visit_id,
-    ae.name     as event_name,
-    ae.time     as occurred_at_utc,
-    ae.user_id,
-    parse_json(ae.properties) as event_json
+     id        as event_id
+    ,visit_id
+    ,name      as event_name
+    ,time      as occurred_at_utc
+    ,user_id
+    ,parse_json(properties) as event_json
   from
-    {{ source('cc', 'ahoy_events') }} as ae
+    {{ source('cc', 'ahoy_events') }}
 )
 
 select * from base_ahoy_events

@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: stg_cc__event_viewed_product
+    description: Ahoy Event that's published when a product is viewed
+    columns:
+      - name: event_id
+        description: Event ID
+        tests:
+            - unique
+            - not_null
+
+      - name: visit_id
+        description: Visit ID
+
+      - name: occurred_at_utc
+        description: Timestamp for when the event was published
+
+      - name: user_id
+        description: User ID
+
+      - name: experiments
+        description: A JSON object mapping an experiment token to the variant (group) that was active during this Visit
+
+      - name: is_member
+        description: Boolean that is true if the User was logged in and was a Subscriber when this event was published
+
+      - name: bid_item_brands
+        description: JSON list of Bid Item Brands
+
+      - name: bid_item_categories
+        description: JSON list of Product Categories
+
+      - name: bid_item_image_url
+        description: Bid Item's image URL
+
+      - name: bid_item_name
+        description: Bid Item's name
+
+      - name: product_page_url
+        description: Product page URL
