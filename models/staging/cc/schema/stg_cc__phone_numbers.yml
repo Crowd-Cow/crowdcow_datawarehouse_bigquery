@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: stg_cc__phone_numbers
+    description: Phone numbers
+    columns:
+      - name: phone_number_id
+        description: Phone Number ID
+        tests: 
+          - not_null
+          - unique
+
+      - name: phone_type
+        description: Phone type
+
+      - name: phone_number
+        description: Phone Number
+
+      - name: phone_number_token
+        description: Phone Number token
+
+      - name: phone_number_does_allow_sms
+        description: Boolean for whether the Phone Number allows SMS
+
+      - name: created_at_utc
+        description: Timestamp for when a record was added to the source database
+
+      - name: updated_at_utc
+        description: Timestamp for when a record in the source database was updated
+
+      - name: validated_at_utc
+        description: Timestamp for when a Phone Number was validated

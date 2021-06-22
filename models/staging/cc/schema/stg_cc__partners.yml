@@ -1,0 +1,77 @@
+version: 2
+
+models:
+  - name: stg_cc__partners
+    description: Partners
+    columns:
+      - name: partner_id
+        description: Partner ID
+        tests: 
+          - not_null
+          - unique
+
+      - name: event_id
+        description: Event ID
+
+      - name: partner_created_by_user_id
+        description: User ID for the person that created the Partner
+
+      - name: street_team_user_id
+        description: User ID for the street team
+
+      - name: partner_redirect_path
+        description: Partner redirect path
+
+      - name: partner_campaign_type
+        description: Partner campaign type
+
+      - name: partner_promo_description
+        description: Partner promo description
+
+      - name: partner_path
+        description: Partner path
+
+      - name: partner_token
+        description: Partner token
+
+      - name: partner_page_text
+        description: Partner page text
+
+      - name: partner_page_title
+        description: Partner page title
+
+      - name: partner_notes
+        description: Partner notes
+
+      - name: partner_image_url
+        description: Partner image URL
+
+      - name: partner_utm_medium
+        description: Parnter utm medium
+
+      - name: partner_url
+        description: Partner URL
+
+      - name: partner_name
+        description: Partner name
+
+      - name: partner_utm_source
+        description: Partner utm source
+
+      - name: partner_requires_redirect
+        description: Boolean for whether Partner requires redirect
+
+      - name: should_redeem_on_visit
+        description: Boolean for whether redeem is on visit
+
+      - name: partner_requires_email
+        description: Boolean for whether the Partner requires email
+
+      - name: created_at_utc
+        description: Timestamp for when a record was added to the source database
+
+      - name: updated_at_utc
+        description: Timestamp for when a record in the source database was updated
+
+      - name: archived_at_utc
+        description: Timestamp for when a record in the source database was archived
