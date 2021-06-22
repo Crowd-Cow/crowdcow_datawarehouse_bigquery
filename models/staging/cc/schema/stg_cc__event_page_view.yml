@@ -6,6 +6,9 @@ models:
     columns:
       - name: event_id
         description: Event ID
+        tests:
+            - unique
+            - not_null
 
       - name: visit_id
         description: Visit ID
@@ -31,5 +34,5 @@ models:
       - name: referrer_url
         description: Referrer URL
 
-      - name: url_of_page_viewed
+      - name: page_viewed_url
         description: URL of the page that was viewed
