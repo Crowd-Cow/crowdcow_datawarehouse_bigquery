@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: stg_cc__ambassadors
+    description: Ambassadors that promote Crowd Cow in social media
+    columns:
+      - name: ambassador_id
+        description: Ambassador ID
+        tests: 
+          - not_null
+          - unique
+
+      - name: user_id
+        description: User ID
+
+      - name: partner_id
+        description: Partner ID
+
+      - name: ambassador_sort_order
+        description: Sort Order looks like it's used in the Crowd Cow app and probably isn't needed for analytics
+
+      - name: ambassador_data_fields
+        description: A complex string with a lot of the same values as the other columns in this table
+
+      - name: ambassador_google_fields
+        description: A complex string containing the results of a Google survey
+
+      - name: ambassador_category
+        description: Ambassador Category
+
+      - name: ambassador_status
+        description: Ambassador Status
+
+      - name: ambassador_email
+        description: Ambassador Email
+
+      - name: created_at_utc
+        description: Timestamp for when a record was added to the source database
+
+      - name: updated_at_utc
+        description: Timestamp for when a record in the source database was updated
+
+      - name: ambassador_introduced_at_utc
+        description: Timestamp for when the Ambassador was introduced
+
+      - name: ambassador_profile_image_height
+        description: Profile image height
+
+      - name: ambassador_profile_image_width
+        description: Profile image width
+
+      - name: ambassador_lifestyle_image_height
+        description: Lifestyle image height
+
+      - name: ambassador_lifestyle_image_width
+        description: Lifestyle image width
