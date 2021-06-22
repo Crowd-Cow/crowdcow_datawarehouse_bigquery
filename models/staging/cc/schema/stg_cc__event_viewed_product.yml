@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: stg_cc__event_viewed_product
-    description: ""
+    description: Ahoy Event that's published when a product is viewed
     columns:
       - name: event_id
         description: Event ID

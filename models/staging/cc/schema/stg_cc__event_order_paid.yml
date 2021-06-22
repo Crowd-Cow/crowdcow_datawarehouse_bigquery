@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: stg_cc__event_order_paid
-    description: ""
+    description: Ahoy Event that's published when an Order is paid
     columns:
       - name: event_id
         description: Event ID
