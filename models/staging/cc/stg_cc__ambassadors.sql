@@ -14,14 +14,14 @@ renamed as (
 
     select
          id             as ambassador_id
-        ,data_fields    as ambassador_data_fields
         ,user_id
         ,partner_id
-        ,google_fields  as ambassador_google_fields
-        ,category       as ambassador_category
-        ,status         as ambassador_status
-        ,sort_order
-        ,email          as ambassador_email
+        ,sort_order     as ambassador_sort_order -- Appears to be for use in the app
+        ,{{ clean_strings('data_fields') }}     as ambassador_data_fields -- Complex string
+        ,{{ clean_strings('google_fields') }}   as ambassador_google_fields -- Complex string
+        ,{{ clean_strings('category') }}        as ambassador_category
+        ,{{ clean_strings('status') }}          as ambassador_status
+        ,{{ clean_strings('email') }}           as ambassador_email
         ,created_at     as created_at_utc
         ,updated_at     as updated_at_utc
         ,introduced_at  as ambassador_introduced_at_utc
