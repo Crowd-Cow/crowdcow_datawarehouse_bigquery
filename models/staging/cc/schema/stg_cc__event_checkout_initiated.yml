@@ -2,16 +2,16 @@ version: 2
 
 models:
   - name: stg_cc__event_checkout_initiated
-    description: Derived from a custom_event
+    description: Derived from an Ahoy Event named custom_event that is published when a User begins the checkout process
     columns:
       - name: event_id
-        description: ""
+        description: Event ID
 
       - name: visit_id
-        description: ""
+        description: Visit ID
 
       - name: occurred_at_utc
-        description: ""
+        description: Timestamp for when the event was published
 
       - name: user_id
-        description: ""
+        description: User ID

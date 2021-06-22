@@ -5,34 +5,34 @@ models:
     description: ""
     columns:
       - name: event_id
-        description: ""
+        description: Event ID
 
       - name: visit_id
-        description: ""
+        description: Visit ID
 
       - name: occurred_at_utc
-        description: ""
+        description: Timestamp for when the event was published
 
       - name: user_id
-        description: ""
+        description: User ID
 
       - name: experiments
-        description: ""
+        description: A JSON object mapping an experiment token to the variant (group) that was active during this Visit
 
       - name: is_member
-        description: ""
+        description: Boolean that is true if the User was logged in and was a Subscriber when this event was published
 
-      - name: brands_for_bid_item
-        description: ""
+      - name: bid_item_brands
+        description: JSON list of Bid Item Brands
 
-      - name: category_for_bid_item
-        description: ""
+      - name: bid_item_categories
+        description: JSON list of Product Categories
 
       - name: bid_item_image_url
-        description: ""
+        description: Bid Item's image URL
 
       - name: bid_item_name
-        description: ""
+        description: Bid Item's name
 
       - name: product_page_url
-        description: ""
+        description: Product page URL

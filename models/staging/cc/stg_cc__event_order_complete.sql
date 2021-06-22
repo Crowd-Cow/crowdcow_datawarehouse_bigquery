@@ -20,7 +20,6 @@ event_order_complete as (
     ,event_json:experiments           as experiments
     ,event_json:member::boolean       as is_member
     ,{{ clean_strings('event_json:"$event_id"::text') }}  as order_token
-    ,{{ cents_to_usd('event_json:"$value"') }}            as value_usd
     ,event_json:brands                as bid_item_brands
     ,event_json:categories            as bid_item_categories
     ,{{ clean_strings('event_json:currency::text') }}     as currency
@@ -38,7 +37,7 @@ event_order_complete as (
     ,case 
       when event_json:shipping::text like '$%' then try_to_decimal(event_json:shipping::text, '$9,999.99', 7, 2) -- Some values are dollars like $1.23 and others are cents like 123
       else {{ cents_to_usd('event_json:shipping') }}
-     end as total_shipping_usd
+     end as shipping_usd
     ,event_json:suggested_add_ons         as suggested_add_ons
     ,{{ cents_to_usd('event_json:tax') }} as tax_usd
     ,case 

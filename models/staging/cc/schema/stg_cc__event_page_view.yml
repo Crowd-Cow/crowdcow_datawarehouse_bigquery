@@ -5,31 +5,31 @@ models:
     description: ""
     columns:
       - name: event_id
-        description: ""
+        description: Event ID
 
       - name: visit_id
-        description: ""
+        description: Visit ID
 
       - name: occurred_at_utc
-        description: ""
+        description: Timestamp for when the event was published
 
       - name: user_id
-        description: ""
+        description: User ID
 
       - name: experiments
-        description: ""
+        description: A JSON object mapping an experiment token to the variant (group) that was active during this Visit
 
       - name: is_member
-        description: ""
+        description: Boolean that is true if the User was logged in and was a Subscriber when this event was published
 
       - name: current_fc
-        description: ""
+        description: The Fulfillment Center associated with the User's Postal Code
 
       - name: user_postal_code
-        description: ""
+        description: The User's Postal Code
 
       - name: referrer_url
-        description: ""
+        description: Referrer URL
 
       - name: url_of_page_viewed
-        description: ""
+        description: URL of the page that was viewed
