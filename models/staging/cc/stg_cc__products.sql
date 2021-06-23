@@ -37,7 +37,7 @@ renamed as (
   , loyalty_reward_apply_window_days
   , loyalty_reward_daily_rate
   , {{ clean_strings('loyalty_reward_message') }} as loyalty_reward_message
-  , automated_highlight_text_type
+  , {{ clean_strings('automated_highlight_text_type') }} as automated_highlight_text_type
   , always_available as is_always_available
   , is_alacarte
 
