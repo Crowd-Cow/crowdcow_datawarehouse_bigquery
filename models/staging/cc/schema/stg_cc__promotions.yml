@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: stg_cc__promotions
+    description: Promotions
+    columns:
+      - name: promotion_id
+        description: Promotion ID
+
+      - name: promotion_type
+        description: Promotion type
+
+      - name: promotion_is_always_available
+        description: Is the Promotion always available
+
+      - name: promotion_must_be_assigned_to_user
+        description: Does the Promotion have to be assigned to a User
+
+      - name: promotion_must_be_assigned_to_order
+        description: Does the Promotion have to be assigned to a Order
+
+      - name: created_at_utc
+        description: Timestamp for when a record was added to the source database
+
+      - name: updated_at_utc
+        description: Timestamp for when a record in the source database was updated
