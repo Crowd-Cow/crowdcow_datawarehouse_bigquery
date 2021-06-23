@@ -68,7 +68,7 @@ renamed as (
         ,retention_offers_accepted as user_total_retention_offers_accepted
         ,utm_time as utm_time_at_utc
         ,{{ clean_strings('utm_content') }} as utm_content
-        ,{{ clean_strings('roles_for_notifications') }} user_roles_for_notifications
+        ,{{ clean_strings('roles_for_notifications') }} as user_roles_for_notifications
         ,{{ clean_strings('token') }} as user_token
         ,created_at created_at_utc
         ,{{ clean_strings('campaign_id') }} as campaign_id
