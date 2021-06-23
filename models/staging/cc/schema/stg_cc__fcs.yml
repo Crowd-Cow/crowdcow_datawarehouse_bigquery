@@ -20,7 +20,7 @@ models:
         description: "Fulfillment center address line 2"
 
       - name: fc_city
-        description: "Filfillment center city"
+        description: "Fulfillment center city"
 
       - name: fc_state
         description: "Fulfillment center state"

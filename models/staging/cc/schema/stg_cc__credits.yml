@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_cc__credit
+  - name: stg_cc__credits
     description: "Staging model for credits"
     columns:
       - name: credit_id

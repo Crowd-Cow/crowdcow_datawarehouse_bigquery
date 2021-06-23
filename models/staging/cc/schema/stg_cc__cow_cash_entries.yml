@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_cc__cow_cash_entry
+  - name: stg_cc__cow_cash_entries
     description: "Stage model for Cow Cash entries"
     columns:
       - name: cow_cash_id
