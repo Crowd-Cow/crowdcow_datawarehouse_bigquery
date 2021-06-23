@@ -1,0 +1,104 @@
+version: 2
+
+models:
+  - name: stg_cc__products
+    description: Source table for product level data
+    columns:
+      - name: product_id
+        description: Business ID for the product
+        tests: 
+          - not_null
+          - unique
+
+      - name: product_title
+        description: Title of the product
+
+      - name: product_description
+        description: Description of the product
+
+      - name: published_at_utc
+        description: Timestamp product is published in UTC
+
+      - name: seo_page_title
+        description: SEO page title
+
+      - name: seo_meta_description
+        description: SEO meta description TBD
+
+      - name: url_handle
+        description: Url handle associated with the product
+
+      - name: created_at_utc
+        description: Timestamp record was created in UTC
+
+      - name: updated_at_utc
+        description: Timestamp record was updated in UTC
+
+      - name: canonical_product_id
+        description: Canonical_product_id description
+
+      - name: is_stackable
+        description: Flag indicating if the bid item is stackable
+
+      - name: product_subtype
+        description: Subtype of the product, different from product hierarchy subtype
+
+      - name: product_token
+        description: Public facing unique identifier for the product
+
+      - name: archived_at_utc
+        description: Timestamp the record was archived in UTC
+
+      - name: price_usd
+        description: Price of the product in USD
+
+      - name: is_multifarm
+        description: Flag indicating if the product contains skus from multiple farms
+
+      - name: availability_alert_threshold
+        description: Availability alert threshold description
+
+      - name: product_highlight_text
+        description: Product highlight text description
+
+      - name: strike_through_percent_off
+        description: Percent discount applied to achieve the strike through price
+
+      - name: is_new_customers_only
+        description: Flag indicating if the product is only for new customers
+
+      - name: is_limit_one_per_order
+        description: Flag indicating if the product is limited to one per order
+
+      - name: min_product_bundle_value_usd
+        description: Minimum product bundle value in USD
+
+      - name: max_product_bundle_value_usd
+        description: Maximum product bundle value in USD
+
+      - name: fc_id
+        description: Fulfillment Center ID
+
+      - name: product_internal_note
+        description: Product internal note
+
+      - name: loyalty_reward_order_number
+        description: Loyalty reward order number description
+
+      - name: loyalty_reward_apply_window_days
+        description: Loyalty reward apply window days
+
+      - name: loyalty_reward_daily_rate
+        description: Loyalty reward daily rate 
+
+      - name: loyalty_reward_message
+        description: Loyalty reward message
+
+      - name: automated_highlight_text_type
+        description: Automated highlight text type
+
+      - name: is_always_available
+        description: Whether or not the product is always available
+
+      - name: is_alacarte
+        description: Whether or not a product is an a la carte product or not
