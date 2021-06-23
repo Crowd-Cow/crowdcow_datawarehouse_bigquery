@@ -1,0 +1,55 @@
+version: 2
+
+models:
+  - name: stg_cc__product_variants
+    description: Table containing information surrounding product variants
+    columns:
+      - name: product_variant_id
+        description: Business ID for the product variant
+        tests: 
+          - not_null
+          - unique
+
+      - name: min_product_bundle_value_usd
+        description: Minimum product bundle value in USD
+
+      - name: fc_id
+        description: Fulfillment center id
+
+      - name: product_variant_highlight_text
+        description: Product variant highlighted text
+
+      - name: strike_through_percent_off
+        description: Percent discount applied to achieve the strike through price for the variant
+
+      - name: description
+        description: Description of the product variant
+
+      - name: created_at_utc
+        description: Timestamp product is created in UTC
+
+      - name: max_product_bundle_value_usd
+        description: Maximum product bundle value in USD
+
+      - name: product_variant_automated_highlight_text_type
+        description: Automated highlight text type for the product variant
+
+      - name: price_usd
+        description: Price in USD of the product variant
+
+      - name: product_id
+        description: Business ID for the product
+
+      - name: updated_at_utc
+        description: Timestamp product is updated in UTC
+
+      - name: product_variant_image_url
+        description: Specific image url that may be different for the variant than the product
+
+      - name: can_subscribe_to_variant
+        description: Whether or not the product variant can be subscribed to
+
+      - name: is_product_variant_always_available
+        description: Whether or not the product variant is always available
+
+

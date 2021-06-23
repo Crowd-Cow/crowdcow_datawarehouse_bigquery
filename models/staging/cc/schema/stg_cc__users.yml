@@ -1,0 +1,342 @@
+version: 2
+
+models:
+  - name: stg_cc__users
+    description: "Staging model for users"
+    columns:
+      - name: user_id
+        description: "User ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: user_type
+        description: "User Type"
+
+      - name: user_email
+        description: "User email"
+
+      - name: user_gender
+        description: "User gender"
+
+      - name: default_card_token
+        description: "Default card token"
+
+      - name: user_last_geocoded_address
+        description: "User last geocoded address"
+
+      - name: user_last_geocoded_city
+        description: "User last geocoded city"
+
+      - name: user_last_geocoded_state_code
+        description: "User last geocoded state code"
+
+      - name: user_last_geocoded_state
+        description: "User last geocoded state"
+
+      - name: user_last_geocoded_postal_code
+        description: "User last geocoded postal code"
+
+      - name: user_last_geocoded_country_code
+        description: "User last geocoded country code"
+
+      - name: user_last_geocoded_country
+        description: "User last geocoded country"
+
+      - name: user_last_geocoded_latitude
+        description: "User last geocoded latitude"
+
+      - name: user_last_geocoded_longitude
+        description: "User last geocoded longitude"
+
+      - name: user_last_geocoded_ip_address
+        description: "User last geocoded IP address"
+
+      - name: user_last_sign_in_ip
+        description: "User last sign in IP"
+
+      - name: full_contact_data_updated_at_utc
+        description: "Full Contact update timestamp UTC"
+
+      - name: user_referrer_token
+        description: "User referrer token"
+
+      - name: full_contact_id
+        description: "Full Contact ID"
+
+      - name: full_contact_given_name
+        description: "Full Contact user first name"
+
+      - name: full_contact_family_name
+        description: "Full Contact user last name"
+
+      - name: full_contact_full_name
+        description: "Full Contact user full name"
+
+      - name: full_contact_gender
+        description: "Full Contact user gender"
+
+      - name: full_contact_company_name
+        description: "Full Contact user company name"
+
+      - name: full_contact_job_title
+        description: "Full Contact user job title"
+
+      - name: full_contact_bio
+        description: "Full Contact user bio"
+
+      - name: full_contact_angellist_url
+        description: "Full Contact Angel List URL"
+
+      - name: full_contact_angellist_total_followers
+        description: "Full Contact Angel List total followers"
+
+      - name: full_contact_linkedin_url
+        description: "Full Contact LinkedIn URL"
+
+      - name: full_contact_linkedin_total_followers
+        description: "Full Contact LinkedIn total followers"
+
+      - name: full_contact_instagram_url
+        description: "Full Contact Instagram URL"
+
+      - name: full_contact_instagram_total_followers
+        description: "Full Contact Instagram total followers"
+
+      - name: full_contact_twitter_url
+        description: "Full Contract Twitter URL"
+
+      - name: full_contact_twitter_total_followers
+        description: "Full Contact Twitter total followers"
+
+      - name: full_contact_pinterest_url
+        description: "Full Contact Pintrest URL"
+
+      - name: full_contact_pinterest_total_followers
+        description: "Full Contact Pintrest total followers"
+
+      - name: full_contact_facebook_url
+        description: "Full Contact Facebook URL"
+
+      - name: full_contact_image_url
+        description: "Full Contact image URL"
+
+      - name: user_cow_cash_balance_usd
+        description: "User Cow Cash balance in USD"
+
+      - name: user_unsubscribed_all_at_utc
+        description: "Timestamp that user unsubscribed from all email UTC"
+
+      - name: utm_campaign
+        description: "UTM campaign"
+
+      - name: user_vendor_access
+        description: "User vendor access"
+
+      - name: user_account_breach_checked_at_utc
+        description: "Timestamp when account breach was last checked UTC"
+
+      - name: user_remember_created_at_utc
+        description: "Timestamp when a user remember was created UTC"
+
+      - name: user_vacation_ends_at_utc
+        description: "Timestamp when a user's vacation ends UTC"
+
+      - name: user_unlock_token
+        description: "User unlock token"
+
+      - name: user_encrypted_password
+        description: "User encrypted password value"
+
+      - name: user_email_subscribed_often_at_utc
+        description: "Timestamp when user subscribed email often UTC"
+
+      - name: updated_at_utc
+        description: "Timestamp for when a record was updated UTC"
+
+      - name: user_remind_at_utc
+        description: "Timestamp when a user remind was created UTC"
+
+      - name: referred_by_user_id
+        description: "Referred by User ID"
+
+      - name: affiliate_transaction_id
+        description: "Affiliate transaction ID"
+
+      - name: referrer_url
+        description: "Referral URL"
+
+      - name: user_retention_offer_last_accepted_at_utc
+        description: "Timestamp when user retention offer was last accepted UTC"
+
+      - name: user_banned_at_utc
+        description: "Timestamp when a user was banned UTC"
+
+      - name: user_fb_id
+        description: "User Facebook ID"
+
+      - name: user_banned_reason
+        description: "Reason why as user was banned"
+
+      - name: user_support_state_updated_at_utc
+        description: "Timestamp when a user's support status was updated UTC"
+
+      - name: user_total_retention_offers_accepted
+        description: "User total retention offers accepted"
+
+      - name: utm_time_at_utc
+        description: "UTM time UTC"
+
+      - name: utm_content
+        description: "UTM content"
+
+      - name: user_roles_for_notifications
+        description: "User roles for notifications"
+
+      - name: user_token
+        description: "User token"
+
+      - name: created_at_utc
+        description: "Timestamp for when a record was created UTC"
+
+      - name: campaign_id
+        description: "Campaign ID"
+
+      - name: utm_source
+        description: "UTM source"
+
+      - name: user_current_sign_in_at_utc
+        description: "Timestamp for a user's current sign in UTC"
+
+      - name: user_email_subscribed_weekly_at_utc
+        description: "Timestamp when a user subscribed to weekly email UTC"
+
+      - name: user_landing_page_source
+        description: "User landing page source"
+
+      - name: stripe_customer_token
+        description: "Corresponding Stripe customer token"
+
+      - name: banned_by_user_id
+        description: "User that banned another user"
+
+      - name: user_reset_password_token
+        description: "User reset password token"
+
+      - name: user_unconfirmed_email
+        description: "User unconfirmed email"
+
+      - name: user_notes_for_next_order
+        description: "User notes for the next order"
+
+      - name: user_resubscribed_at_utc
+        description: "Timestamp for when a user resubscribed UTC"
+
+      - name: adgroup_id
+        description: "Adgroup ID"
+
+      - name: user_total_failed_attempts
+        description: "User total failed login attempts"
+
+      - name: merged_into_user_id
+        description: "Merged into user ID"
+
+      - name: user_mailchimp_unsubscribed_all_at_utc
+        description: "Timestamp when a user unsubscribed from Mail Chimp UTC"
+
+      - name: user_target_id
+        description: "User target ID"
+
+      - name: user_email_validated_at_utc
+        description: "Timestamp for when a user email was validated UTC"
+
+      - name: user_reset_password_sent_at_utc
+        description: "Timestamp for when a reset password email was sent to a user UTC"
+
+      - name: phone_number_id
+        description: "Phone number ID that can be joined to the phone number table"
+
+      - name: user_emails_paused_until_at_utc
+        description: "Timestamp for when to end an email pause for a user UTC"
+
+      - name: user_current_sign_in_ip
+        description: "Current sign in IP for a user"
+
+      - name: user_total_sign_in_count
+        description: "Total number of sign ins for a user"
+
+      - name: user_email_name
+        description: "User email name"
+
+      - name: user_vip_level
+        description: "User VIP level"
+
+      - name: user_creative_id
+        description: "User creative ID"
+
+      - name: user_predicted_reorder_updated_at_utc
+        description: "Timestamp for when a user reorder prediction is updated UTC"
+
+      - name: user_predicted_reorder_at_utc
+        description: "Timestamp for when a user is predicted to reorder UTC"
+
+      - name: user_locked_at_utc
+        description: "Timestamp for when a user is locked UTX"
+
+      - name: user_original_url
+        description: "User original URL"
+
+      - name: user_support_status
+        description: "Current user support status"
+
+      - name: user_excluded_shipping_carriers
+        description: "User excluded shipping carriers"
+
+      - name: user_confirmation_token
+        description: "User confirmation token"
+
+      - name: utm_medium
+        description: "UTM medium"
+
+      - name: active_order_id
+        description: "Active order ID"
+
+      - name: user_account_breach_reset_password_at_utc
+        description: "Timestamp for when a reset password was sent to a user after an account breach UTC"
+
+      - name: user_pay_rate_usd
+        description: "User pay rate in USD"
+
+      - name: user_vacation_begins_at_utc
+        description: "Timestamp for when a user's vacation begins UTC"
+
+      - name: user_zip
+        description: "User zip"
+
+      - name: user_last_sign_in_at_utc
+        description: "Timestamp for when a user last signed in UTC"
+
+      - name: alternate_phone_number_id
+        description: "Alternate phone number ID. Can be joined to the phone number table"
+
+      - name: user_roles_for_access
+        description: "User roles for access"
+
+      - name: user_email_validation_code
+        description: "User email validation code"
+
+      - name: user_test_bucket
+        description: "User test bucket"
+
+      - name: user_opt_out_list
+        description: "User opt out list"
+
+      - name: user_is_banned_from_referrals
+        description: "Boolean indicating if a user is banned from referrals"
+
+      - name: user_was_email_lead
+        description: "Boolean indicating if a user was an email lead"
+
+      - name: user_has_opted_in_to_emails
+        description: "Boolean indicating if a user has opted in to emails"
+

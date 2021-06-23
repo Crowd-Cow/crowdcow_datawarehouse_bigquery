@@ -1,0 +1,84 @@
+version: 2
+
+models:
+  - name: stg_cc__subscriptions
+    description: "Staging model for subscriptions"
+    columns:
+      - name: subscription_id
+        description: "Subscription ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created UTC"
+
+      - name: subscription_type
+        description: "Subscription type"
+
+      - name: delivery_name
+        description: "Subscription delivery name"
+
+      - name: delivery_street_address_1
+        description: "Subscription delivery address line 1"
+
+      - name: delivery_street_address_2
+        description: "Subscription delivery address line 2"
+
+      - name: delivery_city
+        description: "Subscription delivery city"
+
+      - name: delivery_state
+        description: "Subscription delivery state"
+
+      - name: delivery_postal_code
+        description: "Subscription delivery postal code"
+
+      - name: subscription_reward_frequency
+        description: "Subscription reward frequency"
+
+      - name: subscription_cancelled_at_utc
+        description: "Timestamp of when the subscription was cancelled UTC"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: subscription_token
+        description: "Subscription token"
+
+      - name: subscription_price_usd
+        description: "Subscription price in USD"
+
+      - name: subscription_cancelled_reason
+        description: "The reason the subscription was cancelled"
+
+      - name: subscription_signup_status
+        description: "The current status of the subscription sign up process (e.g. complete)"
+
+      - name: updated_at_utc
+        description: "Timestamp for wwhen the record was updated UTC"
+
+      - name: farm_category
+        description: "Farm category"
+
+      - name: product_id
+        description: "Product ID"
+
+      - name: estimated_fulfillment_date
+        description: "Estimated fulfillment date"
+
+      - name: subscription_renew_period_type
+        description: "Renewal period for the subscription"
+
+      - name: stripe_card_id
+        description: "Corresponding Stripe card ID"
+
+      - name: phone_number_id
+        description: "Phone number ID that can be joined to the phone number table"
+
+      - name: subscription_renews_at_utc
+        description: "Timestamp for when the subscription renews UTC"
+
+      - name: subscription_is_active
+        description: "Boolean to indicate if the subscription is active"
+
