@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: stg_cc__product_variants
-    description: ""
+    description: Table containing information surrounding product variants
     columns:
       - name: product_variant_id
         description: Business ID for the product variant
@@ -10,7 +10,7 @@ models:
           - not_null
           - unique
 
-      - name: min_product_bundle_value_in_usd
+      - name: min_product_bundle_value_usd
         description: Minimum product bundle value in USD
 
       - name: fc_id
@@ -28,13 +28,13 @@ models:
       - name: created_at_utc
         description: Timestamp product is created in UTC
 
-      - name: max_product_bundle_value_in_usd
+      - name: max_product_bundle_value_usd
         description: Maximum product bundle value in USD
 
       - name: product_variant_automated_highlight_text_type
         description: Automated highlight text type for the product variant
 
-      - name: price_in_usd
+      - name: price_usd
         description: Price in USD of the product variant
 
       - name: product_id

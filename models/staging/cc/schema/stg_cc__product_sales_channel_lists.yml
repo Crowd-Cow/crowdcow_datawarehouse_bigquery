@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: stg_cc__product_sales_channel_lists
-    description: ""
+    description: Table containing data for product sales channel lists
     columns:
       - name: product_sales_channel_lists_id
         description: ID for the product sales channel lists table
