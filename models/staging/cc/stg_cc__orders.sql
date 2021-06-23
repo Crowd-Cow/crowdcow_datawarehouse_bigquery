@@ -43,7 +43,7 @@ renamed as (
     ,{{ clean_strings('original_url') }} as order_original_url
     ,cancelled_at as order_cancelled_at_utc
     ,confirmed_at as order_confirmed_at_utc
-    ,first_stuck_at as oder_first_stuck_at_utc
+    ,first_stuck_at as order_first_stuck_at_utc
     ,print_pick_label_last_attempted_at as order_print_pick_label_last_attempted_at_utc
     ,delivery_locked_at as order_delivery_locked_at_utc
     ,picked_up_at as order_picked_up_at_utc
@@ -115,7 +115,7 @@ renamed as (
     ,stripe_card_exp_year
     ,stripe_charge_attempted_at as stripe_charge_attempted_at_utc
     ,stripe_card_zip
-    ,{{ clean_strings('stripe_card_brand') }} as strip_card_brand
+    ,{{ clean_strings('stripe_card_brand') }} as stripe_card_brand
     ,stripe_card_exp_month
     ,stripe_card_id_last_updated_at as stripe_card_id_last_updated_at_utc
     ,stripe_card_fingerprint -- Not converting to uppercase because the difference between upper and lower is significant in this fingerprint (ex. l3wrJ08V0t1SSecS)

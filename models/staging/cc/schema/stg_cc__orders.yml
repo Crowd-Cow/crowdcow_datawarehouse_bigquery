@@ -1,0 +1,350 @@
+version: 2
+
+models:
+  - name: stg_cc__orders
+    description: Orders
+    columns:
+      - name: order_id
+        description: Order ID
+
+      - name: parent_order_id
+        description: Parent Order ID
+
+      - name: campaign_id
+        description: Campaign ID
+
+      - name: subscription_id
+        description: Subscription ID
+
+      - name: order_created_by_subscription_id
+        description: Order was created by Subscription ID
+
+      - name: order_cancelled_by_user_id
+        description: Order was cancelled by User ID
+
+      - name: fc_id
+        description: Fulfillment Center ID
+
+      - name: ahoy_visit_id
+        description: Ahoyt Visit ID
+
+      - name: user_id
+        description: User ID
+
+      - name: packing_wave_id
+        description: Packing Wave ID
+
+      - name: gift_recipient_id
+        description: Gift Recipient ID
+
+      - name: phone_number_id
+        description: Phone Number ID
+
+      - name: packer_id
+        description: Packer ID
+
+      - name: bid_id
+        description: Bid ID
+
+      - name: order_event_id
+        description: Order Event ID
+
+      - name: order_session_id
+        description: Order Session ID
+
+      - name: order_created_by_user_id
+        description: Order was created by User ID
+
+      - name: order_coolant_weight_in_pounds
+        description: Amount of coolant to include in the order, in pounds
+
+      - name: order_portion_errors
+        description: Order Portion Errors
+
+      - name: order_contents_last_notified_hash
+        description: Order contents last notified hash
+
+      - name: order_packing_notes
+        description: Order packing notes
+
+      - name: order_paid_at_utc
+        description: Timestamp for Order paid at (UTC)
+
+      - name: order_address_verified_at_utc
+        description: Timestamp for Order address verified at (UTC)
+
+      - name: order_portions_fulfilled
+        description: Order portions fulfilled
+
+      - name: order_purchase_postage_failed_at_utc
+        description: Timestamp for Order purchase postage failed at (UTC)
+
+      - name: order_additional_coolant_weight_in_pounds
+        description: Additional amount of weight in pounds due to coolant
+
+      - name: order_contents_last_notified_at_utc
+        description: Timestamp content last notified (UTC)
+
+      - name: order_prepick_at_utc
+        description: Timestamp for prepick (UTC)
+
+      - name: order_updated_address_at_utc
+        description: Timestamp for updated address (UTC)
+
+      - name: order_handling_fee_usd
+        description: Handling fee in USD
+
+      - name: order_confirmation_sent_at_utc
+        description: Timestamp for confirmation sent (UTC)
+
+      - name: order_processing_fee_usd
+        description: Order processing fee in USD
+
+      - name: order_delivery_city
+        description: Order delivery city
+
+      - name: order_original_url
+        description: Order original URL
+
+      - name: order_cancelled_at_utc
+        description: Timestamp for order cancellation
+
+      - name: order_confirmed_at_utc
+        description: Timestamp for order confirmation
+
+      - name: order_first_stuck_at_utc
+        description: Timestamp for Order first stuck
+
+      - name: order_print_pick_label_last_attempted_at_utc
+        description: Timestamp for print pick label last attempted
+
+      - name: order_delivery_locked_at_utc
+        description: Timestamp for delivery locked
+
+      - name: order_picked_up_at_utc
+        description: Timestamp for Order picked up
+
+      - name: order_notes_fulfilled_at_utc
+        description: Timestamp for notes fulfilled
+
+      - name: order_shipping_fee_usd
+        description: Shipping fee in USD
+
+      - name: order_notes_updated_at_utc
+        description: Timestamp for Order notes updated (UTC)
+
+      - name: order_scheduled_arrival_date_utc
+        description: Timestamp for scheduled arrival date (UTC)
+
+      - name: order_print_prepick_label_last_attempted_at_utc
+        description: Timestamp for print prepick label last attempted (UTC)
+
+      - name: order_force_postage_carrier
+        description: The postage carrier that must be used
+
+      - name: order_scheduled_fulfillment_date_utc
+        description: Timestamp for scheduled fulfillment date (UTC)
+
+      - name: order_total_price_usd
+        description: Order total price in USD
+
+      - name: order_picked_at_utc
+        description: Timestamp for Order picked
+
+      - name: order_selected_delivery_method
+        description: Order selected delivery method
+
+      - name: order_override_postage_service
+        description: Order override postage service
+
+      - name: order_token
+        description: Order Token
+
+      - name: order_total_discount_usd
+        description: Total discount in USD
+
+      - name: order_day_out_notified_at_utc
+        description: Timestamp for day out notified (UTC)
+
+      - name: order_print_last_attempted_at_utc
+        description: Timestamp for print last attempted (UTC)
+
+      - name: order_marked_eligible_to_prepack_at_utc
+        description: Timestamp for Order marked eligible to prepack
+
+      - name: order_packing_notes_updated_at_utc
+        description: Timestamp for packing notes updated (UTC)
+
+      - name: order_customer_viewed_at_utc
+        description: Timestamp for customer viewed
+
+      - name: order_created_at_utc
+        description: Timestamp for Order created (UTC)
+
+      - name: order_current_state
+        description: The current state of the Order
+
+      - name: order_delivery_postal_code
+        description: Order delivery Postal Code
+
+      - name: order_notes
+        description: Order notes
+
+      - name: order_delivery_latitude
+        description: Order delivery latitude
+
+      - name: order_print_handwritten_note_last_attempted_at_utc
+        description: Timestamp for print handwritten note last attempted (UTC)
+
+      - name: order_identifier
+        description: Order identifier (different than order_id)
+
+      - name: order_confirmation_token
+        description: Order confirmation token
+
+      - name: order_sales_tax_usd
+        description: Order sales tax in USD
+
+      - name: order_override_postage_carrier
+        description: Order override postage carrier
+
+      - name: order_delivery_name
+        description: The name of the person being delivered to
+
+      - name: order_packing_override_at_utc
+        description: Timestamp for packing override (UTC)
+
+      - name: order_last_changed_at_utc
+        description: Timestamp for last changed (UTC)
+
+      - name: order_checkout_completed_at_utc
+        description: Timestamp for checkout completed (UTC)
+
+      - name: order_type
+        description: Order type
+
+      - name: where_order_placed
+        description: Where order placed
+
+      - name: order_shipments_computed_at_utc
+        description: Timestamp for shipments computed (UTC)
+
+      - name: order_next_box_notified_at_utc
+        description: Timestamp for next box notified (UTC)
+
+      - name: order_logged_google_analytics_conversion_at_utc
+        description: Timestamp for logged google analytics conversion (UTC)
+
+      - name: order_delivery_street_address_1
+        description: Order delivery street address line 1
+
+      - name: order_delivery_street_address_2
+        description: Order delivery street address line 2
+
+      - name: order_update_payment_and_shipping_last_attempted_at_utc
+        description: Timestamp for update payment and shipping last attempted (UTC)
+
+      - name: order_updated_at_utc
+        description: Timestamp for Order updated
+
+      - name: order_scheduled_fulfillment_date_override_note
+        description: Order scheduled fulfillment date override note
+
+      - name: order_bids_count
+        description: Order bids count
+
+      - name: order_postage_label_note
+        description: Order postage label note
+
+      - name: order_packed_at_utc
+        description: Timestamp for Order packed
+
+      - name: order_delivery_state
+        description: Order delivery State
+
+      - name: order_total_weight_in_pounds
+        description: Order total weight in pounds
+
+      - name: order_delivery_longitude
+        description: Order delivery longitude
+
+      - name: order_updated_payment_info_at_utc
+        description: Timestamp for updated payment info (UTC)
+
+      - name: order_delivery_elevation
+        description: Order delivery elevation
+
+      - name: order_set_at_utc
+        description: Timestamp for Order set (UTC)
+
+      - name: order_scheduled_fulfillment_date_override_by_user_id
+        description: Order scehduled fulfillment date override by User ID
+
+      - name: order_delivery_address_is_residential
+        description: Is the delivery to a residential address
+
+      - name: order_easypost_will_skip_address_verification
+        description: Will Easypost skip address verification
+
+      - name: order_should_silence_delivery_notifications
+        description: Should delivery notifications be silenced
+
+      - name: is_first_order_ever
+        description: Is this the customer's first order ever
+
+      - name: order_should_ignore_weather_alerts
+        description: Should weather alerts be ignored
+
+      - name: order_easypost_requires_signature
+        description: Should Easypost require signature
+
+      - name: order_use_as_default_address
+        description: Should the address be used as a default address
+
+      - name: is_recurring
+        description: Is this Order recurring
+
+      - name: order_earliest_to_charge_at_utc
+        description: Timestamp for earliest to charge (UTC)
+
+      - name: stripe_card_id
+        description: Stripe card ID
+
+      - name: stripe_card_country
+        description: Stripe card country
+
+      - name: stripe_charge_id
+        description: Stripe charge ID
+
+      - name: stripe_failure_message
+        description: Stripe failure message
+
+      - name: stripe_card_exp_year
+        description: Stripe card expiration year
+
+      - name: stripe_charge_attempted_at_utc
+        description: Timestamp for Stripe charge attempted (UTC)
+
+      - name: stripe_card_zip
+        description: Stripe card zip code
+
+      - name: stripe_card_brand
+        description: Stripe card brand
+
+      - name: stripe_card_exp_month
+        description: Stripe card expiration month
+
+      - name: stripe_card_id_last_updated_at_utc
+        description: Timestamp for Stripe card last updated (UTC)
+
+      - name: stripe_card_fingerprint
+        description: Stripe card fingerprint
+
+      - name: stripe_failure_code
+        description: Stripe failure code
+
+      - name: stripe_card_funding
+        description: Stripe card funding
+
+      - name: stripe_card_last4
+        description: Stripe card last 4 digits
