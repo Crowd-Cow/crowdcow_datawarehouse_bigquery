@@ -1,8 +1,4 @@
-{{
-  config(
-    tags=["stage"]
-  )
-}}
+
 
 with source as (
 
