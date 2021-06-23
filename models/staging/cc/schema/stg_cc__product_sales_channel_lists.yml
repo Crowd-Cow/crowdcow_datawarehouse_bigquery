@@ -6,6 +6,9 @@ models:
     columns:
       - name: product_sales_channel_lists_id
         description: ID for the product sales channel lists table
+        tests: 
+          - not_null
+          - unique
 
       - name: product_id
         description: Business ID for the product
