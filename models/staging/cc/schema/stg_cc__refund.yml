@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: stg_cc__refund
+    description: "Staging model for refunds"
+    columns:
+      - name: refund_id
+        description: "Refund ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: refund_reason
+        description: "Refund reason"
+
+      - name: stripe_balance_transaction_id
+        description: "Corresponding Stripe balance transaction ID"
+
+      - name: stripe_refund_id
+        description: "Corresponding Stripe refund ID"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created UTC"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated UTC"
+
+      - name: refund_created_at_utc
+        description: "Timestamp for when the refund was created UTC"
+
+      - name: stripe_charge_id
+        description: "Corresponding Stripe charge ID"
+
+      - name: order_id
+        description: "Order ID"
+
+      - name: refund_amount_usd
+        description: "Refund amount in USD"
+
