@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: stg_cc__product_sales_channel_lists
+    description: ""
+    columns:
+      - name: product_sales_channel_lists_id
+        description: ID for the product sales channel lists table
+
+      - name: product_id
+        description: Business ID for the product
+
+      - name: created_at_utc
+        description: Timestamp product was created in UTC
+
+      - name: updated_at_utc
+        description: Timestamp product was updated in UTC
+
+      - name: is_website
+        description: Whether or not a product is on the website
+
+      - name: is_google_feed
+        description: Whether or not a product is in google feed
+
+      - name: is_wholesale
+        description: Whether or not a product is wholesale
+
+      - name: is_clearance
+        description: Whether or not a product is a clearance product
+
+      - name: is_add_on
+        description: Whether or not a product is an add on product
+
+      - name: is_subscription
+        description: Whether or not a product is a subscription product
+
+      - name: _fivetran_synced
+        description: Fivetran metadata field
+
+      - name: _fivetran_deleted
+        description: Fivetran metadata field
