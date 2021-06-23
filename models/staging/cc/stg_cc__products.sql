@@ -20,7 +20,7 @@ renamed as (
   , canonical_product_id
   , stackable as is_stackable
   , {{ clean_strings('subtype') }} as product_subtype
-  , token as product_token
+  , {{ clean_strings('token') }} as product_token
   , archived_at as archived_at_utc
   , {{ cents_to_usd('price_in_cents') }} as price_in_usd
   , multifarm as is_multifarm
