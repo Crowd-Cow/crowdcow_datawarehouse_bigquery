@@ -1,0 +1,96 @@
+version: 2
+
+models:
+  - name: stg_cc__order_statement
+    description: "Staging model for order statements"
+    columns:
+      - name: order_statement_id
+        description: "Order statement ID"
+        tests:
+            - unique
+            - not_null
+
+      - name: marketing_insert_cost_usd
+        description: "Cost of marketing inserts in USD"
+
+      - name: net_revenue_usd
+        description: "Order net revenue in USD"
+
+      - name: contribution_margin_before_marketing_usd
+        description: "Order contribution margin before marketing costs in USD"
+
+      - name: contribution_margin_before_marketing_percentage
+        description: "Order contribution margin before marketing costs percentage"
+
+      - name: freight_out_usd
+        description: "Freight out cost in USD"
+
+      - name: net_revenue_percentage
+        description: "Order net revenue percentage"
+
+      - name: shipments_count
+        description: "Count of number of shipments"
+
+      - name: product_revenue_usd
+        description: "Product revenue in USD"
+
+      - name: total_payments_usd
+        description: "Total payment in USD"
+
+      - name: refund_amount_usd
+        description: "Refund amount in USD"
+
+      - name: product_cost_usd
+        description: "Product cost in USd"
+
+      - name: product_margin_percentage
+        description: "Product margin percentage"
+
+      - name: line_item_count
+        description: "Order line item count"
+
+      - name: fulfillment_cost_usd
+        description: "Fulfillment cost in USD"
+
+      - name: total_discount_amount_usd
+        description: "Total discount amount in USD"
+
+      - name: payment_processing_amount_usd
+        description: "Payment processing amount in USD"
+
+      - name: product_margin_usd
+        description: "Product margin in USD"
+
+      - name: order_id
+        description: "Order ID"
+
+      - name: customer_service_cost_usd
+        description: "Customer service cost in USD"
+
+      - name: created_at_utc
+        description: "Timestamp of when the record was created UTC"
+
+      - name: gross_revenue_usd
+        description: "Gross revenue in USd"
+
+      - name: contribution_margin_percentage
+        description: "Contribution margin percentage"
+
+      - name: gross_margin_usd
+        description: "Gross margin in USD"
+
+      - name: gross_margin_percentage
+        description: "Gross margin percentage"
+
+      - name: freight_revenue_usd
+        description: "Freight revenue in USD"
+
+      - name: contribution_margin_usd
+        description: "Contribution margin in USD"
+
+      - name: total_discounts_percentage
+        description: "Total discounts percentage"
+
+      - name: updated_at_utc
+        description: "Timestamp of when the record was updated UTC"
+
