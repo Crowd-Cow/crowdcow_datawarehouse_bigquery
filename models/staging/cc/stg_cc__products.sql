@@ -39,7 +39,7 @@ renamed as (
   , {{ clean_strings('loyalty_reward_message') }} as loyalty_reward_message
   , {{ clean_strings('automated_highlight_text_type') }} as automated_highlight_text_type
   , always_available as is_always_available
-  , is_alacarte
+  , alacarte as is_alacarte
 
     from source 
 
