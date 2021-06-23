@@ -6,6 +6,9 @@ models:
     columns:
       - name: product_id
         description: Business ID for the product
+        tests: 
+          - not_null
+          - unique
 
       - name: product_title
         description: Title of the product
@@ -98,7 +101,7 @@ models:
         description: Whether or not the product is always available
 
       - name: is_alacarte
-        description: 
+        description: Whether or not a product is an a la carte product or not
 
       - name: _fivetran_synced
         description: Fivetran generated metadata timestamp UTC
