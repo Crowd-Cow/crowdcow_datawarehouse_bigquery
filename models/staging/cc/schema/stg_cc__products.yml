@@ -102,9 +102,3 @@ models:
 
       - name: is_alacarte
         description: Whether or not a product is an a la carte product or not
-
-      - name: _fivetran_synced
-        description: Fivetran generated metadata timestamp UTC
-
-      - name: _fivetran_deleted
-        description: Fivetran generated metadata field 

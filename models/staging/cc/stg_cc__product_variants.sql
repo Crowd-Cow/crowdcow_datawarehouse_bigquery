@@ -23,8 +23,6 @@ renamed as (
       , image_url as product_variant_image_url
       , can_subscribe_to_variant 
       , always_available as is_product_variant_always_available
-      , _fivetran_deleted
-      , _fivetran_synced 
 
     from source
 

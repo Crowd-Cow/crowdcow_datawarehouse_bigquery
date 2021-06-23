@@ -18,8 +18,6 @@ renamed as (
     , clearance as is_clearance
     , add_on as is_add_on
     , subscription as is_subscription
-    , _fivetran_synced
-    , _fivetran_deleted
 
   from source
 

@@ -40,8 +40,6 @@ renamed as (
   , automated_highlight_text_type
   , always_available as is_always_available
   , is_alacarte
-  , _fivetran_synced
-  , _fivetran_deleted
 
     from source 
 

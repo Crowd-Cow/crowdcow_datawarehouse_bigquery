@@ -33,9 +33,3 @@ models:
 
       - name: is_subscription
         description: Whether or not a product is a subscription product
-
-      - name: _fivetran_synced
-        description: Fivetran metadata field
-
-      - name: _fivetran_deleted
-        description: Fivetran metadata field
