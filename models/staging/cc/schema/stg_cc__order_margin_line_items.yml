@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_cc__order_margin_line_item
+  - name: stg_cc__order_margin_line_items
     description: "Staging model for order margin line items"
     columns:
       - name: order_margin_id

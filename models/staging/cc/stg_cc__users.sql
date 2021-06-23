@@ -116,7 +116,7 @@ renamed as (
         ,test_bucket as user_test_bucket
         ,{{ clean_strings('opt_out_list') }} as user_opt_out_list
         ,banned_from_referrals as user_is_banned_from_referrals
-        ,was_email_lead as user_is_email_lead
+        ,was_email_lead as user_was_email_lead
         ,opted_in_to_emails as user_has_opted_in_to_emails
 
     from source

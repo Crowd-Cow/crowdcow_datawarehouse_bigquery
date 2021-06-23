@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_cc__subscription
+  - name: stg_cc__subscriptions
     description: "Staging model for subscriptions"
     columns:
       - name: subscription_id

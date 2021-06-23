@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_cc__order_statement
+  - name: stg_cc__order_statements
     description: "Staging model for order statements"
     columns:
       - name: order_statement_id

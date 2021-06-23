@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_cc__gift_card
+  - name: stg_cc__gift_cards
     description: "Stagind model for gift cards"
     columns:
       - name: gift_card_id

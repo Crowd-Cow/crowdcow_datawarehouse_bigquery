@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_cc__custom_subscription_item
+  - name: stg_cc__custom_subscription_items
     description: "Staging model for custom subscription items"
     columns:
       - name: custom_subscription_id

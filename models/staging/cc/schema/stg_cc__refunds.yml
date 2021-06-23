@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_cc__refund
+  - name: stg_cc__refunds
     description: "Staging model for refunds"
     columns:
       - name: refund_id

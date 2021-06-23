@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_cc__user
+  - name: stg_cc__users
     description: "Staging model for users"
     columns:
       - name: user_id
@@ -334,7 +334,7 @@ models:
       - name: user_is_banned_from_referrals
         description: "Boolean indicating if a user is banned from referrals"
 
-      - name: user_is_email_lead
+      - name: user_was_email_lead
         description: "Boolean indicating if a user was an email lead"
 
       - name: user_has_opted_in_to_emails
