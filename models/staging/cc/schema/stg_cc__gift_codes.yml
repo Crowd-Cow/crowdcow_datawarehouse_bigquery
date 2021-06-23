@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_cc__gift_code
+  - name: stg_cc__gift_codes
     description: "Staging model for gift codes"
     columns:
       - name: gift_code_id
