@@ -12,7 +12,7 @@ renamed as (
       , {{ cents_to_usd('min_product_bundle_value_in_cents') }} as min_product_bundle_value_usd
       , fc_id 
       , {{ clean_strings('highlight_text') }} as product_variant_highlight_text
-      , strike_through_percent_off
+      , {{ convert_percent('strike_through_percent_off') }} as strike_through_percent_off
       , {{ clean_strings('description') }} as description
       , created_at as created_at_utc
       , {{ cents_to_usd('max_product_bundle_value_in_cents') }} as max_product_bundle_value_usd

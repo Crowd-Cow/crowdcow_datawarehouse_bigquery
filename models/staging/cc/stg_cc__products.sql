@@ -26,7 +26,7 @@ renamed as (
   , multifarm as is_multifarm
   , availability_alert_threshold
   , {{ clean_strings('highlight_text') }} as product_highlight_text
-  , strike_through_percent_off
+  , {{ convert_percent('strike_through_percent_off') }} strike_through_percent_off
   , new_customers_only as is_new_customers_only
   , limit_one_per_order as is_limit_one_per_order
   , {{ cents_to_usd('min_product_bundle_value_in_cents') }} as min_product_bundle_value_in_usd 
