@@ -1,0 +1,81 @@
+version: 2
+
+models:
+  - name: stg_cc__event_visits
+    description: "Staging model for site visit events"
+    columns:
+      - name: visit_id
+        description: "Visit ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: visit_browser
+        description: "Visit browser"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated UTC"
+
+      - name: visit_city
+        description: "Visit city"
+
+      - name: utm_content
+        description: "UTM content"
+
+      - name: visit_token
+        description: "Visit token"
+
+      - name: visit_ip
+        description: "Visit IP address"
+
+      - name: utm_campaign
+        description: "UTM campaign"
+
+      - name: visit_landing_page
+        description: "Visit landing page"
+
+      - name: visit_os
+        description: "Visit OS"
+
+      - name: utm_term
+        description: "UTM Term"
+
+      - name: utm_medium
+        description: "UTM medium"
+
+      - name: started_at_utc
+        description: "Timestamp for when the visit started UTC"
+
+      - name: visit_referrer
+        description: "Visit referrer"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: visit_country
+        description: "Visit country"
+
+      - name: visit_search_keyword
+        description: "Visit search keyword"
+
+      - name: utm_source
+        description: "UTM source"
+
+      - name: visitor_token
+        description: "Visitor token"
+
+      - name: visit_device_type
+        description: "Visit device type"
+
+      - name: visit_referring_domain
+        description: "Visit referring domain"
+
+      - name: visit_region
+        description: "Visit region"
+
+      - name: visit_user_agent
+        description: "Visit agent"
+
+      - name: is_wall_displayed
+        description: "Boolean that indicates if a wall was displayed"
+
