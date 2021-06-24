@@ -1,5 +1,3 @@
-
-
 with source as (
 
   select * from  {{ source('cc', 'bid_items') }} 
@@ -43,4 +41,3 @@ renamed as (
 )
 
 select * from renamed
-

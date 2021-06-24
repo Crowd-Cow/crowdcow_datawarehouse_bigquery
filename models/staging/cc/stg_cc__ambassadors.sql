@@ -1,9 +1,3 @@
-{{
-  config(
-    tags=["stage"]
-  )
-}}
-
 with source as (
 
     select * from {{ source('cc', 'ambassadors') }}
