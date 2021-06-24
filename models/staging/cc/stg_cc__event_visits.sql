@@ -1,3 +1,9 @@
+{{
+  config(
+    tags=["events"]
+  )
+}}
+
 with source as (
 
     select * from {{ source('cc', 'ahoy_visits') }}
