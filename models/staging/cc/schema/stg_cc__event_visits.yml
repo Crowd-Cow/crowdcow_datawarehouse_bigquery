@@ -34,6 +34,9 @@ models:
       - name: visit_landing_page
         description: "Visit landing page"
 
+      - name: is_homepage_landing
+        description: "Boolean indicating if the landing page was the Crowd Cow homepage"
+
       - name: visit_os
         description: "Visit OS"
 

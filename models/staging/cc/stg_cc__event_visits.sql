@@ -17,6 +17,13 @@ renamed as (
         ,{{ clean_strings('ip') }} as visit_ip
         ,{{ clean_strings('utm_campaign') }} as utm_campaign
         ,{{ clean_strings('landing_page') }} as visit_landing_page
+
+        ,case
+            when parse_url(landing_page):host::text = 'www.crowdcow.com' 
+                and (parse_url(landing_page):path::text = '' or parse_url(landing_page):path::text = 'l') then true
+            else false
+         end as is_homepage_landing
+
         ,{{ clean_strings('os') }} as visit_os
         ,{{ clean_strings('utm_term') }} as utm_term
         ,{{ clean_strings('utm_medium') }} as utm_medium
