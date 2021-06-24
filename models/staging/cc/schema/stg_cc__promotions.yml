@@ -6,6 +6,9 @@ models:
     columns:
       - name: promotion_id
         description: Promotion ID
+        tests:
+            - unique
+            - not_null
 
       - name: promotion_type
         description: Promotion type

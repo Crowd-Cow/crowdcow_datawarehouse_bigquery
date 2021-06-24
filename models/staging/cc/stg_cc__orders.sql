@@ -108,20 +108,20 @@ renamed as (
     ,use_as_default_address as order_use_as_default_address
     ,recurring as is_recurring
     ,earliest_to_charge_at as order_earliest_to_charge_at_utc
-    ,stripe_card_id
+    ,stripe_card_id -- Not converting to uppercase because the difference between upper and lower is significant in this ID (ex. card_0GO8Q074pVzbTfjzcrzaQJhY)
     ,{{ clean_strings('stripe_card_country') }} as stripe_card_country
     ,stripe_charge_id -- Not converting to uppercase because the difference between upper and lower is significant in this ID (ex. ch_0IvyC774pVzbTfjziW0s9lUS)
     ,{{ clean_strings('stripe_failure_message') }} as stripe_failure_message
     ,stripe_card_exp_year
     ,stripe_charge_attempted_at as stripe_charge_attempted_at_utc
-    ,stripe_card_zip
+    ,{{ clean_strings('stripe_card_zip') }} as stripe_card_zip
     ,{{ clean_strings('stripe_card_brand') }} as stripe_card_brand
     ,stripe_card_exp_month
     ,stripe_card_id_last_updated_at as stripe_card_id_last_updated_at_utc
     ,stripe_card_fingerprint -- Not converting to uppercase because the difference between upper and lower is significant in this fingerprint (ex. l3wrJ08V0t1SSecS)
     ,{{ clean_strings('stripe_failure_code') }} as stripe_failure_code
     ,{{ clean_strings('stripe_card_funding') }} as stripe_card_funding
-    ,stripe_card_last4
+    ,stripe_card_last4::int as stripe_card_last4
 
   from source
 
