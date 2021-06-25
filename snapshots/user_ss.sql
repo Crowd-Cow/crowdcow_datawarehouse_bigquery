@@ -2,7 +2,7 @@
 
 {{
     config(
-      target_database='bi_snapshots',
+      target_database='raw', 
       target_schema='snapshots',
       unique_key='id',
 
