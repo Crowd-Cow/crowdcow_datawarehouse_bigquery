@@ -94,7 +94,7 @@ event_visits as ( select * from {{ ref('stg_cc__event_visits') }} )
         visit_id
         ,user_id
         ,event_id
-        ,'click_navigation' as event_name
+        ,'click_navigation: ' || navigation_label as event_name
         ,occurred_at_utc
     from stg_cc__event_click_navigation
 )
