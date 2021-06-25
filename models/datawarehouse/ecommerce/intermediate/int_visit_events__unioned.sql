@@ -14,6 +14,7 @@ event_visits as ( select * from {{ ref('stg_cc__event_visits') }} )
 ,event_page_view as ( select * from {{ ref('stg_cc__event_page_view') }} )
 ,event_pdp_added_to_cart as ( select * from {{ ref('stg_cc__event_pdp_added_to_cart') }} )
 ,event_viewed_product as ( select * from {{ ref('stg_cc__event_viewed_product') }} )
+,event_click_navigation as ( select * from {{ ref('stg_cc__event_click_navigation') }} )
 
 ,visit_events as (
     select
@@ -88,6 +89,15 @@ event_visits as ( select * from {{ ref('stg_cc__event_visits') }} )
         ,occurred_at_utc
     from stg_cc__event_viewed_product
 )
+,click_navigation as (
+    select
+        visit_id
+        ,user_id
+        ,event_id
+        ,'click_navigation' as event_name
+        ,occurred_at_utc
+    from stg_cc__event_click_navigation
+)
 ,union_events as (
     select * from visit_events
     union all
@@ -104,6 +114,8 @@ event_visits as ( select * from {{ ref('stg_cc__event_visits') }} )
     select * from pdp_added_to_cart
     union all
     select * from viewed_product
+    union all
+    select * from click_navigation
 )
 
 select * from union_events
