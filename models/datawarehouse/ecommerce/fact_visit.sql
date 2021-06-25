@@ -9,7 +9,6 @@ base as (
         *
     from all_events
     where event_name = 'visit_start'
-        and occurred_at_utc >= '2021-01-01'
 
 ),
 
@@ -26,7 +25,7 @@ aggregate_events as (
 
     select
         visit_id
-        ,listagg(event_name,' | ') within group (order by event_id, occurred_at_utc)::variant as visit_event_sequence
+        ,array_agg(event_name) within group (order by event_id, occurred_at_utc)::variant as visit_event_sequence
     from small_events
     group by 1
 

@@ -41,5 +41,4 @@ models:
         ecommerce:
             intermediate:
                 +schema: intermediate
-                +snowflake_warehouse: "MEDIUM"
         
