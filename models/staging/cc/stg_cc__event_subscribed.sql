@@ -1,7 +1,6 @@
 {{
   config(
-    tags=["events"],
-    enabled=false
+    tags=["events"]
   )
 }}
 
