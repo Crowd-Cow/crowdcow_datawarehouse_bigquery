@@ -1,6 +1,7 @@
 {{
   config(
-    tags = ["intermediate"]
+    tags = ["intermediate"],
+    snowflake_warehouse = 'TRANSFORMING_M'
   )
 }}
 
@@ -14,8 +15,9 @@ visit_events as (
         ,'visit_start' as event_name
         ,started_at_utc as occurred_at_utc
     from {{ ref('stg_cc__event_visits') }}
-)
-,checkout_initiated as (
+),
+
+checkout_initiated as (
     select
         visit_id
         ,user_id
@@ -23,8 +25,9 @@ visit_events as (
         ,'checkout_initiated' as event_name
         ,occurred_at_utc
     from {{ ref('stg_cc__event_checkout_initiated') }}
-)
-,checkout_payment_selected as (
+),
+
+checkout_payment_selected as (
     select
         visit_id
         ,user_id
@@ -32,8 +35,9 @@ visit_events as (
         ,'checkout_payment_selected' as event_name
         ,occurred_at_utc
     from {{ ref('stg_cc__event_checkout_payment_selected') }}
-)
-,order_complete as (
+),
+
+order_complete as (
     select
         visit_id
         ,user_id
@@ -41,8 +45,9 @@ visit_events as (
         ,'order_complete' as event_name
         ,occurred_at_utc
     from {{ ref('stg_cc__event_order_complete') }}
-)
-,order_paid as (
+),
+
+order_paid as (
     select
         visit_id
         ,user_id
@@ -50,8 +55,9 @@ visit_events as (
         ,'order_paid' as event_name
         ,occurred_at_utc
     from {{ ref('stg_cc__event_order_paid') }} 
-)
-,page_view as (
+),
+
+page_view as (
     select
         visit_id
         ,user_id
@@ -60,8 +66,9 @@ visit_events as (
             split_part(parse_url(page_viewed_url):path::text,'/',1) as event_name
         ,occurred_at_utc
     from {{ ref('stg_cc__event_page_view') }}
-)
-,pdp_added_to_cart as (
+),
+
+pdp_added_to_cart as (
     select
         visit_id
         ,user_id
@@ -69,8 +76,9 @@ visit_events as (
         ,'pdp_added_to_cart' as event_name
         ,occurred_at_utc
     from {{ ref('stg_cc__event_pdp_added_to_cart') }} 
-)
-,viewed_product as (
+),
+
+viewed_product as (
     select
         visit_id
         ,user_id
@@ -78,8 +86,9 @@ visit_events as (
         ,'viewed_product: ' || bid_item_name as event_name
         ,occurred_at_utc
     from {{ ref('stg_cc__event_viewed_product') }}
-)
-,click_navigation as (
+),
+
+click_navigation as (
     select
         visit_id
         ,user_id
@@ -87,8 +96,9 @@ visit_events as (
         ,'click_navigation: ' || navigation_label as event_name
         ,occurred_at_utc
     from {{ ref('stg_cc__event_click_navigation') }}
-)
-,union_events as (
+),
+
+union_events as (
     select * from visit_events
     union all
     select * from checkout_initiated
