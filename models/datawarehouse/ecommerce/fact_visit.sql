@@ -25,7 +25,7 @@ aggregate_events as (
 
     select
         visit_id
-        ,array_agg(event_name) within group (order by event_id, occurred_at_utc)::variant as visit_event_sequence
+        ,array_agg(event_name) within group (order by occurred_at_utc, event_id)::variant as visit_event_sequence
     from small_events
     group by 1
 
