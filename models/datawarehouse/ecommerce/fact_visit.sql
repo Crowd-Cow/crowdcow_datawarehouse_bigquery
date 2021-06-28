@@ -40,22 +40,7 @@ joined_visits as (
         ,visits.visit_os
         ,visits.visit_device_type
         ,visits.visit_user_agent
-
-        ,case
-            when /* dsia.ip_address IS NOT NULL TODO: add suspicious IP logic
-                or */ visits.user_agent LIKE '%BOT%'
-                or lower(visits.user_agent) like '%CRAWL%'
-                or lower(visits.user_agent) like '%LIBRATO%'
-                or lower(visits.user_agent) like '%TWILIOPROXY%'
-                or lower(visits.user_agent) like '%YAHOOMAILPROXY%'
-                or lower(visits.user_agent) like '%SCOUTURLMONITOR%'
-                or lower(visits.user_agent) like '%FULLCONTACT%'
-                or lower(visits.user_agent) like '%IMGIX%'
-                or lower(visits.user_agent) like '%BUCK%'
-                or (visits.ip is null and visits.user_agent is null) THEN true
-            else false
-         end as is_bot
-
+        ,visits.is_bot
         ,visits.visit_referrer
         ,visits.visit_referring_domain
         ,visits.visit_search_keyword

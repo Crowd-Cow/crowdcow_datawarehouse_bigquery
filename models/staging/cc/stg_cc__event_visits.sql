@@ -23,15 +23,8 @@ renamed as (
         ,{{ clean_strings('ip') }} as visit_ip
         ,{{ clean_strings('utm_campaign') }} as utm_campaign
         ,{{ clean_strings('landing_page') }} as visit_landing_page
-
+        ,parse_url({{ clean_strings('landing_page') }}):host::text as visit_landing_page_host
         ,parse_url({{ clean_strings('landing_page') }}):path::text as visit_landing_page_path
-
-        ,case
-            when parse_url(landing_page):host::text = 'www.crowdcow.com' 
-                and (parse_url(landing_page):path::text = '' or parse_url(landing_page):path::text = 'l') then true
-            else false
-         end as is_homepage_landing
-
         ,{{ clean_strings('os') }} as visit_os
         ,{{ clean_strings('utm_term') }} as utm_term
         ,{{ clean_strings('utm_medium') }} as utm_medium
@@ -50,7 +43,61 @@ renamed as (
 
     from source
 
+),
+
+add_flags as (
+
+    select
+        visit_id
+        ,visit_browser
+        ,updated_at_utc
+        ,visit_city
+        ,utm_content
+        ,visit_token
+        ,visit_ip
+        ,utm_campaign
+        ,visit_landing_page
+        ,visit_landing_page_path
+
+        ,case
+            when visit_landing_page_host = 'WWW.CROWDCOW.COM' 
+                and visit_landing_page_path = '' or visit_landing_page_path = 'L' then true
+            else false
+         end as is_homepage_landing
+
+        ,visit_os
+        ,utm_term
+        ,utm_medium
+        ,started_at_utc
+        ,visit_referrer
+        ,user_id
+        ,visit_country
+        ,visit_search_keyword
+        ,utm_source
+        ,visitor_token
+        ,visit_device_type
+        ,visit_referring_domain
+        ,visit_region
+        ,visit_user_agent
+
+        ,case
+            when /* dsia.ip_address IS NOT NULL TODO: add suspicious IP logic
+                or */ visit_user_agent like '%BOT%'
+                or lower(visit_user_agent) like '%CRAWL%'
+                or lower(visit_user_agent) like '%LIBRATO%'
+                or lower(visit_user_agent) like '%TWILIOPROXY%'
+                or lower(visit_user_agent) like '%YAHOOMAILPROXY%'
+                or lower(visit_user_agent) like '%SCOUTURLMONITOR%'
+                or lower(visit_user_agent) like '%FULLCONTACT%'
+                or lower(visit_user_agent) like '%IMGIX%'
+                or lower(visit_user_agent) like '%BUCK%'
+                or (visit_ip is null and visit_user_agent is null) then true
+            else false
+         end as is_bot
+
+         ,is_wall_displayed
+    from renamed
 )
 
-select * from renamed
+select * from add_flags
 
