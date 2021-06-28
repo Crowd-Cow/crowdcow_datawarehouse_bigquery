@@ -45,6 +45,8 @@ base as (
     , user_is_banned_from_referrals
     , user_is_email_lead
     , user_has_opted_in_to_emails
+    , dbt_valid_to 
+    , dbt_valid_from
   from stage
 
 )
