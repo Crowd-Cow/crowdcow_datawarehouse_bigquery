@@ -41,10 +41,12 @@ joined_visits as (
         ,visits.is_wall_displayed
         ,visits.is_bot
         ,visits.is_homepage_landing
-        ,visits.did_subscribe
         ,visits.has_previous_order
         ,visits.has_previous_subscription
         ,visits.had_account_created
+        ,visits.did_subscribe
+        ,visits.did_sign_up
+        ,visits.did_complete_order
         ,visits.started_at_utc
         ,visits.updated_at_utc
         ,aggregate_events.visit_event_sequence

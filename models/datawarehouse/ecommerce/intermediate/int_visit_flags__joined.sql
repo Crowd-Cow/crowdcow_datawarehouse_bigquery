@@ -3,6 +3,8 @@ with
 visits as ( select * from {{ ref('base_cc__ahoy_visits') }} ),
 suspicious_ips as ( select * from {{ ref('stg_cc__suspicious_ips') }} ),
 subscribed as ( select * from {{ ref('stg_cc__event_subscribed') }} ),
+sign_up as ( select * from {{ ref('stg_cc__event_sign_up') }} ),
+order_complete as ( select * from {{ ref('stg_cc__event_order_complete') }} ),
 unsubscribed as ( select * from {{ ref('stg_cc__event_unsubscribed') }} ),
 orders as ( select * from {{ ref('stg_cc__orders') }} ),
 subscriptions as ( select * from {{ ref('stg_cc__subscriptions') }} ),
@@ -47,6 +49,24 @@ user_account_created as (
     group by 1
 ),
 
+user_signed_up as (
+
+    select
+        visit_id
+        ,count(distinct user_id) as total_signed_up
+    from sign_up
+    group by 1
+),
+
+order_completed as (
+
+    select
+        visit_id
+        ,count(distinct order_id) as total_order_count
+    from order_complete
+    group by 1
+),
+
 add_flags as (
 
     select
@@ -82,11 +102,6 @@ add_flags as (
             else false
          end as is_homepage_landing
 
-        ,case 
-            when subscription_visits.visit_id is not null then true
-            else false
-         end as did_subscribe
-
         ,case
             when  suspicious_ips.visit_ip is not null
                 or visits.visit_user_agent like '%BOT%'
@@ -117,12 +132,29 @@ add_flags as (
             else false
          end as had_account_created
 
+        ,case 
+            when subscription_visits.visit_id is not null then true
+            else false
+         end as did_subscribe
+
+        ,case
+            when user_signed_up.visit_id is not null then true
+            else false
+         end did_sign_up
+        
+        ,case
+            when order_completed.visit_id is not null then true
+            else false
+         end as did_complete_order
+
     from visits
         left join suspicious_ips on visits.visit_ip = suspicious_ips.visit_ip
         left join subscription_visits on visits.visit_id = subscription_visits.visit_id
         left join user_first_order on visits.user_id = user_first_order.user_id
         left join user_first_subscription on visits.user_id = user_first_subscription.user_id
         left join user_account_created on visits.user_id = user_account_created.user_id
+        left join user_signed_up on visits.visit_id = user_signed_up.visit_id
+        left join order_completed on visits.visit_id = order_completed.visit_id
 )
 
 select * from add_flags
