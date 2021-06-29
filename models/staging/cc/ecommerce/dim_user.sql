@@ -47,6 +47,7 @@ base as (
     , user_has_opted_in_to_emails
     , dbt_valid_to 
     , dbt_valid_from
+    , dbt_scd_id as user_key
   from stage
 
 )
