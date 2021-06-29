@@ -23,24 +23,28 @@ joined_visits as (
         ,visits.visit_browser
         ,visits.visit_city
         ,visits.visit_region
+        ,visits.visit_country
         ,visits.visit_ip
         ,visits.visit_os
         ,visits.visit_device_type
         ,visits.visit_user_agent
-        ,visits.is_bot
         ,visits.visit_referrer
         ,visits.visit_referring_domain
         ,visits.visit_search_keyword
         ,visits.visit_landing_page
         ,visits.visit_landing_page_path
-        ,visits.is_homepage_landing
-        ,visits.did_subscribe
         ,visits.utm_content
         ,visits.utm_campaign
         ,visits.utm_term
         ,visits.utm_medium
         ,visits.utm_source
         ,visits.is_wall_displayed
+        ,visits.is_bot
+        ,visits.is_homepage_landing
+        ,visits.did_subscribe
+        ,visits.has_previous_order
+        ,visits.has_previous_subscription
+        ,visits.had_account_created
         ,visits.started_at_utc
         ,visits.updated_at_utc
         ,aggregate_events.visit_event_sequence

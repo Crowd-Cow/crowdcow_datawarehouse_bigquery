@@ -4,6 +4,9 @@ visits as ( select * from {{ ref('base_cc__ahoy_visits') }} ),
 suspicious_ips as ( select * from {{ ref('stg_cc__suspicious_ips') }} ),
 subscribed as ( select * from {{ ref('stg_cc__event_subscribed') }} ),
 unsubscribed as ( select * from {{ ref('stg_cc__event_unsubscribed') }} ),
+orders as ( select * from {{ ref('stg_cc__orders') }} ),
+subscriptions as ( select * from {{ ref('stg_cc__subscriptions') }} ),
+users as ( select * from {{ ref('stg_cc__users') }} ),
 
 subscription_visits as (
     select 
@@ -16,19 +19,62 @@ subscription_visits as (
     having count(distinct subscribed.subscription_id) - count(distinct unsubscribed.subscription_id) > 0
 ),
 
+user_first_order as (
+
+    select
+        user_id
+        ,min(order_paid_at_utc) as first_order_date
+    from orders
+    where order_paid_at_utc is not null
+    group by 1
+),
+
+user_first_subscription as (
+
+    select 
+        user_id
+        ,min(created_at_utc) as first_subscription_date
+    from subscriptions
+    group by 1
+),
+
+user_account_created as (
+
+    select
+        user_id
+        ,min(created_at_utc) as first_creation_date
+    from users
+    group by 1
+),
+
 add_flags as (
 
     select
         visits.visit_id
-        ,visits.visit_browser
-        ,visits.updated_at_utc
-        ,visits.visit_city
-        ,visits.utm_content
+        ,visits.user_id
         ,visits.visit_token
+        ,visits.visitor_token
+        ,visits.visit_browser
+        ,visits.visit_city
+        ,visits.visit_region
+        ,visits.visit_country
         ,visits.visit_ip
-        ,visits.utm_campaign
+        ,visits.visit_os
+        ,visits.visit_device_type
+        ,visits.visit_user_agent
+        ,visits.visit_referrer
+        ,visits.visit_referring_domain
+        ,visits.visit_search_keyword
         ,visits.visit_landing_page
         ,visits.visit_landing_page_path
+        ,visits.utm_content
+        ,visits.utm_campaign
+        ,visits.utm_term
+        ,visits.utm_medium
+        ,visits.utm_source
+        ,visits.started_at_utc
+        ,visits.updated_at_utc
+        ,visits.is_wall_displayed
 
         ,case
             when visits.visit_landing_page_host = 'WWW.CROWDCOW.COM' 
@@ -40,21 +86,6 @@ add_flags as (
             when subscription_visits.visit_id is not null then true
             else false
          end as did_subscribe
-
-        ,visits.visit_os
-        ,visits.utm_term
-        ,visits.utm_medium
-        ,visits.started_at_utc
-        ,visits.visit_referrer
-        ,visits.user_id
-        ,visits.visit_country
-        ,visits.visit_search_keyword
-        ,visits.utm_source
-        ,visits.visitor_token
-        ,visits.visit_device_type
-        ,visits.visit_referring_domain
-        ,visits.visit_region
-        ,visits.visit_user_agent
 
         ,case
             when  suspicious_ips.visit_ip is not null
@@ -71,10 +102,27 @@ add_flags as (
             else false
          end as is_bot
 
-         ,visits.is_wall_displayed
+        ,case
+            when user_first_order.user_id is not null and user_first_order.first_order_date < visits.started_at_utc then true
+            else false
+         end as has_previous_order
+
+        ,case
+            when user_first_subscription.user_id is not null and user_first_subscription.first_subscription_date < visits.started_at_utc then true
+            else false
+         end as has_previous_subscription
+
+        ,case
+            when user_account_created.user_id is not null and user_account_created.first_creation_date < visits.started_at_utc then true
+            else false
+         end as had_account_created
+
     from visits
         left join suspicious_ips on visits.visit_ip = suspicious_ips.visit_ip
         left join subscription_visits on visits.visit_id = subscription_visits.visit_id
+        left join user_first_order on visits.user_id = user_first_order.user_id
+        left join user_first_subscription on visits.user_id = user_first_subscription.user_id
+        left join user_account_created on visits.user_id = user_account_created.user_id
 )
 
 select * from add_flags
