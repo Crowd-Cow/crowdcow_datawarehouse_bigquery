@@ -14,7 +14,7 @@ visit_events as (
         ,0 as event_id
         ,'visit_start' as event_name
         ,started_at_utc as occurred_at_utc
-    from {{ ref('stg_cc__event_visits') }}
+    from {{ ref('base_cc__ahoy_visits') }}
 ),
 
 checkout_initiated as (

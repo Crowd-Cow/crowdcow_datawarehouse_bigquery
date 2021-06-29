@@ -35,6 +35,8 @@ models:
   cc_datawarehouse:
     staging:
         +materialized: view
+        reference:
+            +materialized: table
     datawarehouse:
         +materialized: table
         +schema: datawarehouse

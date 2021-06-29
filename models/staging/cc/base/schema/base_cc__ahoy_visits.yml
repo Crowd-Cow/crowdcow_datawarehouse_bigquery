@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_cc__event_visits
+  - name: base_cc__ahoy_visits
     description: "Staging model for site visit events"
     columns:
       - name: visit_id
