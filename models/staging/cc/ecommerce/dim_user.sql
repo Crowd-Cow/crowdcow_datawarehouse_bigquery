@@ -8,11 +8,13 @@ base as (
 
   select 
     user_id 
-    , case 
-        when user_type = 'C' then 'CUSTOMER' 
-        when user_type = 'P' then 'PLACEHOLDER' 
-        else user_type 
-        end as user_type
+    , case
+        when NULLIF(TRIM(u.roles_for_access), '') IS NOT NULL THEN 'EMPLOYEE'
+        when LOWER(u.email) LIKE '%@crowdcow.com%' THEN 'INTERNAL'
+        when LOWER(TRIM(u.user_type)) = 'c' THEN 'CUSTOMER'
+        when LOWER(TRIM(u.user_type)) = 'p' THEN 'PROSPECT'
+        else 'OTHER'
+      end as user_type   
     , user_email 
     , user_gender
     , user_last_geocoded_address
