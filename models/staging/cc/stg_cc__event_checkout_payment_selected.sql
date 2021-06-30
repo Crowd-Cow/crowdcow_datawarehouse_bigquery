@@ -17,6 +17,7 @@ event_checkout_payment_selected as (
     ,visit_id
     ,occurred_at_utc
     ,user_id
+    ,is_member
   from 
     base
   where 
