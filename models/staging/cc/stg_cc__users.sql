@@ -8,6 +8,13 @@ renamed as (
 
     select
         id as user_id
+        , case
+            when nullif(trim(u.roles_for_access), '') is not null then 'EMPLOYEE'
+            when lower(u.email) LIKE '%@crowdcow.com%' then 'INTERNAL'
+            when lower(trim(u.user_type)) = 'c' then 'CUSTOMER'
+            when lower(trim(u.user_type)) = 'p' then 'PROSPECT'
+            else 'OTHER'
+        end as user_type
         ,{{ clean_strings('user_type') }} as user_type
         ,{{ clean_strings('email') }} as user_email
         ,{{ clean_strings('gender') }} as user_gender
