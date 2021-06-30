@@ -8,7 +8,7 @@ renamed as (
 
     select
         id as subscription_id
-        ,created_at as created_at_utc
+        ,created_at as subscription_created_at_utc
         ,{{ clean_strings('subscription_type') }} as subscription_type
         ,{{ clean_strings('delivery_name') }} as delivery_name
         ,{{ clean_strings('delivery_street_address_1') }} as delivery_street_address_1

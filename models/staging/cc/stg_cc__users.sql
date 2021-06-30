@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ source('cc', 'users') }}
+    select * from {{ ref('users_ss') }}
 
 ),
 
@@ -8,6 +8,13 @@ renamed as (
 
     select
         id as user_id
+        , case
+            when nullif(trim(roles_for_access), '') is not null then 'EMPLOYEE'
+            when lower(email) LIKE '%@crowdcow.com%' then 'INTERNAL'
+            when lower(trim(user_type)) = 'c' then 'CUSTOMER'
+            when lower(trim(user_type)) = 'p' then 'PROSPECT'
+            else 'OTHER'
+        end as user_type
         ,{{ clean_strings('user_type') }} as user_type
         ,{{ clean_strings('email') }} as user_email
         ,{{ clean_strings('gender') }} as user_gender
@@ -118,7 +125,9 @@ renamed as (
         ,banned_from_referrals as user_is_banned_from_referrals
         ,was_email_lead as user_was_email_lead
         ,opted_in_to_emails as user_has_opted_in_to_emails
-
+        ,dbt_valid_to 
+        ,dbt_valid_from
+        ,dbt_scd_id as user_key
     from source
 
 )
