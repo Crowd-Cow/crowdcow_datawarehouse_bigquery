@@ -3,13 +3,22 @@ with
 all_events as ( select * from {{ ref('int_visit_events__unioned') }} ),
 visits as ( select * from {{ ref('int_visit_flags__joined') }} ),
 
+find_user_id as (
+
+    select 
+        *
+        ,last_value(user_id) over(partition by visit_id order by occurred_at_utc, event_id) as last_user_id
+    from all_events
+),
+
 aggregate_events as (
 
     select
         visit_id
+        ,last_user_id as user_id
         ,array_agg(event_name) within group (order by occurred_at_utc, event_id)::variant as visit_event_sequence
-    from all_events
-    group by 1
+    from find_user_id
+    group by 1,2
 
 ),
 
@@ -17,7 +26,7 @@ joined_visits as (
 
     select 
         visits.visit_id
-        ,visits.user_id
+        ,coalesce(visits.user_id,aggregate_events.user_id) as user_id
         ,visits.visit_token
         ,visits.visitor_token
         ,visits.visit_browser
