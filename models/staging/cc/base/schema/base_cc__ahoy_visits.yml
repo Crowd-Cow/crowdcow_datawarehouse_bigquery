@@ -82,9 +82,6 @@ models:
       - name: visit_user_agent
         description: "Visit agent"
 
-      - name: is_bot
-        description: "Boolean that indicates if this visit is a bot"
-
       - name: is_wall_displayed
         description: "Boolean that indicates if a wall was displayed"
 

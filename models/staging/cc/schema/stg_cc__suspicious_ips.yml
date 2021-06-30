@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: stg_cc__suspicious_ips
+    description: "Staging model to identify suspicious IP addresses that visit the site"
+    columns:
+      - name: visit_ip
+        description: "Visit IP"
+        tests:
+          - unique
+          - not_null
+
+      - name: avg_daily_visits
+        description: "Average daily visits for the IP address in the past 10 days"
+
