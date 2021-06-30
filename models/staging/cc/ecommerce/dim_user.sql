@@ -9,10 +9,10 @@ base as (
   select 
     user_id 
     , case
-        when NULLIF(TRIM(u.roles_for_access), '') IS NOT NULL THEN 'EMPLOYEE'
-        when LOWER(u.email) LIKE '%@crowdcow.com%' THEN 'INTERNAL'
-        when LOWER(TRIM(u.user_type)) = 'c' THEN 'CUSTOMER'
-        when LOWER(TRIM(u.user_type)) = 'p' THEN 'PROSPECT'
+        when nullif(trim(u.roles_for_access), '') is not null then 'EMPLOYEE'
+        when lower(u.email) LIKE '%@crowdcow.com%' then 'INTERNAL'
+        when lower(trim(u.user_type)) = 'c' then 'CUSTOMER'
+        when lower(trim(u.user_type)) = 'p' then 'PROSPECT'
         else 'OTHER'
       end as user_type   
     , user_email 
