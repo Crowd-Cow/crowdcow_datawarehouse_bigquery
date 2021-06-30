@@ -15,16 +15,16 @@ base as (
         end as user_type
     , user_email 
     , user_gender
-    , user_last_geocoded_address as user_last_geocoded_address
-    , user_last_geocoded_city as user_last_geocoded_city
-    , user_last_geocoded_state_code as user_last_state_code
-    , user_last_geocoded_state as user_last_state 
-    , user_last_geocoded_postal_code as user_last_postal_code 
-    , user_last_geocoded_country_code as user_last_country_code 
-    , user_last_geocoded_country as user_last_country 
-    , user_zip as user_zipcode 
-    , user_last_geocoded_latitude as user_last_latitude
-    , user_last_geocoded_longitude as user_last_longitude
+    , user_last_geocoded_address
+    , user_last_geocoded_city 
+    , user_last_geocoded_state_code
+    , user_last_geocoded_state 
+    , user_last_geocoded_postal_code 
+    , user_last_geocoded_country_code  
+    , user_last_geocoded_country 
+    , user_zip  
+    , user_last_geocoded_latitude 
+    , user_last_geocoded_longitude 
     , user_cow_cash_balance_usd 
     , user_unsubscribed_all_at_utc
     , updated_at_utc
