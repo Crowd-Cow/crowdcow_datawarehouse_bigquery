@@ -28,6 +28,9 @@ models:
       - name: visit_region
         description: "Region of the user"
 
+      - name: visit_country
+        description: "Country of the user"
+
       - name: visit_ip
         description: "IP address of the user"
 
@@ -55,9 +58,6 @@ models:
       - name: visit_landing_page_path
         description: "The path of the landing page that was parsed out of the URL"
 
-      - name: is_homepage_landing
-        description: "Boolean indicating whether the landing page was the homepage"
-
       - name: utm_content
         description: "UTM content"
 
@@ -72,6 +72,33 @@ models:
 
       - name: utm_source
         description: "UTM source"
+
+      - name: is_wall_displayed
+        description: "Boolean indicating whether the wall was displayed"
+
+      - name: is_homepage_landing
+        description: "Boolean indicating if this visit landed on the homepage"
+
+      - name: is_bot
+        description: "Boolean indicating if this visit was a bot user"
+
+      - name: has_previous_order
+        description: "Boolean indicating if the user associated with this visit has had an order previous to this visit"
+
+      - name: has_previous_subscription
+        description: "Boolean indicating if the user associated with this visit already has a subscription"
+
+      - name: had_account_created
+        description: "Boolean indicating if the user associated with this visit already created an account"
+
+      - name: did_subscribe
+        description: "Boolean indicating if the user associated with this visit became a subscriber during this visit"
+
+      - name: did_sign_up
+        description: "Boolean indicating if the user associated with this visit did sign up for an account during this visit"
+
+      - name: did_complete_order
+        description: "Boolean indicating if the user associated with this visit did complete an order during this visit"
 
       - name: started_at_utc
         description: "Timestamp of when the visit started"
