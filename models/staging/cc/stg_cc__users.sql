@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ source('cc', 'users') }}
+    select * from {{ ref('users_ss') }}
 
 ),
 
@@ -118,7 +118,9 @@ renamed as (
         ,banned_from_referrals as user_is_banned_from_referrals
         ,was_email_lead as user_was_email_lead
         ,opted_in_to_emails as user_has_opted_in_to_emails
-
+        ,dbt_valid_to 
+        ,dbt_valid_from
+        ,dbt_scd_id as user_key
     from source
 
 )
