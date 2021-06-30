@@ -1,6 +1,6 @@
 with stage as (
 
-    select * from {{ ref('users_ss') }}
+    select * from {{ ref('stg_cc__users') }}
 
 ),
 
@@ -49,7 +49,7 @@ base as (
     , user_has_opted_in_to_emails
     , dbt_valid_to 
     , dbt_valid_from
-    , dbt_scd_id as user_key
+    , user_key
   from stage
 
 )
