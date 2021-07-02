@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: stg_cc__event_click_navigation
+    description: "Staging model for the custom event `click-navigation`"
+    columns:
+      - name: event_id
+        description: "Event ID"
+        tests:
+            - unique
+            - not_null
+
+      - name: visit_id
+        description: "Visit ID"
+
+      - name: occurred_at_utc
+        description: "Timestamp when the event occurred UTC"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: navigation_label
+        description: "Navigation label text"
+
+      - name: is_member
+        description: Boolean indicating if this user was a member at the time of the event

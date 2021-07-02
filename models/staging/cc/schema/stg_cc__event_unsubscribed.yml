@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: stg_cc__event_unsubscribed
+    description: "Staging model for unsubscribed events"
+    columns:
+      - name: event_id
+        description: "Event ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: visit_id
+        description: "Visit ID"
+
+      - name: occurred_at_utc
+        description: "Timestamp for when the event occurred UTC"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: experiments
+        description: "Experiments"
+
+      - name: is_member
+        description: "Boolean indicating if this user is a member"
+
+      - name: unsubscribe_reason
+        description: "Reason for unsubscribing"
+
+      - name: subscription_id
+        description: "Subscription ID"

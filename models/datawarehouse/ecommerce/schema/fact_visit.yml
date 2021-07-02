@@ -1,0 +1,110 @@
+version: 2
+
+models:
+  - name: fact_visit
+    description: "Fact table to describe visits and activities performed when visiting the Crowd Cow website"
+    columns:
+      - name: visit_id
+        description: "Visit ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: user_id
+        description: "User ID"
+
+      - name: visit_token
+        description: "Visit token"
+
+      - name: visitor_token
+        description: "Visitor token"
+
+      - name: visit_browser
+        description: "Browser used by the user"
+
+      - name: visit_city
+        description: "City of the user"
+
+      - name: visit_region
+        description: "Region of the user"
+
+      - name: visit_country
+        description: "Country of the user"
+
+      - name: visit_ip
+        description: "IP address of the user"
+
+      - name: visit_os
+        description: "OS of the user's device"
+
+      - name: visit_device_type
+        description: "Device type the user is using to access the site"
+
+      - name: visit_user_agent
+        description: "Visit user agent"
+
+      - name: visit_referrer
+        description: "Visit referrer URL"
+
+      - name: visit_referring_domain
+        description: "Visit referring domain"
+
+      - name: visit_search_keyword
+        description: "Visit search keyword"
+
+      - name: visit_landing_page
+        description: "Initial landing page where the visit started"
+
+      - name: visit_landing_page_path
+        description: "The path of the landing page that was parsed out of the URL"
+
+      - name: utm_content
+        description: "UTM content"
+
+      - name: utm_campaign
+        description: "UTM campaign"
+
+      - name: utm_term
+        description: "UTM term"
+
+      - name: utm_medium
+        description: "UTM medium"
+
+      - name: utm_source
+        description: "UTM source"
+
+      - name: is_wall_displayed
+        description: "Boolean indicating whether the wall was displayed"
+
+      - name: is_homepage_landing
+        description: "Boolean indicating if this visit landed on the homepage"
+
+      - name: is_bot
+        description: "Boolean indicating if this visit was a bot user"
+
+      - name: has_previous_order
+        description: "Boolean indicating if the user associated with this visit has had an order previous to this visit"
+
+      - name: has_previous_subscription
+        description: "Boolean indicating if the user associated with this visit already has a subscription"
+
+      - name: had_account_created
+        description: "Boolean indicating if the user associated with this visit already created an account"
+
+      - name: did_subscribe
+        description: "Boolean indicating if the user associated with this visit became a subscriber during this visit"
+
+      - name: did_sign_up
+        description: "Boolean indicating if the user associated with this visit did sign up for an account during this visit"
+
+      - name: did_complete_order
+        description: "Boolean indicating if the user associated with this visit did complete an order during this visit"
+
+      - name: started_at_utc
+        description: "Timestamp of when the visit started"
+
+      - name: updated_at_utc
+        description: "Timesteamp of when the visit record was updated"
+
+      - name: visit_event_sequence
+        description: "An aggregated list of all events that took place during a user's visit to the site. Events are delimited by a pipe (`|`)"

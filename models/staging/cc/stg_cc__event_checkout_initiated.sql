@@ -17,7 +17,7 @@ event_checkout_initiated as (
     ,visit_id
     ,occurred_at_utc
     ,user_id
-    ,is_member
+    ,event_json:member::boolean as is_member
   from 
     base
   where 

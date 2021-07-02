@@ -28,7 +28,7 @@ models:
       - name: fc_id
         description: Fulfillment Center ID
 
-      - name: ahoy_visit_id
+      - name: visit_id
         description: Ahoyt Visit ID
 
       - name: user_id

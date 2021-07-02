@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_cc__event_visits
+  - name: base_cc__ahoy_visits
     description: "Staging model for site visit events"
     columns:
       - name: visit_id
@@ -33,6 +33,12 @@ models:
 
       - name: visit_landing_page
         description: "Visit landing page"
+
+      - name: visit_landing_page_host
+        description: "The host value of the landing page"
+
+      - name: visit_landing_page_path
+        description: "The page path parsed out of the visit landing page URL"
 
       - name: is_homepage_landing
         description: "Boolean indicating if the landing page was the Crowd Cow homepage"

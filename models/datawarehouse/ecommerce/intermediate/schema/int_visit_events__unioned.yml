@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: int_visit_events__unioned
+    description: "Intermediate model to union all ahoy events and ahoy visits together"
+    tests:
+        - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+                - visit_id
+                - event_id
+    columns:
+      - name: visit_id
+        description: "Visit ID"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: event_id
+        description: "Event ID"
+
+      - name: event_name
+        description: "Event Name"
+
+      - name: occurred_at_utc
+        description: "Timestamp for when the event occurred"

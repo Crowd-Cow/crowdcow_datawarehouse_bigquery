@@ -14,7 +14,7 @@ renamed as (
     ,created_by_subscription_id as order_created_by_subscription_id
     ,cancelled_by_user_id as order_cancelled_by_user_id
     ,fc_id
-    ,ahoy_visit_id
+    ,ahoy_visit_id as visit_id
     ,user_id
     ,packing_wave_id
     ,gift_recipient_id
