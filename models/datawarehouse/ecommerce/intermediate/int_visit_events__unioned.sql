@@ -11,6 +11,10 @@ visit_events as (
     select
         visit_id
         ,user_id
+
+        /*** Initialize event_id to 0 so that when the events are sorted in fact_visit, ****/
+        /*** the visit_start is always the first event in the sequence. ********************/
+        
         ,0 as event_id
         ,'visit_start' as event_name
         ,started_at_utc as occurred_at_utc
