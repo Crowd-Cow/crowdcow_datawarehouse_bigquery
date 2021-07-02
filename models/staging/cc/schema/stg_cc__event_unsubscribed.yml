@@ -30,4 +30,3 @@ models:
 
       - name: subscription_id
         description: "Subscription ID"
-

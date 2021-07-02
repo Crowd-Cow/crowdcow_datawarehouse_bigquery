@@ -17,6 +17,7 @@ event_click_navigation as (
         ,occurred_at_utc
         ,user_id
         ,trim({{ clean_strings('event_json:label::text') }},'\n') as navigation_label
+        ,event_json:member::boolean as is_member
     from
         base
     where
