@@ -132,20 +132,9 @@ add_flags as (
             else false
          end as had_account_created
 
-        ,case 
-            when subscription_visits.visit_id is not null then true
-            else false
-         end as did_subscribe
-
-        ,case
-            when user_signed_up.visit_id is not null then true
-            else false
-         end did_sign_up
-        
-        ,case
-            when order_completed.visit_id is not null then true
-            else false
-         end as did_complete_order
+        ,subscription_visits.visit_id is not null as did_subscribe
+        ,user_signed_up.visit_id is not null as did_sign_up
+        ,order_completed.visit_id is not null as did_complete_order
 
     from visits
         left join suspicious_ips on visits.visit_ip = suspicious_ips.visit_ip
