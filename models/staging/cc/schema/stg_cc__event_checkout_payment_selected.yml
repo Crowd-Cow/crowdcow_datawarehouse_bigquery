@@ -21,4 +21,4 @@ models:
       
       - name: is_member
         description: Boolean indicating if this user was a member at the time of the event
-        sdf
+        
