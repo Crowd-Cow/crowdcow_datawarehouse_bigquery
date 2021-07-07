@@ -352,3 +352,12 @@ models:
       - name: stripe_card_last4
         description: Stripe card last 4 digits
 
+      - name: all_paid_order_rank
+        description: Ranking provided from oldest order to newest for all orders that are uncancelled, have been paid for and didn't have a payment_issue
+
+      - name: subscription_paid_order_rank
+        description: Ranking provided from oldest order to newest for subscription orders that are uncancelled, have been paid for and didn't have a payment_issue
+
+      - name: alc_paid_order_rank 
+        description: Ranking provided from oldest order to newest for a la carte orders that are uncancelled, have been paid for and didn't have a payment_issue
+

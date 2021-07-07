@@ -55,14 +55,14 @@ models:
       - name: user_unsubscribed_all_at_utc
         description: Timestamp that user unsubscribed from all email UTC
 
+      - name: referrer_url
+        description: Url of the referrer
+
       - name: updated_at_utc
         description: Timestamp for when a record was updated UTC
 
       - name: referred_by_user_id
         description: Referred by User ID
-
-      - name: user_retention_offer_last_accepted_at_utc
-        description: Timestamp when user retention offer was last accepted UTC
 
       - name: user_roles_for_notifications
         description: User roles for notifications
@@ -76,11 +76,20 @@ models:
       - name: utm_source
         description: UTM source
 
+      - name: user_landing_page_source
+        description: Landing page of the source for the user 
+
       - name: user_total_sign_in_count
         description: Total number of sign ins for a user
 
+      - name: user_email_name
+        description: Name associated with user email 
+
       - name: user_vip_level
         description: User VIP level
+
+      - name: user_last_sign_in_at_utc
+        description: Last time in UTC the user signed in to their account
 
       - name: user_test_bucket
         description: User test bucket
@@ -91,6 +100,9 @@ models:
       - name: user_is_banned_from_referrals
         description: Boolean indicating if a user is banned from referrals
 
+      - name: user_was_email_lead
+        description: Binary flag for whether or not a user was an email lead 
+        
       - name: user_has_opted_in_to_emails
         description: Boolean indicating if a user has opted in to emails
       

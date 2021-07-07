@@ -1,4 +1,4 @@
-{% snapshot orders_snapshot %}
+{% snapshot users_ss %}
 
 {{
     config(

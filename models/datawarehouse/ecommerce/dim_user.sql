@@ -30,7 +30,7 @@ base as (
     , user_token
     , created_at_utc
     , utm_source
-    , user_page_landing_source
+    , user_landing_page_source
     -- , phone_number -- inclined to leave this out for pii
     , user_total_sign_in_count
     , user_email_name
@@ -39,7 +39,7 @@ base as (
     , user_test_bucket
     , user_opt_out_list
     , user_is_banned_from_referrals
-    , user_is_email_lead
+    , user_was_email_lead
     , user_has_opted_in_to_emails
     , dbt_valid_to 
     , dbt_valid_from
