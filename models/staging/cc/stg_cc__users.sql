@@ -15,7 +15,6 @@ renamed as (
             when lower(trim(user_type)) = 'p' then 'PROSPECT'
             else 'OTHER'
         end as user_type
-        ,{{ clean_strings('user_type') }} as user_type
         ,{{ clean_strings('email') }} as user_email
         ,{{ clean_strings('gender') }} as user_gender
         ,{{ clean_strings('default_card_token') }} as default_card_token
