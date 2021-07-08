@@ -9,8 +9,8 @@ daily_ip_visits as (
         ,date(visits.started_at_utc) as visit_date
         ,count(visits.visit_id) as daily_visit_count
     from visits
-        left join orders on visits.visit_id = orders.ahoy_visit_id
-    where orders.ahoy_visit_id is null
+        left join orders on visits.visit_id = orders.visit_id
+    where orders.visit_id is null
         and date(visits.started_at_utc) >= dateadd('day',-10,date(getdate()))
         and visits.visit_ip is not null
     group by 1,2

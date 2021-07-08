@@ -35,7 +35,7 @@ user_first_subscription as (
 
     select 
         user_id
-        ,min(created_at_utc) as first_subscription_date
+        ,min(subscription_created_at_utc) as first_subscription_date
     from subscriptions
     group by 1
 ),
