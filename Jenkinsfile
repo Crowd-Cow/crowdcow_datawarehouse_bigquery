@@ -47,6 +47,7 @@ pipeline {
 
     stage('RUN') {
       steps {
+        sh "docker system prune"
         sh "docker run --rm dbt_run dbt seed"
         sh "docker run --rm dbt_run dbt snapshot"
         sh "docker run --rm dbt_run dbt run"
@@ -57,10 +58,10 @@ pipeline {
 
   post {
     success {
-      slackSend channel: '#jenkins-alerts', message: "${currentBuild.displayName} SUCCESS: ${currentBuild.result}"
+      slackSend channel: '#jenkins-alerts', message: "Snowflake Data Warehouse ${currentBuild.displayName}: ${currentBuild.result}"
     }
     failure {
-      slackSend channel: '#jenkins-alerts', message: "${currentBuild.displayName} FAILURE: ${currentBuild.result}"
+      slackSend channel: '#jenkins-alerts', message: "Snowflake Data Warehouse ${currentBuild.displayName}: ${currentBuild.result}"
     }
   }
 }
