@@ -54,4 +54,13 @@ pipeline {
       }
     }
   }
+
+  post {
+    success {
+      slackSend channel: '#jenkins-alerts', message: "Snowflake Data Warehouse Pipeline SUCCESS: ${currentBuild.result}"
+    }
+    failure {
+      slackSend channel: '#jenkins-alerts', message: "Snowflake Data Warehouse Pipeline FAILURE: ${currentBuild.result}"
+    }
+  }
 }
