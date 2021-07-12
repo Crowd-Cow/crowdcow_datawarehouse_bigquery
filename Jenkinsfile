@@ -48,6 +48,7 @@ pipeline {
     stage('RUN') {
       steps {
         sh "docker system prune"
+        sh "dbt deps"
         sh "docker run --rm dbt_run dbt seed"
         sh "docker run --rm dbt_run dbt snapshot"
         sh "docker run --rm dbt_run dbt run"
