@@ -1,6 +1,6 @@
-FROM python:3.9.6
+FROM python:3.9.6-alpine
 
-RUN apt-get update -y
+# RUN apt-get update -y
 
 RUN pip install pip --upgrade
 RUN pip install "dbt==0.20.0"
