@@ -29,7 +29,7 @@ pipeline {
                 password: $SNOWFLAKE_DATAWAREHOUSE_PASSWORD
                 database: ANALYTICS
                 role: TRANSFORMER
-                warehouse: TRANSFORMING
+                warehouse: TRANSFORMING_M
                 schema: STAGING
                 client_session_keep_alive: False
             target: prod
