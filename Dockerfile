@@ -9,3 +9,5 @@ WORKDIR /usr/src/app
 RUN cd /usr/src/app
 
 COPY . .
+
+RUN dbt deps
