@@ -57,10 +57,10 @@ pipeline {
 
   post {
     success {
-      slackSend channel: '#jenkins-alerts', message: "Snowflake Data Warehouse Pipeline SUCCESS: ${currentBuild.result}"
+      slackSend channel: '#jenkins-alerts', message: "${currentBuild.displayName} SUCCESS: ${currentBuild.result}"
     }
     failure {
-      slackSend channel: '#jenkins-alerts', message: "Snowflake Data Warehouse Pipeline FAILURE: ${currentBuild.result}"
+      slackSend channel: '#jenkins-alerts', message: "${currentBuild.displayName} FAILURE: ${currentBuild.result}"
     }
   }
 }
