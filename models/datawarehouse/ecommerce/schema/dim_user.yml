@@ -7,7 +7,8 @@ models:
       - name: user_id
         description: User ID
         tests:
-          - unique
+          - unique:
+              severity: warn
           - not_null
 
       - name: user_type
@@ -77,13 +78,13 @@ models:
         description: UTM source
 
       - name: user_landing_page_source
-        description: Landing page of the source for the user 
+        description: Landing page of the source for the user
 
       - name: user_total_sign_in_count
         description: Total number of sign ins for a user
 
       - name: user_email_name
-        description: Name associated with user email 
+        description: Name associated with user email
 
       - name: user_vip_level
         description: User VIP level
@@ -101,11 +102,11 @@ models:
         description: Boolean indicating if a user is banned from referrals
 
       - name: user_was_email_lead
-        description: Binary flag for whether or not a user was an email lead 
-        
+        description: Binary flag for whether or not a user was an email lead
+
       - name: user_has_opted_in_to_emails
         description: Boolean indicating if a user has opted in to emails
-      
+
       - name: dbt_valid_to
         description: DBT generated timsteampe for the start of a period a record was considered "current"
 
@@ -113,6 +114,4 @@ models:
         description: DBT generated timestamp for the end period a record was considered "current"
 
       - name: user_key
-        description: Uniqe identifier for user information at a given point in time 
-
-  
+        description: Uniqe identifier for user information at a given point in time
