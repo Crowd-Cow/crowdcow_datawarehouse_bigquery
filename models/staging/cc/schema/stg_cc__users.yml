@@ -7,7 +7,8 @@ models:
       - name: user_id
         description: "User ID"
         tests:
-          - unique
+          - unique:
+              severity: warn
           - not_null
 
       - name: user_type
@@ -339,7 +340,7 @@ models:
 
       - name: user_has_opted_in_to_emails
         description: "Boolean indicating if a user has opted in to emails"
-      
+
       - name: dbt_valid_to
         description: DBT generated timsteampe for the start of a period a record was considered "current"
 
@@ -347,5 +348,4 @@ models:
         description: DBT generated timestamp for the end period a record was considered "current"
 
       - name: user_key
-        description: Uniqe identifier for user information at a given point in time 
-
+        description: Uniqe identifier for user information at a given point in time
