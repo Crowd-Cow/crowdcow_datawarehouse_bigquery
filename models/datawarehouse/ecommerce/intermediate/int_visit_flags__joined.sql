@@ -67,6 +67,13 @@ order_completed as (
     group by 1
 ),
 
+employoee_user as (
+    select distinct
+        user_id
+    from users
+    where user_type = 'EMPLOYEE'
+),
+
 add_flags as (
 
     select
@@ -118,6 +125,11 @@ add_flags as (
          end as is_bot
 
         ,case
+            when visits.visit_ip in ('66.171.181.219', '127.0.0.1') or employoee_user.user_id then true
+            else false
+        end as is_internal_traffic
+
+        ,case
             when user_first_order.user_id is not null and user_first_order.first_order_date < visits.started_at_utc then true
             else false
          end as has_previous_order
@@ -144,6 +156,7 @@ add_flags as (
         left join user_account_created on visits.user_id = user_account_created.user_id
         left join user_signed_up on visits.visit_id = user_signed_up.visit_id
         left join order_completed on visits.visit_id = order_completed.visit_id
+        left join employoee_user on visits.user_id = employoee_user.user_id
 )
 
 select * from add_flags
