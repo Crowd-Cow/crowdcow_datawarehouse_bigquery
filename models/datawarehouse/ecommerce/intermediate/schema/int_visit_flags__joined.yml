@@ -88,6 +88,9 @@ models:
       - name: is_bot
         description: "Boolean indicating if this visit was a bot user"
 
+      - name: is_internal_traffic
+        description: "Boolean indicating if the visit is coming from a internal traffic"
+
       - name: has_previous_order
         description: "Boolean indicating if the user associated with this visit has had an order previous to this visit"
 
