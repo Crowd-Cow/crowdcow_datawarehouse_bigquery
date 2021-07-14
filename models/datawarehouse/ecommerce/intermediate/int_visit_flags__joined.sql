@@ -67,7 +67,7 @@ order_completed as (
     group by 1
 ),
 
-employoee_user as (
+employee_user as (
     select distinct
         user_id
     from users
@@ -125,7 +125,7 @@ add_flags as (
          end as is_bot
 
         ,case
-            when visits.visit_ip in ('66.171.181.219', '127.0.0.1') or employoee_user.user_id then true
+            when visits.visit_ip in ('66.171.181.219', '127.0.0.1') or employee_user.user_id then true
             else false
         end as is_internal_traffic
 
@@ -156,7 +156,7 @@ add_flags as (
         left join user_account_created on visits.user_id = user_account_created.user_id
         left join user_signed_up on visits.visit_id = user_signed_up.visit_id
         left join order_completed on visits.visit_id = order_completed.visit_id
-        left join employoee_user on visits.user_id = employoee_user.user_id
+        left join employee_user on visits.user_id = employee_user.user_id
 )
 
 select * from add_flags
