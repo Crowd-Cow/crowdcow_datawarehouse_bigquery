@@ -49,6 +49,7 @@ joined_visits as (
         ,visits.utm_source
         ,visits.is_wall_displayed
         ,visits.is_bot
+        ,visits.is_internal_traffic
         ,visits.is_homepage_landing
         ,visits.has_previous_order
         ,visits.has_previous_subscription
