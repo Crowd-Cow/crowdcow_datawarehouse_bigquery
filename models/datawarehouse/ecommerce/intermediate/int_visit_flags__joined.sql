@@ -9,6 +9,8 @@ unsubscribed as ( select * from {{ ref('stg_cc__event_unsubscribed') }} ),
 orders as ( select * from {{ ref('stg_cc__orders') }} ),
 subscriptions as ( select * from {{ ref('stg_cc__subscriptions') }} ),
 users as ( select * from {{ ref('stg_cc__users') }} ),
+pdp_impressions as (select * from {{ ref('stg_cc__event_pdp_impression')}})
+pdp_product_add_to_cart as (select * from {{ref('stg_cc__event_pdp_product_add_to_cart')}})
 
 subscription_visits as (
     select 
@@ -147,6 +149,8 @@ add_flags as (
         ,subscription_visits.visit_id is not null as did_subscribe
         ,user_signed_up.visit_id is not null as did_sign_up
         ,order_completed.visit_id is not null as did_complete_order
+        ,pdp_impressions.visit_id is not null as did_view_pdp
+        ,pdp_add_to_cart.visit_id is not null as did_add_to_cart_from_pdp
 
     from visits
         left join suspicious_ips on visits.visit_ip = suspicious_ips.visit_ip
@@ -157,6 +161,8 @@ add_flags as (
         left join user_signed_up on visits.visit_id = user_signed_up.visit_id
         left join order_completed on visits.visit_id = order_completed.visit_id
         left join employee_user on visits.user_id = employee_user.user_id
+        left join pdp_impressions on visits.visit_id = pdp_impressions.visit_id
+        left join pdp_add_to_cart on visits.visit_id = pdp_add_to_cart.visit_id
 )
 
 select * from add_flags
