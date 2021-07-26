@@ -10,7 +10,7 @@ with base as (
 
 ),
 
-event_pdp_impression as (
+event_pdc_impression as (
 
   select
      event_id
@@ -28,4 +28,4 @@ event_pdp_impression as (
 
 )
 
-select * from event_pdp_impression
+select * from event_pdc_impression
