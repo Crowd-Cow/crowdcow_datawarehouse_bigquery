@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_cc__event_pdp_added_to_cart
+  - name: stg_cc__event_pdp_clicked_add_to_cart
     description: Derived from an Ahoy Event named custom_event that is published when a user clicks the add to cart button
     columns:
       - name: event_id

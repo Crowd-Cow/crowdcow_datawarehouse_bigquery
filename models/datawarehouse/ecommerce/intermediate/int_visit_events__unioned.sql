@@ -72,14 +72,14 @@ page_view as (
     from {{ ref('stg_cc__event_page_view') }}
 ),
 
-pdp_added_to_cart as (
+pdp_clicked_add_to_cart as (
     select
         visit_id
         ,user_id
         ,event_id
-        ,'pdp_added_to_cart' as event_name
+        ,'pdp_clicked_add_to_cart' as event_name
         ,occurred_at_utc
-    from {{ ref('stg_cc__event_pdp_added_to_cart') }} 
+    from {{ ref('stg_cc__event_pdp_clicked_add_to_cart') }} 
 ),
 
 viewed_product as (
@@ -115,7 +115,7 @@ union_events as (
     union all
     select * from page_view
     union all
-    select * from pdp_added_to_cart
+    select * from pdp_clicked_add_to_cart
     union all
     select * from viewed_product
     union all
