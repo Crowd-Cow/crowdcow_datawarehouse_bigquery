@@ -22,5 +22,5 @@ models:
       - name: is_member
         description: Boolean indicating if this user was a member at the time of the event
       
-      - name: label
-        description: PDP url handle for the product added to the users cart
+      - name: product_name
+        description: PDP url handle for the product added to the users cart. Join to product using product.url_handle
