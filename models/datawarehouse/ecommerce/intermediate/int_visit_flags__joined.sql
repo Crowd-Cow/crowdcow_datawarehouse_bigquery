@@ -77,6 +77,29 @@ employee_user as (
     where user_type = 'EMPLOYEE'
 ),
 
+pdc_impression_visits as ( 
+    select pdc_impressions.visit_id
+    , count(distinct pdc_impressions.event_id) as pdc_impressions_count
+    from pdc_impressions
+    group by 1
+), 
+
+pdc_impression_click_visits as ( 
+    select 
+        pdc_impression_clicks.visit_id 
+        ,count(distinct pdc_impression_clicks.event_id) as pdc_impression_clicks_count
+    from pdc_impression_clicks
+    group by 1
+),
+
+pdp_product_add_to_cart_visits as ( 
+    select 
+        pdp_product_add_to_cart.visit_id
+        ,count(distinct pdp_product_add_to_cart.event_id) as pdp_product_add_to_cart_count
+    from pdp_product_add_to_cart
+    group by 1
+),
+
 add_flags as (
 
     select
@@ -150,9 +173,9 @@ add_flags as (
         ,subscription_visits.visit_id is not null as did_subscribe
         ,user_signed_up.visit_id is not null as did_sign_up
         ,order_completed.visit_id is not null as did_complete_order
-        ,pdc_impressions.visit_id is not null as did_view_pdc
-        ,pdc_impression_clicks.visit_id is not null as did_click_pdc
-        ,pdp_add_to_cart.visit_id is not null as did_add_to_cart_from_pdp
+        ,pdc_impression_visits.pdc_impressions_count
+        ,pdc_impression_click_visits.pdc_impression_clicks_count
+        ,pdp_product_add_to_cart_visits.pdp_product_add_to_cart_count
 
     from visits
         left join suspicious_ips on visits.visit_ip = suspicious_ips.visit_ip
@@ -163,9 +186,9 @@ add_flags as (
         left join user_signed_up on visits.visit_id = user_signed_up.visit_id
         left join order_completed on visits.visit_id = order_completed.visit_id
         left join employee_user on visits.user_id = employee_user.user_id
-        left join pdc_impressions on visits.visit_id = pdc_impressions.visit_id
-        left join pdc_impression_clicks on visits.visit_id = pdc_impression_clicks.visit_id 
-        left join pdp_add_to_cart on visits.visit_id = pdp_add_to_cart.visit_id
+        left join pdc_impression_visits on visits.visit_id = pdc_impression_visits.visit_id
+        left join pdc_impression_click_visits on visits.visit_id = pdc_impression_click_visits.visit_id 
+        left join pdp_product_add_to_cart_visits on visits.visit_id = pdp_product_add_to_cart_visits.visit_id
 )
 
 select * from add_flags
