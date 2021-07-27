@@ -1,8 +1,8 @@
 version: 2
 
 models:
-  - name: stg_cc__event_pdc_impression_click
-    description: Derived from an Ahoy Event named custom_event that is published when a PDC (product detail card) is clicked
+  - name: stg_cc__event_pcp_impression_click
+    description: Derived from an Ahoy Event named custom_event that is published when a pcp (product card) is clicked
     columns:
       - name: event_id
         description: Event ID

@@ -10,7 +10,7 @@ with base as (
 
 ),
 
-event_pdc_impression as (
+event_pcp_impression_click as (
 
   select
      event_id
@@ -24,8 +24,8 @@ event_pdc_impression as (
   where 
     event_name = 'custom_event'
       and event_json:category::text = 'product'
-      and event_json:action::text = 'view-impression' 
+      and event_json:action::text = 'impression-click' 
 
 )
 
-select * from event_pdc_impression
+select * from event_pcp_impression_click
