@@ -40,6 +40,8 @@ renamed as (
   , {{ clean_strings('automated_highlight_text_type') }} as automated_highlight_text_type
   , always_available as is_always_available
   , alacarte as is_alacarte
+  , dbt_valid_to
+  , dbt_valid_from
 
     from source 
 
