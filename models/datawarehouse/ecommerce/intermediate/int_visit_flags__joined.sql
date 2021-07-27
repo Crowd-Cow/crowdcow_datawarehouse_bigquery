@@ -12,6 +12,7 @@ users as ( select * from {{ ref('stg_cc__users') }} ),
 pdc_impressions as (select * from {{ ref('stg_cc__event_pdc_impression') }} ),
 pdc_impression_clicks as (select * from {{ref('stg_cc__event_pdc_impression_click') }} ),
 pdp_product_add_to_cart as (select * from {{ref('stg_cc__event_pdp_product_add_to_cart') }} ),
+viewed_pdp as (select * from {{ ref('stg_cc__event_viewed_product') }} ),
 
 subscription_visits as (
     select 
@@ -100,6 +101,14 @@ pdp_product_add_to_cart_visits as (
     group by 1
 ),
 
+viewed_pdp_visits as ( 
+    select 
+        viewed_pdp.visit_id
+        ,count(distinct viewed_pdp.event_id) as pdp_views_count
+    from viewed_pdp
+    group by 1
+),
+
 add_flags as (
 
     select
@@ -176,6 +185,7 @@ add_flags as (
         ,pdc_impression_visits.pdc_impressions_count
         ,pdc_impression_click_visits.pdc_impression_clicks_count
         ,pdp_product_add_to_cart_visits.pdp_product_add_to_cart_count
+        ,viewed_pdp_visits.pdp_views_count
 
     from visits
         left join suspicious_ips on visits.visit_ip = suspicious_ips.visit_ip
@@ -189,6 +199,7 @@ add_flags as (
         left join pdc_impression_visits on visits.visit_id = pdc_impression_visits.visit_id
         left join pdc_impression_click_visits on visits.visit_id = pdc_impression_click_visits.visit_id 
         left join pdp_product_add_to_cart_visits on visits.visit_id = pdp_product_add_to_cart_visits.visit_id
+        left join viewed_pdp_visits as visits.visit_id = viewed_pdp_visits.visit_id
 )
 
 select * from add_flags
