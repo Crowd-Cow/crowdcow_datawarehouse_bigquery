@@ -9,6 +9,7 @@ models:
         tests: 
           - not_null
           - unique
+              severity: warn
 
       - name: product_title
         description: Title of the product
@@ -49,7 +50,7 @@ models:
       - name: archived_at_utc
         description: Timestamp the record was archived in UTC
 
-      - name: price_usd
+      - name: price_in_usd
         description: Price of the product in USD
 
       - name: is_multifarm
@@ -70,10 +71,10 @@ models:
       - name: is_limit_one_per_order
         description: Flag indicating if the product is limited to one per order
 
-      - name: min_product_bundle_value_usd
+      - name: min_product_bundle_value_in_usd
         description: Minimum product bundle value in USD
 
-      - name: max_product_bundle_value_usd
+      - name: max_product_bundle_value_in_usd
         description: Maximum product bundle value in USD
 
       - name: fc_id
