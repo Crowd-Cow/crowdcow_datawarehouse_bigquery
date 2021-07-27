@@ -57,6 +57,11 @@ joined_visits as (
         ,visits.did_subscribe
         ,visits.did_sign_up
         ,visits.did_complete_order
+        ,visits.pdp_views_count
+        ,visits.pcp_impressions_count
+        ,visits.pcp_impression_clicks_count
+        ,visits.pdp_product_add_to_cart_count
+        ,visits.pdp_views_count
         ,visits.started_at_utc
         ,visits.updated_at_utc
         ,aggregate_events.visit_event_sequence

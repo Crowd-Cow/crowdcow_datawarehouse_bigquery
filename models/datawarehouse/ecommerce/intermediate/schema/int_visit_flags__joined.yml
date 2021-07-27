@@ -109,3 +109,14 @@ models:
       - name: did_complete_order
         description: "Boolean indicating if the user associated with this visit did complete an order during this visit"
 
+      - name: pcp_impressions_count
+        description: "Number of product card impresssions that took place during this user's visit"
+
+      - name: pcp_impression_clicks_count
+        description: "Number of product card clicks that took place during this user's visit"
+
+      - name: pdp_product_add_to_cart_count
+        description: "Number of events where a product was added to the user's cart during this user's visit"
+
+      - name: pdp_views_count
+        description: "Number of events where a product display page viewed during this user's visit"

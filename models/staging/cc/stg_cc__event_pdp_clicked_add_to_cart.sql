@@ -10,7 +10,7 @@ with base as (
 
 ),
 
-event_pdp_added_to_cart as (
+event_pdp_clicked_add_to_cart as (
 
   select
      event_id
@@ -28,4 +28,4 @@ event_pdp_added_to_cart as (
 
 )
 
-select * from event_pdp_added_to_cart
+select * from event_pdp_clicked_add_to_cart

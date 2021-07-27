@@ -9,6 +9,10 @@ unsubscribed as ( select * from {{ ref('stg_cc__event_unsubscribed') }} ),
 orders as ( select * from {{ ref('stg_cc__orders') }} ),
 subscriptions as ( select * from {{ ref('stg_cc__subscriptions') }} ),
 users as ( select * from {{ ref('stg_cc__users') }} ),
+pcp_impressions as (select * from {{ ref('stg_cc__event_pcp_impression') }} ),
+pcp_impression_clicks as (select * from {{ref('stg_cc__event_pcp_impression_click') }} ),
+pdp_product_add_to_cart as (select * from {{ref('stg_cc__event_pdp_product_add_to_cart') }} ),
+viewed_pdp as (select * from {{ ref('stg_cc__event_viewed_product') }} ),
 
 subscription_visits as (
     select 
@@ -72,6 +76,37 @@ employee_user as (
         user_id
     from users
     where user_type = 'EMPLOYEE'
+),
+
+pcp_impression_visits as ( 
+    select pcp_impressions.visit_id
+    , count(distinct pcp_impressions.event_id) as pcp_impressions_count
+    from pcp_impressions
+    group by 1
+), 
+
+pcp_impression_click_visits as ( 
+    select 
+        pcp_impression_clicks.visit_id 
+        ,count(distinct pcp_impression_clicks.event_id) as pcp_impression_clicks_count
+    from pcp_impression_clicks
+    group by 1
+),
+
+pdp_product_add_to_cart_visits as ( 
+    select 
+        pdp_product_add_to_cart.visit_id
+        ,count(distinct pdp_product_add_to_cart.event_id) as pdp_product_add_to_cart_count
+    from pdp_product_add_to_cart
+    group by 1
+),
+
+viewed_pdp_visits as ( 
+    select 
+        viewed_pdp.visit_id
+        ,count(distinct viewed_pdp.event_id) as pdp_views_count
+    from viewed_pdp
+    group by 1
 ),
 
 add_flags as (
@@ -147,6 +182,10 @@ add_flags as (
         ,subscription_visits.visit_id is not null as did_subscribe
         ,user_signed_up.visit_id is not null as did_sign_up
         ,order_completed.visit_id is not null as did_complete_order
+        ,pcp_impression_visits.pcp_impressions_count
+        ,pcp_impression_click_visits.pcp_impression_clicks_count
+        ,pdp_product_add_to_cart_visits.pdp_product_add_to_cart_count
+        ,viewed_pdp_visits.pdp_views_count
 
     from visits
         left join suspicious_ips on visits.visit_ip = suspicious_ips.visit_ip
@@ -157,6 +196,10 @@ add_flags as (
         left join user_signed_up on visits.visit_id = user_signed_up.visit_id
         left join order_completed on visits.visit_id = order_completed.visit_id
         left join employee_user on visits.user_id = employee_user.user_id
+        left join pcp_impression_visits on visits.visit_id = pcp_impression_visits.visit_id
+        left join pcp_impression_click_visits on visits.visit_id = pcp_impression_click_visits.visit_id 
+        left join pdp_product_add_to_cart_visits on visits.visit_id = pdp_product_add_to_cart_visits.visit_id
+        left join viewed_pdp_visits as visits.visit_id = viewed_pdp_visits.visit_id
 )
 
 select * from add_flags
