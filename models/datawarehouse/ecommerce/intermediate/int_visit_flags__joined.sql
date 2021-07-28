@@ -199,7 +199,7 @@ add_flags as (
         left join pcp_impression_visits on visits.visit_id = pcp_impression_visits.visit_id
         left join pcp_impression_click_visits on visits.visit_id = pcp_impression_click_visits.visit_id 
         left join pdp_product_add_to_cart_visits on visits.visit_id = pdp_product_add_to_cart_visits.visit_id
-        left join viewed_pdp_visits as visits.visit_id = viewed_pdp_visits.visit_id
+        left join viewed_pdp_visits on visits.visit_id = viewed_pdp_visits.visit_id
 )
 
 select * from add_flags
