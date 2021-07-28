@@ -6,9 +6,10 @@ models:
     columns:
       - name: product_id
         description: Business ID for the product
-        tests: 
+        tests:
           - not_null
-          - unique
+          - unique:
+              severity: warn
 
       - name: product_title
         description: Title of the product
@@ -89,7 +90,7 @@ models:
         description: Loyalty reward apply window days
 
       - name: loyalty_reward_daily_rate
-        description: Loyalty reward daily rate 
+        description: Loyalty reward daily rate
 
       - name: loyalty_reward_message
         description: Loyalty reward message
