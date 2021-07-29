@@ -1,12 +1,21 @@
 {{
-    config(
-        tags = ["events"]
-    )
+  config(
+    materialized = 'incremental',
+    unique_key = 'id',
+    tags=["events"]
+  )
 }}
-
+    
 with base as (
+  
+  select * 
+  from {{ ref('base_cc__ahoy_events') }} as ae
+  where true 
 
-    select * from {{ ref('base_cc__ahoy_events') }}
+    {% if is_incremental() %}
+      and ae.occurred_at_utc >= coalesce((select max(occurred_at_utc) from {{ this }}), '1900-01-01')
+    {% endif %}
+    
 ),
 
 event_click_navigation as (
