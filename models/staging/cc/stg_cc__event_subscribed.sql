@@ -1,7 +1,7 @@
 {{
   config(
     materialized = 'incremental',
-    unique_key = 'id',
+    unique_key = 'event_id',
     tags=["events"]
   )
 }}
@@ -10,7 +10,7 @@ with base as (
   
   select * 
   from {{ ref('base_cc__ahoy_events') }} as ae
-  where true 
+  where event_name = 'subscribed' 
 
     {% if is_incremental() %}
       and ae.occurred_at_utc >= coalesce((select max(occurred_at_utc) from {{ this }}), '1900-01-01')
@@ -32,8 +32,6 @@ event_subscribed as (
     ,{{ clean_strings('event_json:user_token::text') }} as user_token
   from 
     base
-  where 
-    event_name = 'subscribed'
 
 )
 

@@ -1,7 +1,7 @@
 {{
   config(
     materialized = 'incremental',
-    unique_key = 'id',
+    unique_key = 'event_id',
     tags=["events"]
   )
 }}
@@ -10,7 +10,7 @@ with base as (
   
   select * 
   from {{ ref('base_cc__ahoy_events') }} as ae
-  where true 
+  where event_name = 'order_paid' 
 
     {% if is_incremental() %}
       and ae.occurred_at_utc >= coalesce((select max(occurred_at_utc) from {{ this }}), '1900-01-01')
@@ -45,8 +45,6 @@ event_order_paid as (
     ,{{ cents_to_usd('event_json:total') }}     as total_usd
   from 
     base
-  where 
-    event_name = 'order_paid'
 
 )
 

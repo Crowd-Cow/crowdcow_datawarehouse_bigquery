@@ -1,7 +1,7 @@
 {{
   config(
     materialized = 'incremental',
-    unique_key = 'id',
+    unique_key = 'event_id',
     tags=["events"]
   )
 }}
@@ -10,12 +10,15 @@ with base as (
   
   select * 
   from {{ ref('base_cc__ahoy_events') }} as ae
-  where true 
+  where event_name = 'custom_event'
+      and event_json:category::text = 'checkout'
+      and event_json:action::text = 'reached-step' 
+      and event_json:label::text = '1' 
 
     {% if is_incremental() %}
       and ae.occurred_at_utc >= coalesce((select max(occurred_at_utc) from {{ this }}), '1900-01-01')
     {% endif %}
-    
+
 ),
 
 event_checkout_initiated as (
@@ -28,11 +31,6 @@ event_checkout_initiated as (
     ,event_json:member::boolean as is_member
   from 
     base
-  where 
-    event_name = 'custom_event'
-      and event_json:category::text = 'checkout'
-      and event_json:action::text = 'reached-step' 
-      and event_json:label::text = '1'
 
 )
 
