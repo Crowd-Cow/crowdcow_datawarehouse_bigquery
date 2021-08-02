@@ -1,13 +1,21 @@
 {{
   config(
+    materialized = 'incremental',
+    unique_key = 'event_id',
     tags=["events"]
   )
 }}
-
+    
 with base as (
   
-  select * from {{ ref('base_cc__ahoy_events') }}
+  select * 
+  from {{ ref('base_cc__ahoy_events') }}
+  where event_name = 'viewed_product' 
 
+    {% if is_incremental() %}
+      and occurred_at_utc >= coalesce((select max(occurred_at_utc) from {{ this }}), '1900-01-01')
+    {% endif %}
+    
 ),
 
 event_viewed_product as (
@@ -25,9 +33,7 @@ event_viewed_product as (
     ,{{ clean_strings('event_json:title::text') }}       as bid_item_name
     ,{{ clean_strings('event_json:url::text') }}         as product_page_url
   from 
-    base
-  where 
-    event_name = 'viewed_product'
+    base 
 
 )
 
