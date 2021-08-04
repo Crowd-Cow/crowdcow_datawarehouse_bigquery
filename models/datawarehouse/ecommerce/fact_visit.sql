@@ -1,3 +1,10 @@
+{{
+  config(
+        tags = ["intermediate"],
+        snowflake_warehouse = 'TRANSFORMING_M'
+    )
+}}
+
 with
 
 all_events as ( select * from {{ ref('int_visit_events__unioned') }} ),

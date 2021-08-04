@@ -1,3 +1,10 @@
+{{
+  config(
+        tags = ["intermediate"],
+        snowflake_warehouse = 'TRANSFORMING_M'
+    )
+}}
+
 with
 
 visits as ( select * from {{ ref('base_cc__ahoy_visits') }} ),
