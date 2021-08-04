@@ -1,6 +1,5 @@
 {{
   config(
-        tags = ["intermediate"],
         snowflake_warehouse = 'TRANSFORMING_M'
     )
 }}
