@@ -49,10 +49,10 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 
 , join_gift_flag as (
     select
-        orders.*
+        all_up_order_ranks.*
         ,gift_flag.order_id is not null as is_gift_order
-    from orders
-        left join gift_flag on orders.order_id = gift_flag.order_id
+    from all_up_order_ranks
+        left join gift_flag on all_up_order_ranks.order_id = gift_flag.order_id
 )
 
 
