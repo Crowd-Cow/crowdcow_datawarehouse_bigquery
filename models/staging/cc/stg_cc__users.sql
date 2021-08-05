@@ -10,7 +10,8 @@ renamed as (
         id as user_id
         , case
             when nullif(trim(roles_for_access), '') is not null then 'EMPLOYEE'
-            when lower(email) LIKE '%@crowdcow.com%' then 'INTERNAL'
+            when  LOWER(u.email) like 'temporary%@crowdcow.com%' then 'DEV' 
+            when lower(email) like '%@crowdcow.com%' then 'INTERNAL'
             when lower(trim(user_type)) = 'c' then 'CUSTOMER'
             when lower(trim(user_type)) = 'p' then 'PROSPECT'
             else 'OTHER'
