@@ -361,3 +361,6 @@ models:
       - name: alc_paid_order_rank 
         description: Ranking provided from oldest order to newest for a la carte orders that are uncancelled, have been paid for and didn't have a payment_issue
 
+      - name: is_gift_order
+        description: Boolean indicating if the order is a gift order
+

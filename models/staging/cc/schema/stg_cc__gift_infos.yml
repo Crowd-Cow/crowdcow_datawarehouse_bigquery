@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: stg_cc__gift_infos
+    description: "Staging model for gift info"
+    columns:
+      - name: gift_info_id
+        description: "Gift info ID"
+        tests:
+          - not_null
+          - unique
+
+      - name: recipient_email
+        description: "Recipient email"
+
+      - name: order_id
+        description: "Order ID"
+
+      - name: suggested_product_id
+        description: "Suggested product ID"
+
+      - name: gift_info_token
+        description: "Gift info token"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated UTC"
+
+      - name: frauded_at_utc
+        description: "Timestamp for when fraud occurred UTC"
+
+      - name: recipient_name
+        description: "Gift recipient name"
+
+      - name: sender_email
+        description: "Gift sender email address"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created UTC"
+
+      - name: gift_message
+        description: "Gift message"
+
+      - name: sender_name
+        description: "Gift sender name"
+
+      - name: delivery_method
+        description: "Gift delivery method"
+
+      - name: suggested_quantity
+        description: "Suggessted quantity"
+
+      - name: suggested_bid_item_id
+        description: "Suggested bid item ID"
+
+      - name: image_url
+        description: "Image URL"
+
+      - name: is_surprise
+        description: "Boolean indicating if the gift is a surprise"
+
