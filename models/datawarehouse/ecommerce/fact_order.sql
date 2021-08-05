@@ -47,7 +47,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
     left join alacarte_rank on alacarte_rank.order_id = orders.order_id
 )
 
-, join_gift_info as (
+, join_gift_flag as (
     select
         orders.*
         ,gift_flag.order_id is not null as is_gift_order
@@ -56,4 +56,4 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 )
 
 
-select * from join_gift_info 
+select * from join_gift_flag
