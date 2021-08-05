@@ -6,14 +6,14 @@ day_spine as (
       dbt_utils.date_spine(
           datepart = 'day',
           start_date = "'2018-01-01'::date",
-          end_date = "date(getdate())"
+          end_date = "dateadd(week, 53, current_date)"
       )
     }}
 
 ),
 
 date_parts as (
-
+/* Do we want week start/end and month start/end */ 
     select
         date_day
         ,date_trunc('week',date_day) as date_week
