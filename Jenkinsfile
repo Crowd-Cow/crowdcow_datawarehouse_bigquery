@@ -11,7 +11,7 @@ pipeline {
       steps {
         checkout scm
 
-        sh "docker build -t crowdcow_datawarehouse ."
+        sh "docker build -t dbt ."
       }
     }
 
@@ -21,6 +21,17 @@ pipeline {
           cat > profiles.yml <<EOL
           cc_datawarehouse:
             outputs:
+              qa:
+                type: snowflake
+                threads: 8
+                account: lna65058.us-east-1
+                user: $SNOWFLAKE_DATAWAREHOUSE_USER
+                password: $SNOWFLAKE_DATAWAREHOUSE_PASSWORD
+                database: QA_ANALYTICS
+                role: TRANSFORMER
+                warehouse: TRANSFORMING
+                schema: STAGING
+                client_session_keep_alive: False
               prod:
                 type: snowflake
                 threads: 8
@@ -36,21 +47,18 @@ pipeline {
         """
 
         sh """
-          cat > Dockerfile.crowdcow_datawarehouse <<EOL
-          FROM crowdcow_datawarehouse
+          cat > Dockerfile.dbt <<EOL
+          FROM dbt
           COPY profiles.yml /root/.dbt/profiles.yml
         """
 
-        sh "docker build -f Dockerfile.crowdcow_datawarehouse -t crowdcow_datawarehouse_dbt_run ."
+        sh "docker build -f Dockerfile.dbt -t dbt_run ."
       }
     }
 
     stage('RUN') {
       steps {
-        sh "docker run --rm crowdcow_datawarehouse_dbt_run dbt seed"
-        sh "docker run --rm crowdcow_datawarehouse_dbt_run dbt snapshot"
-        sh "docker run --rm crowdcow_datawarehouse_dbt_run dbt run"
-        sh "docker run --rm crowdcow_datawarehouse_dbt_run dbt test"
+        sh "docker run --rm dbt_run ./jenkins_bin/jenkins_run.sh"
       }
     }
   }
