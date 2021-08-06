@@ -1,3 +1,3 @@
 -- Drop databases for QA
 
-drop qa_analytics;
+drop database qa_analytics;
