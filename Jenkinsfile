@@ -28,7 +28,7 @@ pipeline {
                 user: $SNOWFLAKE_DATAWAREHOUSE_USER
                 password: $SNOWFLAKE_DATAWAREHOUSE_PASSWORD
                 database: QA_ANALYTICS
-                role: TRANSFORMER
+                role: SYSADMIN
                 warehouse: TRANSFORMING
                 schema: STAGING
                 client_session_keep_alive: False
@@ -39,7 +39,7 @@ pipeline {
                 user: $SNOWFLAKE_DATAWAREHOUSE_USER
                 password: $SNOWFLAKE_DATAWAREHOUSE_PASSWORD
                 database: ANALYTICS
-                role: TRANSFORMER
+                role: SYSADMIN
                 warehouse: TRANSFORMING
                 schema: STAGING
                 client_session_keep_alive: False
