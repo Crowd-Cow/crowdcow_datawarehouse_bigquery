@@ -58,7 +58,14 @@ pipeline {
 
     stage('RUN') {
       steps {
-        sh "docker run --rm crowdcow_datawarehouse_dbt_run ./jenkins_bin/jenkins_run.sh"
+        sh '''
+        docker run \
+        --rm \
+        --env SNOWFLAKE_DATAWAREHOUSE_USER=$SNOWFLAKE_DATAWAREHOUSE_USER \
+        --env SNOWFLAKE_DATAWAREHOUSE_PASSWORD=$SNOWFLAKE_DATAWAREHOUSE_PASSWORD  \
+        crowdcow_datawarehouse_dbt_run \
+        ./jenkins_bin/jenkins_run.sh
+        '''
       }
     }
   }
