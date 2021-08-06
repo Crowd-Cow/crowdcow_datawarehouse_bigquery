@@ -11,7 +11,7 @@ pipeline {
       steps {
         checkout scm
 
-        sh "docker build -t dbt ."
+        sh "docker build -t crowdcow_datawarehouse ."
       }
     }
 
@@ -47,18 +47,18 @@ pipeline {
         """
 
         sh """
-          cat > Dockerfile.dbt <<EOL
-          FROM dbt
+          cat > Dockerfile.crowdcow_datawarehouse <<EOL
+          FROM crowdcow_datawarehouse
           COPY profiles.yml /root/.dbt/profiles.yml
         """
 
-        sh "docker build -f Dockerfile.dbt -t dbt_run ."
+        sh "docker build -f Dockerfile.crowdcow_datawarehouse -t crowdcow_datawarehouse_dbt_run ."
       }
     }
 
     stage('RUN') {
       steps {
-        sh "docker run --rm dbt_run ./jenkins_bin/jenkins_run.sh"
+        sh "docker run --rm crowdcow_datawarehouse_dbt_run ./jenkins_bin/jenkins_run.sh"
       }
     }
   }
