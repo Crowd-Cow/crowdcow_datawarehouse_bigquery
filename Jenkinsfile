@@ -27,8 +27,8 @@ pipeline {
                 account: lna65058.us-east-1
                 user: $SNOWFLAKE_DATAWAREHOUSE_USER
                 password: $SNOWFLAKE_DATAWAREHOUSE_PASSWORD
-                database: QA_ANALYTICS
-                role: SYSADMIN
+                database: ANALYTICS_QA
+                role: TRANSFORMER
                 warehouse: TRANSFORMING
                 schema: STAGING
                 client_session_keep_alive: False
@@ -39,11 +39,11 @@ pipeline {
                 user: $SNOWFLAKE_DATAWAREHOUSE_USER
                 password: $SNOWFLAKE_DATAWAREHOUSE_PASSWORD
                 database: ANALYTICS
-                role: SYSADMIN
+                role: TRANSFORMER
                 warehouse: TRANSFORMING
                 schema: STAGING
                 client_session_keep_alive: False
-            target: prod
+            target: qa
         """
 
         sh """
@@ -61,8 +61,6 @@ pipeline {
         sh '''
         docker run \
         --rm \
-        --env SNOWFLAKE_DATAWAREHOUSE_USER=$SNOWFLAKE_DATAWAREHOUSE_USER \
-        --env SNOWFLAKE_DATAWAREHOUSE_PASSWORD=$SNOWFLAKE_DATAWAREHOUSE_PASSWORD  \
         crowdcow_datawarehouse_dbt_run \
         ./jenkins_bin/jenkins_run.sh
         '''
