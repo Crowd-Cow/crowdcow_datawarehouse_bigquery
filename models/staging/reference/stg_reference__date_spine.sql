@@ -17,6 +17,7 @@ date_parts as (
     select
         date_day
         ,date_trunc('week',date_day) as date_week
+        ,date_trunc(week,date_day+1)-1 as date_week_sun
         ,date_trunc('month',date_day) as date_month
         ,date_part('month',date_day)::int as month_of_year
         ,{{ dbt_utils.last_day('date_day', 'month') }} as month_end_date
