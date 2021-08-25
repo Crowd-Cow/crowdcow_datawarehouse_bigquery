@@ -69,8 +69,8 @@ pipeline {
   }
 
   post {
-    always {
-      slackSend channel: '#jenkins-alerts', message: "Snowflake Data Warehouse ${currentBuild.displayName}: ${currentBuild.result}"
+    failure {
+      slackSend channel: '#jenkins-alerts', message: ":red_circle: ${currentBuild.projectName} ${currentBuild.displayName}: ${currentBuild.result}"
     }
   }
 }
