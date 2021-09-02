@@ -21,8 +21,6 @@ renamed as (
         ,{{ clean_strings('ip') }} as visit_ip
         ,{{ clean_strings('utm_campaign') }} as utm_campaign
         ,{{ clean_strings('landing_page') }} as visit_landing_page
-        ,parse_url({{ clean_strings('landing_page') }}):host::text as visit_landing_page_host
-        ,parse_url({{ clean_strings('landing_page') }}):path::text as visit_landing_page_path
         ,{{ clean_strings('os') }} as visit_os
         ,{{ clean_strings('utm_term') }} as utm_term
         ,{{ clean_strings('utm_medium') }} as utm_medium
