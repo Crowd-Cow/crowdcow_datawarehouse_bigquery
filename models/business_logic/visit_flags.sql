@@ -26,7 +26,6 @@ subscription_visits as (
 ),
 
 user_first_order as (
-
     select
         user_id
         ,min(order_paid_at_utc) as first_order_date
@@ -36,7 +35,6 @@ user_first_order as (
 ),
 
 user_first_subscription as (
-
     select 
         user_id
         ,min(subscription_created_at_utc) as first_subscription_date
@@ -45,7 +43,6 @@ user_first_subscription as (
 ),
 
 user_account_created as (
-
     select
         user_id
         ,min(created_at_utc) as first_creation_date
@@ -54,7 +51,6 @@ user_account_created as (
 ),
 
 user_signed_up as (
-
     select
         visit_id
         ,count(distinct user_id) as total_signed_up
@@ -63,7 +59,6 @@ user_signed_up as (
 ),
 
 order_completed as (
-
     select
         visit_id
         ,count(distinct order_id) as total_order_count
@@ -110,7 +105,6 @@ viewed_pdp_visits as (
 ),
 
 add_flags as (
-
     select
         visits.visit_id
 
