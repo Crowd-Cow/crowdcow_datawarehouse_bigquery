@@ -72,6 +72,7 @@ base_visits as (
         ,visits.visitor_token
         ,visits.visit_token
         ,visits.visit_landing_page
+        ,parse_url(visits.visit_landing_page):host::text as visit_landing_page_host
         ,replace(replace('/' || parse_url(visits.visit_landing_page):path::text,'//','/'),'/ROBOTS.TXT','') as visit_landing_page_path
         ,visits.visit_referring_domain
         ,visits.visit_referrer
@@ -108,6 +109,7 @@ base_visits as (
         ,visitor_token
         ,visit_token
         ,visit_landing_page
+        ,visit_landing_page_host
         ,coalesce(visit_landing_page_path,'') as visit_landing_page_path
 
         /** Extract user token from the landing page URL **/
@@ -231,6 +233,7 @@ base_visits as (
         ,visitor_token
         ,visit_token
         ,visit_landing_page
+        ,visit_landing_page_host
         ,visit_landing_page_path
         ,visit_landing_page_user_token
         ,visit_referring_domain
