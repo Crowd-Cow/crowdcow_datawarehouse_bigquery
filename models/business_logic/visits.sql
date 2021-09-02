@@ -37,9 +37,9 @@ base_visits as (
         
         /** Modify landing page to get the URL with the most information **/
         ,case
-            when lower(visit_landing_page) not like '%UTM_%' 
-                and lower(visit_referrer) like '%CROWDCOW.COM%'
-                and  lower(visit_referrer) like '%UTM_%' then coalesce(trim(visit_referrer),'')
+            when visit_landing_page not like '%UTM_%' 
+                and visit_referrer like '%CROWDCOW.COM%'
+                and  visit_referrer like '%UTM_%' then coalesce(trim(visit_referrer),'')
             else coalesce(trim(visit_landing_page),'')
         end as visit_landing_page
         
@@ -72,7 +72,7 @@ base_visits as (
         ,visits.visitor_token
         ,visits.visit_token
         ,visits.visit_landing_page
-        ,replace(replace('/' || parse_url(visits.visit_landing_page):path::text,'//','/'),'/robots.txt','') as visit_landing_page_path
+        ,replace(replace('/' || parse_url(visits.visit_landing_page):path::text,'//','/'),'/ROBOTS.TXT','') as visit_landing_page_path
         ,visits.visit_referring_domain
         ,visits.visit_referrer
         ,visits.visit_search_keyword
@@ -87,9 +87,9 @@ base_visits as (
         ,visits.utm_content
         ,visits.utm_term
         ,parse_url(visits.visit_landing_page) as parsed_landing_page
-        ,parse_url(visits.visit_landing_page):parameters:utm_medium::text as landing_utm_medium
-        ,parse_url(visits.visit_landing_page):parameters:utm_source::text as landing_utm_source
-        ,parse_url(visits.visit_landing_page):parameters:utm_campaign::text as landing_utm_campaign
+        ,parse_url(visits.visit_landing_page):parameters:UTM_MEDIUM::text as landing_utm_medium
+        ,parse_url(visits.visit_landing_page):parameters:UTM_SOURCE::text as landing_utm_source
+        ,parse_url(visits.visit_landing_page):parameters:UTM_CAMPAIGN::text as landing_utm_campaign
         ,ambassador_paths.partner_path as ambassador_path
         ,visits.visit_city
         ,visits.visit_country
