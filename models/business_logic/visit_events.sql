@@ -1,10 +1,3 @@
-{{
-  config(
-    tags = ["intermediate"],
-    snowflake_warehouse = 'TRANSFORMING_M'
-  )
-}}
-
 with 
 
 visit_events as (
@@ -18,7 +11,7 @@ visit_events as (
         ,0 as event_id
         ,'visit_start' as event_name
         ,started_at_utc as occurred_at_utc
-    from {{ ref('base_cc__ahoy_visits') }}
+    from {{ ref('visits') }}
 ),
 
 checkout_initiated as (
