@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: int_visit_flags__joined
+  - name: visit_flags
     description: "Intermediate model to add various flags to the fact visit data"
     columns:
       - name: visit_id
@@ -9,78 +9,6 @@ models:
         tests:
           - unique
           - not_null
-
-      - name: user_id
-        description: "User ID"
-
-      - name: visit_token
-        description: "Visit token"
-
-      - name: visitor_token
-        description: "Visitor token"
-
-      - name: visit_browser
-        description: "Browser used during site visit"
-
-      - name: visit_city
-        description: "Visit city"
-
-      - name: visit_region
-        description: "Visit region"
-
-      - name: visit_country
-        description: "Visit country"
-
-      - name: visit_ip
-        description: "Visit IP"
-
-      - name: visit_os
-        description: "Visit OS"
-
-      - name: visit_device_type
-        description: "Visit device type"
-
-      - name: visit_user_agent
-        description: "Visit user agent"
-
-      - name: visit_referrer
-        description: "Visit referrer"
-
-      - name: visit_referring_domain
-        description: "Visit referring domain"
-
-      - name: visit_search_keyword
-        description: "Visit search keyword"
-
-      - name: visit_landing_page
-        description: "Visit landing page"
-
-      - name: visit_landing_page_path
-        description: "Visit landing page path"
-
-      - name: utm_content
-        description: "UTM content"
-
-      - name: utm_campaign
-        description: "UTM campaign"
-
-      - name: utm_term
-        description: "UTM term"
-
-      - name: utm_medium
-        description: "UTM medium"
-
-      - name: utm_source
-        description: "UTM source"
-
-      - name: started_at_utc
-        description: "Timestamp for when the visit started UTC"
-
-      - name: updated_at_utc
-        description: "Timestamp for when the visit was updated UTC"
-
-      - name: is_wall_displayed
-        description: "Boolean indicating whether the wall was displayed"
 
       - name: is_homepage_landing
         description: "Boolean indicating if this visit landed on the homepage"

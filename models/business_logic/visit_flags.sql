@@ -1,13 +1,6 @@
-{{
-  config(
-        tags = ["intermediate"],
-        snowflake_warehouse = 'TRANSFORMING_M'
-    )
-}}
-
 with
 
-visits as ( select * from {{ ref('base_cc__ahoy_visits') }} ),
+visits as ( select * from {{ ref('visits') }} ),
 suspicious_ips as ( select * from {{ ref('stg_cc__suspicious_ips') }} ),
 subscribed as ( select * from {{ ref('stg_cc__event_subscribed') }} ),
 sign_up as ( select * from {{ ref('stg_cc__event_sign_up') }} ),
@@ -120,72 +113,18 @@ add_flags as (
 
     select
         visits.visit_id
-        ,visits.user_id
-        ,visits.visit_token
-        ,visits.visitor_token
-        ,visits.visit_browser
-        ,visits.visit_city
-        ,visits.visit_region
-        ,visits.visit_country
-        ,visits.visit_ip
-        ,visits.visit_os
-        ,visits.visit_device_type
-        ,visits.visit_user_agent
-        ,visits.visit_referrer
-        ,visits.visit_referring_domain
-        ,visits.visit_search_keyword
-        ,visits.visit_landing_page
-        ,visits.visit_landing_page_path
-        ,visits.utm_content
-        ,visits.utm_campaign
-        ,visits.utm_term
-        ,visits.utm_medium
-        ,visits.utm_source
-        ,visits.started_at_utc
-        ,visits.updated_at_utc
-        ,visits.is_wall_displayed
 
-        ,case
-            when visits.visit_landing_page_host = 'WWW.CROWDCOW.COM' 
-                and visits.visit_landing_page_path = '' or visits.visit_landing_page_path = 'L' then true
-            else false
-         end as is_homepage_landing
+        ,visits.visit_landing_page_host = 'WWW.CROWDCOW.COM' 
+            and visits.visit_landing_page_path in ('/','/L') as is_homepage_landing
 
-        ,case
-            when  suspicious_ips.visit_ip is not null
-                or visits.visit_user_agent like '%BOT%'
-                or lower(visits.visit_user_agent) like '%CRAWL%'
-                or lower(visits.visit_user_agent) like '%LIBRATO%'
-                or lower(visits.visit_user_agent) like '%TWILIOPROXY%'
-                or lower(visits.visit_user_agent) like '%YAHOOMAILPROXY%'
-                or lower(visits.visit_user_agent) like '%SCOUTURLMONITOR%'
-                or lower(visits.visit_user_agent) like '%FULLCONTACT%'
-                or lower(visits.visit_user_agent) like '%IMGIX%'
-                or lower(visits.visit_user_agent) like '%BUCK%'
-                or (visits.visit_ip is null and visits.visit_user_agent is null) then true
-            else false
-         end as is_bot
+        ,suspicious_ips.visit_ip is not null
+            or visits.visit_user_agent like any ('%BOT%','%CRAWL%','%LIBRATO%','%TWILIOPROXY%','%YAHOOMAILPROXY%','%SCOUTURLMONITOR%','%FULLCONTACT%','%IMGIX%','%BUCK%')
+            or (visits.visit_ip is null and visits.visit_user_agent is null) as is_bot
 
-        ,case
-            when visits.visit_ip in ('66.171.181.219', '127.0.0.1') or employee_user.user_id then true
-            else false
-        end as is_internal_traffic
-
-        ,case
-            when user_first_order.user_id is not null and user_first_order.first_order_date < visits.started_at_utc then true
-            else false
-         end as has_previous_order
-
-        ,case
-            when user_first_subscription.user_id is not null and user_first_subscription.first_subscription_date < visits.started_at_utc then true
-            else false
-         end as has_previous_subscription
-
-        ,case
-            when user_account_created.user_id is not null and user_account_created.first_creation_date < visits.started_at_utc then true
-            else false
-         end as had_account_created
-
+        ,visits.visit_ip in ('66.171.181.219', '127.0.0.1') or employee_user.user_id as is_internal_traffic
+        ,user_first_order.user_id is not null and user_first_order.first_order_date < visits.started_at_utc as has_previous_order
+        ,user_first_subscription.user_id is not null and user_first_subscription.first_subscription_date < visits.started_at_utc as has_previous_subscription
+        ,user_account_created.user_id is not null and user_account_created.first_creation_date < visits.started_at_utc as had_account_created
         ,subscription_visits.visit_id is not null as did_subscribe
         ,user_signed_up.visit_id is not null as did_sign_up
         ,order_completed.visit_id is not null as did_complete_order
