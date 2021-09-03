@@ -1,0 +1,102 @@
+version: 2
+
+models:
+  - name: visits
+    description: "Business logic to describe visits"
+    columns:
+      - name: visit_id
+        description: "Visit ID"
+        tests:
+          - not_null
+          - unique
+
+      - name: user_id
+        description: "User ID"
+
+      - name: visitor_token
+        description: "Visitor token"
+
+      - name: visit_token
+        description: "Visit token"
+
+      - name: visit_landing_page
+        description: "Initial landing page where the visit started"
+
+      - name: visit_landing_page_host
+        description: "The host of the landing page that was parsed out of the URL"
+
+      - name: visit_landing_page_path
+        description: "The path of the landing page that was parsed out of the URL"
+
+      - name: visit_landing_page_user_token
+        description: "User token parsed from the landing URL. Used to determine if the visit was a user referral"
+
+      - name: visit_referring_domain
+        description: "Visit referring domain"
+
+      - name: visit_referrer
+        description: "Visit referrer"
+
+      - name: visit_search_keyword
+        description: "Visit search keyword"
+
+      - name: visit_browser
+        description: "Visit browser"
+
+      - name: visit_ip
+        description: "Visit IP"
+
+      - name: visit_device_type
+        description: "Visit device type"
+
+      - name: visit_user_agent
+        description: "Visit user agent"
+
+      - name: visit_os
+        description: "Visit OS"
+
+      - name: utm_source
+        description: "UTM soruce"
+
+      - name: utm_medium
+        description: "UTM medium"
+
+      - name: utm_campaign
+        description: "UTM campaign"
+
+      - name: utm_content
+        description: "UTM content"
+
+      - name: utm_term
+        description: "UTM term"
+
+      - name: channel
+        description: "Channel of visit attributed source"
+
+      - name: sub_channel
+        description: "Sub channel of visit attributed source"
+
+      - name: visit_attributed_source
+        description: "The attributed source of a visit"
+
+      - name: ambassador_path
+        description: "Ambassador landing page path"
+
+      - name: visit_city
+        description: "Visit city"
+
+      - name: visit_country
+        description: "Visit country"
+
+      - name: visit_region
+        description: "Visit region"
+
+      - name: is_wall_displayed
+        description: "Boolean indicating if the wal was displayed"
+
+      - name: started_at_utc
+        description: "Timestamp of when the visit started UTC"
+
+      - name: updated_at_utc
+        description: "Timestamp of when the record was updated UTC"
+

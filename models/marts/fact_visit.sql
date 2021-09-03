@@ -6,18 +6,19 @@
 
 with
 
-all_events as ( select * from {{ ref('int_visit_events__unioned') }} ),
-visits as ( select * from {{ ref('int_visit_flags__joined') }} ),
+visits as ( select * from {{ ref('visits') }} )
+,all_events as ( select * from {{ ref('visit_events') }} )
+,visit_flags as ( select * from {{ ref('visit_flags') }} )
 
-find_user_id as (
+,find_user_id as (
 
     select 
         *
         ,last_value(user_id) over(partition by visit_id order by occurred_at_utc, event_id) as last_user_id
     from all_events
-),
+)
 
-aggregate_events as (
+,aggregate_events as (
 
     select
         visit_id
@@ -26,9 +27,9 @@ aggregate_events as (
     from find_user_id
     group by 1,2
 
-),
+)
 
-joined_visits as (
+,joined_visits as (
 
     select 
         visits.visit_id
@@ -53,25 +54,29 @@ joined_visits as (
         ,visits.utm_term
         ,visits.utm_medium
         ,visits.utm_source
+        ,visits.channel
+        ,visits.sub_channel
+        ,visits.visit_attributed_source
         ,visits.is_wall_displayed
-        ,visits.is_bot
-        ,visits.is_internal_traffic
-        ,visits.is_homepage_landing
-        ,visits.has_previous_order
-        ,visits.has_previous_subscription
-        ,visits.had_account_created
-        ,visits.did_subscribe
-        ,visits.did_sign_up
-        ,visits.did_complete_order
-        ,visits.pdp_views_count
-        ,visits.pcp_impressions_count
-        ,visits.pcp_impression_clicks_count
-        ,visits.pdp_product_add_to_cart_count
+        ,visit_flags.is_bot
+        ,visit_flags.is_internal_traffic
+        ,visit_flags.is_homepage_landing
+        ,visit_flags.has_previous_order
+        ,visit_flags.has_previous_subscription
+        ,visit_flags.had_account_created
+        ,visit_flags.did_subscribe
+        ,visit_flags.did_sign_up
+        ,visit_flags.did_complete_order
+        ,visit_flags.pdp_views_count
+        ,visit_flags.pcp_impressions_count
+        ,visit_flags.pcp_impression_clicks_count
+        ,visit_flags.pdp_product_add_to_cart_count
         ,visits.started_at_utc
         ,visits.updated_at_utc
         ,aggregate_events.visit_event_sequence
     from visits
-        inner join aggregate_events on visits.visit_id = aggregate_events.visit_id
+        left join visit_flags on visits.visit_id = visit_flags.visit_id
+        left join aggregate_events on visits.visit_id = aggregate_events.visit_id
         
 
 )
