@@ -37,7 +37,9 @@ models:
         +materialized: view
         reference:
             +materialized: table
-    datawarehouse:
+    business_logic:
+        +materialized: table
+    marts:
         +materialized: table
         +schema: datawarehouse
         ecommerce:
