@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: fact_visit_new
+  - name: fact_visit
     description: "Fact table to describe visits and activities performed when visiting the Crowd Cow website"
     columns:
       - name: visit_id
