@@ -1,3 +1,9 @@
+{{
+  config(
+        snowflake_warehouse = 'TRANSFORMING_M'
+    )
+}}
+
 with 
 
 visit_events as (

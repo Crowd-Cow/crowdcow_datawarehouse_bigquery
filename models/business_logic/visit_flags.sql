@@ -1,3 +1,9 @@
+{{
+  config(
+        snowflake_warehouse = 'TRANSFORMING_M'
+    )
+}}
+
 with
 
 visits as ( select * from {{ ref('visits') }} ),

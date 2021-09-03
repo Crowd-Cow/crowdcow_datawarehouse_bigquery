@@ -1,3 +1,8 @@
+{{
+  config(
+        snowflake_warehouse = 'TRANSFORMING_M'
+    )
+}}
 
 with
 
