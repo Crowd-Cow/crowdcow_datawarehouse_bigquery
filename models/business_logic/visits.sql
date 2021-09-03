@@ -13,7 +13,7 @@ base_visits as (
     from {{ ref('base_cc__ahoy_visits') }} 
     
     {% if is_incremental() %}
-      and started_at_utc >= coalesce((select max(started_at_utc) from {{ this }}), '1900-01-01')
+      where started_at_utc >= coalesce((select max(started_at_utc) from {{ this }}), '1900-01-01')
     {% endif %}
 
 )
