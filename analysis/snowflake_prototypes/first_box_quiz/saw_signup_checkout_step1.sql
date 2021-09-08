@@ -1,3 +1,4 @@
+/*** Snowflake prototype dashboard: https://app.snowflake.com/us-east-1/lna65058/first-box-dashboard-includes-any-visitor-that-saw-the-homepage-with-fbq-dZ6KnqQC4 ****/
 /**** % of Visitors Who Saw Sign-up and Checkout Step 1 ****/
 
 /* raw.cc_cc.ahoy_events.name = 'sign_up' --> checkout_step_1 --> checkout_step_2 --> order_complete */

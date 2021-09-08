@@ -1,3 +1,4 @@
+/*** Snowflake prototype dashboard: https://app.snowflake.com/us-east-1/lna65058/first-box-dashboard-includes-any-visitor-that-saw-the-homepage-with-fbq-dZ6KnqQC4 ****/
 /**** FBQ CTA and Sign Up Visit Rates (Sign in and bundle event visits/Visits to FBQ CTA page) - Visit had both events. Sign up was not necessarily reached through FBQ ****/
 
 with

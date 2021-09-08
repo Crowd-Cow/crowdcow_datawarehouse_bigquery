@@ -1,3 +1,4 @@
+/*** Snowflake prototype dashboard: https://app.snowflake.com/us-east-1/lna65058/first-box-dashboard-includes-any-visitor-that-saw-the-homepage-with-fbq-dZ6KnqQC4 ****/
 /**** Weekly Conversion (By Visitor Session)  - Non Sub Paid Uncancelled Orders / # of Visitor Sessions ****/
 
 with
