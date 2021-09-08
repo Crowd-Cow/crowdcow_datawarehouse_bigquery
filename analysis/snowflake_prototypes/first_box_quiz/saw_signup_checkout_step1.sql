@@ -35,19 +35,19 @@ members as (
     where dbt_valid_to is null
     group by 1
     having count(subscription_id) > 0
-),
+)
 
-homepage_view_events as (
+,traffic_to_fbq as (
     select
         visit_id
         ,count(event_id) as event_count
     from fact_event_pageview
-    where (parse_url(url):path::text = '' or parse_url(url):path::text = 'l')
-        and url not like '%/?first-box%'
+    where parse_url(url):path::text = 'first-box'
+        and occurred_at >= '2021-08-25'
     group by 1
-),
+)
 
-homepage_fbq_impressions as (
+,fbq_flow as (
     select
         fact_visit.visit_id
         ,fact_visit.user_id
@@ -69,23 +69,15 @@ homepage_fbq_impressions as (
             and dim_user.dbt_valid_to is null
         left join members on fact_visit.user_id = members.user_id
     where convert_timezone('UTC','America/Los_Angeles',fact_visit.visited_at) = :daterange
-        and fact_visit.visit_id in (select visit_id from homepage_view_events)
+        and fact_visit.visit_id in (select visit_id from traffic_to_fbq)
         and not fact_visit.is_bot
         and not fact_visit.is_internal_traffic
-        and valid_experiments.experiment_variant = 'experimental'
         and (utm_medium <> 'FIELD-MARKETING' or utm_medium is null)
         and (members.user_id is null or members.first_subscription_date >= fact_visit.visited_at)
-),
+)
 
 /*LIMITING SIGN UP EVENTS TO 08/1/21 OR LATER */ 
-clicked_fbq_cta as (
-    select
-        homepage_fbq_impressions.*
-    from homepage_fbq_impressions
-        inner join event_first_box_hero_selected on homepage_fbq_impressions.visit_id = event_first_box_hero_selected.visit_id
-),
-
-sign_up_events as ( 
+,sign_up_events as ( 
     select
         visit_id 
         , count(id) as event_count
@@ -128,33 +120,32 @@ order_complete_events as (
     group by 1
     having count(event_order_complete.event_id) > 0
 )
+
 , viewed_sign_up as (
 
     select 
-    homepage_fbq_impressions.visit_date
+    fbq_flow.visit_date
 
     , 
     case when sign_up_events.visit_id is not null then 'Viewed Sign Up' else 'Did Not View Sign Up' end as viewed_sign_up
     , count(distinct case when checkout_one_events.visit_id is not null 
-            then homepage_fbq_impressions.visitor_token else null end) as viewed_checkout_one
+            then fbq_flow.visitor_token else null end) as viewed_checkout_one
     , count(distinct case when checkout_two_events.visit_id is not null 
-            then homepage_fbq_impressions.visitor_token else null end) as viewed_checkout_two
+            then fbq_flow.visitor_token else null end) as viewed_checkout_two
     , count(distinct case when checkout_one_events.visit_id is not null 
                 and checkout_two_events.visit_id is not null 
                 and order_complete_events.visit_id is not null
-            then homepage_fbq_impressions.visitor_token else null end) as viewed_one_two_order_complete 
+            then fbq_flow.visitor_token else null end) as viewed_one_two_order_complete 
     , count(distinct case when order_complete_events.visit_id is not null
-            then homepage_fbq_impressions.visitor_token else null end) as viewed_order_complete 
-    from homepage_fbq_impressions
-    left join sign_up_events on sign_up_events.visit_id = homepage_fbq_impressions.visit_id 
-    left join clicked_fbq_cta on homepage_fbq_impressions.visit_id = clicked_fbq_cta.visit_id
-     
-    left join checkout_one_events on checkout_one_events.visit_id = homepage_fbq_impressions.visit_id
-    left join checkout_two_events on checkout_two_events.visit_id = homepage_fbq_impressions.visit_id
-    left join order_complete_events on order_complete_events.visit_id = homepage_fbq_impressions.visit_id
+            then fbq_flow.visitor_token else null end) as viewed_order_complete 
+    from fbq_flow
+        left join sign_up_events on sign_up_events.visit_id = fbq_flow.visit_id 
+        left join checkout_one_events on checkout_one_events.visit_id = fbq_flow.visit_id
+        left join checkout_two_events on checkout_two_events.visit_id = fbq_flow.visit_id
+        left join order_complete_events on order_complete_events.visit_id = fbq_flow.visit_id
     
     /* Where clause filtering for clicked FBQ and were experimental */ 
-    where clicked_fbq_cta.visit_id is not null and homepage_fbq_impressions.experiment_variant = 'experimental'
+    where fbq_flow.visit_id is not null and fbq_flow.experiment_variant = 'experimental'
     group by 1,2
 )
 

@@ -29,17 +29,19 @@ members as (
     from dim_subscription
     where dbt_valid_to is null
     group by 1
-),
-homepage_view_events as (
+)
+
+,traffic_to_fbq as (
     select
         visit_id
         ,count(event_id) as event_count
     from fact_event_pageview
-    where (parse_url(url):path::text = '' or parse_url(url):path::text = 'l')
-        and url not like '%/?first-box%'
+    where parse_url(url):path::text = 'first-box'
+        and occurred_at >= '2021-08-25'
     group by 1
-),
-homepage_fbq_impressions as (
+)
+
+,fbq_flow as (
     select
         fact_visit.visit_id
         ,fact_visit.user_id
@@ -58,30 +60,21 @@ homepage_fbq_impressions as (
             and dim_user.dbt_valid_to is null
         left join members on fact_visit.user_id = members.user_id
     where convert_timezone('UTC','America/Los_Angeles',fact_visit.visited_at) = :daterange
-        and fact_visit.visit_id in (select visit_id from homepage_view_events)
+        and fact_visit.visit_id in (select visit_id from traffic_to_fbq)
         and not fact_visit.is_bot
         and not fact_visit.is_internal_traffic
-        and valid_experiments.experiment_variant = 'experimental'
         and (utm_medium <> 'FIELD-MARKETING' or utm_medium is null)
         and (members.user_id is null or members.first_subscription_date >= fact_visit.visited_at)
-),
-
-clicked_fbq_cta as (
-    select
-        homepage_fbq_impressions.*
-    from homepage_fbq_impressions
-        inner join event_first_box_hero_selected on homepage_fbq_impressions.visit_id = event_first_box_hero_selected.visit_id
 )
-
 
 ,clicked_on_bundle as (
     select
-        clicked_fbq_cta.visit_id
+        fbq_flow.visit_id
         ,count(event_quiz_nav_purchase_bundle.visit_id) as cnt
         ,event_quiz_nav_purchase_bundle.bid_item_key
-        , clicked_fbq_cta.visit_date
-    from clicked_fbq_cta
-        inner join event_quiz_nav_purchase_bundle on clicked_fbq_cta.visit_id = event_quiz_nav_purchase_bundle.visit_id
+        , fbq_flow.visit_date
+    from fbq_flow
+        inner join event_quiz_nav_purchase_bundle on fbq_flow.visit_id = event_quiz_nav_purchase_bundle.visit_id
     group by 1, 3, 4
 )
 
@@ -96,12 +89,12 @@ clicked_fbq_cta as (
 
 ,clicked_customize_bundle as (
     select
-        clicked_fbq_cta.visit_id
+        fbq_flow.visit_id
         ,count(event_quiz_nav_customize_bundle.visit_id) as cnt
-        , clicked_fbq_cta.visit_date
+        , fbq_flow.visit_date
         , event_quiz_nav_customize_bundle.bid_item_key
-    from clicked_fbq_cta
-        inner join event_quiz_nav_customize_bundle on clicked_fbq_cta.visit_id = event_quiz_nav_customize_bundle.visit_id
+    from fbq_flow
+        inner join event_quiz_nav_customize_bundle on fbq_flow.visit_id = event_quiz_nav_customize_bundle.visit_id
     group by 1, 3, 4
 )
 
@@ -122,7 +115,7 @@ from clicked_on_bundle
     inner join event_quiz_nav_purchase_bundle on clicked_on_bundle.visit_id = event_quiz_nav_purchase_bundle.visit_id
     inner join bid_items_from_bundle_select on event_quiz_nav_purchase_bundle.bid_item_key = bid_items_from_bundle_select.bid_item_key
 where
-    click_fbq_cta.is_guest_user = :is_guest
+    fbq_flow.is_guest_user = :is_guest
 group by 2, 3, 4
 
 
@@ -137,6 +130,6 @@ from clicked_customize_bundle
     inner join event_quiz_nav_purchase_bundle on clicked_customize_bundle.visit_id = event_quiz_nav_purchase_bundle.visit_id
     inner join bid_items_from_customize_select on event_quiz_nav_purchase_bundle.bid_item_key = bid_items_from_customize_select.bid_item_key
 where
-    click_fbq_cta.is_guest_user = :is_guest
+    fbq_flow.is_guest_user = :is_guest
 group by 2, 3, 4
 order by 3, 4, 2

@@ -1,7 +1,4 @@
-/*** Snowflake prototype dashboard: https://app.snowflake.com/us-east-1/lna65058/first-box-dashboard-includes-any-visitor-that-saw-the-homepage-with-fbq-dZ6KnqQC4 ****/
-/**** Visitors Coming Through FBQ Flow | Rates ****/
-
-with
+/*** Snowflake prototype dashboard: https://app.snowflake.com/us-east-1/lna65058/first-box-dashboard-includes-any-visitor-that-saw-the-homepage-with-fbq-dZ6KnqQC4 ****/with
 
 invalid_experiments as (
        select
@@ -34,23 +31,22 @@ members as (
     group by 1
 )
 
-,homepage_view_events as (
+,traffic_to_fbq as (
     select
         visit_id
         ,count(event_id) as event_count
     from fact_event_pageview
-    where (parse_url(url):path::text = '' or parse_url(url):path::text = 'l')
-        and url not like '%/?first-box%'
+    where parse_url(url):path::text = 'first-box'
+        and occurred_at >= '2021-08-25'
     group by 1
 )
 
-
-, homepage_fbq_impressions as (
+,fbq_flow as (
     select
         fact_visit.visit_id
         ,fact_visit.user_id
         ,fact_visit.visitor_token
-        , concat(fact_visit.visitor_token, '-', date(convert_timezone('UTC','America/Los_Angeles',fact_visit.visited_at)))as visitor_session
+        ,concat(fact_visit.visitor_token, '-', date(convert_timezone('UTC','America/Los_Angeles',fact_visit.visited_at)))as visitor_session
         ,case
             when dim_user.email like 'TEMPORARY%CROWDCOW.COM%' then TRUE
             when dim_user.email is null then FALSE
@@ -58,7 +54,7 @@ members as (
          end as is_guest_user
         ,members.user_id is not null as is_member
         ,date(convert_timezone('UTC','America/Los_Angeles',fact_visit.visited_at)) as visit_date
-        , convert_timezone('UTC','America/Los_Angeles',fact_visit.visited_at) as visited_at
+        ,convert_timezone('UTC','America/Los_Angeles',fact_visit.visited_at) as visited_at
         ,fact_visit.device_type as device_type
         ,valid_experiments.experiment_token
         ,valid_experiments.experiment_variant
@@ -67,35 +63,27 @@ members as (
         left join dim_user on fact_visit.user_id = dim_user.user_id
             and dim_user.dbt_valid_to is null
         left join members on fact_visit.user_id = members.user_id
-    
     where convert_timezone('UTC','America/Los_Angeles',fact_visit.visited_at) = :daterange
-        and fact_visit.visit_id in (select visit_id from homepage_view_events)
-        and  fact_visit.is_bot = false
-        and  fact_visit.is_internal_traffic = false
+        and fact_visit.visit_id in (select visit_id from traffic_to_fbq)
+        and not fact_visit.is_bot
+        and not fact_visit.is_internal_traffic
+        and (utm_medium <> 'FIELD-MARKETING' or utm_medium is null)
         and valid_experiments.experiment_variant = 'experimental'
-        and (utm_medium != 'FIELD-MARKETING' or utm_medium is null )
         and (members.user_id is null or members.first_subscription_date >= fact_visit.visited_at)
 )
 
-,clicked_fbq_cta as (
-    select
-        homepage_fbq_impressions.*
-    from homepage_fbq_impressions
-        inner join event_first_box_hero_selected on homepage_fbq_impressions.visit_id = event_first_box_hero_selected.visit_id
-)
-
 , aggregates as (
-select homepage_fbq_impressions.experiment_variant
-, count(distinct homepage_fbq_impressions.visitor_token) as distinct_visitors
-, count( distinct case when fact_order.checkout_completed_at >= homepage_fbq_impressions.visited_at  
+select fbq_flow.experiment_variant
+, count(distinct fbq_flow.visitor_token) as distinct_visitors
+, count( distinct case when fact_order.checkout_completed_at >= fbq_flow.visited_at  
                         and fact_order.checkout_completed_at is not null 
                     then fact_order.order_id else null end ) as completed_orders
 
-, count(distinct case when fact_order.checkout_completed_at >= homepage_fbq_impressions.visited_at  
+, count(distinct case when fact_order.checkout_completed_at >= fbq_flow.visited_at  
                         and fact_order.checkout_completed_at is not null 
                         and fact_order.is_subscription = true
                     then fact_order.order_id else null end) as completed_first_member_orders 
-, count( distinct case when fact_order.checkout_completed_at >= homepage_fbq_impressions.visited_at  
+, count( distinct case when fact_order.checkout_completed_at >= fbq_flow.visited_at  
                         and fact_order.checkout_completed_at is not null 
                         and fact_order.is_subscription = false
                     then fact_order.order_id else null end) as completed_non_member_orders 
@@ -105,7 +93,7 @@ select homepage_fbq_impressions.experiment_variant
 //            as net_aov_paid_uncancelled
    ,round(avg(case when fact_order.checkout_completed_at is not null then fact_order.product_revenue + fact_order.shipping_revenue - fact_order.disputes  - fact_order.discounts - fact_order.refunds else null end),2)
         as completed_orders_net_aov
-, count( distinct case when fact_order.ordered_at >= homepage_fbq_impressions.visited_at  
+, count( distinct case when fact_order.ordered_at >= fbq_flow.visited_at  
                         and fact_order.ordered_at is not null  
                         and fact_order.is_subscription = true
                         and fact_order.cancelled_at is null 
@@ -115,13 +103,12 @@ select homepage_fbq_impressions.experiment_variant
                  
                         
 
-from homepage_fbq_impressions
-        inner join clicked_fbq_cta on homepage_fbq_impressions.visit_id = clicked_fbq_cta.visit_id
-        left join fact_order on fact_order.visit_id = homepage_fbq_impressions.visit_id
+from fbq_flow
+        left join fact_order on fact_order.visit_id = fbq_flow.visit_id
         left join (select product_revenue,shipping_revenue,discounts,disputes,refunds,ordered_at,cancelled_at,order_id,visit_id 
                     from fact_order
                     where fact_order.cancelled_at is null 
-                    and fact_order.ordered_at is not null ) as fact_order_paid_uncancelled on fact_order_paid_uncancelled.visit_id = homepage_fbq_impressions.visit_id
+                    and fact_order.ordered_at is not null ) as fact_order_paid_uncancelled on fact_order_paid_uncancelled.visit_id = fbq_flow.visit_id
 group by 1
 order by 2 desc ) 
 
