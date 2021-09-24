@@ -6,7 +6,7 @@ day_spine as (
       dbt_utils.date_spine(
           datepart = 'day',
           start_date = "'2018-01-01'::date",
-          end_date = "date(getdate())"
+          end_date = "date(sysdate())"
       )
     }}
 
