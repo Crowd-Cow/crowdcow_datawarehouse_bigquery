@@ -16,6 +16,9 @@ models:
       - name: is_bot
         description: "Boolean indicating if this visit was a bot user"
 
+      - name: is_invalid_visit
+        description: "Boolean indicating if this visit is considered an invalid visit. It could be considered invalid for a variety of reasons (e.g. internal dev traffic, invalid URLS, etc"
+
       - name: is_internal_traffic
         description: "Boolean indicating if the visit is coming from a internal traffic"
 

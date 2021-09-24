@@ -46,6 +46,9 @@ models:
       - name: visit_ip
         description: "Visit IP"
 
+      - name: visitor_ip_session
+        description: "Defines a visit session at the IP address level. If the same IP address logs another visit after 30 minutes, the session number for that IP is incremented by one. The field is a concatenation of the IP address and the session number."
+
       - name: visit_device_type
         description: "Visit device type"
 
