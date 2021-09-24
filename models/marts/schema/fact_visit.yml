@@ -34,6 +34,9 @@ models:
       - name: visit_ip
         description: "IP address of the user"
 
+      - name: visitor_ip_session
+        description: "Defines a visit session at the IP address level. If the same IP address logs another visit after 30 minutes, the session number for that IP is incremented by one. The field is a concatenation of the IP address and the session number."
+
       - name: visit_os
         description: "OS of the user's device"
 
@@ -81,6 +84,9 @@ models:
 
       - name: is_bot
         description: "Boolean indicating if this visit was a bot user"
+
+      - name: is_invalid_visit
+        description: "Boolean indicating if this visit is considered an invalid visit. It could be considered invalid for a variety of reasons (e.g. internal dev traffic, invalid URLS, etc"
 
       - name: has_previous_order
         description: "Boolean indicating if the user associated with this visit has had an order previous to this visit"

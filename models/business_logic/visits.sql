@@ -48,6 +48,7 @@ base_visits as (
         ,visit_search_keyword
         ,visit_browser
         ,visit_ip
+        ,CONDITIONAL_TRUE_EVENT(DATEDIFF(MIN, LAG(started_at_utc) OVER (PARTITION BY visit_ip ORDER BY started_at_utc ASC), started_at_utc) >= 30) OVER (PARTITION BY visit_ip ORDER BY started_at_utc ASC) AS ip_session_number
         ,visit_device_type
         ,visit_user_agent
         ,visit_os
@@ -79,6 +80,7 @@ base_visits as (
         ,visits.visit_search_keyword
         ,visits.visit_browser
         ,visits.visit_ip
+        ,visit_ip || '-' || ip_session_number as visitor_ip_session
         ,visits.visit_device_type
         ,visits.visit_user_agent
         ,visits.visit_os
@@ -123,6 +125,7 @@ base_visits as (
         ,coalesce(visit_search_keyword,'') as visit_search_keyword
         ,visit_browser
         ,visit_ip
+        ,visitor_ip_session
         ,visit_device_type
         ,visit_user_agent
         ,visit_os
@@ -241,6 +244,7 @@ base_visits as (
         ,visit_search_keyword
         ,visit_browser
         ,visit_ip
+        ,visitor_ip_session
         ,visit_device_type
         ,visit_user_agent
         ,visit_os

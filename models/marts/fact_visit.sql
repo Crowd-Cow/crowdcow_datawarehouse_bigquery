@@ -41,6 +41,7 @@ visits as ( select * from {{ ref('visits') }} )
         ,visits.visit_region
         ,visits.visit_country
         ,visits.visit_ip
+        ,visits.visitor_ip_session
         ,visits.visit_os
         ,visits.visit_device_type
         ,visits.visit_user_agent
@@ -60,6 +61,7 @@ visits as ( select * from {{ ref('visits') }} )
         ,visits.is_wall_displayed
         ,visit_flags.is_bot
         ,visit_flags.is_internal_traffic
+        ,visit_flags.is_invalid_visit
         ,visit_flags.is_homepage_landing
         ,visit_flags.has_previous_order
         ,visit_flags.has_previous_subscription
@@ -77,6 +79,8 @@ visits as ( select * from {{ ref('visits') }} )
     from visits
         left join visit_flags on visits.visit_id = visit_flags.visit_id
         left join aggregate_events on visits.visit_id = aggregate_events.visit_id
+    where not visit_flags.is_invalid_visit
+        and visits.visit_landing_page <> ''
         
 
 )
