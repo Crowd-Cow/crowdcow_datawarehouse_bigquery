@@ -125,6 +125,7 @@ base_visits as (
         ,coalesce(visit_search_keyword,'') as visit_search_keyword
         ,visit_browser
         ,visit_ip
+        ,visitor_ip_session
         ,visit_device_type
         ,visit_user_agent
         ,visit_os
@@ -243,6 +244,7 @@ base_visits as (
         ,visit_search_keyword
         ,visit_browser
         ,visit_ip
+        ,visitor_ip_session
         ,visit_device_type
         ,visit_user_agent
         ,visit_os
