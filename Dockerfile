@@ -1,7 +1,7 @@
 FROM python:3.9.6
 
 # Uncomment if you need to install anything, like Vim, with apt-get
-RUN apt-get update -y
+# RUN apt-get update -y
 # RUN apt-get install vim -y
 
 # Uncomment if you need SnowSQL
