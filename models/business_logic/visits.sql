@@ -80,7 +80,7 @@ base_visits as (
         ,visits.visit_search_keyword
         ,visits.visit_browser
         ,visits.visit_ip
-        ,visit_ip || '-' || ip_session_number as visitor_ip_session
+        ,visits.visit_ip || '-' || visits.ip_session_number as visitor_ip_session
         ,visits.visit_device_type
         ,visits.visit_user_agent
         ,visits.visit_os
