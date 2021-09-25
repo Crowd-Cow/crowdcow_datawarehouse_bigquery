@@ -41,7 +41,7 @@ visits as ( select * from {{ ref('visits') }} )
         ,visits.visit_region
         ,visits.visit_country
         ,visits.visit_ip
-        ,visits.visitor_ip_session
+        ,visits._visitor_ip_session as visitor_ip_session
         ,visits.visit_os
         ,visits.visit_device_type
         ,visits.visit_user_agent
