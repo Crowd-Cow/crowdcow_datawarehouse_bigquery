@@ -1,4 +1,4 @@
-FROM python:3.9.6
+FROM python:3.9.7
 
 # Uncomment if you need to install anything, like Vim, with apt-get
 # RUN apt-get update -y
