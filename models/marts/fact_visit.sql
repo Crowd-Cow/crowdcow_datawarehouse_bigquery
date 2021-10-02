@@ -12,8 +12,8 @@ visits as ( select * from {{ ref('visits') }} )
 
 ,find_user_id as (
 
-    select 
-        *
+    select distinct
+        visit_id
         ,last_value(user_id) over(partition by visit_id order by occurred_at_utc, event_id) as last_user_id
     from all_events
 )
