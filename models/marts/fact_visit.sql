@@ -12,26 +12,26 @@ visits as ( select * from {{ ref('visits') }} )
 
 ,find_user_id as (
 
-    select distinct
-        visit_id
+    select 
+        *
         ,last_value(user_id) over(partition by visit_id order by occurred_at_utc, event_id) as last_user_id
     from all_events
 )
 
-/**,aggregate_events as (
+,aggregate_events as (
     select
         visit_id
         ,last_user_id as user_id
         ,array_agg(event_name) within group (order by occurred_at_utc, event_id)::variant as visit_event_sequence
     from find_user_id
     group by 1,2
-)**/
+)
 
 ,joined_visits as (
 
     select 
         visits.visit_id
-        ,coalesce(visits.user_id,find_user_id.last_user_id) as user_id
+        ,coalesce(visits.user_id,aggregate_events.user_id) as user_id
         ,visits.visit_token
         ,visits.visitor_token
         ,visits.visit_browser
@@ -74,11 +74,10 @@ visits as ( select * from {{ ref('visits') }} )
         ,visit_flags.pdp_product_add_to_cart_count
         ,visits.started_at_utc
         ,visits.updated_at_utc
-        --,aggregate_events.visit_event_sequence
+        ,aggregate_events.visit_event_sequence
     from visits
         left join visit_flags on visits.visit_id = visit_flags.visit_id
-        left join find_user_id on visits.visit_id = find_user_id.visit_id
-        --left join aggregate_events on visits.visit_id = aggregate_events.visit_id
+        left join aggregate_events on visits.visit_id = aggregate_events.visit_id
     where not visit_flags.is_invalid_visit
         and visits.visit_landing_page <> ''
         
