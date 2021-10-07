@@ -157,92 +157,55 @@ base_visits as (
     from extract_url_parts
 )
 
-,visit_classification as (
+,assign_sub_channel as (
     select
         *
-        ,utm_campaign = '' and visit_referring_domain = '' as direct
-        ,visit_search_keyword <> '' or visit_referring_domain like any ('%GOOGLE.%','%BING.%','%YAHOO.%','%DUCKDUCKGO.%') as seo
-        ,utm_medium like '%AFFILIATE%' or utm_source like '%SHAREASALE%' or visit_landing_page like '%/AFFILIATE-GIVEAWAY%' as affiliate
-        ,utm_medium like '%AMBASSADOR%' or visit_landing_page like '%/AMBASSADOR-GIVEAWAY%' or ambassador_path <> '' as ambassador
-        ,utm_medium like '%INFLUENCER%' or visit_referring_domain like '%INFLUENCER%' as influencer
-        ,visit_landing_page like '%/L_U%' and visit_landing_page_user_token <> '' as user_referral
-        ,visit_referring_domain <> '' and visit_referring_domain not like '%CROWDCOW.%' as non_user_referral
-        ,utm_source like '%TXN%' as email_transactional
-        ,(utm_medium like '%EMAIL%' or utm_source like '%ITERABLE%') and utm_source <> 'TXN' and utm_medium <> 'SMS' and utm_campaign like '%_202%' as email_marketing_manual
-        ,(utm_medium like '%EMAIL%' or utm_source like '%ITERABLE%') and utm_source <> 'TXN' and utm_medium <> 'SMS' and utm_campaign not like '%_202%' as email_marketing_automated
-        ,(utm_medium like '%EMAIL%' or utm_source like any ('%EMAIL%','%ONBOARDING%')) and not(utm_source like any ('%ITERABLE%','%TXN%')) as email_other
-        ,utm_medium like '%SMS%' or utm_source like '%ATTENTIVE%' as sms_marketing
-        ,utm_medium like '%SMS%' and utm_source not like '%ATTENTIVE%' as sms_transactional
-        ,concat(utm_source,utm_medium,visit_referring_domain) like any ('%INSTAGRAM%','%IGSHOPPING%') as instagram
-        ,concat(utm_source,utm_medium,visit_referring_domain) like '%FACEBOOK%' as facebook
-        ,concat(utm_source,utm_medium,visit_referring_domain) like '%LINKTREE%' as linktree
-        ,concat(utm_source,utm_medium,visit_referring_domain) like '%YOUTUBE%' as youtube
-        ,concat(utm_source,utm_medium,visit_referring_domain) like '%REDDIT%' as reddit
-        ,concat(utm_source,utm_medium,visit_referring_domain) like '%LINKEDIN%' as linkedin
-        ,concat(utm_source,utm_medium,visit_referring_domain) like '%TWITTER%' as twitter
-        ,(utm_source = 'SOCIAL' or utm_medium = 'SOCIAL')
-                and not(concat(utm_source,utm_medium,visit_referring_domain,visit_landing_page) like any ('%INSTAGRAM%','%IGSHOPPING%','%FACEBOOK%','%LINKTREE%','%YOUTUBE%'
-                                                                                                ,'%REDDIT%','%LINKEDIN%','%PINTEREST%','%TWITTER%')) as social_other
-        ,utm_medium in ('OCPM', 'CPC', 'CPCB', 'CPCNB', 'MAXCPA', 'CPM') or utm_source = 'PINTEREST' as paid
-        ,utm_medium in ('OCPM', 'CPC', 'CPCB', 'CPCNB', 'MAXCPA', 'CPM') and utm_source = 'PINTEREST' as paid_pinterest
-        ,utm_medium in ('OCPM', 'CPC', 'CPCB', 'CPCNB', 'MAXCPA', 'CPM') and utm_source in ('ZEMANTA','FACEBOOK') as paid_facebook
-        ,utm_medium in ('OCPM', 'CPC', 'CPCB', 'CPCNB', 'MAXCPA', 'CPM') and utm_source = 'GOOGLE' and utm_campaign like '%WAGYU%' as paid_waygu
-        ,utm_medium in ('OCPM', 'CPC', 'CPCB', 'CPCNB', 'MAXCPA', 'CPM') and utm_source = 'GOOGLE' and utm_campaign not like '%WAGYU%' as paid_non_waygu
-        ,utm_medium in ('OCPM', 'CPC', 'CPCB', 'CPCNB', 'MAXCPA', 'CPM') and utm_source = 'BING' as paid_other_bing
-        ,utm_medium in ('OCPM', 'CPC', 'CPCB', 'CPCNB', 'MAXCPA', 'CPM') and concat(utm_source,utm_medium,visit_referring_domain) like '%YOUTUBE%' as paid_other_youtube
-        ,concat(utm_source,utm_medium,visit_referring_domain) like '%TIKTOK%' as paid_other_tiktok
-        ,concat(utm_source,utm_medium,visit_referring_domain) like '%PHYSICAL%' as paid_other_physical
-        ,concat(utm_source,utm_medium) like '%FIELD-MARKETING%' as paid_other_field_marketing
-        ,utm_medium like '%PODCAST%' as paid_other_podcast
-        ,utm_medium like '%PARTNER%' as paid_other_partner
-        ,visit_landing_page_path = '/VOUCHER' as paid_other_voucher
+        ,case 
+            when concat(utm_source,utm_medium,visit_referring_domain) like any ('%INSTAGRAM%','%IGSHOPPING%') then 'INSTAGRAM'
+            when concat(utm_source,utm_medium,visit_referring_domain) like '%FACEBOOK%GROUP%' then 'FACEBOOK-GROUP'
+            when concat(utm_source,utm_medium,visit_referring_domain) like any ('%FACEBOOK%','%ZEMANTA%') then 'FACEBOOK'
+            when concat(utm_source,utm_medium,visit_referring_domain) like '%LINKTR.EE%' then 'LINKTREE'
+            when concat(utm_source,utm_medium,visit_referring_domain) like '%YOUTUBE%' then 'YOUTUBE'
+            when concat(utm_source,utm_medium,visit_referring_domain) like '%REDDIT%' then 'REDDIT'
+            when concat(utm_source,utm_medium,visit_referring_domain) like '%LINKEDIN%' then 'LINKEDIN'
+            when concat(utm_source,utm_medium,visit_referring_domain) like '%TWITTER%' then 'TWITTER'
+            when concat(utm_source,utm_medium,visit_referring_domain) like '%TIKTOK%' then 'TIKTOK'
+            when concat(utm_source,utm_medium,visit_referring_domain) like '%PINTEREST%' then 'PINTEREST'
+            when utm_medium like '%PODCAST%' then 'PODCAST'
+            when utm_source like '%GEIST%' then 'GEIST'
+            when visit_landing_page like '%/L_U%' and visit_landing_page_user_token <> '' then 'USER REFERRAL'
+            when utm_medium like '%PARTNER%' then 'PARTNER'
+            when utm_medium like '%AFFILIATE%' or utm_source like '%SHAREASALE%' or visit_landing_page like '%/AFFILIATE-GIVEAWAY%' then 'AFFILIATE'
+            when utm_medium like '%AMBASSADOR%' or visit_landing_page like '%/AMBASSADOR-GIVEAWAY%' or ambassador_path <> '' then 'AMBASSADOR'
+            when utm_medium like '%INFLUENCER%' or visit_referring_domain like '%INFLUENCER%' then 'INFLUENCER'
+            when utm_medium like '%SMS%' or utm_source like '%ATTENTIVE%' then 'SMS - MARKETING'
+            when utm_medium like '%SMS%' and utm_source not like '%ATTENTIVE%' then 'SMS -TRANSACTIONAL'
+            when utm_source like '%TXN%' then 'EMAIL MARKETING - TRANSACTIONAL'
+            when (utm_medium like '%EMAIL%' or utm_source like '%ITERABLE%') and utm_source <> 'TXN' and utm_medium <> 'SMS' and utm_campaign like '%_202%' then 'EMAIL MARKETING - MANUAL'
+            when (utm_medium like '%EMAIL%' or utm_source like '%ITERABLE%') and utm_source <> 'TXN' and utm_medium <> 'SMS' and utm_campaign not like '%_202%' then 'EMAIL MARKETING - AUTOMATED'
+            when (visit_referring_domain like '%GOOGLE.%' or utm_source = 'GOOGLE') then 'GOOGLE'
+            when (visit_referring_domain like '%BING.%' or utm_source = 'BING') then 'BING'
+            when visit_referring_domain like any ('%YAHOO.%','%DUCKDUCKGO.%') then 'SEO'
+            when visit_referring_domain <> '' and visit_referring_domain not like '%CROWDCOW.%' then 'NON-USER REFERRAL'
+            when utm_campaign = '' and visit_referring_domain = '' then 'DIRECT'
+            else 'OTHER'
+         end as sub_channel
     from combine_elements_extract_user_token
 )
 
-,visit_attribution as (
+,assign_paid_social_platform as (
     select
         *
-        ,case
-            when paid_pinterest then 'PAID: PINTEREST'
-            when paid_facebook then 'PAID: FACEBOOK'
-            when paid_waygu then 'PAID: WAYGU'
-            when paid_non_waygu then 'PAID: NON-WAYGU'
-            when ambassador then 'AMBASSADOR'
-            when affiliate then 'AFFILIATES'
-            when influencer then 'INFLUENCER'
-            when paid_other_bing then 'PAID OTHER: BING'
-            when paid_other_youtube then 'PAID OTHER: YOUTUBE'
-            when paid_other_tiktok then 'PAID OTHER: TIKTOK'
-            when paid_other_physical then 'PAID OTHER: PHYSICAL'
-            when paid_other_field_marketing then 'PAID OTHER: FIELD MARKETING'
-            when paid_other_podcast then 'PAID OTHER: PODCAST'
-            when paid_other_partner then 'PAID OTHER: PARTNER'
-            when paid_other_voucher then 'PAID OTHER: VOUCHER'
-            when paid then 'PAID OTHER'
-            when sms_marketing then 'SMS: MARKETING'
-            when sms_transactional then 'SMS: TRANSACTIONAL'
-            when email_transactional then 'EMAIL: TRANSACTIONAL'
-            when email_marketing_manual then 'EMAIL: MANUAL'
-            when email_marketing_automated then 'EMAIL: AUTOMATED'
-            when email_other then 'EMAIL: OTHER'
-            when user_referral then 'USER REFERRAL'
-            when instagram then 'SOCIAL: INSTAGRAM'
-            when facebook then 'SOCIAL: FACEBOOK'
-            when linktree then 'SOCIAL: LINKTREE'
-            when youtube then 'SOCIAL: YOUTUBE'
-            when reddit then 'SOCIAL: REDDIT'
-            when linkedin then 'SOCIAL: LINKED IN'
-            when twitter then 'SOCIAL: TWITTER'
-            when social_other then 'SOCIAL: OTHER'
-            when seo then 'SEO'
-            when non_user_referral then 'NON-USER REFERRAL'
-            when direct then 'DIRECT'
-            else null
-        end as visit_attributed_source
-    from visit_classification
+        ,utm_medium in ('OCPM', 'CPC', 'CPCB', 'CPCNB', 'MAXCPA', 'CPM') 
+            or utm_source = 'PINTEREST' 
+            or utm_source like 'PAID%'
+            or utm_medium like 'PAID%'
+            or sub_channel in ('GEIST','GOOGLE','BING','USER REFERRAL','NON-USER REFERRAL','PARTNER','AFFILIATE','AMBASSADOR','INFLUENCER') as is_paid_referrer
+        ,sub_channel in ('INSTAGRAM','FACEBOOK-GROUP','FACEBOOK','LINKTREE','YOUTUBE','REDDIT','LINKEDIN','TWITTER','TIKTOK','PINTEREST','PODCAST') as is_social_platform_referrer
+    from assign_sub_channel
 )
 
-,channel_sub_channel_rollup as (
+,assign_channel as (
     select
         visit_id
         ,user_id
@@ -269,36 +232,29 @@ base_visits as (
         ,utm_term
         
         ,case
-            when visit_attributed_source in ('AFFILIATES','AMBASSADOR','INFLUENCER') then 'AFFILIATES'
-            when visit_attributed_source in ('USER REFERRAL','NON-USER REFERRAL') then 'REFERRAL'
-            when visit_attributed_source like any ('SMS%','EMAIL%','SOCIAL:%') then 'LIFECYCLE'
-            when visit_attributed_source in ('PAID: WAYGU','PAID: NON-WAYGU') then 'PAID: GOOGLE'
-            when visit_attributed_source like 'PAID OTHER%' then 'PAID: OTHER'
-            else visit_attributed_source
-        end as channel
+            when is_paid_referrer and is_social_platform_referrer then 'SOCIAL'
+            when is_paid_referrer and sub_channel in ('GOOGLE','BING') then 'SEM'
+            when is_paid_referrer and sub_channel in ('USER REFERRAL','NON-USER REFERRAL') then 'REFERRAL'
+            when is_paid_referrer and sub_channel in ('AMBASSADOR','INFLUENCER') then 'INFLUENCER'
+            when is_paid_referrer and sub_channel = 'GEIST' then 'CONTENT'
+            when not is_paid_referrer and is_social_platform_referrer then 'ORGANIC SOCIAL'
+            when not is_paid_referrer and sub_channel like 'SMS%' then 'SMS'
+            when not is_paid_referrer and sub_channel like 'EMAIL%' then 'EMAIL'
+            else sub_channel
+         end as channel
 
-        ,case
-            when visit_attributed_source like 'EMAIL:%' then 'EMAIL'
-            when visit_attributed_source like 'SMS:%' then 'SMS'
-            when visit_attributed_source like 'SOCIAL:%' then 'SOCIAL'
-            when visit_attributed_source like 'PAID:%' then 'PAID'
-            when visit_attributed_source in ('PAID OTHER: BING','PAID OTHER: YOUTUBE','PAID OTHER: TIKTOK','PAID OTHER: PHYSICAL'
-                                                ,'PAID OTHER: FIELD MARKETING','PAID OTHER') then 'PAID'
-            when visit_attributed_source = 'PAID OTHER: PODCAST' then 'PODCAST'
-            when visit_attributed_source = 'PAID OTHER: PARTNER' then 'PARTNER'
-            when visit_attributed_source = 'PAID OTHER: VOUCHER' then 'VOUCHER'
-            else visit_attributed_source
-        end as sub_channel
-
-        ,visit_attributed_source
+        ,sub_channel
+        ,null::text as visit_attributed_source
         ,ambassador_path
         ,visit_city
         ,visit_country
         ,visit_region
+        ,is_paid_referrer
+        ,is_social_platform_referrer
         ,is_wall_displayed
         ,started_at_utc
         ,updated_at_utc
-    from visit_attribution
+    from assign_paid_social_platform
 )
 
-select * from channel_sub_channel_rollup
+select * from assign_channel
