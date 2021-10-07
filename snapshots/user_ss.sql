@@ -2,7 +2,6 @@
 
 {{
     config(
-      target_database='raw', 
       target_schema='snapshots',
       unique_key='id',
 
