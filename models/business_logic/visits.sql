@@ -174,6 +174,7 @@ base_visits as (
             when concat(utm_source,utm_medium,visit_referring_domain) like '%TIKTOK%' then 'TIKTOK'
             when concat(utm_source,utm_medium,visit_referring_domain) like '%PINTEREST%' then 'PINTEREST'
             when utm_medium like '%PODCAST%' then 'PODCAST'
+            when utm_medium = 'FIELD-MARKETING' then 'FIELD-MARKETING'
             when utm_source like '%GEIST%' then 'GEIST'
             when visit_landing_page like '%/L_U%' and visit_landing_page_user_token <> '' then 'USER REFERRAL'
             when utm_medium like '%PARTNER%' then 'PARTNER'
@@ -202,7 +203,7 @@ base_visits as (
             or utm_source = 'PINTEREST' 
             or utm_source like 'PAID%'
             or utm_medium like 'PAID%'
-            or sub_channel in ('GEIST','GOOGLE','BING','USER REFERRAL','NON-USER REFERRAL','PARTNER','AFFILIATE','AMBASSADOR','INFLUENCER') as is_paid_referrer
+            or sub_channel in ('FIELD-MARKETING','GEIST','GOOGLE','BING','USER REFERRAL','NON-USER REFERRAL','PARTNER','AFFILIATE','AMBASSADOR','INFLUENCER') as is_paid_referrer 
         ,sub_channel in ('INSTAGRAM','FACEBOOK-GROUP','FACEBOOK','LINKTREE','YOUTUBE','REDDIT','LINKEDIN','TWITTER','TIKTOK','PINTEREST','PODCAST') as is_social_platform_referrer
     from assign_sub_channel
 )
