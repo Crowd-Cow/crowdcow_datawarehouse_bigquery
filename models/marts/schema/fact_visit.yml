@@ -70,6 +70,9 @@ models:
       - name: utm_campaign
         description: "UTM campaign"
 
+      - name: utm_adset
+        description: "UTM adset"
+
       - name: utm_term
         description: "UTM term"
 
