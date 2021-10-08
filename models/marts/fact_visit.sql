@@ -58,6 +58,8 @@ visits as ( select * from {{ ref('visits') }} )
         ,visits.sub_channel
         ,visits.visit_attributed_source
         ,visits.is_wall_displayed
+        ,visits.is_paid_referrer
+        ,visits.is_social_platform_referrer
         ,visit_flags.is_bot
         ,visit_flags.is_internal_traffic
         ,visit_flags.is_invalid_visit
