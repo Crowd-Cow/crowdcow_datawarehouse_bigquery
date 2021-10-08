@@ -102,6 +102,7 @@ base_visits as (
         ,parse_url(visits.visit_landing_page):parameters:UTM_MEDIUM::text as landing_utm_medium
         ,parse_url(visits.visit_landing_page):parameters:UTM_SOURCE::text as landing_utm_source
         ,parse_url(visits.visit_landing_page):parameters:UTM_CAMPAIGN::text as landing_utm_campaign
+        ,parse_url(visits.visit_landing_page):parameters:UTM_ADSET::text as landing_utm_adset
         ,ambassador_paths.partner_path as ambassador_path
         ,visits.visit_city
         ,visits.visit_country
@@ -145,6 +146,7 @@ base_visits as (
         ,coalesce(utm_source,landing_utm_source,'') as utm_source
         ,coalesce(utm_medium,landing_utm_medium,'') as utm_medium
         ,coalesce(utm_campaign,landing_utm_campaign,'') as utm_campaign
+        ,coalesce(landing_utm_adset,'') as utm_adset
         ,utm_content
         ,utm_term
         ,coalesce(ambassador_path,'') as ambassador_path
@@ -228,6 +230,7 @@ base_visits as (
         ,utm_source
         ,utm_medium
         ,utm_campaign
+        ,utm_adset
         ,utm_content
         ,utm_term
         

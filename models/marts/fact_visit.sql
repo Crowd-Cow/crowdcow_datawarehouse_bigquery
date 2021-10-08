@@ -51,6 +51,7 @@ visits as ( select * from {{ ref('visits') }} )
         ,visits.visit_landing_page_path
         ,visits.utm_content
         ,visits.utm_campaign
+        ,visits.utm_adset
         ,visits.utm_term
         ,visits.utm_medium
         ,visits.utm_source
