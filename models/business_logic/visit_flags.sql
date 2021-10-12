@@ -40,6 +40,15 @@ user_first_order as (
     group by 1
 ),
 
+user_first_completed_order as (
+    select
+        user_id
+        ,min(order_checkout_completed_at_utc) as first_completed_order_date
+    from orders
+    where order_checkout_completed_at_utc is not null
+    group by 1
+),
+
 user_first_subscription as (
     select 
         user_id
@@ -128,6 +137,7 @@ add_flags as (
         
         ,visits.visit_ip in ('66.171.181.219', '127.0.0.1') or employee_user.user_id is not null as is_internal_traffic
         ,user_first_order.user_id is not null and user_first_order.first_order_date < visits.started_at_utc as has_previous_order
+        ,user_first_completed_order.user_id is not null and user_first_completed_order.first_completed_order_date < visits.started_at_utc as has_previous_completed_order
         ,user_first_subscription.user_id is not null and user_first_subscription.first_subscription_date < visits.started_at_utc as has_previous_subscription
         ,user_account_created.user_id is not null and user_account_created.first_creation_date < visits.started_at_utc as had_account_created
         ,subscription_visits.visit_id is not null as did_subscribe
@@ -142,6 +152,7 @@ add_flags as (
         left join suspicious_ips on visits.visit_ip = suspicious_ips.visit_ip
         left join subscription_visits on visits.visit_id = subscription_visits.visit_id
         left join user_first_order on visits.user_id = user_first_order.user_id
+        left join user_first_completed_order on visits.user_id = user_first_completed_order.user_id
         left join user_first_subscription on visits.user_id = user_first_subscription.user_id
         left join user_account_created on visits.user_id = user_account_created.user_id
         left join user_signed_up on visits.visit_id = user_signed_up.visit_id
