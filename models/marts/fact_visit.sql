@@ -66,6 +66,7 @@ visits as ( select * from {{ ref('visits') }} )
         ,visit_flags.is_invalid_visit
         ,visit_flags.is_homepage_landing
         ,visit_flags.has_previous_order
+        ,visit_flags.has_previous_completed_order
         ,visit_flags.has_previous_subscription
         ,visit_flags.had_account_created
         ,visit_flags.did_subscribe

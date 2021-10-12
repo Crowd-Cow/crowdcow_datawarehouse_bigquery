@@ -115,6 +115,9 @@ models:
       - name: has_previous_order
         description: "Boolean indicating if the user associated with this visit has had an order previous to this visit"
 
+      - name: has_previous_completed_order
+        description: "Boolean indicating if the user associated with this visit has had a completed order previous to this visit. Completed order is defined using the order checkout completed date"
+
       - name: has_previous_subscription
         description: "Boolean indicating if the user associated with this visit already has a subscription"
 
