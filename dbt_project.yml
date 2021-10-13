@@ -37,12 +37,10 @@ models:
         +materialized: view
         reference:
             +materialized: table
-    business_logic:
+    business_vault:
         +materialized: table
+        +schema: business_vault
     marts:
         +materialized: table
         +schema: datawarehouse
-        ecommerce:
-            intermediate:
-                +schema: intermediate
         
