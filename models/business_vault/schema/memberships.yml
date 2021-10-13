@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: memberships
+    description: ""
+    columns:
+      - name: subscription_id
+        description: "Membership ID"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: subscription_token
+        description: "Membership token"
+
+      - name: subscription_renew_period_type
+        description: "Membership renewal period"
+
+      - name: subscription_cancelled_reason
+        description: "The reason why the membership was cancelled"
+
+      - name: is_uncancelled_membership
+        description: "The membership is not cancelled. If the value is FALSE, the membership is cancelled"
+
+      - name: is_active_membership
+        description: "The membership has at least one paid/uncancelled order in the past 90 days. If the value is FALSE, the membership is not active"
+
+      - name: subscription_created_at_utc
+        description: "Timestamp of when the membership was created in UTC"
+
+      - name: subscription_cancelled_at_utc
+        description: "Timestamp of when the membership was cancelled in UTC"
+
+      - name: updated_at_utc
+        description: "Timestamp of when the membership record was updated in UTC"
+

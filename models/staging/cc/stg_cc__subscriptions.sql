@@ -31,7 +31,7 @@ renamed as (
         ,{{ clean_strings('stripe_card_id') }} as stripe_card_id
         ,phone_number_id
         ,renews_at as subscription_renews_at_utc
-        ,active as subscription_is_active
+        ,active as is_uncancelled_membership
 
     from source
 
