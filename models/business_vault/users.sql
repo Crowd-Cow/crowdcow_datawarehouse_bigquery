@@ -20,7 +20,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,count(order_id) as total_order_count
         ,count_if(order_cancelled_at_utc is null and order_paid_at_utc is not null and subscription_id is null) as total_paid_ala_carte_order_count
         ,count_if(order_cancelled_at_utc is null and order_paid_at_utc is not null and subscription_id is not null) total_paid_membership_order_count
-        ,count_if(order_cancelled_at_utc is null and order_paid_at_utc is not null and subscription_id is not null and order_paid_at_utc::date - sysdate()::date <= 90) as total_active_order_count
+        ,count_if(order_cancelled_at_utc is null and order_paid_at_utc is not null and subscription_id is not null and sysdate()::date - order_paid_at_utc::date <= 90) as total_active_order_count
     from orders
     group by 1
 )
