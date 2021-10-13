@@ -1,0 +1,72 @@
+version: 2
+
+models:
+  - name: users
+    description: "Business logic to describe users"
+    columns:
+      - name: user_id
+        description: "User ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: phone_number_id
+        description: "Phone number ID that can be joined to the phone number table"
+
+      - name: user_type
+        description: "User type"
+
+      - name: user_gender
+        description: "User gender"
+
+      - name: user_email_name
+        description: "User email name"
+
+      - name: user_email
+        description: "User email address"
+
+      - name: user_roles_for_access
+        description: "User roles for access given to Crowd Cow employees"
+
+      - name: user_zip
+        description: "User zip"
+
+      - name: user_token
+        description: "User token"
+
+      - name: user_referrer_token
+        description: "User referrer token"
+
+      - name: user_cow_cash_balance_usd
+        description: "Cow Cash balance in USD"
+
+      - name: user_support_status
+        description: "User support status"
+
+      - name: is_member
+        description: "The user has had at least one membership at some point. The membership can be cancelled or uncancelled. If this value is FALSE, the user has never had a membership."
+
+      - name: is_cancelled_member
+        description: "The user has had at least one membership and all of them have been cancelled. If this value is FALSE, the user is an uncancelled member."
+
+      - name: is_lead
+        description: "The user has a Crowd Cow account but has never had any order activity. No order created, completed, cancelled, paid, etc."
+
+      - name: is_purchasing_customer
+        description: "The user has placed at least one paid/uncancelled non-membership order"
+
+      - name: is_purchasing_member
+        description: "The user has placed at least one paid/uncancelled membership order"
+
+      - name: is_active_member
+        description: "The user has had at least one paid/uncancelled membership order in the past 90 days. If this value is FALSE, the user is an inactive member."
+
+      - name: user_last_sign_in_at_utc
+        description: "User last signed in timestamp in UTC"
+
+      - name: created_at_utc
+        description: "Timestamp for when the user was created in UTC"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the user record was updated in UTC"
+
