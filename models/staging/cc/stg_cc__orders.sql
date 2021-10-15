@@ -128,6 +128,7 @@ renamed as (
     ,stripe_card_last4::int as stripe_card_last4
 
   from source
+  where not _fivetran_deleted
 
 )
 
