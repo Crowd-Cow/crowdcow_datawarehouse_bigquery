@@ -5,7 +5,7 @@ with source as (
 ),
 
 renamed as (
-
+--TODO: Rename subscription -> membership and fix downstream
     select
         id as subscription_id
         ,created_at as subscription_created_at_utc
