@@ -1,0 +1,48 @@
+version: 2
+
+models:
+  - name: order_flags
+    description: "Logic for order flags"
+    columns:
+      - name: order_id
+        description: "Order ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: user_id
+        description: "User ID"
+
+      - name: subscription_id
+        description: "Membership ID"
+
+      - name: order_created_at_utc
+        description: "Timestamp for when the order was created in UTC"
+
+      - name: is_ala_carte_order
+        description: "Boolean indicating if the order is an ala carte order. Order has no associated membership ID and is not a gift order of any kind"
+
+      - name: is_membership_order
+        description: "Boolean indicating if the order is a membership order. Order has an associated membership ID"
+
+      - name: is_completed_order
+        description: "Boolean indicating if the order has been completed. Order has a `checkout_completed_at` date"
+
+      - name: is_paid_order
+        description: "Boolean indicating if the order has been paid. Order has a `paid_at` date"
+
+      - name: is_cancelled_order
+        description: "Boolean indicating if the order has been cancelled. Order has a `cancelled_at` date"
+
+      - name: is_abandonded_order
+        description: "Boolean indiciating if the order was an abandoned order. Order has no `checkout_completed_at` date and does have a `cancelled_at` date"
+
+      - name: is_gift_order
+        description: "Boolean indicating if the order is a gift order"
+
+      - name: is_bulk_gift_order
+        description: "Boolean indicating if the order is a bulk gift order. Order has a type of `BULK ORDER` or has a parent order ID"
+
+      - name: is_gift_card_order
+        description: "Boolean indicating if the order is a gift card order"
+
