@@ -38,8 +38,8 @@ models:
         description: "Rank of all ala carte orders for a user. The order is not associated associated with a membership ID and is not a gift order of any kind"
 
       - name: paid_membership_order_rank
-        description: "Rank of paid, uncancelled membership orders for a user"
+        description: "Rank of paid, uncancelled membership orders for a user. The order needs to be associated with a member ID"
 
       - name: paid_ala_carte_order_rank
-        description: ""
+        description: "Rank of paid, uncancelled membership order for a user. The order is not associated with a member ID"
 

@@ -10,7 +10,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 )
 
 ,gift_info as (
-    select
+    select distinct
         order_id
         ,gift_card.gift_info_id is not null as is_gift_card
     from stg_cc__gift_infos
