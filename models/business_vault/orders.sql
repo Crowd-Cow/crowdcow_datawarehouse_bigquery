@@ -33,10 +33,6 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
     from credits
     group by 1
 )
--- select *
--- from credit_amount
--- where order_id = 1432950
--- limit 1000;
 
 ,order_joins as (
     select
