@@ -8,8 +8,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
     select
         user_id
         ,count(subscription_id) as total_membership_count
-        ,count_if(subscription_cancelled_at_utc is not null) as total_cancelled_membership_count
-        ,count(subscription_id) - count_if(subscription_cancelled_at_utc is not null) as total_uncancelled_memberships
+        ,count_if(not is_uncancelled_membership) as total_cancelled_membership_count
+        ,count(subscription_id) - count_if(not is_uncancelled_membership) as total_uncancelled_memberships
     from memberships
     group by 1
 )
