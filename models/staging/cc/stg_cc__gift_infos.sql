@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ source('cc', 'gift_infos') }}
+    select * from {{ source('cc', 'gift_infos') }} where not _fivetran_deleted
 
 ),
 
