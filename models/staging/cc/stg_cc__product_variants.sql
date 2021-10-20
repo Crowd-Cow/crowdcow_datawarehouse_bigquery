@@ -1,7 +1,7 @@
 
 with source as (
 
-    select * from {{ source('cc', 'product_variants') }}
+    select * from {{ source('cc', 'product_variants') }} where not _fivetran_deleted
 
 ),
 
