@@ -38,7 +38,6 @@ renamed as (
         ,updated_at as updated_at_utc
 
     from source
-    where not _fivetran_deleted
 
 )
 

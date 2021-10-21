@@ -19,7 +19,6 @@ renamed as (
         ,{{ cents_to_usd('amount_in_cents') }} as refund_amount_usd
 
     from source
-    where not _fivetran_deleted
 
 )
 

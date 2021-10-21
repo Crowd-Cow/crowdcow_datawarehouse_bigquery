@@ -37,7 +37,6 @@ renamed as (
     , first_stuck_at as first_stuck_at_utc
 
     from source
-    where not _fivetran_deleted
 
 )
 

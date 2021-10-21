@@ -23,7 +23,6 @@ renamed as (
         ,hide_from_user as is_hidden_from_user
         ,controlled_by_promotion as is_controlled_by_promotion
     from source
-    where not _fivetran_deleted
 
 )
 

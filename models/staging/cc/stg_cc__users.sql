@@ -122,7 +122,6 @@ renamed as (
         ,dbt_valid_from
         ,dbt_scd_id as user_key
     from source
-    where not _fivetran_deleted
 
 )
 
