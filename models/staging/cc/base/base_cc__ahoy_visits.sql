@@ -6,7 +6,7 @@
 
 with 
 
-source as ( select * from {{ source('cc', 'ahoy_visits') }} ),
+source as ( select * from {{ source('cc', 'ahoy_visits') }} where not _fivetran_deleted ),
 
 renamed as (
 
