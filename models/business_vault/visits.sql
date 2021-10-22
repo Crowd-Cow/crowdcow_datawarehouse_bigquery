@@ -62,7 +62,6 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,visits.updated_at_utc
     from visits
         left join visit_flags on visits.visit_id = visit_flags.visit_id
-        left join aggregate_events on visits.visit_id = aggregate_events.visit_id
     where not visit_flags.is_invalid_visit
         and visits.visit_landing_page <> ''
         
