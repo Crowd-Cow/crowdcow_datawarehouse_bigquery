@@ -6,7 +6,7 @@
 
 with
 
-visits as ( select * from {{ ref('visits') }} ),
+visits as ( select * from {{ ref('visit_classification') }} ),
 suspicious_ips as ( select * from {{ ref('stg_cc__suspicious_ips') }} ),
 subscribed as ( select * from {{ ref('stg_cc__event_subscribed') }} ),
 sign_up as ( select * from {{ ref('stg_cc__event_sign_up') }} ),
