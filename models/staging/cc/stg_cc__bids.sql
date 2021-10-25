@@ -36,7 +36,7 @@ renamed as (
     , target_product_permutation_id
     , first_stuck_at as first_stuck_at_utc
 
-    from source 
+    from source
 
 )
 

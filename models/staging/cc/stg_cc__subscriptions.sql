@@ -5,7 +5,7 @@ with source as (
 ),
 
 renamed as (
-
+--TODO: Rename subscription -> membership and fix downstream
     select
         id as subscription_id
         ,created_at as subscription_created_at_utc
@@ -31,7 +31,7 @@ renamed as (
         ,{{ clean_strings('stripe_card_id') }} as stripe_card_id
         ,phone_number_id
         ,renews_at as subscription_renews_at_utc
-        ,active as subscription_is_active
+        ,active as is_uncancelled_membership
 
     from source
 

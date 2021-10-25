@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: order_ranks
+    description: "Logic to determine order ranks by user"
+    columns:
+      - name: order_id
+        description: "Order ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: user_id
+        description: "User ID"
+
+      - name: subscription_id
+        description: "Membership ID"
+
+      - name: order_created_at_utc
+        description: "Timestamp for when the order was created by the system in UTC"
+
+      - name: overall_order_rank
+        description: "Overall order rank for a user regardless of order type or status"
+
+      - name: completed_order_rank
+        description: "Rank of completed orders for a user. The order needs to have an `checkout_completed_at` date"
+
+      - name: paid_order_rank
+        description: "Rank of paid orders for a user. The order needs to have a `paid_at` date"
+
+      - name: cancelled_order_rank
+        description: "Rank of cancelled orders for a user. The order needs to have a `cancelled_at` date"
+
+      - name: membership_order_rank
+        description: "Rank of all membership orders for a user. The order needs to be associated with a membership ID. This rank carries over between memberships and does not reset if the user has a new membership ID"
+
+      - name: ala_carte_order_rank
+        description: "Rank of all ala carte orders for a user. The order is not associated associated with a membership ID and is not a gift order of any kind"
+
+      - name: paid_membership_order_rank
+        description: "Rank of paid, uncancelled membership orders for a user. The order needs to be associated with a member ID"
+
+      - name: paid_ala_carte_order_rank
+        description: "Rank of paid, uncancelled membership order for a user. The order is not associated with a member ID"
+
