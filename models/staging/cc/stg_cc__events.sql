@@ -1,7 +1,8 @@
 {{
   config(
     materialized = 'table',
-    snowflake_warehouse = 'TRANSFORMING_M'
+    snowflake_warehouse = 'TRANSFORMING_M',
+    enabled = false
     )
 }}
 
