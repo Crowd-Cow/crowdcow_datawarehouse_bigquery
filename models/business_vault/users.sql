@@ -25,6 +25,14 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
     group by 1
 )
 
+,order_cohorts as (
+    select distinct
+        user_id
+        ,first_value(order_paid_at_utc::date) over(partition by user_id order by paid_order_rank) as customer_cohort_date
+        ,first_value(order_paid_at_utc::date) over(partition by user_id order by paid_membership_order_rank) as membership_cohort_date
+    from orders
+)
+
 ,user_joins as (
     select
         users.*
@@ -34,9 +42,12 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,order_count.user_id is not null and total_paid_ala_carte_order_count > 0 as is_purchasing_customer
         ,order_count.user_id is not null and total_paid_membership_order_count > 0 as is_purchasing_member
         ,order_count.user_id is not null and total_active_order_count > 0 as is_active_member
+        ,order_cohorts.customer_cohort_date
+        ,order_cohorts.membership_cohort_date
     from users
         left join membership_count on users.user_id = membership_count.user_id
         left join order_count on users.user_id = order_count.user_id
+        left join order_cohorts on users.user_id = order_cohorts.user_id
 )
 
 ,final as (
@@ -62,6 +73,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_referrer_token
         ,user_cow_cash_balance_usd
         ,user_support_status
+        ,customer_cohort_date
+        ,membership_cohort_date
         ,is_member
         ,is_cancelled_member
         ,is_lead

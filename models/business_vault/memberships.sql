@@ -1,12 +1,12 @@
 with
 
-memberships as (select * from stg_cc__subscriptions)
-,orders as (select * from stg_cc__orders)
+memberships as (select * from {{ ref('stg_cc__subscriptions') }})
+,orders as (select * from {{ ref('orders') }})
 
 ,order_count as (
     select
         subscription_id
-        ,count_if(order_cancelled_at_utc is null and order_paid_at_utc is not null and subscription_id is not null and sysdate()::date - order_paid_at_utc::date <= 90) as total_active_order_count
+        ,count_if(not is_cancelled_order and is_paid_order and is_membership_order and sysdate()::date - order_paid_at_utc::date <= 90) as total_active_order_count
     from orders
     group by 1
 )
