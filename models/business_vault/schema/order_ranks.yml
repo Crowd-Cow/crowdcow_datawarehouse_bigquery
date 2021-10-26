@@ -38,8 +38,23 @@ models:
         description: "Rank of all ala carte orders for a user. The order is not associated associated with a membership ID and is not a gift order of any kind"
 
       - name: paid_membership_order_rank
-        description: "Rank of paid, uncancelled membership orders for a user. The order needs to be associated with a member ID"
+        description: "Rank of paid, uncancelled membership orders for a user. The order needs to be associated with a membership ID"
 
       - name: paid_ala_carte_order_rank
-        description: "Rank of paid, uncancelled membership order for a user. The order is not associated with a member ID"
+        description: "Rank of paid, uncancelled membership order for a user. The order is not associated with a membership ID"
+
+      - name: completed_membership_order_rank
+        description: "Rank of all completed membership orders. The order is associated with a membership ID and has a `checkout_completed_at` date"
+
+      - name: completed_ala_carte_order_rank
+        description: "Rank of all completed ala carte orders. The order is not associated with a membership ID and has a `checkout_completed_at` date"
+
+      - name: unique_membership_order_rank
+        description: "Rank of all membership orders for a user. The order needs to be associated with a membership ID. This rank resets when there is a new membership ID for the user"
+
+      - name: paid_unique_membership_order_rank
+        description: "Rank of paid, uncancelled membership orders for a user. The order needs to be associated with a membership ID. This rank resets when there is a new membership ID for the user"
+
+      - name: completed_unique_membership_order_rank
+        description: "Rank of all completed membership orders. The order is associated with a membership ID and has a `checkout_completed_at` date. This rank resets when there is a new membership ID for the user"
 

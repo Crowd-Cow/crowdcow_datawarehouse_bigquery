@@ -85,6 +85,11 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,ranks.ala_carte_order_rank
         ,ranks.paid_membership_order_rank
         ,ranks.paid_ala_carte_order_rank
+        ,ranks.completed_membership_order_rank
+        ,ranks.completed_ala_carte_order_rank
+        ,ranks.unique_membership_order_rank
+        ,ranks.paid_unique_membership_order_rank
+        ,ranks.completed_unique_membership_order_rank
         ,orders.order_created_at_utc
         ,orders.order_updated_at_utc
         ,orders.order_checkout_completed_at_utc
@@ -154,6 +159,11 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,ala_carte_order_rank
         ,paid_membership_order_rank
         ,paid_ala_carte_order_rank
+        ,completed_membership_order_rank
+        ,completed_ala_carte_order_rank
+        ,unique_membership_order_rank
+        ,paid_unique_membership_order_rank
+        ,completed_unique_membership_order_rank
         ,order_created_at_utc
         ,order_updated_at_utc
         ,order_checkout_completed_at_utc
@@ -214,6 +224,11 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,ala_carte_order_rank
         ,paid_membership_order_rank
         ,paid_ala_carte_order_rank
+        ,completed_membership_order_rank
+        ,completed_ala_carte_order_rank
+        ,unique_membership_order_rank
+        ,paid_unique_membership_order_rank
+        ,completed_unique_membership_order_rank
         ,order_created_at_utc
         ,order_updated_at_utc
         ,order_checkout_completed_at_utc
