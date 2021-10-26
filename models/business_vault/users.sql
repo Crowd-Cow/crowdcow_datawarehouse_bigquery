@@ -30,7 +30,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         user_id
         ,first_value(order_paid_at_utc::date) over(partition by user_id order by paid_order_rank) as customer_cohort_date
         ,first_value(order_paid_at_utc::date) over(partition by user_id order by paid_membership_order_rank) as membership_cohort_date
-    from orders
+    from order_info
 )
 
 ,user_joins as (
