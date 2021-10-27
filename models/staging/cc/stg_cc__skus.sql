@@ -1,0 +1,67 @@
+with source as (
+
+    select * from {{ ref('skus_ss') }} where not _fivetran_deleted
+
+),
+
+renamed as (
+
+    select
+        id as sku_id,
+        non_member_promotion_start_at as non_member_promotion_start_at_utc,
+        {{ cents_to_usd('average_cost_in_cents') }} as average_cost_in_usd,
+        promotion_start_at as promotion_start_at_utc,
+        {{ clean_strings('vendor_funded_discount_name') }} as vendor_funded_discount_name,
+        sku_code, -- sku_code appears to be null 
+        {{ cents_to_usd('vendor_funded_discount_cents') }} as vendor_funded_discount_usd,
+        non_member_promotion_discount,--  appears to be null 
+        member_only_promotion_discount,--  appears to be null 
+        member_only_promotion_start_at as member_only_promotion_start_at_utc,
+        updated_at as updated_at_utc,
+        {{ cents_to_usd('platform_fee_in_cents') }} as platform_fee_in_usd,
+        {{ clean_strings('name') }} as sku_name,
+        {{ cents_to_usd('fulfillment_fee_in_cents') }} as fulfillment_fee_in_usd,
+        {{ cents_to_usd('price_in_cents') }} as price_in_usd,
+        {{ cents_to_usd('marketplace_cost_in_cents') }} as marketplace_cost_in_usd,
+        created_at as created_at_utc,
+        sku_vendor_id,
+        average_box_quantity,
+        vendor_funded_discount_start_at as vendor_funded_discount_start_at_utc,
+        vendor_funded_discount_end_at as vendor_funded_discount_end_at_utc,
+        barcode,
+        {{ cents_to_usd('payment_processing_fee_in_cents') }} as payment_processing_fee_in_usd,
+        cut_id,
+        vendor_funded_discount_percent,
+        active_at as active_at_utc,
+        promotion_end_at as promotion_end_at_utc,
+        weight,
+        {{ cents_to_usd('standard_price_in_cents') }} as standard_price_in_usd,
+        {{ cents_to_usd('promotional_price_in_cents') }} as promotional_price_in_usd,
+        member_only_promotion_end_at as member_only_promotion_end_at_utc,
+        sku_plan_entry_id,
+        reservation_window_days,
+        non_member_promotion_end_at as non_member_promotion_end_at_utc,
+        _fivetran_deleted,
+        bulk_receivable,
+        is_presellable,
+        virtual_inventory,
+        member_discount_start_at as member_discount_start_at_utc,
+        general_discount_start_at as general_discount_start_at_utc,
+        general_discount_end_at as general_discount_end_at_utc,
+        member_discount_end_at as member_discount_end_at_utc,
+        member_discount_percent,
+        general_discount_percent,
+        non_member_discount_end_at as non_member_discount_end_at_utc,
+        non_member_discount_percent,
+        non_member_discount_start_at as non_member_discount_start_at_utc,
+        partial_member_discount_percent,
+        _fivetran_synced,
+        dbt_valid_to,
+        dbt_valid_from
+
+    from source
+
+)
+
+select * from renamed
+
