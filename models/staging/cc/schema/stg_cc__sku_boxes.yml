@@ -28,7 +28,7 @@ models:
       - name: created_at_utc
         description: Time entry was created in UTC
 
-      - name: name
+      - name: sku_box_name
         description: Sku box name
 
       - name: fc_location_parent_id
@@ -64,9 +64,6 @@ models:
       - name: lot_id
         description: Lot id
 
-      - name: _fivetran_deleted
-        description: If the entry was deleted in fivetran
-
       - name: manually_queued_for_on_deck
         description: Binary field for whether the sku box was manually queued for on deck
 
@@ -81,6 +78,3 @@ models:
 
       - name: printed
         description: If the box has been printed
-
-      - name: _fivetran_synced
-        description: When it was synced by fivetran in UTC

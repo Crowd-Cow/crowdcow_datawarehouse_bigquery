@@ -10,7 +10,7 @@ models:
       - name: non_member_promotion_start_at_utc
         description: Non member promotion start at utc
 
-      - name: average_cost_in_usd
+      - name: average_cost_usd
         description: Average cost in USD
 
       - name: promotion_start_at_utc
@@ -26,10 +26,10 @@ models:
         description: Vendor funded discount USD
 
       - name: non_member_promotion_discount
-        description: Non Member promotion discount
+        description: Non Member promotion discount. This field is typically null
 
       - name: member_only_promotion_discount
-        description: Member only promotion discount
+        description: Member only promotion discount. This field is typically null
 
       - name: member_only_promotion_start_at_utc
         description: Member only promotion start in UTC
@@ -37,19 +37,19 @@ models:
       - name: updated_at_utc
         description: Sku updated at UTC
 
-      - name: platform_fee_in_usd
+      - name: platform_fee_usd
         description: Platform fee in USD
 
       - name: sku_name
         description: Business name of the sku
 
-      - name: fulfillment_fee_in_usd
+      - name: fulfillment_fee_usd
         description: Fulfillment fee in USD
 
-      - name: price_in_usd
+      - name: price_usd
         description: Price in USD
 
-      - name: marketplace_cost_in_usd
+      - name: marketplace_cost_usd
         description: Marketplace cost in USD
 
       - name: created_at_utc
@@ -70,7 +70,7 @@ models:
       - name: barcode
         description: Barcode
 
-      - name: payment_processing_fee_in_usd
+      - name: payment_processing_fee_usd
         description: Payment processing fee in USD
 
       - name: cut_id
@@ -85,7 +85,7 @@ models:
       - name: promotion_end_at_utc
         description: Sku promotion ended at UTC
 
-      - name: weight
+      - name: sku_weight
         description: Sku weight
 
       - name: standard_price_in_usd
@@ -105,9 +105,6 @@ models:
 
       - name: non_member_promotion_end_at_utc
         description: Non member promotion ended at UTC
-
-      - name: _fivetran_deleted
-        description: Have the records been deleted from fivetran
 
       - name: bulk_receivable
         description: Binary field at the sku level
@@ -147,9 +144,6 @@ models:
 
       - name: partial_member_discount_percent
         description: Partial member discount percent
-
-      - name: _fivetran_synced
-        description: Synced with Fivetran
 
       - name: dbt_valid_to
         description: DBT valid to timestamps
