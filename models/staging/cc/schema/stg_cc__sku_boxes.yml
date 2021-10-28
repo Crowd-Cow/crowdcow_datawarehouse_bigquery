@@ -64,17 +64,17 @@ models:
       - name: lot_id
         description: Lot id
 
-      - name: manually_queued_for_on_deck
+      - name: is_manually_queued_for_on_deck
         description: Binary field for whether the sku box was manually queued for on deck
 
-      - name: manually_queued_for_picking
+      - name: is_manually_queued_for_picking
         description: Binary field for whether the sku box was manually queued for picking
 
-      - name: scanned
+      - name: is_scanned
         description: If the box was scanned
 
-      - name: filled
+      - name: is_filled
         description: If the box was filled
 
-      - name: printed
+      - name: is_printed
         description: If the box has been printed

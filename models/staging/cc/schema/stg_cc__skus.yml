@@ -106,13 +106,13 @@ models:
       - name: non_member_promotion_end_at_utc
         description: Non member promotion ended at UTC
 
-      - name: bulk_receivable
+      - name: is_bulk_receivable
         description: Binary field at the sku level
 
       - name: is_presellable
         description: Binary flag to indicate presell
 
-      - name: virtual_inventory
+      - name: is_virtual_inventory
         description: Binary flag to indicate virtual inventory
 
       - name: member_discount_start_at_utc
