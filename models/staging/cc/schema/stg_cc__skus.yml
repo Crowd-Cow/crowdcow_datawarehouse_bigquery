@@ -1,0 +1,150 @@
+version: 2
+
+models:
+  - name: stg_cc__skus
+    description: "Staging table for SKU information"
+    columns:
+      - name: sku_id
+        description: "SKU ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: non_member_promotion_start_at_utc
+        description: "Timestamp for when the non member promotion starts UTC"
+
+      - name: average_cost_usd
+        description: "Average SKU cost USD"
+
+      - name: promotion_start_at_utc
+        description: "Timestamp for when a promotions starts on a SKU UTC"
+
+      - name: vendor_funded_discount_name
+        description: "Vendor funded discount name"
+
+      - name: sku_code
+        description: "SKU code. Field is 100% null in the source"
+
+      - name: vendor_funded_discount_usd
+        description: "Vendor funded discount amount USD"
+
+      - name: non_member_promotion_discount
+        description: "Non member promotion discount. Field is 100% null in the source"
+
+      - name: member_only_promotion_discount
+        description: "Member only promotion discount. Field is 100% null in the source"
+
+      - name: member_only_promotion_start_at_utc
+        description: "Timestamp for when the member only promotion starts UTC"
+
+      - name: updated_at_utc
+        description: "Timestamp of when the record was updated by the system UTC"
+
+      - name: platform_fee_usd
+        description: "Platform fee amount USD"
+
+      - name: sku_name
+        description: "SKU name"
+
+      - name: fulfillment_fee_usd
+        description: "Fulfillment fee amount USD"
+
+      - name: sku_price_usd
+        description: "SKU price USD"
+
+      - name: marketplace_cost_usd
+        description: "Marketplace cost USD"
+
+      - name: created_at_utc
+        description: "Timestamp of when the SKU was created by the system UTC"
+
+      - name: sku_vendor_id
+        description: "SKU vendor ID. This ID can be used to link back to what farm the SKU belongs to"
+
+      - name: average_box_quantity
+        description: "Average box quantity"
+
+      - name: vendor_funded_discount_start_at_utc
+        description: "Timestamp of when the vendor funded discount amount starts UTC"
+
+      - name: vendor_funded_discount_end_at_utc
+        description: "Timestamp of when the vendor funded discount ends UTC"
+
+      - name: sku_barcode
+        description: "SKU barcode"
+
+      - name: payment_processing_fee_usd
+        description: "Payment processing fee amount USD"
+
+      - name: cut_id
+        description: "Cut ID. This can be used to link back to what cut the SKU belongs to"
+
+      - name: vendor_funded_discount_percent
+        description: "Vendor funded discount percent"
+
+      - name: active_at_utc
+        description: "Timestamp for when the SKU is active in the SKU plan UTC"
+
+      - name: promotion_end_at_utc
+        description: "Timestamp for when the promotion ends UTC"
+
+      - name: sku_weight
+        description: "SKU weight"
+
+      - name: standard_price_usd
+        description: "Standard SKU price amount USD"
+
+      - name: promotional_price_usd
+        description: "Promotional price amount USD"
+
+      - name: member_only_promotion_end_at_utc
+        description: "Timestamp for when the member only promotion ends UTC. Field is 100% null in the source"
+
+      - name: sku_plan_entry_id
+        description: "SKU plan entry ID. This can be used to link back to what SKU plan the SKU belongs to"
+
+      - name: reservation_window_days
+        description: "Reservation window days"
+
+      - name: non_member_promotion_end_at_utc
+        description: "Timestamp for when the non member promotion ends UTC"
+
+      - name: is_bulk_receivable
+        description: "Boolean indicating if the SKU is bulk receivable"
+
+      - name: is_presellable
+        description: "Boolean indicating if the SKU is presellable"
+
+      - name: is_virtual_inventory
+        description: "Boolean indicating if the SKU is virtual inventory"
+
+      - name: member_discount_start_at_utc
+        description: "Timestamp for when the member discount starts UTC"
+
+      - name: general_discount_start_at_utc
+        description: "Timestamp for when the general discount starts UTC"
+
+      - name: general_discount_end_at_utc
+        description: "Timestamp for when the general discount ends UTC"
+
+      - name: member_discount_end_at_utc
+        description: "Timestamp for when the member discount ends UTC"
+
+      - name: member_discount_percent
+        description: "Member discount percent"
+
+      - name: general_discount_percent
+        description: "General discount percent"
+
+      - name: non_member_discount_end_at_utc
+        description: "Timestamp for when the non member discount ends UTC"
+
+      - name: non_member_discount_percent
+        description: "Non member discount percent"
+
+      - name: non_member_discount_start_at_utc
+        description: "Timestamp for when the non member discount starts UTC"
+
+      - name: partial_member_discount_percent
+        description: "Partial member discount percent"
+
