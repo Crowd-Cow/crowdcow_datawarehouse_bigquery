@@ -8,11 +8,11 @@ renamed as (
 
     select
         id as bid_item_sku_quantity_id
-        , sku_id
-        , updated_at as updated_at_utc
-        , created_at as created_at_utc
-        , quantity as sku_quantity
-        , bid_item_id
+        ,sku_id
+        ,updated_at as updated_at_utc
+        ,created_at as created_at_utc
+        ,quantity as sku_quantity
+        ,bid_item_id
 
     from source
 
