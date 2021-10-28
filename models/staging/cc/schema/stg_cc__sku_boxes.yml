@@ -1,0 +1,80 @@
+version: 2
+
+models:
+  - name: stg_cc__sku_boxes
+    description: Source table for sku boxes information
+    columns:
+      - name: sku_box_id
+        description: Business ID for the sku box
+
+      - name: fulfillment_center_id
+        description: FC related to the sku box
+
+      - name: sku_id
+        description: Business ID for the sku
+
+      - name: marked_destroyed_at_utc
+        description: Timestamp when the box was marked as destroyed
+
+      - name: quantity
+        description: Sku quantity in the box
+
+      - name: max_weight
+        description: Max weight
+
+      - name: quarantined_quantity
+        description: Quarantined quantity
+
+      - name: created_at_utc
+        description: Time entry was created in UTC
+
+      - name: sku_box_name
+        description: Sku box name
+
+      - name: fc_location_parent_id
+        description: FC location parent id
+
+      - name: marked_not_for_sale_at_utc
+        description: Timestamp where sku box was marked not for sale in UTC
+
+      - name: updated_at_utc
+        description: Sku box entry updated at timestamp in UTC
+
+      - name: quantity_reserved
+        description: Quantity reserved in sku box
+
+      - name: barcode
+        description: Barcode for the sku box
+
+      - name: delivered_at_utc
+        description: Delivered at in UTC
+
+      - name: pallet_id
+        description: Pallet ID
+
+      - name: min_weight
+        description: Minimum weight
+
+      - name: moved_to_picking_at_utc
+        description: Timestamp the sku box was moved to picking in UTC
+
+      - name: owner_id
+        description: Owner id of the sku box
+
+      - name: lot_id
+        description: Lot id
+
+      - name: is_manually_queued_for_on_deck
+        description: Binary field for whether the sku box was manually queued for on deck
+
+      - name: is_manually_queued_for_picking
+        description: Binary field for whether the sku box was manually queued for picking
+
+      - name: is_scanned
+        description: If the box was scanned
+
+      - name: is_filled
+        description: If the box was filled
+
+      - name: is_printed
+        description: If the box has been printed

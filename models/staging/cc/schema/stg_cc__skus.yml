@@ -1,0 +1,152 @@
+version: 2
+
+models:
+  - name: stg_cc__skus
+    description: Source table for sku level data
+    columns:
+      - name: sku_id
+        description: Business ID for the sku
+
+      - name: non_member_promotion_start_at_utc
+        description: Non member promotion start at utc
+
+      - name: average_cost_usd
+        description: Average cost in USD
+
+      - name: promotion_start_at_utc
+        description: Promotion start at UTC
+
+      - name: vendor_funded_discount_name
+        description: Vendor funded discount name
+
+      - name: sku_code
+        description: Sku code. This field is typically null
+
+      - name: vendor_funded_discount_usd
+        description: Vendor funded discount USD
+
+      - name: non_member_promotion_discount
+        description: Non Member promotion discount. This field is typically null
+
+      - name: member_only_promotion_discount
+        description: Member only promotion discount. This field is typically null
+
+      - name: member_only_promotion_start_at_utc
+        description: Member only promotion start in UTC
+
+      - name: updated_at_utc
+        description: Sku updated at UTC
+
+      - name: platform_fee_usd
+        description: Platform fee in USD
+
+      - name: sku_name
+        description: Business name of the sku
+
+      - name: fulfillment_fee_usd
+        description: Fulfillment fee in USD
+
+      - name: price_usd
+        description: Price in USD
+
+      - name: marketplace_cost_usd
+        description: Marketplace cost in USD
+
+      - name: created_at_utc
+        description: Sku created at in UTC
+
+      - name: sku_vendor_id
+        description: Vendor id associated with the sku
+
+      - name: average_box_quantity
+        description: Avg box quantity
+
+      - name: vendor_funded_discount_start_at_utc
+        description: Vendor funded discount start in UTC
+
+      - name: vendor_funded_discount_end_at_utc
+        description: Vendor funded discount start in UTC
+
+      - name: barcode
+        description: Barcode
+
+      - name: payment_processing_fee_usd
+        description: Payment processing fee in USD
+
+      - name: cut_id
+        description: Cut id associated with the sku
+
+      - name: vendor_funded_discount_percent
+        description: Vendor funded discount percent
+
+      - name: active_at_utc
+        description: Activated at UTC
+
+      - name: promotion_end_at_utc
+        description: Sku promotion ended at UTC
+
+      - name: sku_weight
+        description: Sku weight
+
+      - name: standard_price_in_usd
+        description: Standard price in USD
+
+      - name: promotional_price_in_usd
+        description: Promotional price in USD
+
+      - name: member_only_promotion_end_at_utc
+        description: Member only promotion ended at UTC
+
+      - name: sku_plan_entry_id
+        description: Business ID for sku plan entry
+
+      - name: reservation_window_days
+        description: Reservation window days for the given sku
+
+      - name: non_member_promotion_end_at_utc
+        description: Non member promotion ended at UTC
+
+      - name: is_bulk_receivable
+        description: Binary field at the sku level
+
+      - name: is_presellable
+        description: Binary flag to indicate presell
+
+      - name: is_virtual_inventory
+        description: Binary flag to indicate virtual inventory
+
+      - name: member_discount_start_at_utc
+        description: Member discount started at UTC
+
+      - name: general_discount_start_at_utc
+        description: General discount started at UTC
+
+      - name: general_discount_end_at_utc
+        description: General discount ended at UTC
+
+      - name: member_discount_end_at_utc
+        description: Member discount ended at UTC
+
+      - name: member_discount_percent
+        description: Member discount percent
+
+      - name: general_discount_percent
+        description: General discount percent
+
+      - name: non_member_discount_end_at_utc
+        description: Non member discount ended at UTC
+
+      - name: non_member_discount_percent
+        description: Non member discount percent
+
+      - name: non_member_discount_start_at_utc
+        description: Non member discount started at UTC
+
+      - name: partial_member_discount_percent
+        description: Partial member discount percent
+
+      - name: dbt_valid_to
+        description: DBT valid to timestamps
+
+      - name: dbt_valid_from
+        description: DBT valid from timestamps
