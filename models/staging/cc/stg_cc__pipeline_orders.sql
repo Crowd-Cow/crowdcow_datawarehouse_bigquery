@@ -46,6 +46,8 @@ renamed as (
         , marketplace as is_marketplace
         , removed as is_removed
         , fc_delivery_scheduled as is_fc_delivery_scheduled
+        , dbt_valid_to
+        , dbt_valid_from
 
     from source
 
