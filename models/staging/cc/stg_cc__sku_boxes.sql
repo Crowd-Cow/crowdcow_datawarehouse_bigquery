@@ -27,11 +27,11 @@ renamed as (
         ,moved_to_picking_at as moved_to_picking_at_utc
         ,owner_id
         ,lot_id
-        ,is_manually_queued_for_on_deck
-        ,is_manually_queued_for_picking
-        ,is_scanned
-        ,is_filled
-        ,is_printed
+        ,manually_queued_for_on_deck as is_manually_queued_for_on_deck
+        ,manually_queued_for_picking as is_manually_queued_for_picking
+        ,scanned as is_scanned
+        ,filled as is_filled
+        ,printed as is_printed
 
     from source
 

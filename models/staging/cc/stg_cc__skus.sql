@@ -41,9 +41,9 @@ renamed as (
         ,sku_plan_entry_id
         ,reservation_window_days
         ,non_member_promotion_end_at as non_member_promotion_end_at_utc
-        ,is_bulk_receivable
+        ,bulk_receivable as is_bulk_receivable
         ,is_presellable
-        ,is_virtual_inventory
+        ,virtual_inventory as is_virtual_inventory
         ,member_discount_start_at as member_discount_start_at_utc
         ,general_discount_start_at as general_discount_start_at_utc
         ,general_discount_end_at as general_discount_end_at_utc
