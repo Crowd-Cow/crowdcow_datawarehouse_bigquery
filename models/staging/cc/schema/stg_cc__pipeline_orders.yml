@@ -1,0 +1,122 @@
+version: 2
+
+models:
+  - name: stg_cc__pipeline_orders
+    description: Source table for pipeline orders
+    columns:
+      - name: pipeline_order_id
+        description: Pipeline order id
+
+      - name: special_instructions_changed
+        description: Special instructions changed
+
+      - name: events_completed_at_utc
+        description: Events completed at UTC
+
+      - name: inventory_owner_id
+        description: Inventory Owner ID
+
+      - name: expected_pounds
+        description: Expected lbs
+
+      - name: box_count
+        description: Box Count
+
+      - name: pipeline_actor_id
+        description: Pipeline actor ID
+
+      - name: last_updated_by
+        description: Who last updated the entry (ID)
+
+      - name: lot_number
+        description: Number associated with the lot. Not the same as the lot_id
+
+      - name: processor_loss_pounds
+        description: Processor loss pounds
+
+      - name: updated_at_utc
+        description: Updated at UTC
+
+      - name: processor_freight_id
+        description: Processor freight ID
+
+      - name: created_by
+        description: Created by (ID)
+
+      - name: freight_order_number
+        description: Freight order number
+
+      - name: packer_total_shipment_weight
+        description: Packer total shipment weight
+
+      - name: special_instructions
+        description: special instructions
+
+      - name: pallet_count
+        description: Pallet count
+
+      - name: processor_bol_url
+        description: Processory bol url
+
+      - name: farm_bol_url
+        description: farm_bol_url
+
+      - name: fc_box_count
+        description: FC box count
+
+      - name: lot_cost_applied_at_utc
+        description: Lot cost applied at UTC
+
+      - name: fc_freight_id
+        description: FC freight ID
+
+      - name: packer_box_count
+        description: Packer box count
+
+      - name: kill_date
+        description: Kill date 
+
+      - name: quantity
+        description: Quantity
+
+      - name: payment_terms
+        description: Payment terms with the vendor
+
+      - name: admin_notes
+        description: Admin notes
+
+      - name: pipeline_order_type
+        description: Pipeline order type
+
+      - name: created_at_utc
+        description: When the order was created in pipeline
+
+      - name: boxed_beef_processor_id
+        description: Boxed beef processor ID
+
+      - name: packer_bol_url
+        description: Packer bol url
+
+      - name: potential_revenue_usd
+        description: Potential revenue in USD
+
+      - name: processor_total_shipment_weight
+        description: Processor total shipment weight
+
+      - name: coa_url
+        description: coa url
+
+      - name: is_processor_delivery_scheduled
+        description: Binary field for processor delivery scheduled
+
+      - name: is_debut_lot
+        description: Binary field for debut lot
+
+      - name: is_marketplace
+        description: Binary field for marketplace
+
+      - name: is_removed
+        description: Binary field for removed
+
+      - name: is_fc_delivery_scheduled
+        description: Binary field fo fc delivery scheduled
