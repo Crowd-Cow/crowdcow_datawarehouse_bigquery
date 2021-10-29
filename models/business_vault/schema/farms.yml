@@ -1,0 +1,150 @@
+version: 2
+
+models:
+  - name: farms
+    description: "Business logic for farms"
+    columns:
+      - name: farm_id
+        description: "Farm ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: farm_token
+        description: "Farm token"
+
+      - name: sku_vendor_id
+        description: "SKU vendor ID"
+
+      - name: product_collection_id
+        description: "Product collection ID"
+
+      - name: price_list_id
+        description: "Price list ID"
+
+      - name: farmer_name
+        description: "Farmer name"
+
+      - name: farm_name
+        description: "Farm name"
+
+      - name: short_description
+        description: "Farm short description"
+
+      - name: email_address
+        description: "Farm email address"
+
+      - name: phone_number
+        description: "Farm phone number"
+
+      - name: city_name
+        description: "Farm city name"
+
+      - name: state_name
+        description: "Farm state name"
+
+      - name: postal_code
+        description: "Farm postal code"
+
+      - name: category
+        description: "Farm catgory"
+
+      - name: sub_category
+        description: "Farm sub category"
+
+      - name: invoice_payment_terms
+        description: "Farm invoice payment terms"
+
+      - name: meat_type
+        description: "Meat type"
+
+      - name: meat_subtype
+        description: "Meat subtype"
+
+      - name: capsule_tags
+        description: "Capsule tags"
+
+      - name: hanging_weight_price_per_pound_usd
+        description: "Hanging weight price per pound USD"
+
+      - name: slaughter_payment_terms
+        description: "slaughter payment terms"
+
+      - name: sort_order
+        description: "Sort order"
+
+      - name: event_title
+        description: "Event title"
+
+      - name: blog_tags
+        description: "Blog tags"
+
+      - name: handwritten_note_nugget
+        description: "Handwritten note nugget"
+
+      - name: tweetable_nugget
+        description: "Tweetable nugget"
+
+      - name: youtube_videos
+        description: "YouTube videos"
+
+      - name: thanks_video_youtube_token
+        description: "Thanks video YouTube token"
+
+      - name: farm_photo_cached_height
+        description: "Farm photo cahced height"
+
+      - name: farm_photo_cached_width
+        description: "Farm photo cached width"
+
+      - name: website_url
+        description: "Farm Website URL"
+
+      - name: facebook_page_url
+        description: "Farm Facebook page URL"
+
+      - name: photo_url
+        description: "Farm photo URL"
+
+      - name: farmer_photo_url
+        description: "Farmer photo URL"
+
+      - name: video_url
+        description: "Farm video URL"
+
+      - name: thanks_video_static_image_url
+        description: "Thanks video static image URL"
+
+      - name: is_cargill
+        description: "Boolean indicating if this farm is a Cargill farm"
+
+      - name: is_edm
+        description: "Boolean indicating if this farm is an EDM farm"
+
+      - name: is_dry_aged
+        description: "Boolean indicating if this farm sells dry aged product"
+
+      - name: is_zero_antibiotics
+        description: "Boolean indicating if this farm sells zero antibiotic product"
+
+      - name: is_zero_hormones
+        description: "Boolean indicating if this farm sell zero hormone product"
+
+      - name: is_closed_herd
+        description: "Boolean indicating if this farm is a closed herd farm"
+
+      - name: is_active
+        description: "Boolean indicating if this farm is active"
+
+      - name: is_organic
+        description: "Boolean indicating if this farm sells organic product"
+
+      - name: is_non_gmo
+        description: "Boolean indicating if this farm sells non GMO product"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created in the system UTC"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated in the system UTC"
+
