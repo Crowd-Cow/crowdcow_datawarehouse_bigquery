@@ -39,6 +39,10 @@ order_item as ( select * from {{ ref('order_items') }})
 )
 
 ,packed_skus as (
+
+    /*** SKU reservations without a bid ID are primarily items like inserts, handwritten notes, etc. ***/
+    /** This CTE excludes those items without a bid ID ***/
+
     select
         packed_sku_reservations.order_id
         ,sku_reservation.bid_id
@@ -53,6 +57,10 @@ order_item as ( select * from {{ ref('order_items') }})
 )
 
 ,join_common_packed_skus as (
+
+    /*** Joins SKUs for a bid item that were ordered with the packed SKUs ***/
+    /*** where the packed SKUs for a bid item are the same as what was originally ordered ***/
+
     select
         order_item_skus.order_id
         ,order_item_skus.bid_id
@@ -76,6 +84,10 @@ order_item as ( select * from {{ ref('order_items') }})
 )
 
 ,find_pack_swap_skus as (
+
+    /*** Some SKUs for a bid item are swapped when an order is packed. This CTE creates a data set of ***/
+    /*** all packed SKUs that are different than the SKUs that were originally ordered ***/
+
     select
         order_id
         ,bid_id
@@ -96,6 +108,10 @@ order_item as ( select * from {{ ref('order_items') }})
 )
 
 ,add_pack_swap_skus as (
+
+    /*** Joins the ordered SKUs for a bid item that were the same as the packed SKUs ***/
+    /*** with the packed SKUs that were swapped for a given bid item at the time of packing ***/
+
     select
         join_common_packed_skus.order_id
         ,join_common_packed_skus.bid_id
