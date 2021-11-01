@@ -4,7 +4,7 @@ models:
   - name: stg_cc__sku_reservations
     description: Source table for sku reservations
     columns:
-      - name: id
+      - name: sku_reservation_id
         description: Unique identifier for the table
 
       - name: reservation_group_id

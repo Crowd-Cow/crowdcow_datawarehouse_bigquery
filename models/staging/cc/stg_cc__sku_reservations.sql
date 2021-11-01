@@ -7,7 +7,7 @@ with source as (
 renamed as (
 
     select
-        id
+        id as sku_reservation_id
         , reservation_group_id
         , quantity as sku_reservation_quantity
         , {{ cents_to_usd('price_in_cents') }} as price_usd
