@@ -1,0 +1,72 @@
+version: 2
+
+models:
+  - name: stg_cc__order_packed_skus
+    description: "Staging model for order packed SKUs"
+    columns:
+      - name: order_packed_sku_id
+        description: "Order packed SKU ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: order_packed_sku_name
+        description: "Order packed SKU name"
+
+      - name: payment_processing_fee_usd
+        description: "Payment processing fee USD"
+
+      - name: order_id
+        description: "Order ID"
+
+      - name: sku_id
+        description: "SKU ID"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created in the system UTC"
+
+      - name: sku_reservation_id
+        description: "SKU reservation ID"
+
+      - name: sku_barcode
+        description: "SKU barcode"
+
+      - name: farm_id
+        description: "Farm ID"
+
+      - name: acumatica_confirmed_at_utc
+        description: "Timestamp for when Acumatica was confirmed UTC"
+
+      - name: sku_quantity
+        description: "SKU quantity"
+
+      - name: sku_box_id
+        description: "SKU box ID"
+
+      - name: platform_fee_usd
+        description: "Platform fee USD"
+
+      - name: fulfillment_fee_usd
+        description: "Fulfillment fee USD"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was update UTC"
+
+      - name: reason
+        description: "Order packed reason. Field is 100% `null` in the source data"
+
+      - name: farm_name
+        description: "Farm name"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: committed_at_utc
+        description: "Timestamp for when the record was committed UTC"
+
+      - name: sku_cost_usd
+        description: "SKU cost USD"
+
+      - name: sku_weight
+        description: "SKU weight"
+
