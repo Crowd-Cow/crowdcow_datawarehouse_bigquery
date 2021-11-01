@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ source('cc', 'skus') }} where not _fivetran_deleted
+    select * from {{ ref('skus_ss') }} where not _fivetran_deleted
 
 ),
 
@@ -21,7 +21,7 @@ renamed as (
         ,{{ cents_to_usd('platform_fee_in_cents') }} as platform_fee_usd
         ,{{ clean_strings('name') }} as sku_name
         ,{{ cents_to_usd('fulfillment_fee_in_cents') }} as fulfillment_fee_usd
-        ,{{ cents_to_usd('price_in_cents') }} as sku_price_usd
+        ,{{ cents_to_usd('price_in_cents') }} as price_usd
         ,{{ cents_to_usd('marketplace_cost_in_cents') }} as marketplace_cost_usd
         ,created_at as created_at_utc
         ,sku_vendor_id
@@ -54,6 +54,8 @@ renamed as (
         ,{{ convert_percent('non_member_discount_percent') }} as non_member_discount_percent
         ,non_member_discount_start_at as non_member_discount_start_at_utc
         ,{{ convert_percent('partial_member_discount_percent') }} as partial_member_discount_percent
+        ,dbt_valid_to
+        ,dbt_valid_from
 
     from source
 
