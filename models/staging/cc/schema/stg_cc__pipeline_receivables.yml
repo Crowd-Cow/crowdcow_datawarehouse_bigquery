@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: stg_cc__pipeline_receivables
+    description: Source table for pipeline_receivables
+    columns:
+      - name: pipeline_receivables_id
+        description: Unique ID for stg_cc__pipeline_receivables
+
+      - name: sku_id
+        description: Business identifier for a given sku
+
+      - name: quantity
+        description: Quantity of given sku in the receivables
+
+      - name: marked_destroyed_at_utc
+        description: Marked destroyed at timestamp in UTC
+
+      - name: cut_id
+        description: Business identifier for a given cut
+
+      - name: weight
+        description: weight
+
+      - name: created_at_utc
+        description: Timestamp when the pipeline_receivable was created in UTC
+
+      - name: quantity_received
+        description: The amnount received
+
+      - name: received_at_utc
+        description: Received at timestamp UTC 
+
+      - name: pipeline_order_id
+        description: Pipeline order ID
+
+      - name: updated_at_utc
+        description: Updated at UTC 
+
+      - name: dbt_valid_to
+        description: Timestamp for when an entry was valid through
+
+      - name: dbt_valid_from
+        description: Timestamp for when an entry is valid from
