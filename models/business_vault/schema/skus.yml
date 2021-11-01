@@ -1,0 +1,126 @@
+version: 2
+
+models:
+  - name: skus
+    description: "Business logic for SKUs"
+    columns:
+      - name: sku_id
+        description: "SKU ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: cut_id
+        description: "Cut ID"
+
+      - name: sku_vendor_id
+        description: "SKU Vendor ID"
+
+      - name: barcode
+        description: "SKU barcode"
+
+      - name: farm_name
+        description: "Farm name"
+
+      - name: category
+        description: "Farm catgory"
+
+      - name: sub_category
+        description: "Farm sub category"
+
+      - name: cut_name
+        description: "Cut name (also called the SKU name)"
+
+      - name: sku_weight
+        description: "SKU weight"
+
+      - name: average_cost_usd
+        description: "Average SKU cost USD"
+
+      - name: platform_fee_usd
+        description: "Platform fee USD"
+
+      - name: fulfillment_fee_usd
+        description: "Fulfillment fee USD"
+
+      - name: payment_processing_fee_usd
+        description: "Payment processing fee USD"
+
+      - name: standard_price_usd
+        description: "Standard price USD"
+
+      - name: price_usd
+        description: "Price USD"
+
+      - name: marketplace_cost_usd
+        description: "Marketplace cost USD"
+
+      - name: average_box_quantity
+        description: "Average box quantity"
+
+      - name: vendor_funded_discount_name
+        description: "Vendor funded discount name"
+
+      - name: vendor_funded_discount_usd
+        description: "Vendor funded discount USD"
+
+      - name: promotional_price_usd
+        description: "Promotional price USD"
+
+      - name: member_discount_percent
+        description: "Member discount percent"
+
+      - name: non_member_discount_percent
+        description: "Non member discount percent"
+
+      - name: is_bulk_receivable
+        description: "Boolean indicating if this SKU is bulk receivable"
+
+      - name: is_presellable
+        description: "Boolean indicating if this SKU is pre sellable"
+
+      - name: is_virtual_inventory
+        description: "Boolean indicating if this SKU is virtual inventory"
+
+      - name: is_cargill
+        description: "Boolean indicating if this SKU is a Cargill farm item"
+
+      - name: is_edm
+        description: "Boolean indicating if this SKU is an EDM farm item"
+
+      - name: is_marketplace
+        description: "Boolean indicating if this SKU is a marketplace item"
+
+      - name: vendor_funded_discount_start_at_utc
+        description: "Timestamp for when the vendor funded discount starts UTC"
+
+      - name: vendor_funded_discount_end_at_utc
+        description: "Timestamp for when the vendor funded discount ends UTC"
+
+      - name: promotion_start_at_utc
+        description: "Timestamp for when the promotion starts UTC"
+
+      - name: promotion_end_at_utc
+        description: "Promotion for when the promotion ends UTC"
+
+      - name: member_discount_start_at_utc
+        description: "Timestamp for when the member discount starts UTC"
+
+      - name: member_discount_end_at_utc
+        description: "Timestamp for when the member discount ends UTC"
+
+      - name: non_member_discount_start_at_utc
+        description: "Timestamp for when the non member discount starts UTC"
+
+      - name: non_member_discount_end_at_utc
+        description: "Timestamp for when the non-member discount ends UTC"
+
+      - name: active_at_utc
+        description: "Timestamp for when the SKU is active on the SKU plan UTC"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created in the system UTC"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated in the system UTC"
+
