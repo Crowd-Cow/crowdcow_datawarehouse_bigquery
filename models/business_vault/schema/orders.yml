@@ -151,6 +151,18 @@ models:
       - name: completed_unique_membership_order_rank
         description: "Rank of all completed membership orders. The order is associated with a membership ID and has a `checkout_completed_at` date. This rank resets when there is a new membership ID for the user"
 
+      - name: gift_order_rank
+        description: "Rank of all gift orders for a user. The order has gift info associated with it and is not a corp. bulk order or gift card order"
+
+      - name: paid_gift_order_rank
+        description: "Rank of all paid, uncancelled gift orders for a user. The order has gift info associated with it and is not a corp. bulk order or gift card order"
+
+      - name: gift_card_order_rank
+        description: "Rank of all gift card orders for a user"
+
+      - name: paid_gift_card_order_rank
+        description: "Rank of all paid, uncancelled orders for a user"
+
       - name: order_created_at_utc
         description: "Timestamp of when the order was created by the system in UTC"
 
