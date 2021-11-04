@@ -118,13 +118,23 @@ order_item as ( select * from {{ ref('order_items') }})
         ,join_common_packed_skus.bid_item_id
         ,join_common_packed_skus.product_id
         ,join_common_packed_skus.ordered_sku_id
-        ,coalesce(find_pack_swap_skus.packed_sku_id, join_common_packed_skus.ordered_sku_id) as packed_sku_id
+        
+        ,case
+            when is_ordered_sku_packed then join_common_packed_skus.ordered_sku_id
+            else find_pack_swap_skus.packed_sku_id
+         end as packed_sku_id
+
         ,join_common_packed_skus.bid_item_type
         ,join_common_packed_skus.bid_item_subtype
         ,join_common_packed_skus.product_name
         ,join_common_packed_skus.bid_item_name
         ,join_common_packed_skus.ordered_sku_quantity
-        ,coalesce(find_pack_swap_skus.packed_sku_quantity, join_common_packed_skus.ordered_sku_quantity) as packed_sku_quantity
+        
+        ,case
+            when is_ordered_sku_packed then join_common_packed_skus.ordered_sku_quantity
+            else find_pack_swap_skus.packed_sku_quantity
+         end as packed_sku_quantity
+         
         ,join_common_packed_skus.is_order_packed
         ,join_common_packed_skus.is_ordered_sku_packed
         ,join_common_packed_skus.created_at_utc
