@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: stg_cc__bid_item_sku_with_quantities
+    description: "Staging model for bid item with sku quantities"
+    columns:
+      - name: bid_item_sku_quantity_id
+        description: "Bid item with SKU quantity ID"
+        test:
+          - unique
+          - not_null
+
+      - name: sku_id
+        description: "SKU ID"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated by system UTC"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created by system UTC"
+
+      - name: sku_quantity
+        description: "SKU quantity"
+
+      - name: bid_item_id
+        description: "Bid item ID. Can be used to link to the bid item the SKU belongs to"
+

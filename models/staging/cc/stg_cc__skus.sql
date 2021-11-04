@@ -28,10 +28,10 @@ renamed as (
         ,average_box_quantity
         ,vendor_funded_discount_start_at as vendor_funded_discount_start_at_utc
         ,vendor_funded_discount_end_at as vendor_funded_discount_end_at_utc
-        ,barcode
+        ,barcode as sku_barcode
         ,{{ cents_to_usd('payment_processing_fee_in_cents') }} as payment_processing_fee_usd
         ,cut_id
-        ,vendor_funded_discount_percent
+        ,{{ convert_percent('vendor_funded_discount_percent') }} as vendor_funded_discount_percent
         ,active_at as active_at_utc
         ,promotion_end_at as promotion_end_at_utc
         ,weight as sku_weight
@@ -48,12 +48,12 @@ renamed as (
         ,general_discount_start_at as general_discount_start_at_utc
         ,general_discount_end_at as general_discount_end_at_utc
         ,member_discount_end_at as member_discount_end_at_utc
-        ,member_discount_percent
-        ,general_discount_percent
+        ,{{ convert_percent('member_discount_percent') }} as member_discount_percent
+        ,{{ convert_percent('general_discount_percent') }} as general_discount_percent
         ,non_member_discount_end_at as non_member_discount_end_at_utc
-        ,non_member_discount_percent
+        ,{{ convert_percent('non_member_discount_percent') }} as non_member_discount_percent
         ,non_member_discount_start_at as non_member_discount_start_at_utc
-        ,partial_member_discount_percent
+        ,{{ convert_percent('partial_member_discount_percent') }} as partial_member_discount_percent
         ,dbt_valid_to
         ,dbt_valid_from
 

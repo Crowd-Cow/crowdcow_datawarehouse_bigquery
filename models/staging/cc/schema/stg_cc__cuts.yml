@@ -1,0 +1,87 @@
+version: 2
+
+models:
+  - name: stg_cc__cuts
+    description: "Staging model for cuts"
+    columns:
+      - name: cut_id
+        description: "Cut ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: sort_order
+        description: "Sort order"
+
+      - name: product_subtype
+        description: "Product subtype"
+
+      - name: hard_scan_weight_min
+        description: "Hard scan weight min"
+
+      - name: cut_pretty_name
+        description: "Cut pretty name"
+
+      - name: hard_scan_weight_max
+        description: "Hard scan weight max"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated in the system UTC"
+
+      - name: named_cut_weight_min
+        description: "Named cut weight min"
+
+      - name: plu
+        description: "PLU"
+
+      - name: primal_id
+        description: "Primal ID"
+
+      - name: named_cut_weight_max
+        description: "Named cut weight max"
+
+      - name: merchandising_target_weight
+        description: "Merchandising target weight"
+
+      - name: average_box_quantity
+        description: "Average box quantity"
+
+      - name: product_type
+        description: "Product type"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created in the system UTC"
+
+      - name: sales_category
+        description: "Sales category"
+
+      - name: cut_name
+        description: "Cut name"
+
+      - name: named_cut_weight_target
+        description: "Named cut weight target"
+
+      - name: rounding_rule
+        description: "Rounding rule"
+
+      - name: generic_description_override
+        description: "Generic description override"
+
+      - name: is_popular_cut
+        description: "Boolean indicating if this is a popular cut"
+
+      - name: is_in_use
+        description: "Boolean indicating if this cut is in use"
+
+      - name: is_portion_cut
+        description: "Boolean indicating if this cut is a portion cut"
+
+      - name: is_yield_cut
+        description: "Boolean indicating if this cut is a yield cut"
+
+      - name: is_named_weight_cut
+        description: "Boolean indicating if this cut is a named weight cut"
+
+      - name: is_sold_by_weight
+        description: "Boolean indicating if this cut is sold by weight"
+

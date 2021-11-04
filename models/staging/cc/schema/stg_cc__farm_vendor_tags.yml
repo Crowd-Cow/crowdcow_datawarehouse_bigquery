@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: stg_cc__farm_vendor_tags
+    description: "Staging model for farm vendor tags"
+    columns:
+      - name: farm_vendor_tag_id
+        description: "Farm vendor tag ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated in the system UTC"
+
+      - name: farm_id
+        description: "Farm ID"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created in the system UTC"
+
+      - name: vendor_tag_id
+        description: "Vendor tag ID"
+

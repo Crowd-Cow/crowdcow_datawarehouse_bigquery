@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: stg_cc__sku_vendors
+    description: "Staging model for SKU vendors"
+    columns:
+      - name: sku_vendor_id
+        description: "SKU vendor ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: sku_vendor_name
+        description: "SKU vendor name"
+
+      - name: erp_id
+        description: "ERP ID"
+
+      - name: launched_at_utc
+        description: "Timestamp for when the vendor was launched UTC"
+
+      - name: created_at_utc
+        description: "Timestamp for when the vendor was created in the system UTC"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the vendor record was updated by the system UTC"
+
+      - name: barcode_prefix
+        description: "Barcode prefix"
+
+      - name: sku_plan_id
+        description: "SKU plan ID"
+
+      - name: preferred_fc_id
+        description: "Preferred fulfillment center ID"
+
+      - name: is_boxed_beef
+        description: "Boolean indicating if the vendor sell boxed beef"
+
+      - name: is_marketplace
+        description: "Boolean indicating if the vendor is a marketplace vendor"
+
