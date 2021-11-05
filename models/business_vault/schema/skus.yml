@@ -7,6 +7,12 @@ models:
       - name: sku_id
         description: "SKU ID"
 
+      - name: sku_id_surrogate
+        description: "SKU ID surrogate key to provide a unique value. Combination of `sku_id` and `dbt_valid_to` date."
+        tests:
+          - unique
+          - not_null
+
       - name: cut_id
         description: "Cut ID"
 

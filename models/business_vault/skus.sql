@@ -8,6 +8,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
 ,sku_joins as (
     select 
         sku.sku_id
+        ,sku.sku_id_surrogate
         ,sku.cut_id
         ,sku.sku_vendor_id
         ,sku.sku_barcode

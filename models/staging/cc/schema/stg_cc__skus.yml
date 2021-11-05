@@ -7,6 +7,12 @@ models:
       - name: sku_id
         description: Business ID for the sku
 
+      - name: sku_id_surrogate
+        description: SKU ID surrogate key to provide a unique value. Combination of `sku_id` and `dbt_valid_to` date.
+        tests:
+          - unique
+          - not_null
+
       - name: non_member_promotion_start_at_utc
         description: Non member promotion start at utc
 

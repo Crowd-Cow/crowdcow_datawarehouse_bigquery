@@ -8,6 +8,7 @@ renamed as (
 
     select
         id as sku_id
+        ,{{ dbt_utils.surrogate_key(['id', 'dbt_valid_to'] ) }} as sku_id_surrogate
         ,non_member_promotion_start_at as non_member_promotion_start_at_utc
         ,{{ cents_to_usd('average_cost_in_cents') }} as average_cost_usd
         ,promotion_start_at as promotion_start_at_utc
