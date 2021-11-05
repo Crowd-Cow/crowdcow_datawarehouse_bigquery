@@ -4,6 +4,12 @@ models:
   - name: order_item_details
     description: "Business logic to show SKUs that were part of an order. Both SKUs that were ordered and what SKUs were eventually packed"
     columns:
+      - name: order_item_details_id
+        description: Surrogate key to make order items details records unique. Combination of `order_id`,`bid_id`,`bid_item_id`,`ordered_sku_id`, and `packed_sku_id`
+        tests:
+          - unique
+          - not_null
+      
       - name: order_id
         description: "Order ID"
 

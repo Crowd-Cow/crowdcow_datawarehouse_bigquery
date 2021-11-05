@@ -112,7 +112,7 @@ order_item as ( select * from {{ ref('order_items') }})
     /*** Joins the ordered SKUs for a bid item that were the same as the packed SKUs ***/
     /*** with the packed SKUs that were swapped for a given bid item at the time of packing ***/
 
-    select
+    select distinct
         join_common_packed_skus.order_id
         ,join_common_packed_skus.bid_id
         ,join_common_packed_skus.bid_item_id
@@ -147,7 +147,8 @@ order_item as ( select * from {{ ref('order_items') }})
 
 ,add_sku_keys as (
     select
-        add_pack_swap_skus.order_id
+        {{ dbt_utils.surrogate_key( ['order_id','bid_id','bid_item_id','ordered_sku_id','packed_sku_id'] ) }} as order_item_details_id
+        ,add_pack_swap_skus.order_id
         ,add_pack_swap_skus.bid_id
         ,add_pack_swap_skus.bid_item_id
         ,add_pack_swap_skus.product_id
@@ -166,9 +167,11 @@ order_item as ( select * from {{ ref('order_items') }})
         ,add_pack_swap_skus.created_at_utc
     from add_pack_swap_skus
         left join sku on add_pack_swap_skus.ordered_sku_id = sku.sku_id
-            and add_pack_swap_skus.created_at_utc between sku.adjusted_dbt_valid_from and sku.adjusted_dbt_valid_to 
+            and add_pack_swap_skus.created_at_utc >= sku.adjusted_dbt_valid_from 
+            and add_pack_swap_skus.created_at_utc < sku.adjusted_dbt_valid_to 
         left join sku as packed_sku on add_pack_swap_skus.packed_sku_id = packed_sku.sku_id
-            and add_pack_swap_skus.created_at_utc between packed_sku.adjusted_dbt_valid_from and packed_sku.adjusted_dbt_valid_to
+            and add_pack_swap_skus.created_at_utc >= packed_sku.adjusted_dbt_valid_from 
+            and add_pack_swap_skus.created_at_utc < packed_sku.adjusted_dbt_valid_to
 )
 
 
