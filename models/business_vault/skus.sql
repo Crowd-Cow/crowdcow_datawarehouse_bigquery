@@ -8,6 +8,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
 ,sku_joins as (
     select 
         sku.sku_id
+        ,sku.sku_key
         ,sku.cut_id
         ,sku.sku_vendor_id
         ,sku.sku_barcode
@@ -48,6 +49,8 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku.updated_at_utc
         ,sku.dbt_valid_from
         ,sku.dbt_valid_to
+        ,sku.adjusted_dbt_valid_from
+        ,sku.adjusted_dbt_valid_to
     from sku
         left join cut on sku.cut_id = cut.cut_id
         left join farm on sku.sku_vendor_id = farm.sku_vendor_id

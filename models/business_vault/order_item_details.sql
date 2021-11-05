@@ -2,7 +2,7 @@ with
 
 order_item as ( select * from {{ ref('order_items') }})
 ,bid_item_skus as ( select * from {{ ref('stg_cc__bid_item_sku_with_quantities') }} )
-,sku as ( select * from {{ ref('skus') }} where dbt_valid_to is null)
+,sku as ( select * from {{ ref('skus') }} )
 ,order_packed_skus as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
 ,sku_reservation as ( select * from {{ ref('stg_cc__sku_reservations') }} where dbt_valid_to is null )
 
@@ -112,7 +112,7 @@ order_item as ( select * from {{ ref('order_items') }})
     /*** Joins the ordered SKUs for a bid item that were the same as the packed SKUs ***/
     /*** with the packed SKUs that were swapped for a given bid item at the time of packing ***/
 
-    select
+    select distinct
         join_common_packed_skus.order_id
         ,join_common_packed_skus.bid_id
         ,join_common_packed_skus.bid_item_id
@@ -145,26 +145,21 @@ order_item as ( select * from {{ ref('order_items') }})
             
 )
 
-,add_sku_details as (
+,add_sku_keys as (
     select
-        add_pack_swap_skus.order_id
+        {{ dbt_utils.surrogate_key( ['order_id','bid_id','bid_item_id','ordered_sku_id','packed_sku_id'] ) }} as order_item_details_id
+        ,add_pack_swap_skus.order_id
         ,add_pack_swap_skus.bid_id
         ,add_pack_swap_skus.bid_item_id
         ,add_pack_swap_skus.product_id
         ,add_pack_swap_skus.ordered_sku_id
         ,add_pack_swap_skus.packed_sku_id
+        ,sku.sku_key as ordered_sku_key
+        ,packed_sku.sku_key as packed_sku_key
         ,add_pack_swap_skus.bid_item_type
         ,add_pack_swap_skus.bid_item_subtype
         ,add_pack_swap_skus.product_name
         ,add_pack_swap_skus.bid_item_name
-        ,sku.farm_name
-        ,sku.category
-        ,sku.sub_category
-        ,sku.cut_name
-        ,packed_sku.farm_name as packed_farm_name
-        ,packed_sku.category as packed_category
-        ,packed_sku.sub_category as packed_sub_category
-        ,packed_sku.cut_name as packed_cut_name
         ,add_pack_swap_skus.ordered_sku_quantity
         ,add_pack_swap_skus.packed_sku_quantity
         ,add_pack_swap_skus.is_order_packed
@@ -172,8 +167,12 @@ order_item as ( select * from {{ ref('order_items') }})
         ,add_pack_swap_skus.created_at_utc
     from add_pack_swap_skus
         left join sku on add_pack_swap_skus.ordered_sku_id = sku.sku_id
+            and add_pack_swap_skus.created_at_utc >= sku.adjusted_dbt_valid_from 
+            and add_pack_swap_skus.created_at_utc < sku.adjusted_dbt_valid_to 
         left join sku as packed_sku on add_pack_swap_skus.packed_sku_id = packed_sku.sku_id
+            and add_pack_swap_skus.created_at_utc >= packed_sku.adjusted_dbt_valid_from 
+            and add_pack_swap_skus.created_at_utc < packed_sku.adjusted_dbt_valid_to
 )
 
 
-select * from add_sku_details
+select * from add_sku_keys
