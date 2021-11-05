@@ -60,4 +60,3 @@ models:
 
       - name: created_at_utc
         description: "Timestamp of when the order item was created in the system UTC"
-
