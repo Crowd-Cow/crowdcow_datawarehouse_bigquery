@@ -8,7 +8,7 @@ renamed as (
 
     select
         id as sku_id
-        ,{{ dbt_utils.surrogate_key(['id', 'dbt_valid_to'] ) }} as sku_id_surrogate
+        ,dbt_scd_id as sku_key
         ,non_member_promotion_start_at as non_member_promotion_start_at_utc
         ,{{ cents_to_usd('average_cost_in_cents') }} as average_cost_usd
         ,promotion_start_at as promotion_start_at_utc
@@ -57,6 +57,13 @@ renamed as (
         ,{{ convert_percent('partial_member_discount_percent') }} as partial_member_discount_percent
         ,dbt_valid_to
         ,dbt_valid_from
+        
+        ,case
+            when dbt_valid_from = first_value(dbt_valid_from) over(partition by id order by dbt_valid_from) then '1970-01-01'
+            else dbt_valid_from
+         end as adjusted_dbt_valid_from
+
+        ,coalesce(dbt_valid_to,'2999-01-01') as adjusted_dbt_valid_to
 
     from source
 
