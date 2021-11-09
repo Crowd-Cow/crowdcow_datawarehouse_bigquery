@@ -90,6 +90,10 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,ranks.unique_membership_order_rank
         ,ranks.paid_unique_membership_order_rank
         ,ranks.completed_unique_membership_order_rank
+        ,ranks.gift_order_rank
+        ,ranks.paid_gift_order_rank
+        ,ranks.gift_card_order_rank
+        ,ranks.paid_gift_card_order_rank
         ,orders.order_created_at_utc
         ,orders.order_updated_at_utc
         ,orders.order_checkout_completed_at_utc
@@ -164,6 +168,10 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,unique_membership_order_rank
         ,paid_unique_membership_order_rank
         ,completed_unique_membership_order_rank
+        ,gift_order_rank
+        ,paid_gift_order_rank
+        ,gift_card_order_rank
+        ,paid_gift_card_order_rank
         ,order_created_at_utc
         ,order_updated_at_utc
         ,order_checkout_completed_at_utc
@@ -229,6 +237,10 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,unique_membership_order_rank
         ,paid_unique_membership_order_rank
         ,completed_unique_membership_order_rank
+        ,gift_order_rank
+        ,paid_gift_order_rank
+        ,gift_card_order_rank
+        ,paid_gift_card_order_rank
         ,order_created_at_utc
         ,order_updated_at_utc
         ,order_checkout_completed_at_utc
