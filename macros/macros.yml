@@ -24,3 +24,18 @@ macros:
     arguments:
         - name: column_name
           description: "The column name that contains the string value that needs to be cleaned"
+
+  - name: setup_dev_env
+    description: '{{ doc("setup_dev_env") }}'
+    arguments:
+      - name: clone_db
+        type: string
+        description: "Name of the database that you would like to clone as a new dev environment database"
+
+      - name: action
+        type: string
+        description: >
+          The action you would like to take. The possible values are: `create`, `destroy`, or `dry_run`
+          `create` - This will clone the database given in the `clone_db` argument
+          `destroy` - This will destroy the cloned dev database that was created by the create action
+          `dry_run` - This will output the SQL statements used in the `create` and `destroy` actions so you can check to make sure the SQL is doing what is intended
