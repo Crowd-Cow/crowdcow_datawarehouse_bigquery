@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: order_ranks
+  - name: int_order_ranks
     description: "Logic to determine order ranks by user"
     columns:
       - name: order_id

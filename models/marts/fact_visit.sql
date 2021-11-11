@@ -7,7 +7,7 @@
 with
 
 visits as ( select * from {{ ref('visits') }} )
-,all_events as ( select * from {{ ref('visit_events') }} )
+,all_events as ( select * from {{ ref('int_visit_events') }} )
 
 ,find_user_id as (
 

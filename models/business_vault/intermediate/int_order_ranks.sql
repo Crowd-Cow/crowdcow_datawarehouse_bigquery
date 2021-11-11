@@ -1,6 +1,6 @@
 with
 
-flags as ( select * from {{ ref('order_flags') }} )
+flags as ( select * from {{ ref('int_order_flags') }} )
 
 ,overall_order_ranks as(
   select

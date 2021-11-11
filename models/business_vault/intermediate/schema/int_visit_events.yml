@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: visit_events
+  - name: int_visit_events
     description: "Intermediate model to union all ahoy events and ahoy visits together"
     tests:
         - dbt_utils.unique_combination_of_columns:

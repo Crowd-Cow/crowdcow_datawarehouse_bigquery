@@ -1,9 +1,9 @@
 with
 
 orders as ( select * from {{ ref('stg_cc__orders') }} )
-,order_revenue as ( select * from {{ ref('order_revenue') }} )
-,flags as ( select * from {{ ref('order_flags') }} )
-,ranks as ( select * from {{ ref('order_ranks') }} )
+,order_revenue as ( select * from {{ ref('int_order_revenue') }} )
+,flags as ( select * from {{ ref('int_order_flags') }} )
+,ranks as ( select * from {{ ref('int_order_ranks') }} )
 
 ,order_joins as (
     select

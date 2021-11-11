@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: visit_flags
+  - name: int_visit_flags
     description: "Intermediate model to add various flags to the fact visit data"
     columns:
       - name: visit_id

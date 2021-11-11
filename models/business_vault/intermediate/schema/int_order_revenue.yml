@@ -2,7 +2,7 @@ Running with dbt=0.20.0
 version: 2
 
 models:
-  - name: order_revenue
+  - name: int_order_revenue
     description: "Business logic to generate order revenue information"
     columns:
       - name: order_id

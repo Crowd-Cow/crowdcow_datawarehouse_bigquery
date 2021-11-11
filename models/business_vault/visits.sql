@@ -7,7 +7,7 @@
 with
 
 visits as ( select * from {{ ref('visit_classification') }} )
-,visit_flags as ( select * from {{ ref('visit_flags') }} )
+,visit_flags as ( select * from {{ ref('int_visit_flags') }} )
 
 ,joined_visits as (
 

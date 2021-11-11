@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: order_flags
+  - name: int_order_flags
     description: "Logic for order flags"
     columns:
       - name: order_id
