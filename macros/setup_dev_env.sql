@@ -53,7 +53,7 @@ Command to run the macro from the command line: dbt run-operation setup_dev_env 
 
 {% else %}
 
-    {{ log("Selected action is not supported. Please set action as `create` or `destroy`.", info=True) }}
+    {{ log("Selected action is not supported. Please set action as `create`, `destroy`, or `dry_run`.", info=True) }}
 
 {% endif %}
   
