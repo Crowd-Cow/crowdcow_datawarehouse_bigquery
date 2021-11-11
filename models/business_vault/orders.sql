@@ -81,19 +81,26 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,ranks.completed_order_rank
         ,ranks.paid_order_rank
         ,ranks.cancelled_order_rank
-        ,ranks.membership_order_rank
         ,ranks.ala_carte_order_rank
-        ,ranks.paid_membership_order_rank
-        ,ranks.paid_ala_carte_order_rank
-        ,ranks.completed_membership_order_rank
         ,ranks.completed_ala_carte_order_rank
+        ,ranks.paid_ala_carte_order_rank
+        ,ranks.cancelled_ala_carte_order_rank
+        ,ranks.membership_order_rank
+        ,ranks.completed_membership_order_rank
+        ,ranks.paid_membership_order_rank
+        ,ranks.cancelled_membership_order_rank
         ,ranks.unique_membership_order_rank
-        ,ranks.paid_unique_membership_order_rank
         ,ranks.completed_unique_membership_order_rank
+        ,ranks.paid_unique_membership_order_rank
+        ,ranks.cancelled_unique_membership_order_rank
         ,ranks.gift_order_rank
+        ,ranks.completed_gift_order_rank
         ,ranks.paid_gift_order_rank
+        ,ranks.cancelled_gift_order_rank
         ,ranks.gift_card_order_rank
+        ,ranks.completed_gift_card_order_rank
         ,ranks.paid_gift_card_order_rank
+        ,ranks.cancelled_gift_card_order_rank
         ,orders.order_created_at_utc
         ,orders.order_updated_at_utc
         ,orders.order_checkout_completed_at_utc
@@ -159,19 +166,26 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,completed_order_rank
         ,paid_order_rank
         ,cancelled_order_rank
-        ,membership_order_rank
         ,ala_carte_order_rank
-        ,paid_membership_order_rank
-        ,paid_ala_carte_order_rank
-        ,completed_membership_order_rank
         ,completed_ala_carte_order_rank
+        ,paid_ala_carte_order_rank
+        ,cancelled_ala_carte_order_rank
+        ,membership_order_rank
+        ,completed_membership_order_rank
+        ,paid_membership_order_rank
+        ,cancelled_membership_order_rank
         ,unique_membership_order_rank
-        ,paid_unique_membership_order_rank
         ,completed_unique_membership_order_rank
+        ,paid_unique_membership_order_rank
+        ,cancelled_unique_membership_order_rank
         ,gift_order_rank
+        ,completed_gift_order_rank
         ,paid_gift_order_rank
+        ,cancelled_gift_order_rank
         ,gift_card_order_rank
+        ,completed_gift_card_order_rank
         ,paid_gift_card_order_rank
+        ,cancelled_gift_card_order_rank
         ,order_created_at_utc
         ,order_updated_at_utc
         ,order_checkout_completed_at_utc
@@ -228,19 +242,26 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,completed_order_rank
         ,paid_order_rank
         ,cancelled_order_rank
-        ,membership_order_rank
         ,ala_carte_order_rank
-        ,paid_membership_order_rank
-        ,paid_ala_carte_order_rank
-        ,completed_membership_order_rank
         ,completed_ala_carte_order_rank
+        ,paid_ala_carte_order_rank
+        ,cancelled_ala_carte_order_rank
+        ,membership_order_rank
+        ,completed_membership_order_rank
+        ,paid_membership_order_rank
+        ,cancelled_membership_order_rank
         ,unique_membership_order_rank
-        ,paid_unique_membership_order_rank
         ,completed_unique_membership_order_rank
+        ,paid_unique_membership_order_rank
+        ,cancelled_unique_membership_order_rank
         ,gift_order_rank
+        ,completed_gift_order_rank
         ,paid_gift_order_rank
+        ,cancelled_gift_order_rank
         ,gift_card_order_rank
+        ,completed_gift_card_order_rank
         ,paid_gift_card_order_rank
+        ,cancelled_gift_card_order_rank
         ,order_created_at_utc
         ,order_updated_at_utc
         ,order_checkout_completed_at_utc

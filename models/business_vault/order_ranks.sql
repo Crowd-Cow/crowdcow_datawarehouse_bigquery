@@ -5,7 +5,7 @@ flags as ( select * from {{ ref('order_flags') }} )
 ,overall_order_ranks as(
   select
     order_id
-    ,row_number() over(partition by user_id order_by order_created_at_utc) as overall_order_rank
+    ,row_number() over(partition by user_id order by order_created_at_utc) as overall_order_rank
     
     ,case 
       when not is_completed_order then null 
@@ -157,7 +157,9 @@ flags as ( select * from {{ ref('order_flags') }} )
       ,case
         when not is_gift_card_order or not is_cancelled_order or is_paid_order then null
         else conditional_true_event(is_gift_card_order and is_cancelled_order and not is_paid_order) over(partition by user_id order by order_created_at_utc)
-       end as cancelled_gift_card_order
+       end as cancelled_gift_card_order_rank
+
+    from flags
 )
 
 ,combine_ranks as (
@@ -186,7 +188,7 @@ flags as ( select * from {{ ref('order_flags') }} )
       ,gift_card_order_ranks.gift_card_order_rank
       ,gift_card_order_ranks.completed_gift_card_order_rank
       ,gift_card_order_ranks.paid_gift_card_order_rank
-      ,gift_card_order_ranks.cancelled_gift_card_order
+      ,gift_card_order_ranks.cancelled_gift_card_order_rank
     from flags
       left join overall_order_ranks on flags.order_id = overall_order_ranks.order_id
       left join ala_carte_order_ranks on flags.order_id = ala_carte_order_ranks.order_id
