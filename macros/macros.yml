@@ -36,6 +36,6 @@ macros:
         type: string
         description: >
           The action you would like to take. The possible values are: `create`, `destroy`, or `dry_run`
-          `create` - This will clone the database given in the `clone_db` argument
-          `destroy` - This will destroy the cloned dev database that was created by the create action
-          `dry_run` - This will output the SQL statements used in the `create` and `destroy` actions so you can check to make sure the SQL is doing what is intended
+            - `create`: This will clone the database given in the `clone_db` argument
+            - `destroy`: This will destroy the cloned dev database that was created by the create action
+            - `dry_run`: This will output the SQL statements used in the `create` and `destroy` actions so you can check to make sure the SQL is doing what is intended

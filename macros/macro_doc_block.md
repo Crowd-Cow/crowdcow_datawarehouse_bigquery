@@ -12,7 +12,7 @@ For example:
   - User `user2` is using the target flag of --target qa and clones the proddb database
     - The database that is created or destroyed: user_db = `user2_proddb_qa` 
     
-Using the `dry_run` action will output the sql statements that would run given the create or destroy action
+Using the `dry_run` action will output the sql statements that would run given the create or destroy action.
 This can be useful to make sure the clone/drop table statement will do what is intended 
 
 Command to run the macro from the command line: `dbt run-operation setup_dev_env --args '{ "clone_db": "<db_name>", "action":"<create/destroy/dry_run>"}'`
