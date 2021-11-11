@@ -1,14 +1,14 @@
 {% docs setup_dev_env %}
 
-This macro to sets up a development environment for a user by cloning a given database
+This macro to sets up a development environment for a user by cloning a given database.
 Based on the given action, it will create or destroy a development database based on the user 
 running the macro and what target environment they are using. 
 
 For example:
   - User `user1` is using the default dbt target of `dev` and clones the proddb database
     - The database that is created or destroyed: user_db = `user1_proddb_dev`
-   
-    
+
+
   - User `user2` is using the target flag of --target qa and clones the proddb database
     - The database that is created or destroyed: user_db = `user2_proddb_qa` 
     
