@@ -37,6 +37,9 @@ models:
       - name: is_abandonded_order
         description: "Boolean indiciating if the order was an abandoned order. Order has no `checkout_completed_at` date and does have a `cancelled_at` date"
 
+      - name: has_free_shipping
+        description: "Boolean indicating if the order had a free shipping credit."
+        
       - name: is_gift_order
         description: "Boolean indicating if the order is a gift order"
 

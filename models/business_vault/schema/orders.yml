@@ -64,26 +64,26 @@ models:
       - name: billing_postal_code
         description: "billing postal code"
 
-      - name: order_total_price_usd
-        description: "Order total price"
+      - name: gross_revenue_usd
+        description: "Gross revenue for an order. Calculated as `product revenue + shipping revenue`"
 
       - name: product_revenue_usd
-        description: "Product revenue"
+        description: "Product revenue for an order. Calculated as the sum of `bid list price * bid quantity` for all bids in an order. Bid list price does not include item discounts."
 
-      - name: shipping_revenue
+      - name: shipping_revenue_usd
         description: "Shipping revenue"
 
-      - name: order_total_discount_usd
-        description: "Order discounts"
+      - name: discount_percent
+        description: "The total discount percent that was applied to an order"
+
+      - name: discount_amount_usd
+        description: "Total discount amount for an order. This includes all order level discounts (e.g. free shipping, promos, etc.) as well as item level discounts (e.g. member vs non-member pricing."
 
       - name: refund_amount_usd
-        description: "Refund amounts"
+        description: "The total refund amount for an order"
 
-      - name: gross_revenue
-        description: "Gross revenue for an order. Product revenue + Shipping revenue"
-
-      - name: net_revenue
-        description: "Net revenue for an order. Product revenue + Shipping revenue - Order discounts - Refund amounts"
+      - name: net_revenue_usd
+        description: "The net revenue for an order. Calculated as `product revenue + shipping revenue - discounts - refunds`"
 
       - name: is_ala_carte_order
         description: "Boolean indicating if the order is an ala carte order. Order has no associated membership ID and is not a gift order of any kind"
