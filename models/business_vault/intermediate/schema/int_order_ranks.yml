@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: order_ranks
+  - name: int_order_ranks
     description: "Logic to determine order ranks by user"
     columns:
       - name: order_id
@@ -31,42 +31,63 @@ models:
       - name: cancelled_order_rank
         description: "Rank of cancelled orders for a user. The order needs to have a `cancelled_at` date"
 
-      - name: membership_order_rank
-        description: "Rank of all membership orders for a user. The order needs to be associated with a membership ID. This rank carries over between memberships and does not reset if the user has a new membership ID"
-
       - name: ala_carte_order_rank
         description: "Rank of all ala carte orders for a user. The order is not associated associated with a membership ID and is not a gift order of any kind"
-
-      - name: paid_membership_order_rank
-        description: "Rank of paid, uncancelled membership orders for a user. The order needs to be associated with a membership ID"
-
-      - name: paid_ala_carte_order_rank
-        description: "Rank of paid, uncancelled membership order for a user. The order is not associated with a membership ID"
-
-      - name: completed_membership_order_rank
-        description: "Rank of all completed membership orders. The order is associated with a membership ID and has a `checkout_completed_at` date"
 
       - name: completed_ala_carte_order_rank
         description: "Rank of all completed ala carte orders. The order is not associated with a membership ID and has a `checkout_completed_at` date"
 
+      - name: paid_ala_carte_order_rank
+        description: "Rank of paid, uncancelled ala carte order for a user. The order is not associated with a membership ID"
+
+      - name: cancelled_ala_carte_order_rank
+        description: "Rank of cancelled ala carte orders for a user. THe order is not associated with a membership ID"
+
+      - name: membership_order_rank
+        description: "Rank of all membership orders for a user. The order needs to be associated with a membership ID. This rank carries over between memberships and does not reset if the user has a new membership ID"
+
+      - name: completed_membership_order_rank
+        description: "Rank of all completed membership orders. The order is associated with a membership ID and has a `checkout_completed_at` date"
+
+      - name: paid_membership_order_rank
+        description: "Rank of paid, uncancelled membership orders for a user. The order needs to be associated with a membership ID"
+
+      - name: cancelled_membership_order_rank
+        description: "Rank of cancelled membership orders for a user. The order needs to be associated with a membership ID"
+
       - name: unique_membership_order_rank
         description: "Rank of all membership orders for a user. The order needs to be associated with a membership ID. This rank resets when there is a new membership ID for the user"
-
-      - name: paid_unique_membership_order_rank
-        description: "Rank of paid, uncancelled membership orders for a user. The order needs to be associated with a membership ID. This rank resets when there is a new membership ID for the user"
 
       - name: completed_unique_membership_order_rank
         description: "Rank of all completed membership orders. The order is associated with a membership ID and has a `checkout_completed_at` date. This rank resets when there is a new membership ID for the user"
 
+      - name: paid_unique_membership_order_rank
+        description: "Rank of paid, uncancelled membership orders for a user. The order needs to be associated with a membership ID. This rank resets when there is a new membership ID for the user"
+
+      - name: cancelled_unique_membership_order_rank
+        description: "Rank of cancelled membership orders for a user. The order needs to be associated with a membership ID. This rank resets when there is a new membership ID for the user"
+
       - name: gift_order_rank
         description: "Rank of all gift orders for a user. The order has gift info associated with it and is not a corp. bulk order or gift card order"
+
+      - name: completed_gift_order_rank
+        description: "Rank of all completed gift orders for a user. The order has gift info associated with it and is not a corp. bulk order or gift card order"
 
       - name: paid_gift_order_rank
         description: "Rank of all paid, uncancelled gift orders for a user. The order has gift info associated with it and is not a corp. bulk order or gift card order"
 
+      - name: cancelled_gift_order_rank
+        description: "Rank of all cancelled gift orders for a user. The order has gift infor associated with it and is not a corp. bulk order or gift card order"
+
       - name: gift_card_order_rank
         description: "Rank of all gift card orders for a user"
 
+      - name: completed_gift_card_order_rank
+        description: "Rank of all completed gift card orders for a user"
+
       - name: paid_gift_card_order_rank
-        description: "Rank of all paid, uncancelled orders for a user"
+        description: "Rank of all paid, uncancelled gift card orders for a user"
+
+      - name: cancelled_gift_card_order_rank
+        description: "Rank of all cancelled gift card orders for a user"
 
