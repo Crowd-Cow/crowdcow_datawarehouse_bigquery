@@ -18,7 +18,7 @@ renamed as (
         ,{{ clean_strings('notes') }} as notes
         ,{{ clean_strings('autofill_type') }} as autofill_type
         ,{{ cents_to_usd('initial_subtotal_cents') }} as initial_subtotal_usd
-        , filled_at as filled_at_date
+        ,filled_at as filled_at_date
     from source
 
 )
