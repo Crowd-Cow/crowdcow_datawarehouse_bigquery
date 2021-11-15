@@ -10,6 +10,7 @@ with base_ahoy_events as (
     ,visit_id
     ,name      as event_name
     ,time      as occurred_at_utc
+    ,updated_at as updated_at_utc
     ,user_id
     ,parse_json(properties) as event_json
   from
