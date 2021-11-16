@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: stg_cc__autofill_order_logs
+    description: "Staging model for autofill order logs"
+    columns:
+      - name: autofill_order_log_id
+        description: "Autofill order log id"
+        tests:
+          - unique
+          - not_null
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated in the system UTC"
+
+      - name: previous_order_subtotal_usd
+        description: "The subtotal amount of the member's previous order"
+
+      - name: final_subtotal_usd
+        description: "Final subtotal USD after autofill process runs"
+
+      - name: order_id
+        description: "Order ID"
+
+      - name: created_at_utc
+        description: "Timestamp of when the record was created in the system"
+
+      - name: previous_order_id
+        description: "The order id of the member's previous order"
+
+      - name: target_subtotal_usd
+        description: "The target subtotal amount that the autofill process is trying to get to"
+
+      - name: notes
+        description: "Autofill notes"
+
+      - name: autofill_type
+        description: "Autofill type (e.g. Prefill, Replacement, Removal, etc.)"
+
+      - name: initial_subtotal_usd
+        description: "Initial subtotal amount before the autofill process runs"
+
+      - name: filled_at_date
+        description: "The date that the order was filled"
+
