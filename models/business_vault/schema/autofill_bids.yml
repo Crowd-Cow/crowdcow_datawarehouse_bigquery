@@ -31,6 +31,12 @@ models:
       - name: bid_id
         description: "The bid ID created by the autofill process"
 
+      - name: autofill_sku_key
+        description: "Autofill SKU key to join to information about the autofill SKU ID at the time the bid log record was created"
+
+      - name: target_sku_key
+        description: "Target SKU key to join to the information about the target SKU ID at the time the bid log was created"
+
       - name: target_sku_name
         description: "The name of the target SKU the autofill process is trying to replace (100 % `null` values)"
 

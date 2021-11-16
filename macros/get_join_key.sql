@@ -6,7 +6,8 @@
         select max( {{ key_name }} ) as key 
             from {{ key_table_ref }}
             where {{ key_id_lookup }} = {{ id_table }}.{{ id_lookup }} 
-                and {{ id_table }}.{{ id_valid_date }} between adjusted_dbt_valid_from and adjusted_dbt_valid_to
+                and {{ id_table }}.{{ id_valid_date }} >= adjusted_dbt_valid_from 
+                and {{ id_table }}.{{ id_valid_date }} < adjusted_dbt_valid_to
     )
   
 {%- endmacro -%}
