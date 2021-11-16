@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: int_user_order_activity
+    description: "Intermediate model for user order activity logic"
+    columns:
+      - name: user_id
+        description: "User ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: order_user_id
+        description: "User ID for users that have placed orders"
+
+      - name: total_paid_ala_carte_order_count
+        description: "The total number of paid, uncancelled ala carte orders for the user"
+
+      - name: total_paid_membership_order_count
+        description: "The total paid, uncancelled membership orders for a user"
+
+      - name: total_active_order_count
+        description: "Total number of paid, uncancelled membership orders for a user in the past 90 days"
+
+      - name: average_order_frequency_days
+        description: "The average number of days between paid, uncancelled orders for a user"
+
+      - name: average_membership_order_frequency_days
+        description: "The average number of days between paid, uncancelled membership orders for a user"
+
+      - name: average_ala_carte_order_frequncy_days
+        description: "The average number of days between paid, uncancelled ala carte orders for a user"
+
+      - name: customer_cohort_date
+        description: "Assigns the user to a customer cohort that starts on the date of their first paid/uncancelled order"
+
+      - name: membership_cohort_date
+        description: "Assigns the user to a membership cohort that starts on the date of their first paid/uncancelled membership order. The user stays in this cohort even if they cancel this membership and sign up for a new one later."
