@@ -31,7 +31,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.user_id
         ,orders.subscription_id
         ,orders.order_created_at_utc
-        ,orders.subscription_id is null and gift_info.order_id is null as is_ala_carte_order
+        ,orders.subscription_id is null as is_ala_carte_order
         ,orders.subscription_id is not null as is_membership_order
         ,orders.order_checkout_completed_at_utc is not null as is_completed_order
         ,orders.order_paid_at_utc is not null as is_paid_order
