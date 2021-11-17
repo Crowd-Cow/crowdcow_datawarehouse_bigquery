@@ -16,11 +16,14 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
 )
 
 ,order_cohorts as (
-    select distinct
+    select 
         user_id
-        ,first_value(order_paid_at_utc::date) over(partition by user_id order by paid_order_rank) as customer_cohort_date
-        ,first_value(order_paid_at_utc::date) over(partition by user_id order by paid_membership_order_rank) as membership_cohort_date
+        ,min(case when is_paid_order then order_paid_at_utc::date end) as customer_cohort_date
+        ,min(case when is_paid_order and is_membership_order then order_paid_at_utc::date end) as membership_cohort_date
+        ,max(case when is_paid_order and is_membership_order then order_paid_at_utc::date end) as last_paid_membership_order_date
+        ,max(case when is_paid_order and is_ala_carte_order then order_paid_at_utc::date end) as last_paid_ala_carte_order_date
     from order_info
+    group by 1
 )
 
 ,order_frequency as (
@@ -54,6 +57,8 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,average_ala_carte_order_frequncy_days
         ,order_cohorts.customer_cohort_date
         ,order_cohorts.membership_cohort_date
+        ,order_cohorts.last_paid_membership_order_date
+        ,order_cohorts.last_paid_ala_carte_order_date
     from user
         left join order_count on user.user_id = order_count.user_id
         left join order_cohorts on user.user_id = order_cohorts.user_id
