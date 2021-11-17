@@ -24,6 +24,8 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,count_if(category = 'PRODUCT' and action = 'IMPRESSION-CLICK') as pcp_impression_clicks
         ,count_if(category = 'PRODUCT' and action = 'PAGE_INTERACTION' and label = 'CLICKED-ADD-TO-CART') as pdp_add_to_carts
         ,count_if(event_name = 'VIEWED_PRODUCT') as viewed_pdps
+        ,count_if(event_sequence_number = 1 and event_name = 'PAGE_VIEW' and parse_url(url):path::text in ('','L')) as homepage_views
+        ,count(*) as event_count
     from events
     group by 1
 )
@@ -54,41 +56,51 @@ visits as ( select * from {{ ref('visit_classification') }} )
     group by 1,2
 )
 
-,add_flags as (
+,visit_clean_urls as (
     select
-        visits.visit_id
-
+        visit_id
+        ,user_id
         ,visits.visit_landing_page_host = 'WWW.CROWDCOW.COM' 
             and visits.visit_landing_page_path in ('/','/L') as is_homepage_landing
-
-        ,suspicious_ips.visit_ip is not null
-            or visits.visit_user_agent like any ('%BOT%','%CRAWL%','%LIBRATO%','%TWILIOPROXY%','%YAHOOMAILPROXY%','%SCOUTURLMONITOR%','%FULLCONTACT%','%IMGIX%','%BUCK%')
-            or (visits.visit_ip is null and visits.visit_user_agent is null) as is_bot
 
         ,visit_landing_page_path like any ('%.JS%','%.ICO%','%.PNG%','%.CSS%','%.PHP%','%.TXT%','%GRAPHQL%'
                                        ,'%.XML%','%.SQL%','%.ICS%','%WELL-KNOWN%','%/e/%','%.ENV%','%/WP-%','/CROWDCOW.COM%'
                                        ,'%/WWW.CROWDCOW.COM%.%','%/ADMIN%','%/INGREDIENT-LIST%','%.','%PHPINFO%','%.YML%'
                                        ,'%.HTML%','%.ASP','%XXXSS%','%.RAR','%.AXD%','%.AWS%','%;VAR%') as is_invalid_visit
-        
-        ,visits.visit_ip in ('66.171.181.219', '127.0.0.1') or (user_account.user_id is not null and user_account.user_type = 'EMPLOYEE') as is_internal_traffic
-        ,user_order_firsts.user_id is not null and user_order_firsts.first_paid_order_date < visits.started_at_utc as has_previous_order
-        ,user_order_firsts.user_id is not null and user_order_firsts.first_completed_order_date < visits.started_at_utc as has_previous_completed_order
-        ,user_first_subscription.user_id is not null and user_first_subscription.first_subscription_date < visits.started_at_utc as has_previous_subscription
-        ,user_account.user_id is not null and user_account.first_creation_date < visits.started_at_utc as had_account_created
+        ,visit_ip
+        ,visit_user_agent
+        ,started_at_utc
+    from visits
+)
+
+,add_flags as (
+    select
+        visit_clean_urls.visit_id
+        ,visit_clean_urls.is_invalid_visit
+        ,visit_clean_urls.is_homepage_landing
+        ,suspicious_ips.visit_ip is not null
+            or visit_clean_urls.visit_user_agent like any ('%BOT%','%CRAWL%','%LIBRATO%','%TWILIOPROXY%','%YAHOOMAILPROXY%','%SCOUTURLMONITOR%','%FULLCONTACT%','%IMGIX%','%BUCK%')
+            or (visit_clean_urls.visit_ip is null and visit_clean_urls.visit_user_agent is null) as is_bot
+        ,visit_clean_urls.visit_ip in ('66.171.181.219', '127.0.0.1') or (user_account.user_id is not null and user_account.user_type = 'EMPLOYEE') as is_internal_traffic
+        ,user_order_firsts.user_id is not null and user_order_firsts.first_paid_order_date < visit_clean_urls.started_at_utc as has_previous_order
+        ,user_order_firsts.user_id is not null and user_order_firsts.first_completed_order_date < visit_clean_urls.started_at_utc as has_previous_completed_order
+        ,user_first_subscription.user_id is not null and user_first_subscription.first_subscription_date < visit_clean_urls.started_at_utc as has_previous_subscription
+        ,user_account.user_id is not null and user_account.first_creation_date < visit_clean_urls.started_at_utc as had_account_created
         ,visit_activity.visit_id is not null and subscribes - unsubscribes > 0 as did_subscribe
         ,visit_activity.visit_id is not null and sign_ups > 0 as did_sign_up
         ,visit_activity.visit_id is not null and order_completes > 0 as did_complete_order
+        ,visit_clean_urls.is_homepage_landing and (visit_activity.visit_id is null or (visit_activity.homepage_views = 1 and visit_activity.event_count = 1)) as did_bounce_homepage
         ,zeroifnull(visit_activity.pcp_impressions) as pcp_impressions_count
         ,zeroifnull(visit_activity.pcp_impression_clicks) as pcp_impression_clicks_count
         ,zeroifnull(visit_activity.pdp_add_to_carts) as pdp_product_add_to_cart_count
         ,zeroifnull(visit_activity.viewed_pdps) as pdp_views_count
 
-    from visits
-        left join suspicious_ips on visits.visit_ip = suspicious_ips.visit_ip
-        left join user_order_firsts on visits.user_id = user_order_firsts.user_id
-        left join user_first_subscription on visits.user_id = user_first_subscription.user_id
-        left join user_account on visits.user_id = user_account.user_id
-        left join visit_activity on visits.visit_id = visit_activity.visit_id
+    from visit_clean_urls
+        left join suspicious_ips on visit_clean_urls.visit_ip = suspicious_ips.visit_ip
+        left join user_order_firsts on visit_clean_urls.user_id = user_order_firsts.user_id
+        left join user_first_subscription on visit_clean_urls.user_id = user_first_subscription.user_id
+        left join user_account on visit_clean_urls.user_id = user_account.user_id
+        left join visit_activity on visit_clean_urls.visit_id = visit_activity.visit_id
 )
 
 select * from add_flags
