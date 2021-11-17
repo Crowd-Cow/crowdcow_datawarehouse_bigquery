@@ -57,3 +57,4 @@ models:
 
       - name: pdp_views_count
         description: "Number of events where a product display page viewed during this user's visit"
+        
