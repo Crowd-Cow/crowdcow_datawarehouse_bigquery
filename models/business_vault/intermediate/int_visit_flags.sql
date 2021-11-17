@@ -16,14 +16,14 @@ visits as ( select * from {{ ref('visit_classification') }} )
 ,visit_activity as (
     select 
         visit_id
-        ,count(distinct case when event_name = 'subscribed' then subscription_id end) as subscribes
-        ,count(distinct case when event_name = 'unsubscribed' then subscription_id end) as unsubscribes
-        ,count_if(event_name = 'sign_up') as sign_ups
-        ,count_if(event_name = 'order_complete') as order_completes
-        ,count_if(category = 'product' and action = 'view-impression') as pcp_impressions
-        ,count_if(category = 'product' and action = 'impression-click') as pcp_impression_clicks
-        ,count_if(category = 'product' and action = 'page_interaction' and label = 'clicked-add-to-cart') as pdp_add_to_carts
-        ,count_if(event_name = 'viewed_product') as viewed_pdps
+        ,count(distinct case when event_name = 'SUBSCRIBED' then subscription_id end) as subscribes
+        ,count(distinct case when event_name = 'UNSUBSCRIBED' then subscription_id end) as unsubscribes
+        ,count_if(event_name = 'SIGN_UP') as sign_ups
+        ,count_if(event_name = 'ORDER_COMPLETE') as order_completes
+        ,count_if(category = 'PRODUCT' and action = 'VIEW-IMPRESSION') as pcp_impressions
+        ,count_if(category = 'PRODUCT' and action = 'IMPRESSION-CLICK') as pcp_impression_clicks
+        ,count_if(category = 'PRODUCT' and action = 'PAGE_INTERACTION' and label = 'CLICKED-ADD-TO-CART') as pdp_add_to_carts
+        ,count_if(event_name = 'VIEWED_PRODUCT') as viewed_pdps
     from events
     group by 1
 )
@@ -51,7 +51,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,user_type
         ,min(created_at_utc) as first_creation_date
     from users
-    group by 1
+    group by 1,2
 )
 
 ,add_flags as (
@@ -71,7 +71,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
                                        ,'%.HTML%','%.ASP','%XXXSS%','%.RAR','%.AXD%','%.AWS%','%;VAR%') as is_invalid_visit
         
         ,visits.visit_ip in ('66.171.181.219', '127.0.0.1') or (user_account.user_id is not null and user_account.user_type = 'EMPLOYEE') as is_internal_traffic
-        ,user_order_firsts.user_id is not null and user_order_firsts.first_order_date < visits.started_at_utc as has_previous_order
+        ,user_order_firsts.user_id is not null and user_order_firsts.first_paid_order_date < visits.started_at_utc as has_previous_order
         ,user_order_firsts.user_id is not null and user_order_firsts.first_completed_order_date < visits.started_at_utc as has_previous_completed_order
         ,user_first_subscription.user_id is not null and user_first_subscription.first_subscription_date < visits.started_at_utc as has_previous_subscription
         ,user_account.user_id is not null and user_account.first_creation_date < visits.started_at_utc as had_account_created

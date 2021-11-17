@@ -38,4 +38,27 @@ events as (
   {% endif %}
 )
 
-select * from events
+,clean_strings as (
+  select 
+    event_id
+    ,visit_id
+    ,user_id
+    ,occurred_at_utc
+    ,updated_at_utc
+    ,event_sequence_number
+    ,{{ clean_strings('event_name') }} as event_name
+    ,{{ clean_strings('category') }} as category
+    ,{{ clean_strings('action') }} as action
+    ,{{ clean_strings('label') }} as label
+    ,experiments
+    ,is_member
+    ,{{ clean_strings('token') }} as token
+    ,{{ clean_strings('order_id') }} as order_id
+    ,{{ clean_strings('url') }} as url
+    ,{{ clean_strings('referrer_url') }} as referrer_url
+    ,{{ clean_strings('subscription_id') }} as subscription_id
+    ,{{ clean_strings('title') }} as title
+  from events
+)
+
+select * from clean_strings
