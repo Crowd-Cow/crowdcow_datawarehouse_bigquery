@@ -8,9 +8,9 @@ with
 
 visits as ( select * from {{ ref('visit_classification') }} )
 ,suspicious_ips as ( select * from {{ ref('stg_cc__suspicious_ips') }} )
-,orders as ( select * from {{ ref('stg_cc__orders') }} )
+,orders as ( select * from {{ ref('orders') }} )
 ,subscriptions as ( select * from {{ ref('stg_cc__subscriptions') }} )
-,users as ( select * from {{ ref('stg_cc__users') }} )
+,users as ( select * from {{ ref('users') }} )
 ,events as ( select * from {{ ref('stg_cc__events') }} )
 
 ,visit_activity as (
@@ -28,21 +28,12 @@ visits as ( select * from {{ ref('visit_classification') }} )
     group by 1
 )
 
-,user_first_order as (
+,user_order_firsts as (
     select
         user_id
-        ,min(order_paid_at_utc) as first_order_date
+        ,min(case when paid_order_rank = 1 then order_paid_at_utc end) as first_paid_order_date
+        ,min(case when completed_order_rank = 1 then order_checkout_completed_at_utc end) as first_completed_order_date
     from orders
-    where order_paid_at_utc is not null
-    group by 1
-)
-
-,user_first_completed_order as (
-    select
-        user_id
-        ,min(order_checkout_completed_at_utc) as first_completed_order_date
-    from orders
-    where order_checkout_completed_at_utc is not null
     group by 1
 )
 
@@ -54,19 +45,13 @@ visits as ( select * from {{ ref('visit_classification') }} )
     group by 1
 )
 
-,user_account_created as (
+,user_account as (
     select
         user_id
+        ,user_type
         ,min(created_at_utc) as first_creation_date
     from users
     group by 1
-)
-
-,employee_user as (
-    select distinct
-        user_id
-    from users
-    where user_type = 'EMPLOYEE'
 )
 
 ,add_flags as (
@@ -85,11 +70,11 @@ visits as ( select * from {{ ref('visit_classification') }} )
                                        ,'%/WWW.CROWDCOW.COM%.%','%/ADMIN%','%/INGREDIENT-LIST%','%.','%PHPINFO%','%.YML%'
                                        ,'%.HTML%','%.ASP','%XXXSS%','%.RAR','%.AXD%','%.AWS%','%;VAR%') as is_invalid_visit
         
-        ,visits.visit_ip in ('66.171.181.219', '127.0.0.1') or employee_user.user_id is not null as is_internal_traffic
-        ,user_first_order.user_id is not null and user_first_order.first_order_date < visits.started_at_utc as has_previous_order
-        ,user_first_completed_order.user_id is not null and user_first_completed_order.first_completed_order_date < visits.started_at_utc as has_previous_completed_order
+        ,visits.visit_ip in ('66.171.181.219', '127.0.0.1') or (user_account.user_id is not null and user_account.user_type = 'EMPLOYEE') as is_internal_traffic
+        ,user_order_firsts.user_id is not null and user_order_firsts.first_order_date < visits.started_at_utc as has_previous_order
+        ,user_order_firsts.user_id is not null and user_order_firsts.first_completed_order_date < visits.started_at_utc as has_previous_completed_order
         ,user_first_subscription.user_id is not null and user_first_subscription.first_subscription_date < visits.started_at_utc as has_previous_subscription
-        ,user_account_created.user_id is not null and user_account_created.first_creation_date < visits.started_at_utc as had_account_created
+        ,user_account.user_id is not null and user_account.first_creation_date < visits.started_at_utc as had_account_created
         ,visit_activity.visit_id is not null and subscribes - unsubscribes > 0 as did_subscribe
         ,visit_activity.visit_id is not null and sign_ups > 0 as did_sign_up
         ,visit_activity.visit_id is not null and order_completes > 0 as did_complete_order
@@ -100,11 +85,9 @@ visits as ( select * from {{ ref('visit_classification') }} )
 
     from visits
         left join suspicious_ips on visits.visit_ip = suspicious_ips.visit_ip
-        left join user_first_order on visits.user_id = user_first_order.user_id
-        left join user_first_completed_order on visits.user_id = user_first_completed_order.user_id
+        left join user_order_firsts on visits.user_id = user_order_firsts.user_id
         left join user_first_subscription on visits.user_id = user_first_subscription.user_id
-        left join user_account_created on visits.user_id = user_account_created.user_id
-        left join employee_user on visits.user_id = employee_user.user_id
+        left join user_account on visits.user_id = user_account.user_id
         left join visit_activity on visits.visit_id = visit_activity.visit_id
 )
 
