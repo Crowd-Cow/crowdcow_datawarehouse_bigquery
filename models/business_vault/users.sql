@@ -22,8 +22,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.order_user_id is null as is_lead
         ,user_order_activity.user_id is not null and user_order_activity.total_paid_ala_carte_order_count > 0 and membership_count.total_membership_count = 0 as is_purchasing_customer
         ,user_order_activity.user_id is not null and user_order_activity.total_paid_membership_order_count > 0 as is_purchasing_member
-        ,user_order_activity.user_id is not null and user_order_activity.total_active_order_count > 0 as is_active_member
-        ,coalesce(sysdate()::date - user_order_activity.last_paid_ala_carte_order_date > 45,FALSE) as is_ala_carte_attrition_risk
+        ,user_order_activity.user_id is not null and user_order_activity.total_active_90_day_order_count > 0 as is_active_member_90_day
+        ,sysdate()::date - user_order_activity.last_paid_ala_carte_order_date > 45 as is_ala_carte_attrition_risk
         ,user_order_activity.average_order_frequency_days
         ,user_order_activity.average_membership_order_frequency_days
         ,user_order_activity.average_ala_carte_order_frequncy_days
@@ -67,7 +67,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,is_lead
         ,is_purchasing_customer
         ,is_purchasing_member
-        ,is_active_member
+        ,is_active_member_90_day
         ,is_ala_carte_attrition_risk
         ,user_last_sign_in_at_utc
         ,created_at_utc

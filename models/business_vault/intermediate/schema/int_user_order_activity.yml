@@ -19,7 +19,7 @@ models:
       - name: total_paid_membership_order_count
         description: "The total paid, uncancelled membership orders for a user"
 
-      - name: total_active_order_count
+      - name: total_active_90_day_order_count
         description: "Total number of paid, uncancelled membership orders for a user in the past 90 days"
 
       - name: average_order_frequency_days

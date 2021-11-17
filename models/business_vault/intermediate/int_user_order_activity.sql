@@ -10,7 +10,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,count(order_id) as total_order_count
         ,count_if(is_paid_order and not is_cancelled_order and is_ala_carte_order) as total_paid_ala_carte_order_count
         ,count_if(is_paid_order and not is_cancelled_order and is_membership_order) total_paid_membership_order_count
-        ,count_if(is_paid_order and not is_cancelled_order and is_membership_order and sysdate()::date - order_paid_at_utc::date <= 90) as total_active_order_count
+        ,count_if(is_paid_order and not is_cancelled_order and is_membership_order and sysdate()::date - order_paid_at_utc::date <= 90) as total_active_90_day_order_count
     from order_info
     group by 1
 )
@@ -29,9 +29,15 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
 ,order_frequency as (
     select
         user_id
-        ,lead(case when paid_order_rank is not null then order_paid_at_utc::date end,1) over (partition by user_id order by paid_order_rank)  - order_paid_at_utc::date as days_to_next_paid_order
-        ,lead(case when paid_membership_order_rank is not null then order_paid_at_utc::date end,1) over (partition by user_id order by paid_membership_order_rank)  - order_paid_at_utc::date as days_to_next_paid_membership_order
-        ,lead(case when paid_ala_carte_order_rank is not null then order_paid_at_utc::date end,1) over (partition by user_id order by paid_ala_carte_order_rank)  - order_paid_at_utc::date as days_to_next_paid_ala_carte_order
+        
+        ,lead(case when paid_order_rank is not null then order_paid_at_utc::date end,1) 
+            over (partition by user_id order by paid_order_rank)  - order_paid_at_utc::date as days_to_next_paid_order
+        
+        ,lead(case when paid_membership_order_rank is not null then order_paid_at_utc::date end,1) 
+            over (partition by user_id order by paid_membership_order_rank)  - order_paid_at_utc::date as days_to_next_paid_membership_order
+        
+        ,lead(case when paid_ala_carte_order_rank is not null then order_paid_at_utc::date end,1) 
+            over (partition by user_id order by paid_ala_carte_order_rank)  - order_paid_at_utc::date as days_to_next_paid_ala_carte_order
     from order_info
 )
 
@@ -51,7 +57,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,order_count.user_id as order_user_id
         ,zeroifnull(order_count.total_paid_ala_carte_order_count) as total_paid_ala_carte_order_count
         ,zeroifnull(order_count.total_paid_membership_order_count) as total_paid_membership_order_count
-        ,zeroifnull(order_count.total_active_order_count) as total_active_order_count
+        ,zeroifnull(order_count.total_active_90_day_order_count) as total_active_90_day_order_count
         ,average_order_frequency_days
         ,average_membership_order_frequency_days
         ,average_ala_carte_order_frequncy_days
