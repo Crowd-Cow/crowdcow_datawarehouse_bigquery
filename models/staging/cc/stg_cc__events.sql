@@ -17,7 +17,7 @@ events as (
       ,updated_at_utc
       ,row_number() over(partition by visit_id order by occurred_at_utc, event_id) as event_sequence_number
       ,case
-          when event_name = 'custom_event' then event_json:action::text
+          when event_name = 'custom_event' then event_json:category::text || '_' || event_json:action::text
           else event_name
       end as event_name
       ,event_json:category::text as category
@@ -31,6 +31,7 @@ events as (
       ,event_json:referrer_url::text as referrer_url
       ,event_json:subscription_id::text as subscription_id
       ,event_json:title::text as title
+      ,event_json
   from {{ ref('base_cc__ahoy_events') }}
 
   {% if is_incremental() %}
