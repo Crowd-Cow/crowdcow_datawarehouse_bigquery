@@ -25,6 +25,12 @@ models:
       - name: user_email
         description: "User email address"
 
+      - name: phone_number
+        description: "User's current phone number"
+
+      - name: phone_type
+        description: "Phone type (e.g. Mobile, landline, etc)"
+
       - name: user_roles_for_access
         description: "User roles for access given to Crowd Cow employees"
 
@@ -66,6 +72,9 @@ models:
 
       - name: is_active_member
         description: "The user has had at least one paid/uncancelled membership order in the past 90 days. If this value is FALSE, the user is an inactive member."
+
+      - name: does_allow_sms
+        description: "Boolean indicating if the user's phone number allows SMS texting"
 
       - name: user_last_sign_in_at_utc
         description: "User last signed in timestamp in UTC"

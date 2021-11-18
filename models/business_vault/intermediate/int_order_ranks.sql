@@ -9,17 +9,17 @@ flags as ( select * from {{ ref('int_order_flags') }} )
     
     ,case 
       when not is_completed_order then null 
-      else conditional_true_event(is_completed_order) over (partition by user_id order by order_created_at_utc) 
+      else conditional_true_event(is_completed_order) over (partition by user_id order by order_checkout_completed_at_utc) 
      end as completed_order_rank
 
     ,case 
       when not is_paid_order then null 
-      else conditional_true_event(is_paid_order) over (partition by user_id order by order_created_at_utc) 
+      else conditional_true_event(is_paid_order) over (partition by user_id order by order_paid_at_utc) 
      end as paid_order_rank
 
     ,case
       when not is_cancelled_order then null
-      else conditional_true_event(is_cancelled_order) over (partition by user_id order by order_created_at_utc) 
+      else conditional_true_event(is_cancelled_order) over (partition by user_id order by order_cancelled_at_utc) 
      end as cancelled_order_rank
 
     from flags
@@ -36,17 +36,17 @@ flags as ( select * from {{ ref('int_order_flags') }} )
 
       ,case
         when not is_completed_order or not is_ala_carte_order or is_membership_order then null
-        else conditional_true_event(is_completed_order and is_ala_carte_order) over (partition by user_id order by order_created_at_utc)
+        else conditional_true_event(is_completed_order and is_ala_carte_order) over (partition by user_id order by order_checkout_completed_at_utc)
        end as completed_ala_carte_order_rank
 
       ,case
         when not is_paid_order or is_cancelled_order or not is_ala_carte_order then null
-        else conditional_true_event(is_paid_order and not is_cancelled_order and is_ala_carte_order) over (partition by user_id order by order_created_at_utc)
+        else conditional_true_event(is_paid_order and not is_cancelled_order and is_ala_carte_order) over (partition by user_id order by order_paid_at_utc)
        end as paid_ala_carte_order_rank
 
       ,case
         when not is_cancelled_order or not is_ala_carte_order or is_paid_order then null
-        else conditional_true_event(is_cancelled_order and is_ala_carte_order and not is_paid_order) over(partition by user_id order by order_created_at_utc)
+        else conditional_true_event(is_cancelled_order and is_ala_carte_order and not is_paid_order) over(partition by user_id order by order_cancelled_at_utc)
        end as cancelled_ala_carte_order_rank
 
     from flags
@@ -63,17 +63,17 @@ flags as ( select * from {{ ref('int_order_flags') }} )
 
     ,case
       when not is_completed_order or not is_membership_order then null
-      else conditional_true_event(is_completed_order and is_membership_order) over (partition by user_id order by order_created_at_utc)
+      else conditional_true_event(is_completed_order and is_membership_order) over (partition by user_id order by order_checkout_completed_at_utc)
      end as completed_membership_order_rank
 
     ,case
       when not is_paid_order or is_cancelled_order or not is_membership_order then null
-      else conditional_true_event(is_paid_order and not is_cancelled_order and is_membership_order) over (partition by user_id order by order_created_at_utc) 
+      else conditional_true_event(is_paid_order and not is_cancelled_order and is_membership_order) over (partition by user_id order by order_paid_at_utc) 
      end as paid_membership_order_rank
 
     ,case
       when not is_cancelled_order or is_paid_order or not is_membership_order then null
-      else conditional_true_event(is_cancelled_order and is_membership_order and not is_paid_order) over (partition by user_id order by order_created_at_utc)
+      else conditional_true_event(is_cancelled_order and is_membership_order and not is_paid_order) over (partition by user_id order by order_cancelled_at_utc)
      end as cancelled_membership_order_rank
 
   from flags
@@ -90,17 +90,17 @@ flags as ( select * from {{ ref('int_order_flags') }} )
 
     ,case
       when not is_completed_order or not is_membership_order then null
-      else conditional_true_event(is_completed_order and is_membership_order) over (partition by user_id, subscription_id order by order_created_at_utc)
+      else conditional_true_event(is_completed_order and is_membership_order) over (partition by user_id, subscription_id order by order_checkout_completed_at_utc)
      end as completed_unique_membership_order_rank
 
     ,case
       when not is_paid_order or is_cancelled_order or not is_membership_order then null
-      else conditional_true_event(is_paid_order and is_membership_order) over (partition by user_id, subscription_id order by order_created_at_utc) 
+      else conditional_true_event(is_paid_order and is_membership_order) over (partition by user_id, subscription_id order by order_paid_at_utc) 
      end as paid_unique_membership_order_rank
 
     ,case
       when not is_cancelled_order or is_paid_order or not is_membership_order then null
-      else conditional_true_event(is_cancelled_order and is_membership_order and not is_paid_order) over(partition by user_id, subscription_id order by order_created_at_utc)
+      else conditional_true_event(is_cancelled_order and is_membership_order and not is_paid_order) over(partition by user_id, subscription_id order by order_cancelled_at_utc)
      end as cancelled_unique_membership_order_rank
 
   from flags
@@ -118,17 +118,17 @@ flags as ( select * from {{ ref('int_order_flags') }} )
 
     ,case
       when not is_gift_order or not is_completed_order then null
-      else conditional_true_event(is_gift_order and is_completed_order) over(partition by user_id order by order_created_at_utc)
+      else conditional_true_event(is_gift_order and is_completed_order) over(partition by user_id order by order_checkout_completed_at_utc)
      end as completed_gift_order_rank
 
     ,case
       when not is_gift_order or not is_paid_order or is_cancelled_order then null
-      else conditional_true_event(is_gift_order and is_paid_order and not is_cancelled_order) over (partition by user_id order by order_created_at_utc)
+      else conditional_true_event(is_gift_order and is_paid_order and not is_cancelled_order) over (partition by user_id order by order_paid_at_utc)
      end as paid_gift_order_rank
 
     ,case
       when not is_gift_order or not is_cancelled_order or is_paid_order then null
-      else conditional_true_event(is_gift_order and is_cancelled_order and not is_paid_order) over(partition by user_id order by order_created_at_utc)
+      else conditional_true_event(is_gift_order and is_cancelled_order and not is_paid_order) over(partition by user_id order by order_cancelled_at_utc)
      end as cancelled_gift_order_rank
 
   from flags
@@ -146,17 +146,17 @@ flags as ( select * from {{ ref('int_order_flags') }} )
 
       ,case
         when not is_gift_card_order or not is_completed_order then null
-        else conditional_true_event(is_gift_card_order and is_completed_order) over(partition by user_id order by order_created_at_utc)
+        else conditional_true_event(is_gift_card_order and is_completed_order) over(partition by user_id order by order_checkout_completed_at_utc)
        end as completed_gift_card_order_rank
 
       ,case
         when not is_gift_card_order or not is_paid_order or is_cancelled_order then null
-        else conditional_true_event(is_gift_card_order and is_paid_order and not is_cancelled_order) over (partition by user_id order by order_created_at_utc)
+        else conditional_true_event(is_gift_card_order and is_paid_order and not is_cancelled_order) over (partition by user_id order by order_paid_at_utc)
        end as paid_gift_card_order_rank
 
       ,case
         when not is_gift_card_order or not is_cancelled_order or is_paid_order then null
-        else conditional_true_event(is_gift_card_order and is_cancelled_order and not is_paid_order) over(partition by user_id order by order_created_at_utc)
+        else conditional_true_event(is_gift_card_order and is_cancelled_order and not is_paid_order) over(partition by user_id order by order_cancelled_at_utc)
        end as cancelled_gift_card_order_rank
 
     from flags
