@@ -55,6 +55,9 @@ models:
       - name: membership_cohort_date
         description: "Assigns the user to a membership cohort that starts on the date of their first paid/uncancelled membership order. The user stays in this cohort even if they cancel this membership and sign up for a new one later."
 
+      - name: days_from_ala_carte_to_membership
+        description: "The number of days a customer takes to go from being an ala carte only customer to a member"
+        
       - name: is_member
         description: "The user has had at least one membership at some point. The membership can be cancelled or uncancelled. If this value is FALSE, the user has never had a membership."
 

@@ -74,6 +74,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,average_order_frequency_days
         ,average_membership_order_frequency_days
         ,average_ala_carte_order_frequncy_days
+        ,days_from_ala_carte_to_membership
         ,is_member
         ,is_cancelled_member
         ,is_lead
