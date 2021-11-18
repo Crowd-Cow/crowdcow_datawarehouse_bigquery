@@ -3,6 +3,7 @@ with
 users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
 ,user_order_activity as ( select * from {{ ref('int_user_order_activity') }} )
 ,memberships as (select * from {{ ref('stg_cc__subscriptions') }})
+,phone_number as ( select * from {{ ref('stg_cc__phone_numbers') }} )
 
 ,membership_count as (
     select
@@ -17,6 +18,9 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
 ,user_joins as (
     select
         users.*
+        ,phone_number.phone_type
+        ,phone_number.phone_number
+        ,phone_number.does_allow_sms
         ,membership_count.user_id is not null as is_member
         ,membership_count.user_id is not null and membership_count.total_uncancelled_memberships = 0 as is_cancelled_member
         ,user_order_activity.order_user_id is null as is_lead
@@ -37,6 +41,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
     from users
         left join membership_count on users.user_id = membership_count.user_id
         left join user_order_activity on users.user_id = user_order_activity.user_id
+        left join phone_number on users.phone_number_id = phone_number.phone_number_id
 )
 
 ,final as (
@@ -56,6 +61,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_gender
         ,user_email_name
         ,user_email
+        ,phone_number
+        ,phone_type
         ,user_roles_for_access
         ,user_zip
         ,user_token
@@ -74,6 +81,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,is_purchasing_member
         ,is_active_member_90_day
         ,is_ala_carte_attrition_risk
+        ,does_allow_sms
         ,user_last_sign_in_at_utc
         ,created_at_utc
         ,updated_at_utc

@@ -19,7 +19,7 @@ models:
       - name: phone_number_token
         description: Phone Number token
 
-      - name: phone_number_does_allow_sms
+      - name: does_allow_sms
         description: Boolean for whether the Phone Number allows SMS
 
       - name: created_at_utc
