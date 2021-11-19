@@ -43,6 +43,9 @@ models:
       - name: did_complete_order
         description: "Boolean indicating if the user associated with this visit did complete an order during this visit"
 
+      - name: did_bounce_homepage
+        description: "Boolean indicating if the user bounced from the home page. The visit is a homepage landing and they either have no subsequence site events or the only site event is a homepage view"
+
       - name: pcp_impressions_count
         description: "Number of product card impresssions that took place during this user's visit"
 
@@ -54,3 +57,4 @@ models:
 
       - name: pdp_views_count
         description: "Number of events where a product display page viewed during this user's visit"
+        

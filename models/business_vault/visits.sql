@@ -54,6 +54,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,visit_flags.did_subscribe
         ,visit_flags.did_sign_up
         ,visit_flags.did_complete_order
+        ,visit_flags.did_bounce_homepage
         ,visit_flags.pdp_views_count
         ,visit_flags.pcp_impressions_count
         ,visit_flags.pcp_impression_clicks_count
