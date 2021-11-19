@@ -8,6 +8,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
     select
         user_id
         ,count(order_id) as total_order_count
+        ,count_if(is_completed_order and is_membership_order) as total_completed_membership_orders
         ,count_if(is_paid_order and not is_cancelled_order and is_ala_carte_order) as total_paid_ala_carte_order_count
         ,count_if(is_paid_order and not is_cancelled_order and is_membership_order) total_paid_membership_order_count
         ,count_if(is_paid_order and not is_cancelled_order and is_membership_order and sysdate()::date - order_paid_at_utc::date <= 90) as total_active_90_day_order_count
@@ -55,6 +56,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
     select
         user.user_id
         ,order_count.user_id as order_user_id
+        ,zeroifnull(order_count.total_completed_membership_orders) as total_completed_membership_orders
         ,zeroifnull(order_count.total_paid_ala_carte_order_count) as total_paid_ala_carte_order_count
         ,zeroifnull(order_count.total_paid_membership_order_count) as total_paid_membership_order_count
         ,zeroifnull(order_count.total_active_90_day_order_count) as total_active_90_day_order_count
