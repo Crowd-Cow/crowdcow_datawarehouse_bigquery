@@ -34,7 +34,7 @@ jobs:
           IMAGE_TAG: 1.0
         run: |
           # Build a docker container and push it to ECR 
-          docker build -t 454711173051.dkr.ecr.us-east-1.amazonaws.com/crowdcow-dbt-docs:latest --build-arg DBT_DOCS_PASSWORD=<password> -f Dockerfile.dbtdocs .
+          docker build -t 454711173051.dkr.ecr.us-east-1.amazonaws.com/crowdcow-dbt-docs:latest --build-arg DBT_DOCS_PASSWORD=${{ secrets.DBT_DOCS_PASSWORD }} -f Dockerfile.dbtdocs .
           echo "Pushing image to ECR..."
           docker push 454711173051.dkr.ecr.us-east-1.amazonaws.com/crowdcow-dbt-docs:latest
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
