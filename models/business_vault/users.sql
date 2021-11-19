@@ -21,7 +21,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,phone_number.phone_type
         ,phone_number.phone_number
         ,phone_number.does_allow_sms
-        ,membership_count.user_id is not null as is_member
+        ,membership_count.user_id is not null and total_completed_membership_orders > 0 as is_member
         ,membership_count.user_id is not null and membership_count.total_uncancelled_memberships = 0 as is_cancelled_member
         ,user_order_activity.order_user_id is null as is_lead
         ,user_order_activity.user_id is not null and user_order_activity.total_paid_ala_carte_order_count > 0 and membership_count.total_membership_count = 0 as is_purchasing_customer
