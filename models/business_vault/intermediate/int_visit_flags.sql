@@ -22,7 +22,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,count_if(event_name = 'ORDER_COMPLETE') as order_completes
         ,count_if(category = 'PRODUCT' and action = 'VIEW-IMPRESSION') as pcp_impressions
         ,count_if(category = 'PRODUCT' and action = 'IMPRESSION-CLICK') as pcp_impression_clicks
-        ,count_if(category = 'PRODUCT' and action = 'PAGE_INTERACTION' and label = 'CLICKED-ADD-TO-CART') as pdp_add_to_carts
+        ,count_if(category = 'PRODUCT' and action = 'PAGE-INTERACTION' and label = 'CLICKED-ADD-TO-CART') as pdp_add_to_carts
         ,count_if(event_name = 'VIEWED_PRODUCT') as viewed_pdps
         ,count_if(event_sequence_number = 1 and event_name = 'PAGE_VIEW' and parse_url(url):path::text in ('','L')) as homepage_views
         ,count(*) as event_count
