@@ -12,7 +12,7 @@ This will be automated soon.
 
 `aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 454711173051.dkr.ecr.us-east-1.amazonaws.com`
 
-`docker build -t crowdcow-dbt-docs --build-arg DBT_DOCS_PASSWORD=<password> -f Dockerfile.dbtdocs`
+`docker build -t crowdcow-dbt-docs --build-arg DBT_DOCS_PASSWORD=<password> -f Dockerfile.dbtdocs .`
 
 `docker tag crowdcow-dbt-docs:latest 454711173051.dkr.ecr.us-east-1.amazonaws.com/crowdcow-dbt-docs:latest`
 
