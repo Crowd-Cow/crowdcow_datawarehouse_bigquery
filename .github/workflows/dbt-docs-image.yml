@@ -25,7 +25,7 @@ jobs:
           DBT_CC_DATAWAREHOUSE_PROFILE: ${{secrets.DBT_CC_DATAWAREHOUSE_PROFILE}}
         run: |
           mkdir dbt_profile
-          'echo "$DBT_CC_DATAWAREHOUSE_PROFILE" >> dbt_profile/profiles.yml'
+          'echo "$DBT_CC_DATAWAREHOUSE_PROFILE" > dbt_profile/profiles.yml'
           dbt docs generate --profiles-dir dbt_profile
       - name: Build the Docker image
         env:
