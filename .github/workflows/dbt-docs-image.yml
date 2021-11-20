@@ -14,5 +14,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.9"
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install dbt
+    - name: Generate dbt docs
+      run: |
+        dbt docs generate
     - name: Build the Docker image
       run: docker build -t crowdcow-dbt-docs --build-arg DBT_DOCS_PASSWORD=${{ secrets.DBT_DOCS_PASSWORD }} -f Dockerfile.dbtdocs .
