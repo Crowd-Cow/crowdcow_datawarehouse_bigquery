@@ -29,6 +29,7 @@ jobs:
         run: |
           dbt docs generate --project-dir dbt_profile
       - name: Build the Docker image
-          env:
-            DBT_DOCS_PASSWORD: ${{ secrets.DBT_DOCS_PASSWORD }}
-        run: docker build -t crowdcow-dbt-docs --build-arg DBT_DOCS_PASSWORD=$DBT_DOCS_PASSWORD -f Dockerfile.dbtdocs .
+        env:
+          DBT_DOCS_PASSWORD: ${{ secrets.DBT_DOCS_PASSWORD }}
+        run: |
+          docker build -t crowdcow-dbt-docs --build-arg DBT_DOCS_PASSWORD=$DBT_DOCS_PASSWORD -f Dockerfile.dbtdocs .
