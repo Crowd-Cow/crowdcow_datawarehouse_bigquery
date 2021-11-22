@@ -1,0 +1,147 @@
+version: 2
+
+models:
+  - name: stg_cc__farms
+    description: "Staging model for farms"
+    columns:
+      - name: farm_id
+        description: "Farm ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: capsule_tags
+        description: "Capsule tags"
+
+      - name: hanging_weight_price_per_pound_usd
+        description: "Handing weight price per pound USD"
+
+      - name: slaughter_payment_terms
+        description: "Slaughter payment terms"
+
+      - name: photo_url
+        description: "Farm photo URL"
+
+      - name: farmer_name
+        description: "Farmer name"
+
+      - name: category
+        description: "Farm category"
+
+      - name: invoice_payment_terms
+        description: "Invoice payment terms"
+
+      - name: created_at_utc
+        description: "Timestamp of when the record was created UTC"
+
+      - name: meat_subtype
+        description: "Meat subtype"
+
+      - name: farm_name
+        description: "Farm name"
+
+      - name: youtube_videos
+        description: "YouTube videos"
+
+      - name: farm_photo_cached_height
+        description: "Farm photo cached height"
+
+      - name: sku_vendor_id
+        description: "SKU vendor ID"
+
+      - name: blog_tags
+        description: "Blog tags"
+
+      - name: sub_category
+        description: "Farm sub category"
+
+      - name: farm_token
+        description: "Farm token"
+
+      - name: farmer_photo_url
+        description: "Farmer photo URL"
+
+      - name: farm_photo_cached_width
+        description: "Farm photo cached width"
+
+      - name: twitter_handle
+        description: "Farm twitter handle"
+
+      - name: email_address
+        description: "Farm email address"
+
+      - name: handwritten_note_nugget
+        description: "Handwritten note nugget"
+
+      - name: postal_code
+        description: "Farm postal code"
+
+      - name: video_url
+        description: "Farm video URL"
+
+      - name: product_collection_id
+        description: "Product collection ID"
+
+      - name: sort_order
+        description: "Sort order"
+
+      - name: event_title
+        description: "Event title"
+
+      - name: price_list_id
+        description: "Price list ID"
+
+      - name: phone_number
+        description: "Farm phone number"
+
+      - name: city_name
+        description: "Farm city name"
+
+      - name: tweetable_nugget
+        description: "Tweetabel nugget"
+
+      - name: meat_type
+        description: "Meat type"
+
+      - name: thanks_video_static_image_url
+        description: "Thanks video static image URL"
+
+      - name: state_name
+        description: "Farm state name"
+
+      - name: website_url
+        description: "Farm website URL"
+
+      - name: facebook_page_url
+        description: "Farm Facebook page URL"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated in the system UTC"
+
+      - name: short_description
+        description: "Farm short description"
+
+      - name: thanks_video_youtube_token
+        description: "Thanks video YouTube token"
+
+      - name: is_dry_aged
+        description: "Boolean indicating if the farm sells dry aged product"
+
+      - name: is_zero_antibiotics
+        description: "Boolean indicating if the farm sells zero antibiotic products"
+
+      - name: is_zero_hormones
+        description: "Boolean indicating if the farm sells zero homone products"
+
+      - name: is_closed_herd
+        description: "Boolean indicating if the farm is a closed herd farm"
+
+      - name: is_active
+        description: "Boolean indicating if the farm is active"
+
+      - name: is_organic
+        description: "Boolean indicating if the farm sells organic product"
+
+      - name: is_non_gmo
+        description: "Boolean indicating if the farm sells non GMO proudct"
+

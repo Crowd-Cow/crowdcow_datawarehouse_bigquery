@@ -37,6 +37,9 @@ models:
       - name: visitor_ip_session
         description: "Defines a visit session at the IP address level. If the same IP address logs another visit after 30 minutes, the session number for that IP is incremented by one. The field is a concatenation of the IP address and the session number."
 
+      - name: ip_session_visit_number
+        description: "The row number per visitor_ip_session so that users can isolate the first visit for this IP session in order to attribute the source of the visit appropriately"
+
       - name: visit_os
         description: "OS of the user's device"
 
@@ -67,6 +70,9 @@ models:
       - name: utm_campaign
         description: "UTM campaign"
 
+      - name: utm_adset
+        description: "UTM adset"
+
       - name: utm_term
         description: "UTM term"
 
@@ -75,6 +81,21 @@ models:
 
       - name: utm_source
         description: "UTM source"
+
+      - name: channel
+        description: "Channel of visit attributed source"
+
+      - name: sub_channel
+        description: "Sub channel of visit attributed source"
+
+      - name: visit_attributed_source
+        description: "The attributed source of a visit (May be deprecated and is currently defauled to `null`"
+
+      - name: is_paid_referrer
+        description: "Boolean indicating if the visit was referred by a paid source"
+
+      - name: is_social_platform_referrer
+        description: "Boolean indicating if the visit was referred by one of the major social platforms (e.g. Instagram, Facebook, TikTok, etc.)"
 
       - name: is_wall_displayed
         description: "Boolean indicating whether the wall was displayed"
@@ -88,8 +109,14 @@ models:
       - name: is_invalid_visit
         description: "Boolean indicating if this visit is considered an invalid visit. It could be considered invalid for a variety of reasons (e.g. internal dev traffic, invalid URLS, etc"
 
+      - name: is_internal_traffic
+        description: "Boolean indicating if the visit is coming from a internal traffic"
+
       - name: has_previous_order
         description: "Boolean indicating if the user associated with this visit has had an order previous to this visit"
+
+      - name: has_previous_completed_order
+        description: "Boolean indicating if the user associated with this visit has had a completed order previous to this visit. Completed order is defined using the order checkout completed date"
 
       - name: has_previous_subscription
         description: "Boolean indicating if the user associated with this visit already has a subscription"

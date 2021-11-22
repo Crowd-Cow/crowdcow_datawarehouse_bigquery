@@ -49,6 +49,9 @@ models:
       - name: visitor_ip_session
         description: "Defines a visit session at the IP address level. If the same IP address logs another visit after 30 minutes, the session number for that IP is incremented by one. The field is a concatenation of the IP address and the session number."
 
+      - name: ip_session_visit_number
+        description: "The row number per visitor_ip_session so that users can isolate the first visit for this IP session in order to attribute the source of the visit appropriately"
+
       - name: visit_device_type
         description: "Visit device type"
 
@@ -66,6 +69,9 @@ models:
 
       - name: utm_campaign
         description: "UTM campaign"
+
+      - name: utm_adset
+        description: "UTM adset"
 
       - name: utm_content
         description: "UTM content"
@@ -93,6 +99,12 @@ models:
 
       - name: visit_region
         description: "Visit region"
+
+      - name: is_paid_referrer
+        description: "Boolean indicating if the visit was referred by a paid source"
+
+      - name: is_social_platform_referrer
+        description: "Boolean indicating if the visit was referred by one of the major social platforms (e.g. Instagram, Facebook, TikTok, etc.)"
 
       - name: is_wall_displayed
         description: "Boolean indicating if the wal was displayed"

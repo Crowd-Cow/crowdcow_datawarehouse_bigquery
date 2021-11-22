@@ -1,0 +1,72 @@
+version: 2
+
+models:
+  - name: order_items
+    description: "Business logic to create order items"
+    columns:
+      - name: order_id
+        description: "Order ID"
+
+      - name: bid_id
+        description: "Bid ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: bid_item_id
+        description: "Bid item ID"
+
+      - name: bid_token
+        description: "Bid token"
+
+      - name: product_id
+        description: "Product ID"
+
+      - name: product_name
+        description: "Product name"
+
+      - name: bid_item_name
+        description: "Bid item name"
+
+      - name: bid_item_type
+        description: "Bid item type"
+
+      - name: bid_item_subtype
+        description: "Bid item sub type"
+
+      - name: autofill_reason
+        description: "Autofill reason"
+
+      - name: fill_type
+        description: "Autofill fill type"
+
+      - name: bid_list_price_usd
+        description: "Bid list price USD"
+
+      - name: bid_price_paid_usd
+        description: "Bid price paid USD"
+
+      - name: order_item_revenue
+        description: "Order item revenue before discounting of the item. Basic calculation is price * quantity. The price is list price if available. Otherwise it is item price"
+
+      - name: order_item_discount
+        description: "The total amount of item discounts applied to the item. The difference between the list price and price paid * quantity"
+
+      - name: bid_non_member_price_usd
+        description: "Bid non member price USD"
+
+      - name: bid_member_price_usd
+        description: "Bid member price USD"
+
+      - name: bid_quantity
+        description: "Bid quantity"
+
+      - name: created_at_utc
+        description: "Timestamp for when the bid was created UTC"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated by the system UTC"
+
+      - name: first_stuck_at_utc
+        description: "Timestamp for when the bid was first stuck UTC"
+

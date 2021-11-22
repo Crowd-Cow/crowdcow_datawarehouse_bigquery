@@ -1,6 +1,6 @@
 with source as (
 
-  select * from {{ source('cc', 'orders') }}
+  select * from {{ source('cc', 'orders') }} where not _fivetran_deleted
 
 ),
 
@@ -114,7 +114,11 @@ renamed as (
     ,{{ clean_strings('stripe_failure_message') }} as stripe_failure_message
     ,stripe_card_exp_year
     ,stripe_charge_attempted_at as stripe_charge_attempted_at_utc
-    ,{{ clean_strings('stripe_card_zip') }} as stripe_card_zip
+    ,{{ clean_strings('stripe_card_address_1') }} as billing_address_1
+    ,{{ clean_strings('stripe_card_address_2') }} as billing_address_2
+    ,{{ clean_strings('stripe_card_city') }} as billing_city
+    ,{{ clean_strings('stripe_card_state') }} as billing_state
+    ,{{ clean_strings('stripe_card_zip') }} as billing_postal_code
     ,{{ clean_strings('stripe_card_brand') }} as stripe_card_brand
     ,stripe_card_exp_month
     ,stripe_card_id_last_updated_at as stripe_card_id_last_updated_at_utc

@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: stg_cc__pipeline_schedules
+    description: Source table for pipeline_receivabldes
+    columns:
+      - name: pipeline_schedule_id
+        description: Unique ID for the pipeline_schedules entry
+
+      - name: status
+        description: Status of the schedule
+
+      - name: updated_at_utc
+        description: Timestamp the entry was updated at in UTC
+
+      - name: fulfillment_center_id
+        description: Fulfillment center ID
+
+      - name: created_by
+        description: ID of the admin who created the schedule
+
+      - name: schedule_type
+        description: Schedule type
+
+      - name: created_at_utc
+        description: Timestampe schedule was created in UTC
+
+      - name: actual_date
+        description: Actual date for the schedule
+
+      - name: farm_id
+        description: Business identifier for the farm
+
+      - name: quantity
+        description: Quantity in the schedule
+
+      - name: offsite_storage_id
+        description: Offsite storage ID
+
+      - name: pipeline_order_id
+        description: Pipeline order ID
+
+      - name: pipeline_actor_id
+        description: Pipeline actor ID
+
+      - name: proposed_date
+        description: Proposed date of the schedule
+
+      - name: butcher_id
+        description: Business identifier for the butcher
+
+      - name: dbt_valid_from
+        description: Timestamp for when the entry is valid from
+
+      - name: dbt_valid_to
+        description: Timestamp for when the entry is valid to

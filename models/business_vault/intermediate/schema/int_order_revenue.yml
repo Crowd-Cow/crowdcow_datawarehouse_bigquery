@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: int_order_revenue
+    description: "Business logic to generate order revenue information"
+    columns:
+      - name: order_id
+        description: "Order ID"
+
+      - name: order_shipping_fee_usd
+        description: "The shipping revenue for an order"
+
+      - name: gross_revenue_usd
+        description: "Gross revenue for an order. Calculated as `product revenue + shipping revenue`"
+
+      - name: product_revenue_usd
+        description: "Product revenue for an order. Calculated as the sum of `bid list price * bid quantity` for all bids in an order. Bid list price does not include item discounts."
+
+      - name: discount_amount_usd
+        description: "Total discount amount for an order. This includes all order level discounts (e.g. free shipping, promos, etc.) as well as item level discounts (e.g. member vs non-member pricing."
+
+      - name: discount_percent
+        description: "The total discount percent that was applied to an order"
+
+      - name: refund_amount_usd
+        description: "The total refund amount for an order"
+
+      - name: net_revenue_usd
+        description: "The net revenue for an order. Calculated as `product revenue + shipping revenue - discounts - refunds`"
+

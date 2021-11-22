@@ -1,0 +1,210 @@
+version: 2
+
+models:
+  - name: orders
+    description: "Business logic to describe orders"
+    columns:
+      - name: order_id
+        description: "Order ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: parent_order_id
+        description: "Parent Order ID"
+
+      - name: order_token
+        description: "Order token"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: subscription_id
+        description: "Membership ID"
+
+      - name: fc_id
+        description: "Fulfillment center ID"
+
+      - name: visit_id
+        description: "Visit ID"
+
+      - name: order_type
+        description: "Order type"
+
+      - name: stripe_failure_code
+        description: "Stripe failure code"
+
+      - name: order_delivery_street_address_1
+        description: "Order delivery address 1"
+
+      - name: order_delivery_street_address_2
+        description: "Order delivery street address 2"
+
+      - name: order_delivery_city
+        description: "Order delivery city"
+
+      - name: order_delivery_state
+        description: "Order delivery state"
+
+      - name: order_delivery_postal_code
+        description: "Order delivery postal code"
+
+      - name: billing_address_1
+        description: "Billing address 1"
+
+      - name: billing_address_2
+        description: "Billing address 2"
+
+      - name: billing_city
+        description: "Billing city"
+
+      - name: billing_state
+        description: "Billing state"
+
+      - name: billing_postal_code
+        description: "billing postal code"
+
+      - name: gross_revenue_usd
+        description: "Gross revenue for an order. Calculated as `product revenue + shipping revenue`"
+
+      - name: product_revenue_usd
+        description: "Product revenue for an order. Calculated as the sum of `bid list price * bid quantity` for all bids in an order. Bid list price does not include item discounts."
+
+      - name: shipping_revenue_usd
+        description: "Shipping revenue"
+
+      - name: discount_percent
+        description: "The total discount percent that was applied to an order"
+
+      - name: discount_amount_usd
+        description: "Total discount amount for an order. This includes all order level discounts (e.g. free shipping, promos, etc.) as well as item level discounts (e.g. member vs non-member pricing."
+
+      - name: refund_amount_usd
+        description: "The total refund amount for an order"
+
+      - name: net_revenue_usd
+        description: "The net revenue for an order. Calculated as `product revenue + shipping revenue - discounts - refunds`"
+
+      - name: is_ala_carte_order
+        description: "Boolean indicating if the order is an ala carte order. Order has no associated membership ID and is not a gift order of any kind"
+
+      - name: is_membership_order
+        description: "Boolean indicating if the order is a membership order. Order has an associated membership ID"
+
+      - name: is_completed_order
+        description: "Boolean indicating if the order has been completed. Order has a `checkout_completed_at` date"
+
+      - name: is_paid_order
+        description: "Boolean indicating if the order has been paid. Order has a `paid_at` date"
+
+      - name: is_cancelled_order
+        description: "Boolean indicating if the order has been cancelled. Order has a `cancelled_at` date"
+
+      - name: is_abandonded_order
+        description: "Boolean indiciating if the order was an abandoned order. Order has no `checkout_completed_at` date and does have a `cancelled_at` date"
+
+      - name: is_gift_order
+        description: "Boolean indicating if the order is a gift order"
+
+      - name: is_bulk_gift_order
+        description: "Boolean indicating if the order is a bulk gift order. Order has a type of `BULK ORDER` or has a parent order ID"
+
+      - name: is_gift_card_order
+        description: "Boolean indicating if the order is a gift card order"
+
+      - name: overall_order_rank
+        description: "Overall order rank for a user regardless of order type or status"
+
+      - name: completed_order_rank
+        description: "Rank of completed orders for a user. The order needs to have an `checkout_completed_at` date"
+
+      - name: paid_order_rank
+        description: "Rank of paid orders for a user. The order needs to have a `paid_at` date"
+
+      - name: cancelled_order_rank
+        description: "Rank of cancelled orders for a user. The order needs to have a `cancelled_at` date"
+
+      - name: ala_carte_order_rank
+        description: "Rank of all ala carte orders for a user. The order is not associated associated with a membership ID and is not a gift order of any kind"
+
+      - name: completed_ala_carte_order_rank
+        description: "Rank of all completed ala carte orders. The order is not associated with a membership ID and has a `checkout_completed_at` date"
+
+      - name: paid_ala_carte_order_rank
+        description: "Rank of paid, uncancelled ala carte order for a user. The order is not associated with a membership ID"
+
+      - name: cancelled_ala_carte_order_rank
+        description: "Rank of cancelled ala carte orders for a user. THe order is not associated with a membership ID"
+
+      - name: membership_order_rank
+        description: "Rank of all membership orders for a user. The order needs to be associated with a membership ID. This rank carries over between memberships and does not reset if the user has a new membership ID"
+
+      - name: completed_membership_order_rank
+        description: "Rank of all completed membership orders. The order is associated with a membership ID and has a `checkout_completed_at` date"
+
+      - name: paid_membership_order_rank
+        description: "Rank of paid, uncancelled membership orders for a user. The order needs to be associated with a membership ID"
+
+      - name: cancelled_membership_order_rank
+        description: "Rank of cancelled membership orders for a user. The order needs to be associated with a membership ID"
+
+      - name: unique_membership_order_rank
+        description: "Rank of all membership orders for a user. The order needs to be associated with a membership ID. This rank resets when there is a new membership ID for the user"
+
+      - name: completed_unique_membership_order_rank
+        description: "Rank of all completed membership orders. The order is associated with a membership ID and has a `checkout_completed_at` date. This rank resets when there is a new membership ID for the user"
+
+      - name: paid_unique_membership_order_rank
+        description: "Rank of paid, uncancelled membership orders for a user. The order needs to be associated with a membership ID. This rank resets when there is a new membership ID for the user"
+
+      - name: cancelled_unique_membership_order_rank
+        description: "Rank of cancelled membership orders for a user. The order needs to be associated with a membership ID. This rank resets when there is a new membership ID for the user"
+
+      - name: gift_order_rank
+        description: "Rank of all gift orders for a user. The order has gift info associated with it and is not a corp. bulk order or gift card order"
+
+      - name: completed_gift_order_rank
+        description: "Rank of all completed gift orders for a user. The order has gift info associated with it and is not a corp. bulk order or gift card order"
+
+      - name: paid_gift_order_rank
+        description: "Rank of all paid, uncancelled gift orders for a user. The order has gift info associated with it and is not a corp. bulk order or gift card order"
+
+      - name: cancelled_gift_order_rank
+        description: "Rank of all cancelled gift orders for a user. The order has gift infor associated with it and is not a corp. bulk order or gift card order"
+
+      - name: gift_card_order_rank
+        description: "Rank of all gift card orders for a user"
+
+      - name: completed_gift_card_order_rank
+        description: "Rank of all completed gift card orders for a user"
+
+      - name: paid_gift_card_order_rank
+        description: "Rank of all paid, uncancelled gift card orders for a user"
+
+      - name: cancelled_gift_card_order_rank
+        description: "Rank of all cancelled gift card orders for a user"
+
+      - name: order_created_at_utc
+        description: "Timestamp of when the order was created by the system in UTC"
+
+      - name: order_updated_at_utc
+        description: "Timestamp of when the order record was updated in UTC"
+
+      - name: order_checkout_completed_at_utc
+        description: "Timestamp of when the order checkout was completed in UTC"
+
+      - name: order_cancelled_at_utc
+        description: "Timestamp of when the order was cancelled in UTC"
+
+      - name: order_paid_at_utc
+        description: "Timestamp of when the order was paid in UTC"
+
+      - name: order_first_stuck_at_utc
+        description: "Timestamp of when the order was first stuck in UTC"
+
+      - name: order_scheduled_fulfillment_date_utc
+        description: "Timestamp of when the order is scheduled for fulfillment in UTC"
+
+      - name: order_scheduled_arrival_date_utc
+        description: "Timestamp of when the order is scheduled to arrive in UTC"
+

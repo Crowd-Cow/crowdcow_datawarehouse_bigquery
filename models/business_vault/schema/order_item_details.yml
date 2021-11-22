@@ -1,0 +1,62 @@
+version: 2
+
+models:
+  - name: order_item_details
+    description: "Business logic to show SKUs that were part of an order. Both SKUs that were ordered and what SKUs were eventually packed"
+    columns:
+      - name: order_item_details_id
+        description: Surrogate key to make order items details records unique. Combination of `order_id`,`bid_id`,`bid_item_id`,`ordered_sku_id`, and `packed_sku_id`
+        tests:
+          - unique
+          - not_null
+      
+      - name: order_id
+        description: "Order ID"
+
+      - name: bid_id
+        description: "Bid ID"
+
+      - name: bid_item_id
+        description: "Bid item ID"
+
+      - name: product_id
+        description: "Product ID"
+
+      - name: ordered_sku_id
+        description: "The SKU ID associated with the bid that was originally ordered by the customer"
+
+      - name: packed_sku_id
+        description: "The SKU ID associated with the item that was actually packed in the order"
+
+      - name: ordered_sku_key
+        description: SKU key to join the `ordered_sku_id` to the SKU information that is relevant at the time of the `created_at_utc` of the item
+
+      - name: packed_sku_key
+        description: SKU key to join the `packed_sku_id` to the SKU information that is relevant at the time of the `created_at_utc` of the item
+
+      - name: bid_item_type
+        description: "Ordered bid item type"
+
+      - name: bid_item_subtype
+        description: "Ordered bid item subtype"
+
+      - name: product_name
+        description: "Ordered bid product"
+
+      - name: bid_item_name
+        description: "Ordered bid item name"
+
+      - name: ordered_sku_quantity
+        description: "Ordered SKU quantity"
+
+      - name: packed_sku_quantity
+        description: "Packed SKU quantity"
+
+      - name: is_order_packed
+        description: "Boolean indicating if the order has been packed yet"
+
+      - name: is_ordered_sku_packed
+        description: "Boolean indicating if the SKU that was ordered is the same one that eventually got packed"
+
+      - name: created_at_utc
+        description: "Timestamp of when the order item was created in the system UTC"
