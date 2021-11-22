@@ -38,3 +38,6 @@ jobs:
           secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           region: us-east-1
           image: crowdcow-dbt-docs:latest
+      - name: Deploy on Porter
+        run: |
+          curl -X POST 'https://dashboard.getporter.dev/api/webhooks/deploy/cba8da6b7c6c571bcea4634b2c2172a9?commit=latest'
