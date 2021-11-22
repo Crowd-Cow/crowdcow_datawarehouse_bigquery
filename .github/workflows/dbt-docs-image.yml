@@ -30,3 +30,11 @@ jobs:
           dbt deps
           dbt docs generate --profiles-dir dbt_profile
           docker build -t crowdcow-dbt-docs --build-arg DBT_DOCS_PASSWORD=$DBT_DOCS_PASSWORD -f Dockerfile.dbtdocs .
+      - name: Push to ECR
+        id: ecr
+        uses: jwalton/gh-ecr-push@v1
+        with:
+          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: us-east-1
+          image: crowdcow-dbt-docs:latest
