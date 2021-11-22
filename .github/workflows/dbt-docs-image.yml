@@ -20,15 +20,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install dbt
-      - name: Generate dbt docs
-        env:
-          DBT_CC_DATAWAREHOUSE_PROFILE: ${{secrets.DBT_CC_DATAWAREHOUSE_PROFILE}}
-        run: |
-          mkdir dbt_profile
-          'echo "$DBT_CC_DATAWAREHOUSE_PROFILE" > dbt_profile/profiles.yml'
-          dbt docs generate --profiles-dir dbt_profile
       - name: Build the Docker image
         env:
           DBT_DOCS_PASSWORD: ${{ secrets.DBT_DOCS_PASSWORD }}
+          DBT_CC_DATAWAREHOUSE_PROFILE: ${{secrets.DBT_CC_DATAWAREHOUSE_PROFILE}}
         run: |
+          mkdir dbt_profile
+          echo "$DBT_CC_DATAWAREHOUSE_PROFILE" > dbt_profile/profiles.yml
+          dbt docs generate --profiles-dir dbt_profile
           docker build -t crowdcow-dbt-docs --build-arg DBT_DOCS_PASSWORD=$DBT_DOCS_PASSWORD -f Dockerfile.dbtdocs .
