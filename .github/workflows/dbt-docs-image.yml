@@ -27,5 +27,6 @@ jobs:
         run: |
           mkdir dbt_profile
           echo "$DBT_CC_DATAWAREHOUSE_PROFILE" > dbt_profile/profiles.yml
+          dbt deps
           dbt docs generate --profiles-dir dbt_profile
           docker build -t crowdcow-dbt-docs --build-arg DBT_DOCS_PASSWORD=$DBT_DOCS_PASSWORD -f Dockerfile.dbtdocs .
