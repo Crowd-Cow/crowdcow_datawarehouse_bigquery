@@ -4,7 +4,7 @@
 
 [Confluence](https://crowdcow.atlassian.net/wiki/spaces/ED/pages/170623021/Data+Engineering)
 
-[dbt docs are hosted here](https://dbt-docs-160632217553a66d.onporter.run) and update with merges to master. Login is in 1password under *Datawarehouse Documentation*.
+[dbt docs](https://dbt-docs-160632217553a66d.onporter.run) are updated with merges to master. Login is in 1password under *Datawarehouse Documentation*.
 
 ## Events
 
