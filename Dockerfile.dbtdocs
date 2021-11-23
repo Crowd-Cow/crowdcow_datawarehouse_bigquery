@@ -1,0 +1,14 @@
+FROM ubuntu
+
+ARG DBT_DOCS_USERNAME=crowdcow
+ARG DBT_DOCS_PASSWORD=""
+
+RUN apt-get update
+RUN apt-get install nginx -y
+RUN apt-get install apache2-utils vim nano -y
+RUN htpasswd -b -c /etc/nginx/.htpasswd $DBT_DOCS_USERNAME $DBT_DOCS_PASSWORD
+COPY ./target /var/www/html
+COPY ./nginx_default.config /etc/nginx/sites-enabled/default
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

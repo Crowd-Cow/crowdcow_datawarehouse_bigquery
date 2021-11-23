@@ -25,6 +25,12 @@ models:
       - name: user_email
         description: "User email address"
 
+      - name: phone_number
+        description: "User's current phone number"
+
+      - name: phone_type
+        description: "Phone type (e.g. Mobile, landline, etc)"
+
       - name: user_roles_for_access
         description: "User roles for access given to Crowd Cow employees"
 
@@ -49,6 +55,9 @@ models:
       - name: membership_cohort_date
         description: "Assigns the user to a membership cohort that starts on the date of their first paid/uncancelled membership order. The user stays in this cohort even if they cancel this membership and sign up for a new one later."
 
+      - name: days_from_ala_carte_to_membership
+        description: "The number of days a customer takes to go from being an ala carte only customer to a member"
+        
       - name: is_member
         description: "The user has had at least one membership at some point. The membership can be cancelled or uncancelled. If this value is FALSE, the user has never had a membership."
 
@@ -66,6 +75,9 @@ models:
 
       - name: is_active_member
         description: "The user has had at least one paid/uncancelled membership order in the past 90 days. If this value is FALSE, the user is an inactive member."
+
+      - name: does_allow_sms
+        description: "Boolean indicating if the user's phone number allows SMS texting"
 
       - name: user_last_sign_in_at_utc
         description: "User last signed in timestamp in UTC"

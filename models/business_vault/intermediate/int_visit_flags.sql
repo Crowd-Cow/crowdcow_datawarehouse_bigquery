@@ -6,162 +6,101 @@
 
 with
 
-visits as ( select * from {{ ref('visit_classification') }} ),
-suspicious_ips as ( select * from {{ ref('stg_cc__suspicious_ips') }} ),
-subscribed as ( select * from {{ ref('stg_cc__event_subscribed') }} ),
-sign_up as ( select * from {{ ref('stg_cc__event_sign_up') }} ),
-order_complete as ( select * from {{ ref('stg_cc__event_order_complete') }} ),
-unsubscribed as ( select * from {{ ref('stg_cc__event_unsubscribed') }} ),
-orders as ( select * from {{ ref('stg_cc__orders') }} ),
-subscriptions as ( select * from {{ ref('stg_cc__subscriptions') }} ),
-users as ( select * from {{ ref('stg_cc__users') }} ),
-pcp_impressions as (select * from {{ ref('stg_cc__event_pcp_impression') }} ),
-pcp_impression_clicks as (select * from {{ref('stg_cc__event_pcp_impression_click') }} ),
-pdp_product_add_to_cart as (select * from {{ref('stg_cc__event_pdp_product_add_to_cart') }} ),
-viewed_pdp as (select * from {{ ref('stg_cc__event_viewed_product') }} ),
+visits as ( select * from {{ ref('visit_classification') }} )
+,suspicious_ips as ( select * from {{ ref('stg_cc__suspicious_ips') }} )
+,orders as ( select * from {{ ref('orders') }} )
+,subscriptions as ( select * from {{ ref('stg_cc__subscriptions') }} )
+,users as ( select * from {{ ref('users') }} )
+,events as ( select * from {{ ref('stg_cc__events') }} )
 
-subscription_visits as (
+,visit_activity as (
     select 
-         subscribed.visit_id
-        ,count(distinct subscribed.subscription_id) as subscribe_count
-        ,count(distinct unsubscribed.subscription_id) as unsubscribe_count
-    from subscribed
-        left join unsubscribed on (subscribed.visit_id = unsubscribed.visit_id and subscribed.subscription_id = unsubscribed.subscription_id)
+        visit_id
+        ,count(distinct case when event_name = 'SUBSCRIBED' then subscription_id end) as subscribes
+        ,count(distinct case when event_name = 'UNSUBSCRIBED' then subscription_id end) as unsubscribes
+        ,count_if(event_name = 'SIGN_UP') as sign_ups
+        ,count_if(event_name = 'ORDER_COMPLETE') as order_completes
+        ,count_if(category = 'PRODUCT' and action = 'VIEW-IMPRESSION') as pcp_impressions
+        ,count_if(category = 'PRODUCT' and action = 'IMPRESSION-CLICK') as pcp_impression_clicks
+        ,count_if(category = 'PRODUCT' and action = 'PAGE-INTERACTION' and label = 'CLICKED-ADD-TO-CART') as pdp_add_to_carts
+        ,count_if(event_name = 'VIEWED_PRODUCT') as viewed_pdps
+        ,count_if(event_sequence_number = 1 and event_name = 'PAGE_VIEW' and parse_url(url):path::text in ('','L')) as homepage_views
+        ,count(*) as event_count
+    from events
     group by 1
-    having count(distinct subscribed.subscription_id) - count(distinct unsubscribed.subscription_id) > 0
-),
+)
 
-user_first_order as (
+,user_order_firsts as (
     select
         user_id
-        ,min(order_paid_at_utc) as first_order_date
+        ,min(case when paid_order_rank = 1 then order_paid_at_utc end) as first_paid_order_date
+        ,min(case when completed_order_rank = 1 then order_checkout_completed_at_utc end) as first_completed_order_date
     from orders
-    where order_paid_at_utc is not null
     group by 1
-),
+)
 
-user_first_completed_order as (
-    select
-        user_id
-        ,min(order_checkout_completed_at_utc) as first_completed_order_date
-    from orders
-    where order_checkout_completed_at_utc is not null
-    group by 1
-),
-
-user_first_subscription as (
+,user_first_subscription as (
     select 
         user_id
         ,min(subscription_created_at_utc) as first_subscription_date
     from subscriptions
     group by 1
-),
+)
 
-user_account_created as (
+,user_account as (
     select
         user_id
+        ,user_type
         ,min(created_at_utc) as first_creation_date
     from users
-    group by 1
-),
+    group by 1,2
+)
 
-user_signed_up as (
+,visit_clean_urls as (
     select
         visit_id
-        ,count(distinct user_id) as total_signed_up
-    from sign_up
-    group by 1
-),
-
-order_completed as (
-    select
-        visit_id
-        ,count(distinct order_id) as total_order_count
-    from order_complete
-    group by 1
-),
-
-employee_user as (
-    select distinct
-        user_id
-    from users
-    where user_type = 'EMPLOYEE'
-),
-
-pcp_impression_visits as ( 
-    select pcp_impressions.visit_id
-    , count(distinct pcp_impressions.event_id) as pcp_impressions_count
-    from pcp_impressions
-    group by 1
-), 
-
-pcp_impression_click_visits as ( 
-    select 
-        pcp_impression_clicks.visit_id 
-        ,count(distinct pcp_impression_clicks.event_id) as pcp_impression_clicks_count
-    from pcp_impression_clicks
-    group by 1
-),
-
-pdp_product_add_to_cart_visits as ( 
-    select 
-        pdp_product_add_to_cart.visit_id
-        ,count(distinct pdp_product_add_to_cart.event_id) as pdp_product_add_to_cart_count
-    from pdp_product_add_to_cart
-    group by 1
-),
-
-viewed_pdp_visits as ( 
-    select 
-        viewed_pdp.visit_id
-        ,count(distinct viewed_pdp.event_id) as pdp_views_count
-    from viewed_pdp
-    group by 1
-),
-
-add_flags as (
-    select
-        visits.visit_id
-
+        ,user_id
         ,visits.visit_landing_page_host = 'WWW.CROWDCOW.COM' 
             and visits.visit_landing_page_path in ('/','/L') as is_homepage_landing
-
-        ,suspicious_ips.visit_ip is not null
-            or visits.visit_user_agent like any ('%BOT%','%CRAWL%','%LIBRATO%','%TWILIOPROXY%','%YAHOOMAILPROXY%','%SCOUTURLMONITOR%','%FULLCONTACT%','%IMGIX%','%BUCK%')
-            or (visits.visit_ip is null and visits.visit_user_agent is null) as is_bot
 
         ,visit_landing_page_path like any ('%.JS%','%.ICO%','%.PNG%','%.CSS%','%.PHP%','%.TXT%','%GRAPHQL%'
                                        ,'%.XML%','%.SQL%','%.ICS%','%WELL-KNOWN%','%/e/%','%.ENV%','%/WP-%','/CROWDCOW.COM%'
                                        ,'%/WWW.CROWDCOW.COM%.%','%/ADMIN%','%/INGREDIENT-LIST%','%.','%PHPINFO%','%.YML%'
                                        ,'%.HTML%','%.ASP','%XXXSS%','%.RAR','%.AXD%','%.AWS%','%;VAR%') as is_invalid_visit
-        
-        ,visits.visit_ip in ('66.171.181.219', '127.0.0.1') or employee_user.user_id is not null as is_internal_traffic
-        ,user_first_order.user_id is not null and user_first_order.first_order_date < visits.started_at_utc as has_previous_order
-        ,user_first_completed_order.user_id is not null and user_first_completed_order.first_completed_order_date < visits.started_at_utc as has_previous_completed_order
-        ,user_first_subscription.user_id is not null and user_first_subscription.first_subscription_date < visits.started_at_utc as has_previous_subscription
-        ,user_account_created.user_id is not null and user_account_created.first_creation_date < visits.started_at_utc as had_account_created
-        ,subscription_visits.visit_id is not null as did_subscribe
-        ,user_signed_up.visit_id is not null as did_sign_up
-        ,order_completed.visit_id is not null as did_complete_order
-        ,pcp_impression_visits.pcp_impressions_count
-        ,pcp_impression_click_visits.pcp_impression_clicks_count
-        ,pdp_product_add_to_cart_visits.pdp_product_add_to_cart_count
-        ,viewed_pdp_visits.pdp_views_count
-
+        ,visit_ip
+        ,visit_user_agent
+        ,started_at_utc
     from visits
-        left join suspicious_ips on visits.visit_ip = suspicious_ips.visit_ip
-        left join subscription_visits on visits.visit_id = subscription_visits.visit_id
-        left join user_first_order on visits.user_id = user_first_order.user_id
-        left join user_first_completed_order on visits.user_id = user_first_completed_order.user_id
-        left join user_first_subscription on visits.user_id = user_first_subscription.user_id
-        left join user_account_created on visits.user_id = user_account_created.user_id
-        left join user_signed_up on visits.visit_id = user_signed_up.visit_id
-        left join order_completed on visits.visit_id = order_completed.visit_id
-        left join employee_user on visits.user_id = employee_user.user_id
-        left join pcp_impression_visits on visits.visit_id = pcp_impression_visits.visit_id
-        left join pcp_impression_click_visits on visits.visit_id = pcp_impression_click_visits.visit_id 
-        left join pdp_product_add_to_cart_visits on visits.visit_id = pdp_product_add_to_cart_visits.visit_id
-        left join viewed_pdp_visits on visits.visit_id = viewed_pdp_visits.visit_id
+)
+
+,add_flags as (
+    select
+        visit_clean_urls.visit_id
+        ,visit_clean_urls.is_invalid_visit
+        ,visit_clean_urls.is_homepage_landing
+        ,suspicious_ips.visit_ip is not null
+            or visit_clean_urls.visit_user_agent like any ('%BOT%','%CRAWL%','%LIBRATO%','%TWILIOPROXY%','%YAHOOMAILPROXY%','%SCOUTURLMONITOR%','%FULLCONTACT%','%IMGIX%','%BUCK%')
+            or (visit_clean_urls.visit_ip is null and visit_clean_urls.visit_user_agent is null) as is_bot
+        ,visit_clean_urls.visit_ip in ('66.171.181.219', '127.0.0.1') or (user_account.user_id is not null and user_account.user_type = 'EMPLOYEE') as is_internal_traffic
+        ,user_order_firsts.user_id is not null and user_order_firsts.first_paid_order_date < visit_clean_urls.started_at_utc as has_previous_order
+        ,user_order_firsts.user_id is not null and user_order_firsts.first_completed_order_date < visit_clean_urls.started_at_utc as has_previous_completed_order
+        ,user_first_subscription.user_id is not null and user_first_subscription.first_subscription_date < visit_clean_urls.started_at_utc as has_previous_subscription
+        ,user_account.user_id is not null and user_account.first_creation_date < visit_clean_urls.started_at_utc as had_account_created
+        ,visit_activity.visit_id is not null and subscribes - unsubscribes > 0 as did_subscribe
+        ,visit_activity.visit_id is not null and sign_ups > 0 as did_sign_up
+        ,visit_activity.visit_id is not null and order_completes > 0 as did_complete_order
+        ,visit_clean_urls.is_homepage_landing and (visit_activity.visit_id is null or (visit_activity.homepage_views = 1 and visit_activity.event_count = 1)) as did_bounce_homepage
+        ,zeroifnull(visit_activity.pcp_impressions) as pcp_impressions_count
+        ,zeroifnull(visit_activity.pcp_impression_clicks) as pcp_impression_clicks_count
+        ,zeroifnull(visit_activity.pdp_add_to_carts) as pdp_product_add_to_cart_count
+        ,zeroifnull(visit_activity.viewed_pdps) as pdp_views_count
+
+    from visit_clean_urls
+        left join suspicious_ips on visit_clean_urls.visit_ip = suspicious_ips.visit_ip
+        left join user_order_firsts on visit_clean_urls.user_id = user_order_firsts.user_id
+        left join user_first_subscription on visit_clean_urls.user_id = user_first_subscription.user_id
+        left join user_account on visit_clean_urls.user_id = user_account.user_id
+        left join visit_activity on visit_clean_urls.visit_id = visit_activity.visit_id
 )
 
 select * from add_flags

@@ -1,8 +1,8 @@
 version: 2
 
 models:
-  - name: fact_visit
-    description: "Fact table to describe visits and activities performed when visiting the Crowd Cow website"
+  - name: visits
+    description: "Business logic for visits"
     columns:
       - name: visit_id
         description: "Visit ID"
@@ -91,26 +91,26 @@ models:
       - name: visit_attributed_source
         description: "The attributed source of a visit (May be deprecated and is currently defauled to `null`"
 
+      - name: is_wall_displayed
+        description: "Boolean indicating whether the wall was displayed"
+
       - name: is_paid_referrer
         description: "Boolean indicating if the visit was referred by a paid source"
 
       - name: is_social_platform_referrer
         description: "Boolean indicating if the visit was referred by one of the major social platforms (e.g. Instagram, Facebook, TikTok, etc.)"
 
-      - name: is_wall_displayed
-        description: "Boolean indicating whether the wall was displayed"
-
-      - name: is_homepage_landing
-        description: "Boolean indicating if this visit landed on the homepage"
-
       - name: is_bot
         description: "Boolean indicating if this visit was a bot user"
+
+      - name: is_internal_traffic
+        description: "Boolean indicating if the visit is coming from a internal traffic"
 
       - name: is_invalid_visit
         description: "Boolean indicating if this visit is considered an invalid visit. It could be considered invalid for a variety of reasons (e.g. internal dev traffic, invalid URLS, etc"
 
-      - name: is_internal_traffic
-        description: "Boolean indicating if the visit is coming from a internal traffic"
+      - name: is_homepage_landing
+        description: "Boolean indicating if this visit landed on the homepage"
 
       - name: has_previous_order
         description: "Boolean indicating if the user associated with this visit has had an order previous to this visit"
@@ -133,15 +133,12 @@ models:
       - name: did_complete_order
         description: "Boolean indicating if the user associated with this visit did complete an order during this visit"
 
-      - name: started_at_utc
-        description: "Timestamp of when the visit started"
+      - name: did_bounce_homepage
+        description: "Boolean indicating if the user bounced from the home page. The visit is a homepage landing and they either have no subsequence site events or the only site event is a homepage view"
 
-      - name: updated_at_utc
-        description: "Timesteamp of when the visit record was updated"
+      - name: pdp_views_count
+        description: "Number of events where a product display page viewed during this user's visit"
 
-      - name: visit_event_sequence
-        description: "An aggregated list of all events that took place during a user's visit to the site. Events are delimited by a pipe (`|`)"
-      
       - name: pcp_impressions_count
         description: "Number of product card impresssions that took place during this user's visit"
 
@@ -151,6 +148,9 @@ models:
       - name: pdp_product_add_to_cart_count
         description: "Number of events where a product was added to the user's cart during this user's visit"
 
-      - name: pdp_views_count
-        description: "Number of events where a product display page viewed during this user's visit"
-        
+      - name: started_at_utc
+        description: "Timestamp of when the visit started"
+
+      - name: updated_at_utc
+        description: "Timesteamp of when the visit record was updated"
+

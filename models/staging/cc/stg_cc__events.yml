@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: stg_cc__events
+    description: "Staging model for Ahoy events"
+    columns:
+      - name: event_id
+        description: "Event ID"
+
+      - name: visit_id
+        description: "Visit ID"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: occurred_at_utc
+        description: "Timestamp for when the event occurred UTC"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the event was updated by the system UTC"
+
+      - name: event_sequence_number
+        description: "The sequence number for the event within the visit"
+
+      - name: event_name
+        description: "Event name. If the event is a custom event, the name is a concatination of the category and action keys in the event JSON (`category_action`)"
+
+      - name: category
+        description: "Category key from the event JSON"
+
+      - name: action
+        description: "Action key from the event JSON"
+
+      - name: label
+        description: "Label key from the event JSON"
+
+      - name: experiments
+        description: "Experiments key from the event JSON. The data in this field is the JSON object for experiments"
+
+      - name: is_member
+        description: "Member key from the event JSON"
+
+      - name: token
+        description: "Token key from the event JSON. Key name in the JSON is `$event_id`"
+
+      - name: order_id
+        description: "Order ID key from the event JSON"
+
+      - name: url
+        description: "URL key from the event JSON"
+
+      - name: referrer_url
+        description: "Referrer URL from the event JSON"
+
+      - name: subscription_id
+        description: "Subscription ID from the event JSON"
+
+      - name: title
+        description: "Title key from the event JSON"
+

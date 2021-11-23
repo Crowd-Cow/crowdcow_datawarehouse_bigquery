@@ -4,6 +4,8 @@
 
 [Confluence](https://crowdcow.atlassian.net/wiki/spaces/ED/pages/170623021/Data+Engineering)
 
+[dbt docs](https://dbt-docs-160632217553a66d.onporter.run) are updated with merges to master. Login is in 1password under *Datawarehouse Documentation*.
+
 ## Events
 
 ### Base Ahoy Event Model
@@ -18,5 +20,4 @@ The directory `analysis/events_in_need_of_documentation` constains event models 
 
 ## Snowflake
 
-## Kafka
-
+testing

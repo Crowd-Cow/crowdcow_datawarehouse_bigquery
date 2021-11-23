@@ -1,8 +1,8 @@
 version: 2
 
 models:
-  - name: visits
-    description: "Business logic to describe visits"
+  - name: visit_classification
+    description: "Business logic to clean and classify visits"
     columns:
       - name: visit_id
         description: "Visit ID"

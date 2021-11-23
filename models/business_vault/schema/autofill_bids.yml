@@ -1,0 +1,69 @@
+version: 2
+
+models:
+  - name: autofill_bids
+    description: "Business logic for the autofill process"
+    columns:
+      - name: autofill_bid_log_id
+        description: "Autofill bid log ID"
+        tests:
+            - unique
+            - not_null
+
+      - name: target_sku_id
+        description: "The SKU ID of the target item that autofill is trying to match"
+
+      - name: target_product_permutation_id
+        description: "The product permutation ID of the target item that the autofill process is trying to match"
+
+      - name: autofill_sku_id
+        description: "The SKU ID of the item being autofilled"
+
+      - name: autofill_product_permutation_id
+        description: "Product permutation ID of the autofill item being added by the autofill process"
+
+      - name: order_id
+        description: "Order ID"
+
+      - name: previous_order_id
+        description: "The order id of the member's previous order"
+
+      - name: bid_id
+        description: "The bid ID created by the autofill process"
+
+      - name: autofill_sku_key
+        description: "Autofill SKU key to join to information about the autofill SKU ID at the time the bid log record was created"
+
+      - name: target_sku_key
+        description: "Target SKU key to join to the information about the target SKU ID at the time the bid log was created"
+
+      - name: target_sku_name
+        description: "The name of the target SKU the autofill process is trying to replace (100 % `null` values)"
+
+      - name: target_quantity
+        description: "The target SKU quantity for what is trying to be replaced"
+
+      - name: autofill_sku_name
+        description: "The SKU name of the item being autofilled"
+
+      - name: autofill_quantity
+        description: "Quantity of the autofill SKU being filled"
+
+      - name: autofill_type
+        description: "Autofill type (e.g. Prefill, Replacement, Removal, etc.)"
+
+      - name: reason
+        description: "Bid autofill reason"
+
+      - name: notes
+        description: "Autofill notes"
+
+      - name: filled_at_date
+        description: "The date that the order was filled"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created in the system UTC"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record is updated in the system UTC"
+
