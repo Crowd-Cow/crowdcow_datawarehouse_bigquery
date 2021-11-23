@@ -1,17 +1,12 @@
 with 
 
 day_spine as (
-    
+    /* Using 2015-01-04 as the first fiscal year start date because that is the min(fiscal_start_date) in the current model - crowdcow_dbt.dim_fiscal_calendar*/
     {{
       dbt_utils.date_spine(
           datepart = 'day',
-<<<<<<< HEAD
-          start_date = "'2017-01-01'::date",
+          start_date = "'2015-01-04'::date",
           end_date = "dateadd(week, 53, current_date)"
-=======
-          start_date = "'2018-01-01'::date",
-          end_date = "date(sysdate())"
->>>>>>> 7271ace854314c2d76700fe1304077a551c249a3
       )
     }}
 
@@ -20,7 +15,7 @@ day_spine as (
 date_parts as (
 /* Do we want week start/end and month start/end */ 
     select
-        date_day
+        date_day as calendar_date
         ,date_trunc('week',date_day) as date_week
         ,date_trunc(week,date_day+1)-1 as date_week_sun
         ,date_trunc('month',date_day) as date_month
@@ -37,6 +32,9 @@ date_parts as (
             when date_part(dow,date_day) in (0,6) then true
             else false
         end as is_weekend
+        ,case when mod((date_part('year',date_day) - 2015),4) = 0 then true
+            else false
+            end as is_53_wk_year
 from day_spine
 
 )

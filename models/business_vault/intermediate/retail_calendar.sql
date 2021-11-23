@@ -1,10 +1,10 @@
+
 {{
-    {{
-      config(
-        materialized = 'table',
-        )
-    }}
+    config(
+    materialized = 'table'
+    )
 }}
+
 -- year ends in January = 1
 -- week start on Sunday = 0 
 
@@ -21,7 +21,12 @@ retail_periods as (
         -- Count the weeks in a 13 week period and separate the 4-5-4 week sequences
         mod(week_num::float, 13) as w13_number, 
         -- Chop weeks into 13 weeks merch quarters
+        -- trunc rounds down to the nearest or equal integer closer to 0
         least(trunc(week_num/13),3) as quarter_number, 
+        case when is_53_wk_year = true then 
+                case when week_num between 0 and 4 then 1
+                    else least(trunc(week_num/13),3) end
+            end as is_53_wk_quarter_number,
         case 
             -- we move week 53 into the 3rd period of the quarter
             when fiscal_week_of_year = 53 then 3
@@ -29,6 +34,9 @@ retail_periods as (
             when w13_number between 4 and 7 then 2
             when w13_number between 8 and 12 then 3
         end as period_of_quarter, 
+
+        /*Extra week needs to be added to January */
+        
         (quarter_number*3) + period_of_quarter as retail_period_number
     from fiscal_year_dates
 

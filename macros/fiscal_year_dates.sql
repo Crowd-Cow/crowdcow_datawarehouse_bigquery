@@ -10,7 +10,7 @@ with year_month_end as (
        d.year_number-{{ shift_year }} as fiscal_year_number,
        d.month_end_date
     from
-        {{ ref('dates') }} d
+        {{ ref('stg_reference__date_spine') }} d
     where
         d.month_of_year = {{ year_end_month }}
     group by 1,2
@@ -18,11 +18,11 @@ with year_month_end as (
 ),
 weeks as (
 
-    select
+    select d.year_number,
         d.calendar_date as week_start_date,
         dateadd('d', 6, d.calendar_date) as week_end_date
     from
-        {{ ref('dates') }} d
+        {{ ref('stg_reference__date_spine') }} d
     where 
         date_part('dow', d.calendar_date) = {{ week_start_day }}
 
@@ -86,9 +86,10 @@ fiscal_year_dates as (
             over(
                 partition by m.fiscal_year_number 
                 order by w.week_start_date
-                ) as fiscal_week_of_year 
+                ) as fiscal_week_of_year, 
+        d.is_53_wk_year
     from
-        {{ ref('dates') }} d
+        {{ ref('stg_reference__date_spine') }} d
         join
         fiscal_year_range m on d.calendar_date between m.fiscal_year_start_date and m.fiscal_year_end_date
         join
