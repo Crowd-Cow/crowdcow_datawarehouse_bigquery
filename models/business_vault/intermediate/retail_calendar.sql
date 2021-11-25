@@ -5,54 +5,62 @@
     )
 }}
 
--- year ends in January = 1
--- week start on Sunday = 0 
+with retail_periods as ( 
+    select
+        *
+        ,dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) as fiscal_week_num
+        ,case
+            when is_53_wk_year then
+                case
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 1 and 5 then 1
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 6 and 9 then 2
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 10 and 14 then 3
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 15 and 18 then 4
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 19 and 22 then 5
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 23 and 27 then 6
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 28 and 31 then 7
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 32 and 35 then 8
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 36 and 40 then 9
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 41 and 44 then 10
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 45 and 48 then 11
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 49 and 53 then 12
+                end  
+            else
+                case
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 1 and 4 then 1
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 5 and 8 then 2
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 9 and 13 then 3
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 14 and 17 then 4
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 18 and 21 then 5
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 22 and 26 then 6
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 27 and 30 then 7
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 31 and 34 then 8
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 35 and 39 then 9
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 40 and 43 then 10
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 44 and 47 then 11
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 48 and 52 then 12
+                end
+            end as fiscal_month 
+        ,case
+            when is_53_wk_year then
+                case
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 1 and 14 then 1
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 15 and 27 then 2
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 28 and 40 then 3
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 41 and 53 then 4
+                end
+            else
+                case
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 1 and 13 then 1
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 14 and 26 then 2
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 27 and 39 then 3
+                    when dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) between 40 and 52 then 4
+                end
+        end as fiscal_quarter
 
-{{ fiscal_year_dates(1,0) }}
-retail_periods as ( 
+        ,year(fiscal_year_start) as fiscal_year
 
-    select 
-        calendar_date, 
-        fiscal_year_number as retail_year_number, 
-        week_start_date, 
-        week_end_date, 
-        fiscal_week_of_year as retail_week_of_year,
-        fiscal_week_of_year-1 as week_num,
-        -- Count the weeks in a 13 week period and separate the 4-5-4 week sequences
-        mod(week_num::float, 13) as w13_number, 
-        -- Chop weeks into 13 weeks merch quarters
-        -- trunc rounds down to the nearest or equal integer closer to 0
-        least(trunc(week_num/13),3) as quarter_number, 
-        case when is_53_wk_year = true then 
-                case when week_num between 0 and 4 then 1
-                    else least(trunc(week_num/13),3) end
-            end as is_53_wk_quarter_number,
-        case 
-            -- we move week 53 into the 3rd period of the quarter
-            when fiscal_week_of_year = 53 then 3
-            when w13_number between 0 and 3 then 1
-            when w13_number between 4 and 7 then 2
-            when w13_number between 8 and 12 then 3
-        end as period_of_quarter, 
-
-        /*Extra week needs to be added to January */
-        
-        (quarter_number*3) + period_of_quarter as retail_period_number
-    from fiscal_year_dates
-
+    from {{ ref('stg_reference__date_spine') }}
 )
-select 
-    calendar_date, 
-    retail_year_number,
-    week_start_date, 
-    week_end_date, 
-    retail_week_of_year,
-    dense_rank() over (
-        partition by retail_year_number, retail_period_number
-        order by retail_week_of_year
-    ) as retail_week_of_period,
-    retail_period_number, 
-    quarter_number+1 as retail_quarter_number,
-    period_of_quarter as retail_period_of_quarter
-from retail_periods
-order by 1,2
+
+select * from retail_periods order by 1 asc
