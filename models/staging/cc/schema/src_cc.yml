@@ -24,6 +24,10 @@ sources:
         columns:
           - name: id
             description: id
+            tests: 
+            - not_null
+            - unique:
+                severity: warn
           - name: score
             description: score
           - name: order_id

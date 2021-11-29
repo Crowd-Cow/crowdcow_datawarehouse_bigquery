@@ -7,8 +7,9 @@ models:
       - name: ambassador_id
         description: Ambassador ID
         tests: 
-          - not_null
-          - unique
+            - not_null
+            - unique:
+                severity: warn
 
       - name: user_id
         description: User ID

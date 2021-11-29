@@ -6,9 +6,10 @@ models:
     columns:
       - name: custom_subscription_id
         description: "Custom subscription ID"
-        tests:
-            - unique
+        tests: 
             - not_null
+            - unique:
+                severity: warn
 
       - name: meat_preference
         description: "Customer's meat preference"

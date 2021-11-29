@@ -6,9 +6,10 @@ models:
     columns:
       - name: autofill_bid_log_id
         description: "Autofill bid log id"
-        tests:
-          - unique
-          - not_null
+        tests: 
+            - not_null
+            - unique:
+                severity: warn
 
       - name: autofill_order_log_id
         description: "Autofill order log ID"

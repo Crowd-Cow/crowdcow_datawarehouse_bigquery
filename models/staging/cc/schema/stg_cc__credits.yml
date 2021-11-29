@@ -6,9 +6,10 @@ models:
     columns:
       - name: credit_id
         description: "Credit ID"
-        tests:
-          - unique
-          - not_null
+        tests: 
+            - not_null
+            - unique:
+                severity: warn
 
       - name: promotion_id
         description: "Promotion ID"

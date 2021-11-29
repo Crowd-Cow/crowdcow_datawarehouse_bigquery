@@ -6,9 +6,10 @@ models:
     columns:
       - name: cow_cash_id
         description: "Cow Cash entry record ID"
-        tests:
-          - unique
-          - not_null
+        tests: 
+            - not_null
+            - unique:
+                severity: warn
 
       - name: user_id
         description: "User ID"
