@@ -13,7 +13,6 @@ day_spine as (
 ),
 
 date_parts as (
-/* Do we want week start/end and month start/end */ 
     select
         date_day as calendar_date
         ,date_trunc('week',date_day) as calendar_date_week
@@ -28,7 +27,7 @@ date_parts as (
         ,date_part(dow,date_day) as day_of_week
         ,dayname(date_day) as day_name
         ,date_part('year', date_day)::int as calendar_year_number
-        ,min(case when date_part(dow,date_day) = 0 then date_day end) over(partition by date_part('year', date_day)::int  order by date_day) as fiscal_year_start
+        ,min(calendar_date) over(partition by year(calendar_date_week_sun) order by calendar_date) as fiscal_year_start
         ,max(case when date_part(year,(date_trunc(week,date_day+1)-1)) = date_part('year', date_day)::int  then (date_trunc(week,date_day+1)-1) end) over(partition by date_part('year', date_day)::int ) + 6
                       as fiscal_year_end
         ,case

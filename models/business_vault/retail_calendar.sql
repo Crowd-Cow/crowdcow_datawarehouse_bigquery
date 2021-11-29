@@ -1,10 +1,3 @@
-
-{{
-    config(
-    materialized = 'table'
-    )
-}}
-
 with retail_periods as ( 
     select
         *
@@ -63,4 +56,4 @@ with retail_periods as (
     from {{ ref('stg_reference__date_spine') }}
 )
 
-select * from retail_periods order by 1 asc
+select * from retail_periods 

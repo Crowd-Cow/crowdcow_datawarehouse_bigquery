@@ -8,18 +8,7 @@ renamed as (
 
     select
         id as user_id
-<<<<<<< HEAD
-        , case
-            when nullif(trim(roles_for_access), '') is not null then 'EMPLOYEE'
-            when  LOWER(u.email) like 'temporary%@crowdcow.com%' then 'DEV' 
-            when lower(email) like '%@crowdcow.com%' then 'INTERNAL'
-            when lower(trim(user_type)) = 'c' then 'CUSTOMER'
-            when lower(trim(user_type)) = 'p' then 'PROSPECT'
-            else 'OTHER'
-        end as user_type
-=======
         ,{{ clean_strings('user_type') }} as user_type
->>>>>>> 517ba61fc308caac4b21c50e98c1075a6fbc9a2f
         ,{{ clean_strings('email') }} as user_email
         ,{{ clean_strings('gender') }} as user_gender
         ,{{ clean_strings('default_card_token') }} as default_card_token
