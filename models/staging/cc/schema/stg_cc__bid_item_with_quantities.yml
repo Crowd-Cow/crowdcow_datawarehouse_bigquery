@@ -6,10 +6,9 @@ models:
     columns:
       - name: bid_item_sku_quantity_id
         description: "Bid item with SKU quantity ID"
-        tests: 
-            - not_null
-            - unique:
-                severity: warn
+        test:
+          - unique
+          - not_null
 
       - name: sku_id
         description: "SKU ID"

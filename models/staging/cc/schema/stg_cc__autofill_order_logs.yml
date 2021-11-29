@@ -6,10 +6,9 @@ models:
     columns:
       - name: autofill_order_log_id
         description: "Autofill order log id"
-        tests: 
-            - not_null
-            - unique:
-                severity: warn
+        tests:
+          - unique
+          - not_null
 
       - name: updated_at_utc
         description: "Timestamp for when the record was updated in the system UTC"

@@ -6,10 +6,9 @@ models:
   columns:
     - name: bid_id
       description: Unique id for the fact_bid table
-      tests: 
-            - not_null
-            - unique:
-                severity: warn
+      tests:
+        - unique
+        - not_null
 
     - name: bid_item_id
       description: Business id for the dim_bid table

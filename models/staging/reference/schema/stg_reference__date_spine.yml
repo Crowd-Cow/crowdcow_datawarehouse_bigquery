@@ -6,10 +6,9 @@ models:
     columns:
       - name: date_day
         description: "A given date"
-        tests: 
-          - not_null
-          - unique:
-              severity: warn
+        tests:
+            - unique
+            - not_null
 
       - name: date_week
         description: "The date for the beginning of the week for the given date"

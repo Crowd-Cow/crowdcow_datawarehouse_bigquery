@@ -6,10 +6,9 @@ models:
     columns:
       - name: event_id
         description: "Event ID"
-        tests: 
+        tests:
+            - unique
             - not_null
-            - unique:
-                severity: warn
 
       - name: visit_id
         description: "Visit ID"

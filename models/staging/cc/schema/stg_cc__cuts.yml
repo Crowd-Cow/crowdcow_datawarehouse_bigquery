@@ -6,10 +6,9 @@ models:
     columns:
       - name: cut_id
         description: "Cut ID"
-        tests: 
-            - not_null
-            - unique:
-                severity: warn
+        tests:
+          - unique
+          - not_null
 
       - name: sort_order
         description: "Sort order"

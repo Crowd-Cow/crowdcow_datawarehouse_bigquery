@@ -6,10 +6,9 @@ models:
     columns:
       - name: order_id
         description: Order ID
-        tests: 
-          - not_null
-          - unique:
-              severity: warn
+        tests:
+            - unique
+            - not_null
 
       - name: parent_order_id
         description: Parent Order ID
