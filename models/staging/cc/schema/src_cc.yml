@@ -24,6 +24,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: score
             description: score
           - name: order_id
@@ -55,6 +58,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: visit_id
             description: visit_id
           - name: name
@@ -74,6 +80,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: visit_token
             description: visit_token
           - name: visitor_token
@@ -129,6 +138,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: params
             description: params
           - name: started_processing_at
@@ -150,6 +162,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: data_fields
             description: data_fields
           - name: created_at
@@ -167,6 +182,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: created_at
             description: created_at
           - name: updated_at
@@ -204,6 +222,9 @@ sources:
         columns:
           - name: key
             description: key
+            tests:
+              - not_null
+              - unique
           - name: value
             description: value
           - name: created_at
@@ -217,6 +238,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: short_description
@@ -269,6 +293,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: autofill_order_log_id
             description: autofill_order_log_id
           - name: sku_id
@@ -302,6 +329,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: order_id
             description: order_id
           - name: initial_subtotal_cents
@@ -331,6 +361,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: bid_item_id
             description: bid_item_id
           - name: bid_item_collection_id
@@ -348,6 +381,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: created_at
@@ -361,6 +397,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: max_percentage
@@ -378,6 +417,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: bid_item_id
             description: bid_item_id
           - name: sku_id
@@ -395,6 +437,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: bid_item_id
             description: bid_item_id
           - name: user_id
@@ -434,6 +479,9 @@ sources:
             description: hide_from_user
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: item_photo_url
             description: item_photo_url
           - name: item_price_cents
@@ -521,6 +569,9 @@ sources:
             description: from_user_mail_log_entry_id
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: item_price_cents
             description: item_price_cents
           - name: mix_portion_group_ids
@@ -576,6 +627,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: uuid
             description: uuid
           - name: title
@@ -621,6 +675,9 @@ sources:
             description: height_in_inches
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: in_service
             description: in_service
           - name: insulation_type
@@ -668,6 +725,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: subject
             description: subject
           - name: body
@@ -723,6 +783,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: barcode_prefix
@@ -758,6 +821,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: caller_user_id
             description: caller_user_id
           - name: callee_user_id
@@ -793,6 +859,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: tag
             description: tag
           - name: title
@@ -812,6 +881,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: bid_id
             description: bid_id
           - name: bid_item_id
@@ -829,35 +901,15 @@ sources:
           - name: updated_at
             description: updated_at
 
-      - name: clicks
-        description: clicks
-
-        columns:
-          - name: id
-            description: id
-          - name: clicked_link_index
-            description: clicked_link_index
-          - name: first_clicked_url
-            description: first_clicked_url
-          - name: first_clicked_anchor
-            description: first_clicked_anchor
-          - name: user_mail_log_entry_id
-            description: user_mail_log_entry_id
-          - name: user_id
-            description: user_id
-          - name: created_at
-            description: created_at
-          - name: updated_at
-            description: updated_at
-          - name: click_value_cents
-            description: click_value_cents
-
       - name: contact_imports
         description: contact_imports
 
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: user_id
             description: user_id
           - name: token
@@ -877,6 +929,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: user_id
@@ -912,6 +967,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: user_id
             description: user_id
           - name: credit_id
@@ -955,6 +1013,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: exp_month
@@ -988,6 +1049,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: credit_type
             description: credit_type
           - name: discount_in_cents
@@ -1017,42 +1081,15 @@ sources:
           - name: bid_id
             description: bid_id
 
-      - name: custom_subscription_item_cuts
-        description: custom_subscription_item_cuts
-
-        columns:
-          - name: id
-            description: id
-          - name: custom_subscription_item_id
-            description: custom_subscription_item_id
-          - name: cut_id
-            description: cut_id
-          - name: created_at
-            description: created_at
-          - name: updated_at
-            description: updated_at
-
-      - name: custom_subscription_item_products
-        description: custom_subscription_item_products
-
-        columns:
-          - name: id
-            description: id
-          - name: product_id
-            description: product_id
-          - name: custom_subscription_item_id
-            description: custom_subscription_item_id
-          - name: created_at
-            description: created_at
-          - name: updated_at
-            description: updated_at
-
       - name: custom_subscription_items
         description: custom_subscription_items
 
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: subscription_id
             description: subscription_id
           - name: meat_preference
@@ -1074,6 +1111,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: customer_id
             description: customer_id
           - name: watcher_id
@@ -1091,6 +1131,9 @@ sources:
             description: created_at
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: in_use
             description: in_use
           - name: meat_type
@@ -1150,6 +1193,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: cycle_count_box_id
             description: cycle_count_box_id
           - name: barcode
@@ -1167,6 +1213,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_box_id
             description: sku_box_id
           - name: user_id
@@ -1188,6 +1237,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: cycle_count_id
             description: cycle_count_id
           - name: name
@@ -1197,35 +1249,15 @@ sources:
           - name: updated_at
             description: updated_at
 
-      - name: cycle_count_skus
-        description: cycle_count_skus
-
-        columns:
-          - name: cycle_count_id
-            description: cycle_count_id
-          - name: sku_id
-            description: sku_id
-          - name: id
-            description: id
-          - name: physical_count
-            description: physical_count
-          - name: created_at
-            description: created_at
-          - name: updated_at
-            description: updated_at
-          - name: approved_at
-            description: approved_at
-          - name: approved_by_user_id
-            description: approved_by_user_id
-          - name: system_count
-            description: system_count
-
       - name: cycle_count_variances
         description: cycle_count_variances
 
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: cycle_count_id
             description: cycle_count_id
           - name: sku_id
@@ -1249,6 +1281,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: created_at
             description: created_at
           - name: updated_at
@@ -1276,6 +1311,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: user_id
             description: user_id
           - name: event_type
@@ -1295,6 +1333,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: rule_type
@@ -1319,6 +1360,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: template_name
             description: template_name
           - name: sendgrid_id
@@ -1330,6 +1374,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: event_id
             description: event_id
           - name: farm_id
@@ -1357,6 +1404,9 @@ sources:
             description: event_id
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: quantity
             description: quantity
           - name: updated_at
@@ -1368,6 +1418,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: event_id
             description: event_id
           - name: product_id
@@ -1387,6 +1440,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: event_id
             description: event_id
           - name: promotion_id
@@ -1402,6 +1458,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: event_type
@@ -1469,6 +1528,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: event_id
             description: event_id
           - name: packing_insert_id
@@ -1484,6 +1546,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: token
@@ -1507,6 +1572,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: upload_id
             description: upload_id
           - name: failure_case_id
@@ -1540,6 +1608,9 @@ sources:
             description: failure_case_id
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: order_id
@@ -1587,6 +1658,9 @@ sources:
             description: farm_name
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: link_to_zendesk_ticket
             description: link_to_zendesk_ticket
           - name: notes
@@ -1616,6 +1690,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: farm_id
             description: farm_id
           - name: postal_code
@@ -1631,6 +1708,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: farm_id
             description: farm_id
           - name: vendor_tag_id
@@ -1670,6 +1750,9 @@ sources:
             description: hanging_weight_price_per_pound_cents
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: is_closed_herd
             description: is_closed_herd
           - name: is_dry_aged
@@ -1747,6 +1830,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: day
             description: day
           - name: transit_days
@@ -1781,6 +1867,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: location_type
@@ -1822,6 +1911,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: day
             description: day
           - name: fc_id
@@ -1843,6 +1935,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: fc_id
             description: fc_id
           - name: postal_code
@@ -1874,6 +1969,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: fc_id
             description: fc_id
           - name: product_id
@@ -1891,6 +1989,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: fc_id
             description: fc_id
           - name: queue_type
@@ -1924,6 +2025,9 @@ sources:
             description: emergency_contact_info
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: in_service
             description: in_service
           - name: key
@@ -1975,6 +2079,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: farm_id
             description: farm_id
           - name: event_id
@@ -1992,6 +2099,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: week_start
             description: week_start
           - name: category
@@ -2011,6 +2121,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: shirt_size
             description: shirt_size
           - name: user_id
@@ -2030,6 +2143,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: user_id
             description: user_id
           - name: fc_id
@@ -2045,6 +2161,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: fc_id
             description: fc_id
           - name: forecast_type
@@ -2068,6 +2187,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: redeemed_at
             description: redeemed_at
           - name: sold_at
@@ -2109,6 +2231,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: redeemed_at
             description: redeemed_at
           - name: created_at
@@ -2144,6 +2269,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: gift_message
             description: gift_message
           - name: recipient_name
@@ -2183,6 +2311,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: email
             description: email
           - name: full_name
@@ -2222,6 +2353,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: created_at
             description: created_at
           - name: updated_at
@@ -2237,6 +2371,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: tag_id
             description: tag_id
           - name: taggable_id
@@ -2254,6 +2391,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: created_at
@@ -2269,6 +2409,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: the_text
             description: the_text
           - name: image_url
@@ -2290,6 +2433,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: the_text
             description: the_text
           - name: handwriting_style
@@ -2323,6 +2469,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: user_id
             description: user_id
           - name: provider
@@ -2364,6 +2513,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: url
             description: url
           - name: created_at
@@ -2387,6 +2539,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: description
             description: description
           - name: created_by_user_id
@@ -2410,6 +2565,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_id
             description: sku_id
           - name: adjustment
@@ -2429,6 +2587,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_vendor_id
             description: sku_vendor_id
           - name: inventory_owner_id
@@ -2460,6 +2621,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_id
             description: sku_id
           - name: starting_quantity
@@ -2493,6 +2657,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_id
             description: sku_id
           - name: sku_quantity
@@ -2514,6 +2681,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: fc_id
             description: fc_id
           - name: sku_id
@@ -2545,6 +2715,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: invoice_id
             description: invoice_id
           - name: created_at
@@ -2570,6 +2743,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: invoice_id
             description: invoice_id
           - name: order_id
@@ -2611,6 +2787,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: csv_url
             description: csv_url
           - name: pdf_url
@@ -2650,6 +2829,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: catch_route
             description: catch_route
           - name: redirect_to
@@ -2689,6 +2871,9 @@ sources:
             description: grind_weight_in_pounds
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: pipeline_order_id
@@ -2716,6 +2901,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: resource_owner_id
             description: resource_owner_id
           - name: application_id
@@ -2741,6 +2929,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: uid
@@ -2764,6 +2955,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: in_service
@@ -2779,6 +2973,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: forecast_cycle_date
             description: forecast_cycle_date
           - name: sku_id
@@ -2794,29 +2991,15 @@ sources:
           - name: updated_at
             description: updated_at
 
-      - name: oracle_predictions
-        description: oracle_predictions
-
-        columns:
-          - name: id
-            description: id
-          - name: bid_id
-            description: bid_id
-          - name: prediction
-            description: prediction
-          - name: prediction_date
-            description: prediction_date
-          - name: created_at
-            description: created_at
-          - name: updated_at
-            description: updated_at
-
       - name: order_cancellation_surveys
         description: order_cancellation_surveys
 
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: order_id
             description: order_id
           - name: user_id
@@ -2878,6 +3061,9 @@ sources:
             description: gross_revenue_cents
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: marketing_inserts_cost_cents
             description: marketing_inserts_cost_cents
           - name: meat_weight_percentage
@@ -2939,6 +3125,9 @@ sources:
             description: fc_id
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: order_id
@@ -2958,6 +3147,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: order_id
             description: order_id
           - name: sku_id
@@ -3005,6 +3197,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: order_id
             description: order_id
           - name: promotion_id
@@ -3042,6 +3237,9 @@ sources:
             description: gross_revenue
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: marketing_inserts
             description: marketing_inserts
           - name: net_revenue
@@ -3083,6 +3281,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: order_id
             description: order_id
           - name: user_id
@@ -3104,6 +3305,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: total_price_cents
             description: total_price_cents
           - name: selected_delivery_method
@@ -3425,6 +3629,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_id
             description: sku_id
           - name: name
@@ -3458,6 +3665,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: created_at
@@ -3471,6 +3681,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: packing_wave_id
             description: packing_wave_id
           - name: shipment_id
@@ -3488,6 +3701,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: fc_id
@@ -3517,6 +3733,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: visits_total
             description: visits_total
           - name: visits_last_24
@@ -3580,6 +3799,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: url
@@ -3631,6 +3853,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: user_id
             description: user_id
           - name: ccpa_no_sell_request_date
@@ -3646,6 +3871,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: phone_number
             description: phone_number
           - name: phone_type
@@ -3667,6 +3895,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: order_id
             description: order_id
           - name: fc_id
@@ -3686,6 +3917,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: region_key
             description: region_key
           - name: name
@@ -3731,6 +3965,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: pipeline_actor_id
             description: pipeline_actor_id
           - name: user_id
@@ -3746,6 +3983,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: actor_id
             description: actor_id
           - name: actor_type
@@ -3769,6 +4009,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: hanging_weight_pounds
             description: hanging_weight_pounds
           - name: tag_number
@@ -3790,6 +4033,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: pipeline_order_id
             description: pipeline_order_id
           - name: cut_id
@@ -3823,6 +4069,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: invoice_url
             description: invoice_url
           - name: invoice_amount_cents
@@ -3862,6 +4111,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: pipeline_order_id
             description: pipeline_order_id
           - name: lot_number
@@ -3917,6 +4169,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: lot_number
             description: lot_number
           - name: box_count
@@ -4002,6 +4257,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: pipeline_order_id
             description: pipeline_order_id
           - name: cut_id
@@ -4029,6 +4287,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: quantity
             description: quantity
           - name: schedule_type
@@ -4064,6 +4325,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: start_date
             description: start_date
           - name: end_date
@@ -4083,6 +4347,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: pipeline_order_id
             description: pipeline_order_id
           - name: cut_name
@@ -4118,6 +4385,9 @@ sources:
             description: grade
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: inventory_item_id
             description: inventory_item_id
           - name: mix_portion_group_id
@@ -4143,6 +4413,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: survey_monkey_response_id
             description: survey_monkey_response_id
           - name: nps_score
@@ -4208,6 +4481,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: easypost_rate_id
             description: easypost_rate_id
           - name: mode
@@ -4271,6 +4547,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: postal_code
             description: postal_code
           - name: city_name
@@ -4310,6 +4589,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: campaign_name
             description: campaign_name
           - name: test_group_identifier
@@ -4329,6 +4611,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: subtypes
@@ -4352,6 +4637,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: created_at
@@ -4365,6 +4653,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: queue_name
             description: queue_name
           - name: label_url
@@ -4394,6 +4685,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: token
             description: token
           - name: pretty_name
@@ -4423,6 +4717,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: product_id
             description: product_id
           - name: product_collection_id
@@ -4440,6 +4737,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: product_collection_id
             description: product_collection_id
           - name: key
@@ -4459,6 +4759,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: product_collection_id
             description: product_collection_id
           - name: vendor_tag_id
@@ -4474,6 +4777,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: title
             description: title
           - name: created_at
@@ -4509,6 +4815,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: product_id
             description: product_id
           - name: url
@@ -4528,6 +4837,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: title
             description: title
           - name: description
@@ -4560,6 +4872,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: product_permutation_id
             description: product_permutation_id
           - name: product_option_value_id
@@ -4575,6 +4890,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: title
             description: title
           - name: product_id
@@ -4590,6 +4908,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: product_id
             description: product_id
           - name: fc_id
@@ -4607,6 +4928,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: product_id
             description: product_id
           - name: website
@@ -4634,6 +4958,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: product_skin_id
             description: product_skin_id
           - name: vendor_tag_id
@@ -4649,6 +4976,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: product_id
             description: product_id
           - name: title
@@ -4684,6 +5014,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: product_variant_component_option_id
             description: product_variant_component_option_id
           - name: vendor_tag_id
@@ -4699,6 +5032,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_id
             description: sku_id
           - name: cut_id
@@ -4724,6 +5060,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: product_variant_component_id
             description: product_variant_component_id
           - name: vendor_tag_id
@@ -4739,6 +5078,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: plu
             description: plu
           - name: weight
@@ -4762,6 +5104,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: created_at
             description: created_at
           - name: updated_at
@@ -4801,6 +5146,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: product_id
             description: product_id
           - name: vendor_tag_id
@@ -4816,6 +5164,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: title
             description: title
           - name: description
@@ -4885,6 +5236,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: promotion_type
             description: promotion_type
           - name: created_at
@@ -4904,6 +5258,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: bid_item_id
             description: bid_item_id
           - name: user_id
@@ -4925,6 +5282,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: from_user_id
             description: from_user_id
           - name: to_email
@@ -4952,6 +5312,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: stripe_refund_id
             description: stripe_refund_id
           - name: amount_in_cents
@@ -4977,6 +5340,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: user_id
             description: user_id
           - name: why_bought
@@ -4994,6 +5360,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: bid_id
             description: bid_id
           - name: bid_item_id
@@ -5015,6 +5384,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: title
             description: title
           - name: path
@@ -5036,6 +5408,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sad_cow_bin_id
             description: sad_cow_bin_id
           - name: user_id
@@ -5075,6 +5450,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: created_at
             description: created_at
           - name: updated_at
@@ -5092,6 +5470,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: created_at
             description: created_at
           - name: updated_at
@@ -5119,6 +5500,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: created_at
             description: created_at
           - name: updated_at
@@ -5138,6 +5522,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: created_at
             description: created_at
           - name: updated_at
@@ -5153,6 +5540,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: created_at
             description: created_at
           - name: updated_at
@@ -5174,6 +5564,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_id
             description: sku_id
           - name: user_id
@@ -5199,6 +5592,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_vendor_id
             description: sku_vendor_id
           - name: completed_at
@@ -5216,6 +5612,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: job_name
             description: job_name
           - name: data_hash
@@ -5242,6 +5641,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_id
             description: sku_id
           - name: shelf_allocation_id
@@ -5259,6 +5661,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: shelf_allocation_id
             description: shelf_allocation_id
           - name: vendor_tag_id
@@ -5280,6 +5685,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_vendor_id
             description: sku_vendor_id
           - name: fc_id
@@ -5297,6 +5705,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: fc_id
             description: fc_id
           - name: weighting
@@ -5370,6 +5781,9 @@ sources:
             description: fc_id
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: item_weight
             description: item_weight
           - name: latest_temperature
@@ -5431,6 +5845,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_box_id
             description: sku_box_id
           - name: sku_id
@@ -5450,6 +5867,9 @@ sources:
             description: updated_at
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
 
       - name: sku_boxes
         description: sku_boxes
@@ -5457,6 +5877,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_id
             description: sku_id
           - name: scanned
@@ -5516,6 +5939,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_id
             description: sku_id
           - name: fc_id
@@ -5533,6 +5959,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_id
             description: sku_id
           - name: fc_id
@@ -5552,6 +5981,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_id
             description: sku_id
           - name: sku_location_id
@@ -5577,6 +6009,9 @@ sources:
             description: fc_id
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: quantity
@@ -5618,6 +6053,9 @@ sources:
             description: created_at
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: lot_id
             description: lot_id
           - name: quantity
@@ -5633,6 +6071,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_id
             description: sku_id
           - name: inventory_owner_id
@@ -5650,6 +6091,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_plan_id
             description: sku_plan_id
           - name: cut_id
@@ -5671,6 +6115,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: named_cut_weight_min
             description: named_cut_weight_min
           - name: named_cut_weight_max
@@ -5702,6 +6149,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
 
       - name: sku_plans
         description: sku_plans
@@ -5709,73 +6159,13 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: sku_plan_type
             description: sku_plan_type
-          - name: created_at
-            description: created_at
-          - name: updated_at
-            description: updated_at
-
-      - name: sku_price_entries
-        description: sku_price_entries
-
-        columns:
-          - name: id
-            description: id
-          - name: sku_id
-            description: sku_id
-          - name: sku_vendor_id
-            description: sku_vendor_id
-          - name: price_in_cents
-            description: price_in_cents
-          - name: cost_in_cents
-            description: cost_in_cents
-          - name: created_at
-            description: created_at
-          - name: updated_at
-            description: updated_at
-
-      - name: sku_prices
-        description: sku_prices
-
-        columns:
-          - name: id
-            description: id
-          - name: sku_plan_entry_id
-            description: sku_plan_entry_id
-          - name: cut_id
-            description: cut_id
-          - name: price
-            description: price
-          - name: weight
-            description: weight
-          - name: sku_promotion_id
-            description: sku_promotion_id
-          - name: created_at
-            description: created_at
-          - name: updated_at
-            description: updated_at
-          - name: sku_vendor_id
-            description: sku_vendor_id
-
-      - name: sku_pricing_changes
-        description: sku_pricing_changes
-
-        columns:
-          - name: id
-            description: id
-          - name: sku_pricing_changeset_id
-            description: sku_pricing_changeset_id
-          - name: sku_price_id
-            description: sku_price_id
-          - name: action
-            description: action
-          - name: sku_promotion_id
-            description: sku_promotion_id
-          - name: sku_price_change
-            description: sku_price_change
           - name: created_at
             description: created_at
           - name: updated_at
@@ -5787,6 +6177,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: user_id
             description: user_id
           - name: applied
@@ -5802,6 +6195,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: promotion_start
             description: promotion_start
           - name: promotion_end
@@ -5823,6 +6219,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_id
             description: sku_id
           - name: fc_id
@@ -5864,6 +6263,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_id
             description: sku_id
           - name: new_sku_location_id
@@ -5891,6 +6293,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: sku_vendor_id
             description: sku_vendor_id
           - name: fc_id
@@ -5908,6 +6313,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: created_at
@@ -5935,6 +6343,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: name
             description: name
           - name: weight
@@ -6020,6 +6431,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: to_number
             description: to_number
           - name: from_number
@@ -6083,6 +6497,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: vendor_name
             description: vendor_name
           - name: created_at
@@ -6104,6 +6521,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: subscription_id
             description: subscription_id
           - name: user_id
@@ -6149,6 +6569,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: subscription_id
             description: subscription_id
           - name: key
@@ -6166,6 +6589,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: created_at
             description: created_at
           - name: updated_at
@@ -6181,6 +6607,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: product_id
             description: product_id
           - name: product_variant_id
@@ -6196,6 +6625,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: user_id
             description: user_id
           - name: farm_category
@@ -6263,6 +6695,9 @@ sources:
             description: created_at
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: order_id
             description: order_id
           - name: order_token
@@ -6290,6 +6725,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: purpose
             description: purpose
           - name: key
@@ -6307,6 +6745,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: description
             description: description
           - name: user_id
@@ -6330,6 +6771,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: message
             description: message
           - name: status
@@ -6363,6 +6807,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: exception_type
             description: exception_type
           - name: percent_late
@@ -6384,6 +6831,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: pick_list_id
             description: pick_list_id
           - name: carrier
@@ -6407,6 +6857,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: user_id
             description: user_id
           - name: created_at
@@ -6492,6 +6945,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: transfer_request_id
             description: transfer_request_id
           - name: sku_id
@@ -6519,6 +6975,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: date
             description: date
           - name: fc_id
@@ -6545,6 +7004,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: tweet
             description: tweet
           - name: synonym_id
@@ -6558,6 +7020,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: original_url
             description: original_url
           - name: s3_url
@@ -6575,6 +7040,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: created_at
             description: created_at
           - name: updated_at
@@ -6596,6 +7064,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: user_id
             description: user_id
           - name: experiment_id
@@ -6613,6 +7084,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: user_id
             description: user_id
           - name: farm_id
@@ -6630,6 +7104,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: subject
             description: subject
           - name: body_html
@@ -6715,6 +7192,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: promotion_id
             description: promotion_id
           - name: created_at
@@ -6730,6 +7210,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: mean_time_between_orders_in_days
             description: mean_time_between_orders_in_days
           - name: lifetime_spend_cents
@@ -6791,6 +7274,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: rating
             description: rating
           - name: user_id
@@ -6892,6 +7378,9 @@ sources:
             description: full_contact_data_updated_at
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: last_geocoded_address
             description: last_geocoded_address
           - name: last_geocoded_city
@@ -7053,6 +7542,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: key
             description: key
           - name: value
@@ -7064,61 +7556,15 @@ sources:
           - name: description
             description: description
 
-      - name: visits
-        description: visits
-
-        columns:
-          - name: id
-            description: id
-          - name: device_id
-            description: device_id
-          - name: user_id
-            description: user_id
-          - name: session_id
-            description: session_id
-          - name: wall
-            description: wall
-          - name: start_time
-            description: start_time
-          - name: end_time
-            description: end_time
-          - name: pages_visited
-            description: pages_visited
-          - name: created_at
-            description: created_at
-          - name: updated_at
-            description: updated_at
-          - name: utm_source
-            description: utm_source
-          - name: utm_medium
-            description: utm_medium
-          - name: fc_id
-            description: fc_id
-          - name: utm_campaign
-            description: utm_campaign
-          - name: utm_content
-            description: utm_content
-          - name: referrer_url
-            description: referrer_url
-          - name: event_page_visit_count
-            description: event_page_visit_count
-          - name: event_page_visit
-            description: event_page_visit
-          - name: add_to_cart_flag
-            description: add_to_cart_flag
-          - name: add_to_cart_value_cents
-            description: add_to_cart_value_cents
-          - name: purchase
-            description: purchase
-          - name: purchase_amount_cents
-            description: purchase_amount_cents
-
       - name: weathers
         description: weathers
 
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: icon
             description: icon
           - name: alert_title
@@ -7168,6 +7614,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: youtube_token
             description: youtube_token
           - name: title
@@ -7199,6 +7648,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: ticket_id
             description: ticket_id
           - name: requester_id
@@ -7264,6 +7716,9 @@ sources:
         columns:
           - name: id
             description: id
+            tests:
+              - not_null
+              - unique
           - name: category_name
             description: category_name
           - name: message_text

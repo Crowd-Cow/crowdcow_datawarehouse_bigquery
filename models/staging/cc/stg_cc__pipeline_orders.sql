@@ -8,6 +8,7 @@ renamed as (
 
     select
         id as pipeline_order_id
+        , dbt_scd_id as pipeline_order_key
         , special_instructions_changed
         , events_completed_at as events_completed_at_utc
         , inventory_owner_id
@@ -48,6 +49,11 @@ renamed as (
         , fc_delivery_scheduled as is_fc_delivery_scheduled
         , dbt_valid_to
         , dbt_valid_from
+        , case
+            when dbt_valid_from = first_value(dbt_valid_from) over(partition by id order by dbt_valid_from) then '1970-01-01'
+            else dbt_valid_from
+        end as adjusted_dbt_valid_from
+        , coalesce(dbt_valid_to,'2999-01-01') as adjusted_dbt_valid_to
 
     from source
 
