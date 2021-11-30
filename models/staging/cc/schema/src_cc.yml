@@ -901,32 +901,6 @@ sources:
           - name: updated_at
             description: updated_at
 
-      - name: clicks
-        description: clicks
-
-        columns:
-          - name: id
-            description: id
-            tests:
-              - not_null
-              - unique
-          - name: clicked_link_index
-            description: clicked_link_index
-          - name: first_clicked_url
-            description: first_clicked_url
-          - name: first_clicked_anchor
-            description: first_clicked_anchor
-          - name: user_mail_log_entry_id
-            description: user_mail_log_entry_id
-          - name: user_id
-            description: user_id
-          - name: created_at
-            description: created_at
-          - name: updated_at
-            description: updated_at
-          - name: click_value_cents
-            description: click_value_cents
-
       - name: contact_imports
         description: contact_imports
 
@@ -1107,42 +1081,6 @@ sources:
           - name: bid_id
             description: bid_id
 
-      - name: custom_subscription_item_cuts
-        description: custom_subscription_item_cuts
-
-        columns:
-          - name: id
-            description: id
-            tests:
-              - not_null
-              - unique
-          - name: custom_subscription_item_id
-            description: custom_subscription_item_id
-          - name: cut_id
-            description: cut_id
-          - name: created_at
-            description: created_at
-          - name: updated_at
-            description: updated_at
-
-      - name: custom_subscription_item_products
-        description: custom_subscription_item_products
-
-        columns:
-          - name: id
-            description: id
-            tests:
-              - not_null
-              - unique
-          - name: product_id
-            description: product_id
-          - name: custom_subscription_item_id
-            description: custom_subscription_item_id
-          - name: created_at
-            description: created_at
-          - name: updated_at
-            description: updated_at
-
       - name: custom_subscription_items
         description: custom_subscription_items
 
@@ -1310,32 +1248,6 @@ sources:
             description: created_at
           - name: updated_at
             description: updated_at
-
-      - name: cycle_count_skus
-        description: cycle_count_skus
-
-        columns:
-          - name: cycle_count_id
-            description: cycle_count_id
-          - name: sku_id
-            description: sku_id
-          - name: id
-            description: id
-            tests:
-              - not_null
-              - unique
-          - name: physical_count
-            description: physical_count
-          - name: created_at
-            description: created_at
-          - name: updated_at
-            description: updated_at
-          - name: approved_at
-            description: approved_at
-          - name: approved_by_user_id
-            description: approved_by_user_id
-          - name: system_count
-            description: system_count
 
       - name: cycle_count_variances
         description: cycle_count_variances
@@ -3074,26 +2986,6 @@ sources:
             description: forecast_horizon_date
           - name: forecast_quantity
             description: forecast_quantity
-          - name: created_at
-            description: created_at
-          - name: updated_at
-            description: updated_at
-
-      - name: oracle_predictions
-        description: oracle_predictions
-
-        columns:
-          - name: id
-            description: id
-            tests:
-              - not_null
-              - unique
-          - name: bid_id
-            description: bid_id
-          - name: prediction
-            description: prediction
-          - name: prediction_date
-            description: prediction_date
           - name: created_at
             description: created_at
           - name: updated_at
@@ -6279,78 +6171,6 @@ sources:
           - name: updated_at
             description: updated_at
 
-      - name: sku_price_entries
-        description: sku_price_entries
-
-        columns:
-          - name: id
-            description: id
-            tests:
-              - not_null
-              - unique
-          - name: sku_id
-            description: sku_id
-          - name: sku_vendor_id
-            description: sku_vendor_id
-          - name: price_in_cents
-            description: price_in_cents
-          - name: cost_in_cents
-            description: cost_in_cents
-          - name: created_at
-            description: created_at
-          - name: updated_at
-            description: updated_at
-
-      - name: sku_prices
-        description: sku_prices
-
-        columns:
-          - name: id
-            description: id
-            tests:
-              - not_null
-              - unique
-          - name: sku_plan_entry_id
-            description: sku_plan_entry_id
-          - name: cut_id
-            description: cut_id
-          - name: price
-            description: price
-          - name: weight
-            description: weight
-          - name: sku_promotion_id
-            description: sku_promotion_id
-          - name: created_at
-            description: created_at
-          - name: updated_at
-            description: updated_at
-          - name: sku_vendor_id
-            description: sku_vendor_id
-
-      - name: sku_pricing_changes
-        description: sku_pricing_changes
-
-        columns:
-          - name: id
-            description: id
-            tests:
-              - not_null
-              - unique
-          - name: sku_pricing_changeset_id
-            description: sku_pricing_changeset_id
-          - name: sku_price_id
-            description: sku_price_id
-          - name: action
-            description: action
-          - name: sku_promotion_id
-            description: sku_promotion_id
-          - name: sku_price_change
-            description: sku_price_change
-          - name: created_at
-            description: created_at
-          - name: updated_at
-            description: updated_at
-
       - name: sku_pricing_changesets
         description: sku_pricing_changesets
 
@@ -7735,58 +7555,6 @@ sources:
             description: updated_at
           - name: description
             description: description
-
-      - name: visits
-        description: visits
-
-        columns:
-          - name: id
-            description: id
-            tests:
-              - not_null
-              - unique
-          - name: device_id
-            description: device_id
-          - name: user_id
-            description: user_id
-          - name: session_id
-            description: session_id
-          - name: wall
-            description: wall
-          - name: start_time
-            description: start_time
-          - name: end_time
-            description: end_time
-          - name: pages_visited
-            description: pages_visited
-          - name: created_at
-            description: created_at
-          - name: updated_at
-            description: updated_at
-          - name: utm_source
-            description: utm_source
-          - name: utm_medium
-            description: utm_medium
-          - name: fc_id
-            description: fc_id
-          - name: utm_campaign
-            description: utm_campaign
-          - name: utm_content
-            description: utm_content
-          - name: referrer_url
-            description: referrer_url
-          - name: event_page_visit_count
-            description: event_page_visit_count
-          - name: event_page_visit
-            description: event_page_visit
-          - name: add_to_cart_flag
-            description: add_to_cart_flag
-          - name: add_to_cart_value_cents
-            description: add_to_cart_value_cents
-          - name: purchase
-            description: purchase
-          - name: purchase_amount_cents
-            description: purchase_amount_cents
 
       - name: weathers
         description: weathers
