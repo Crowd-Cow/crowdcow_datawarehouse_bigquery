@@ -1,6 +1,6 @@
 with
 
-vendor_tags as ( select * from {{ ref('stg_cc__vendor_tags') }} where dbt_valid_to is null )
+vendor_tags as ( select * from {{ ref('stg_cc__vendor_tags') }} where dbt_valid_to is null ) --uses current record since vendor tags don't seem to change in the snapshot
 ,farm_vendor_tags as ( select * from {{ ref('stg_cc__farm_vendor_tags') }} )
 ,farm as ( select * from {{ ref('stg_cc__farms') }} )
 
