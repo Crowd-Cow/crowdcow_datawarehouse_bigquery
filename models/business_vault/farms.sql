@@ -1,6 +1,6 @@
 with
 
-vendor_tags as ( select * from {{ ref('stg_cc__vendor_tags') }} )
+vendor_tags as ( select * from {{ ref('stg_cc__vendor_tags') }} where dbt_valid_to is null )
 ,farm_vendor_tags as ( select * from {{ ref('stg_cc__farm_vendor_tags') }} )
 ,farm as ( select * from {{ ref('stg_cc__farms') }} )
 
@@ -29,6 +29,7 @@ vendor_tags as ( select * from {{ ref('stg_cc__vendor_tags') }} )
 ,farm_joins as (
     select
         farm.farm_id
+        ,farm.farm_key
         ,farm.farm_token
         ,farm.sku_vendor_id
         ,farm.product_collection_id
@@ -75,6 +76,10 @@ vendor_tags as ( select * from {{ ref('stg_cc__vendor_tags') }} )
         ,farm.is_non_gmo
         ,farm.created_at_utc
         ,farm.updated_at_utc
+        ,farm.dbt_valid_from
+        ,farm.dbt_valid_to
+        ,farm.adjusted_dbt_valid_from
+        ,farm.adjusted_dbt_valid_to
     from farm
         left join cargill_farm_tags on farm.farm_id = cargill_farm_tags.farm_id
         left join edm_farm_tags on farm.farm_id = edm_farm_tags.farm_id

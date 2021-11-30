@@ -1,7 +1,7 @@
 with
 
 bids as ( select * from {{ ref('stg_cc__bids') }} )
-,bid_items as (select * from {{ ref('stg_cc__bid_items') }} where dbt_valid_to is null)
+,bid_items as (select * from {{ ref('stg_cc__bid_items') }} )
 
 ,order_item_joins as (
     select
@@ -26,6 +26,8 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,bids.first_stuck_at_utc
     from bids
         left join bid_items on bids.bid_item_id = bid_items.bid_item_id
+            and bids.created_at_utc >= bid_items.adjusted_dbt_valid_from
+            and bids.created_at_utc < bid_items.adjusted_dbt_valid_to
 )
 
 ,order_item_revenue_calculations as (
