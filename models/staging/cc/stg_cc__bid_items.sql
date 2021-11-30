@@ -1,6 +1,6 @@
 with source as (
 
-  select * from  {{ source('cc', 'bid_items') }} where not _fivetran_deleted
+  select * from  {{ ref('bid_items_ss') }} where not _fivetran_deleted
 
 ),
 
@@ -13,6 +13,7 @@ renamed as (
     , event_id
     , hide_from_user as is_hidden_from_user
     , id as bid_item_id
+    , dbt_scd_id as bid_item_key
     , {{ clean_strings('item_photo_url') }} as bid_item_photo_url
     , {{ cents_to_usd('item_price_cents') }} as bid_item_price_usd
     , {{ clean_strings('item_type') }} as bid_item_type
@@ -35,6 +36,13 @@ renamed as (
     , product_permutation_id
     , automated_highlight_text_type
     , always_available as is_always_available
+    , dbt_valid_to
+    , dbt_valid_from
+    , case
+        when dbt_valid_from = first_value(dbt_valid_from) over(partition by id order by dbt_valid_from) then '1970-01-01'
+        else dbt_valid_from
+      end as adjusted_dbt_valid_from
+    , coalesce(dbt_valid_to,'2999-01-01') as adjusted_dbt_valid_to
 
     from source 
 

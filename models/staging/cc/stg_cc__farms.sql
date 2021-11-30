@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ source('cc', 'farms') }} where not _fivetran_deleted
+    select * from {{ ref('farms_ss') }} where not _fivetran_deleted
 
 ),
 
@@ -8,6 +8,7 @@ renamed as (
 
     select
         id as farm_id
+        , dbt_scd_id as farm_key
         , capsule_tags
         , {{ cents_to_usd('hanging_weight_price_per_pound_cents') }} as hanging_weight_price_per_pound_usd
         , slaughter_payment_terms
@@ -53,6 +54,13 @@ renamed as (
         , active as is_active
         , is_organic
         , is_non_gmo
+        , dbt_valid_to
+        , dbt_valid_from
+        , case
+            when dbt_valid_from = first_value(dbt_valid_from) over(partition by id order by dbt_valid_from) then '1970-01-01'
+            else dbt_valid_from
+        end as adjusted_dbt_valid_from
+        , coalesce(dbt_valid_to,'2999-01-01') as adjusted_dbt_valid_to
 
     from source
 
