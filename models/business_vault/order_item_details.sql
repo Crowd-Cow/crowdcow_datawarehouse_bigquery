@@ -1,7 +1,7 @@
 with
 
 order_item as ( select * from {{ ref('order_items') }})
-,bid_item_skus as ( select * from {{ ref('stg_cc__bid_item_sku_with_quantities') }} )
+,bid_item_skus as ( select * from {{ ref('stg_cc__bid_item_sku_with_quantities') }} where dbt_valid_to is null )
 ,sku as ( select * from {{ ref('skus') }} )
 ,order_packed_skus as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
 ,sku_reservation as ( select * from {{ ref('stg_cc__sku_reservations') }} where dbt_valid_to is null )
