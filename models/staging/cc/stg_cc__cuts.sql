@@ -8,6 +8,7 @@ renamed as (
 
     select
         id as cut_id
+        ,dbt_scd_id as cut_key
         ,sort_order
         ,product_subtype
         ,hard_scan_weight_min

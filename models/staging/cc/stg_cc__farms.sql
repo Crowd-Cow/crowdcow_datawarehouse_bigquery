@@ -8,6 +8,7 @@ renamed as (
 
     select
         id as farm_id
+        , dbt_scd_id as farm_key
         , capsule_tags
         , {{ cents_to_usd('hanging_weight_price_per_pound_cents') }} as hanging_weight_price_per_pound_usd
         , slaughter_payment_terms

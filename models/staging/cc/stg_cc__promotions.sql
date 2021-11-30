@@ -8,6 +8,7 @@ renamed as (
 
     select
         id as promotion_id
+        , dbt_scd_id as promotion_key
         ,{{ clean_strings('promotion_type') }} as promotion_type
         ,always_available as promotion_is_always_available
         ,must_be_assigned_to_user as promotion_must_be_assigned_to_user

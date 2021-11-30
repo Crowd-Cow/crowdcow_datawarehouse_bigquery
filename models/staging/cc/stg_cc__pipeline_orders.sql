@@ -8,6 +8,7 @@ renamed as (
 
     select
         id as pipeline_order_id
+        , dbt_scd_id as pipeline_order_key
         , special_instructions_changed
         , events_completed_at as events_completed_at_utc
         , inventory_owner_id

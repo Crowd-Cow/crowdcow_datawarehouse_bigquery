@@ -8,6 +8,7 @@ renamed as (
 
     select
         id as pipeline_receivables_id
+        , dbt_scd_id as pipeline_receivables_key
         , sku_id
         , quantity
         , marked_destroyed_at as marked_destroyed_at_utc

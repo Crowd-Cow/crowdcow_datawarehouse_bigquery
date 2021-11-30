@@ -8,6 +8,7 @@ renamed as (
 
   select
     id              as ambassador_id
+    ,dbt_scd_id as ambassador_key
     ,user_id
     ,partner_id
     ,sort_order     as ambassador_sort_order -- Appears to be for use in the app

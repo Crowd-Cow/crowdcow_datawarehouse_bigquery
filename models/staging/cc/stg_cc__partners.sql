@@ -8,6 +8,7 @@ renamed as (
 
   select
     id as partner_id
+    ,dbt_scd_id as partner_key
     ,event_id
     ,created_by_user_id as partner_created_by_user_id
     ,street_team_user_id

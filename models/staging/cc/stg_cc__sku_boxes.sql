@@ -8,6 +8,7 @@ renamed as (
 
     select
         id as sku_box_id
+        ,dbt_scd_id as sku_box_key
         ,fc_id as fulfillment_center_id
         ,sku_id
         ,marked_destroyed_at as marked_destroyed_at_utc
@@ -32,6 +33,8 @@ renamed as (
         ,scanned as is_scanned
         ,filled as is_filled
         ,printed as is_printed
+        ,dbt_valid_to
+        ,dbt_valid_from
 
     from source
 

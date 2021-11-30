@@ -9,6 +9,7 @@ renamed as (
 
   select
    id as product_id
+  , dbt_scd_id as product_key
   , {{ clean_strings('title') }} as product_title
   , {{ clean_strings('description') }} as product_description
   , published_at as published_at_utc

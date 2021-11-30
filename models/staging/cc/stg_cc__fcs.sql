@@ -8,6 +8,7 @@ renamed as (
 
     select
         id as fc_id
+        ,dbt_scd_id as fc_key
         ,{{ clean_strings('name') }} as fc_name
         ,{{ clean_strings('street_address_1') }} as fc_address_1
         ,{{ clean_strings('street_address_2') }} as fc_address_2

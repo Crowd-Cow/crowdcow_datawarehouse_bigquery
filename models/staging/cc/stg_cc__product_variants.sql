@@ -9,6 +9,7 @@ renamed as (
 
     select
       id as product_variant_id
+      , dbt_scd_id as product_variant_key
       , {{ cents_to_usd('min_product_bundle_value_in_cents') }} as min_product_bundle_value_usd
       , fc_id 
       , {{ clean_strings('highlight_text') }} as product_variant_highlight_text

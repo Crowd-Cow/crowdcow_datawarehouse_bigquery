@@ -13,6 +13,7 @@ renamed as (
     , event_id
     , hide_from_user as is_hidden_from_user
     , id as bid_item_id
+    , dbt_scd_id as bid_item_key
     , {{ clean_strings('item_photo_url') }} as bid_item_photo_url
     , {{ cents_to_usd('item_price_cents') }} as bid_item_price_usd
     , {{ clean_strings('item_type') }} as bid_item_type
