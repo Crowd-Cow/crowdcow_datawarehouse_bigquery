@@ -2,7 +2,6 @@ with
 
 bid_log as ( select * from {{ ref('stg_cc__autofill_bid_logs') }} )
 ,autofill_order as ( select * from {{ ref('stg_cc__autofill_order_logs') }} )
-,sku as ( select * from {{ ref('skus') }} )
 
 ,autofill_joins as (
     select
