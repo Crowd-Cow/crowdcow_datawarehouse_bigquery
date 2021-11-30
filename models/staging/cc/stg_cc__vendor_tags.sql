@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ source('cc', 'vendor_tags') }} where not _fivetran_deleted
+    select * from {{ ref('vendor_tags_ss') }} where not _fivetran_deleted
 
 ),
 
