@@ -34,6 +34,13 @@ renamed as (
         ,yield_cut as is_yield_cut
         ,named_weight_cut as is_named_weight_cut
         ,sold_by_weight as is_sold_by_weight
+        ,dbt_valid_to
+        ,dbt_valid_from
+        ,case
+            when dbt_valid_from = first_value(dbt_valid_from) over(partition by id order by dbt_valid_from) then '1970-01-01'
+            else dbt_valid_from
+        end as adjusted_dbt_valid_from
+        ,coalesce(dbt_valid_to,'2999-01-01') as adjusted_dbt_valid_to
 
     from source
 

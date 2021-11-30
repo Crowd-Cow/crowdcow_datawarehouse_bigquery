@@ -36,6 +36,10 @@ renamed as (
     , product_permutation_id
     , automated_highlight_text_type
     , always_available as is_always_available
+    , dbt_valid_to
+    , dbt_valid_from
+    
+    -- dbt dates and adjusted
 
     from source 
 

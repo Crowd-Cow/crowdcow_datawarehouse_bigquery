@@ -130,7 +130,13 @@ models:
         description: Binary field fo fc delivery scheduled
 
       - name: dbt_valid_to
-        description: Valid to field
+        description: dbt valid to timestamps
 
       - name: dbt_valid_from
-        description: Valid from field
+        description: dbt valid from timestamps
+
+      - name: adjusted_dbt_valid_from
+        description: "`dbt_valid_from` date adjusted to '1970-01-01' for the first historical record in order to allow for joins to other tables that have records that are older than the first historical record captured"
+
+      - name: adjusted_dbt_valid_to
+        description: "`dbt_valid_to` date adjusted to '2999-01-01' for the current historical record (`dbt_valid_to is null`). This allows joins to other tables that might have dates that are in the future that need information from the current historical record"
