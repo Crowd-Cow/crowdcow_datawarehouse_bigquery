@@ -4,25 +4,34 @@ models:
   - name: stg_reference__date_spine
     description: "Date spine reference table for dates from 2018-01-01 through current day"
     columns:
-      - name: date_day
+      - name: calendar_date
         description: "A given date"
         tests:
             - unique
             - not_null
 
-      - name: date_week
+      - name: calendar_date_week
         description: "The date for the beginning of the week for the given date"
 
-      - name: date_month
+      - name: calendar_date_week_sun
+        description: "The date for the beginning of the week (Sunday)"
+
+      - name: calendar_date_month
         description: "The date for beginning of the month for the given date"
 
-      - name: date_calendar_quarter
+      - name: calendar_month_of_year
+        description: "The calendar month of year"
+
+      - name: calendar_month_end_date
+        description: "The last day of the month"
+
+      - name: calendar_date_quarter
         description: "The date for the beginning of the calendar quarter for the given date"
 
-      - name: date_year
+      - name: calendar_date_year
         description: "The date for the beginning of the year for the given date"
 
-      - name: week_of_year
+      - name: calendar_week_of_year
         description: "The number of the week for the year of a given date "
 
       - name: calendar_quarter_of_year
@@ -34,6 +43,17 @@ models:
       - name: day_name
         description: "The short name of the day of week (e.g. Mon., Tue., etc)"
 
+      - name: calendar_year_number
+        description: "The four digit year number"
+
+      - name: fiscal_year_start
+        description: "The first date for the new fiscal year. For the Crowd Cow calendar this is the first Sunday of each year"
+
+      - name: fiscal_year_end
+        description: "The last date of the Crowd Cow fiscal year"
+
       - name: is_weekend
         description: "A boolean that represents if the date is a weekend, Saturday or Sunday"
 
+      - name: is_53_wk_year
+        description: "Boolean indicating if the current fiscal year is 53 week year"
