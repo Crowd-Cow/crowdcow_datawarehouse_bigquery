@@ -1,7 +1,7 @@
 with
 
 bids as ( select * from {{ ref('stg_cc__bids') }} )
-,bid_items as (select * from {{ ref('stg_cc__bid_items') }})
+,bid_items as (select * from {{ ref('stg_cc__bid_items') }} where dbt_valid_to is null)
 
 ,order_item_joins as (
     select
