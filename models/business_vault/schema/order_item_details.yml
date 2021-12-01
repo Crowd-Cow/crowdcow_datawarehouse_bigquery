@@ -2,14 +2,14 @@ version: 2
 
 models:
   - name: order_item_details
-    description: "Business logic to show SKUs that were part of an order. Both SKUs that were ordered and what SKUs were eventually packed"
+    description: "Business logic for order item details"
     columns:
       - name: order_item_details_id
-        description: Surrogate key to make order items details records unique. Combination of `order_id`,`bid_id`,`bid_item_id`,`ordered_sku_id`, and `packed_sku_id`
+        description: "Surrogate key for an order item to test for uniqueness. The key is a combination of `order_id`, `bid_id`, `bid_item_id`, and `sku_id`"
         tests:
           - unique
           - not_null
-      
+
       - name: order_id
         description: "Order ID"
 
@@ -19,44 +19,45 @@ models:
       - name: bid_item_id
         description: "Bid item ID"
 
-      - name: product_id
-        description: "Product ID"
+      - name: sku_id
+        description: "SKU ID"
 
-      - name: ordered_sku_id
-        description: "The SKU ID associated with the bid that was originally ordered by the customer"
-
-      - name: packed_sku_id
-        description: "The SKU ID associated with the item that was actually packed in the order"
-
-      - name: ordered_sku_key
-        description: SKU key to join the `ordered_sku_id` to the SKU information that is relevant at the time of the `created_at_utc` of the item
-
-      - name: packed_sku_key
-        description: SKU key to join the `packed_sku_id` to the SKU information that is relevant at the time of the `created_at_utc` of the item
-
-      - name: bid_item_type
-        description: "Ordered bid item type"
-
-      - name: bid_item_subtype
-        description: "Ordered bid item subtype"
-
-      - name: product_name
-        description: "Ordered bid product"
+      - name: sku_key
+        description: "The SKU key that can be used to join to SKUs to get the appropriate historical information for the SKU at the time the bid was created"
 
       - name: bid_item_name
-        description: "Ordered bid item name"
+        description: "Bid item name"
 
-      - name: ordered_sku_quantity
-        description: "Ordered SKU quantity"
+      - name: bid_quantity
+        description: "The quantity of bids added for this order"
 
-      - name: packed_sku_quantity
-        description: "Packed SKU quantity"
+      - name: sku_quantity
+        description: "The quantity of SKUs for this particular bid item"
 
-      - name: is_order_packed
-        description: "Boolean indicating if the order has been packed yet"
+      - name: item_sku_quantity
+        description: "The total number of SKUs for this item. The number of SKUs contained in the bid item times the number of bids added for this order (bid quantity)"
 
-      - name: is_ordered_sku_packed
-        description: "Boolean indicating if the SKU that was ordered is the same one that eventually got packed"
+      - name: bid_list_price_usd
+        description: "The list price of the bid that was captured at the time the bid was created"
 
-      - name: created_at_utc
-        description: "Timestamp of when the order item was created in the system UTC"
+      - name: order_item_revenue
+        description: "The list price of the bid times the quantity of bids for the order"
+
+      - name: sku_price_usd
+        description: "The price of the SKU at the time the bid was created"
+
+      - name: sku_price_proportion
+        description: "The proportion of the order item revenue that can be attributed to the given SKU"
+
+      - name: total_sku_price
+        description: "The total numbers of SKUS (sku quantity * bid quantity) times the price of the SKU at the time the bid was created"
+
+      - name: sku_product_revenue
+        description: "If the bid item is a single SKU bid item, the SKU product revenue is the order item revenue. Otherwise it is the sku price proportion times the order item revenue to get the amount of order item revenue attributed to that SKU"
+
+      - name: bid_created_at_utc
+        description: "Timestamp for when the bid was created UTC"
+
+      - name: bid_updated_at_utc
+        description: "Timestamp for when the bid was updated by the system UTC"
+
