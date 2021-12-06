@@ -22,7 +22,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
     select distinct
         order_id
     from shipping_credit
-    where credit_type = 'FREE SHIPPING'
+    where credit_type = 'FREE_SHIPPING'
 )
 
 ,flags as (
