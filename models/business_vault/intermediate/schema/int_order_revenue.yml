@@ -6,6 +6,9 @@ models:
     columns:
       - name: order_id
         description: "Order ID"
+        tests:
+            - unique
+            - not_null
 
       - name: order_shipping_fee_usd
         description: "The shipping revenue for an order"
