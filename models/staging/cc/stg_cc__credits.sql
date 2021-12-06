@@ -18,7 +18,7 @@ renamed as (
         ,order_id
         ,bid_id
         ,updated_at as updated_at_utc
-        ,description as credit_description
+        ,{{ clean_strings('description') }} as credit_description
         ,{{ convert_percent('discount_percent') }} as discount_percent
         ,hide_from_user as is_hidden_from_user
         ,controlled_by_promotion as is_controlled_by_promotion
