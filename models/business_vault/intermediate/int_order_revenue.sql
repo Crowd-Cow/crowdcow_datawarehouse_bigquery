@@ -19,6 +19,35 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         order_id
         ,sum(discount_percent) as discount_percent
         ,sum(credit_discount_usd) as discount_amount_usd
+
+        /**** Breakdown the total credit for an order into various credit categories for financial reporting in Looker ****/
+        ,zeroifnull(sum(case when credit_type = 'FREE_SHIPPING' then credit_discount_usd end)) as free_shipping_credits
+        ,zeroifnull(sum(case when awarded_cow_cash_entry_type = 'CUSTOMER_SERVICE' and awarded_cow_cash_message not like '%GIVEAWAY%' then credit_discount_usd end)) as cs_cow_cash_credits
+        ,zeroifnull(sum(case when awarded_cow_cash_entry_type = 'GIFT_CARD' then credit_discount_usd end)) as redeemed_gift_card_credit
+        
+        ,zeroifnull(
+            sum(
+                case when credit_description like any ('%REPLACEMENT%','%MISSING%','%LOST%','%STRIPE%','%ALREADY PAID%'
+                                    ,'%PAID FOR%','%MANUAL%','%PREPAYMENT%','%PRE_PAYMENT%','%PREORDER%'
+                                    ,'%PRE_ORDER%','%PRESALE%','%PRE_SALE%') 
+                then credit_discount_usd end
+            )
+        ) as replacement_item_credits
+        
+        ,zeroifnull(
+            sum(
+                case when credit_description like any ('%EVENT%','%SAMPLE%','%TASTING%','%INFLUENCER%','%GIVEAWAY%','%GIFT%','%MARKETING%')
+                    or awarded_cow_cash_message like '%GIVEAWAY%'
+                then credit_discount_usd end
+            )
+        ) as marketing_pr_credits
+        
+        ,zeroifnull(sum(case when awarded_cow_cash_entry_type = 'PROMOTION' or awarded_cow_cash_message like '%POSTCARD%' then credit_discount_usd end)) as other_credits
+        ,zeroifnull(sum(case when credit_type = 'SUBSCRIPTION_FIVE_PERCENT' then credit_discount_usd end)) as subscriber_five_pct_credits
+        ,zeroifnull(sum(case when awarded_cow_cash_entry_type = 'BULK_ORDER' then credit_discount_usd end)) as corp_gifts
+        ,zeroifnull(sum(case when awarded_cow_cash_entry_type = 'REFERRAL' then credit_discount_usd end)) as sales_marketing_referral
+        ,zeroifnull(sum(case when credit_type = 'GIFT_CODE_DOLLAR_AMOUNT' then credit_discount_usd end)) as new_customer_referral
+
     from credit
     group by 1
 )
