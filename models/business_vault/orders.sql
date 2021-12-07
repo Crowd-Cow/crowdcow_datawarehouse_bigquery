@@ -30,7 +30,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(order_revenue.product_revenue_usd) as product_revenue_usd
         ,zeroifnull(order_revenue.order_shipping_fee_usd) as shipping_revenue_usd    
         ,zeroifnull(order_revenue.discount_percent) as discount_percent
-        ,zeroifnull(order_revenue.discount_amount_usd) as discount_amount_usd
+        ,zeroifnull(order_revenue.total_order_discount) as total_order_discount
         ,zeroifnull(order_revenue.refund_amount_usd) as refund_amount_usd
         ,zeroifnull(order_revenue.net_revenue_usd) as net_revenue_usd
         ,flags.has_free_shipping
