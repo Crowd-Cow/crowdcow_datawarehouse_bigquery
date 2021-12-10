@@ -8,5 +8,5 @@ dbt seed
 dbt snapshot
 dbt run
 dbt test
-dbt run-operation swap_database --args '{db: analytics, swap_with: analtyics_qa}'
+dbt run-operation swap_database --args '{db: analytics, swap_with: analytics_qa}'
 dbt run-operation drop_database --args '{db: analytics_qa}'
