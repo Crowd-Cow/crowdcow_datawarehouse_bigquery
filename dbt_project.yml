@@ -41,3 +41,6 @@ models:
     marts:
       +materialized: table
       +schema: datawarehouse
+
+tests:
+  +store_failures: true
