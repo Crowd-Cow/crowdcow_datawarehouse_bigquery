@@ -17,8 +17,6 @@ models:
 
       - name: user_type
         description: "User Type"
-        tests:
-          - unique
 
       - name: user_email
         description: "User email"
