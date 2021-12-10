@@ -25,29 +25,36 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(sum(case when credit_type = 'FREE_SHIPPING' then credit_discount_usd end)) as free_shipping_credit
         ,zeroifnull(sum(case when awarded_cow_cash_entry_type = 'CUSTOMER_SERVICE' and awarded_cow_cash_message not like '%GIVEAWAY%' then credit_discount_usd end)) as cs_cow_cash_credit
         ,zeroifnull(sum(case when awarded_cow_cash_entry_type = 'GIFT_CARD' then credit_discount_usd end)) as redeemed_gift_card_credit
+        ,zeroifnull(sum(case when is_new_member_promotion then credit_discount_usd end)) as new_member_promotion_credit
         
         ,zeroifnull(
             sum(
-                case when credit_description like any ('%REPLACEMENT%','%MISSING%','%LOST%','%STRIPE%','%ALREADY PAID%'
-                                    ,'%PAID FOR%','%MANUAL%','%PREPAYMENT%','%PRE_PAYMENT%','%PREORDER%'
-                                    ,'%PRE_ORDER%','%PRESALE%','%PRE_SALE%','%LATE%','%THAW%') 
+                case when credit_description like any ('%REPLACE%','%MISSING%','%LOST%','%STRIPE%','%ALREADY PAID%'
+                                    ,'%PAID FOR%','%MANUAL%','%PREPAYMENT%','%PRE_PAYMENT%','%PREORDER%','%QUALITY%','%ARRIVE%'
+                                    ,'%PRE_ORDER%','%PRESALE%','%PRE_SALE%','%LATE%','%THAW%','%RECEIVED%','%FAIL%','%DELAY%'
+                                    ,'%SHIPPED%','%NOT%SHIP%','%WRONG%','%DAMAGE%','%ACCURACY%') 
+                                    and credit_description not like '%WHOLESALE%'
                 then credit_discount_usd end
             )
         ) as replacement_item_credit
         
         ,zeroifnull(
             sum(
-                case when credit_description like any ('%EVENT%','%SAMPLE%','%TASTING%','%INFLUENCER%','%GIVEAWAY%','%GIFT%','%MARKETING%')
-                    or awarded_cow_cash_message like '%GIVEAWAY%'
+                case when (credit_description like any ('%EVENT%','%SAMPLE%','%TASTING%','%INFLUENCER%','%GIVEAWAY%','%GIFT%','%MARKETING%')
+                    or awarded_cow_cash_message like '%GIVEAWAY%') and not(credit_description like any ('%REPLACE%','%THAW%'))
                 then credit_discount_usd end
             )
         ) as marketing_pr_credit
         
         ,zeroifnull(sum(case when awarded_cow_cash_entry_type = 'PROMOTION' or awarded_cow_cash_message like '%POSTCARD%' then credit_discount_usd end)) as cow_cash_promotion_credit
+        ,zeroifnull(sum(case when awarded_cow_cash_entry_type = 'GIFT_CARD_PROMOTION' then credit_discount_usd end)) as cow_cash_gift_card_promotion_credit
         ,zeroifnull(sum(case when credit_type = 'SUBSCRIPTION_FIVE_PERCENT' then credit_discount_usd end)) as subscriber_five_pct_credit
         ,zeroifnull(sum(case when awarded_cow_cash_entry_type = 'BULK_ORDER' then credit_discount_usd end)) as corp_gift_credit
-        ,zeroifnull(sum(case when awarded_cow_cash_entry_type = 'REFERRAL' then credit_discount_usd end)) as sales_marketing_referral_credit
-        ,zeroifnull(sum(case when credit_type = 'GIFT_CODE_DOLLAR_AMOUNT' then credit_discount_usd end)) as new_customer_referral_credit
+        ,zeroifnull(sum(case when awarded_cow_cash_entry_type like '%REFER%' then credit_discount_usd end)) as sales_marketing_referral_credit
+        ,zeroifnull(sum(case when credit_type = 'GIFT_CODE_DOLLAR_AMOUNT' or promotion_type = 'GIFT_CODE_PROMOTION' then credit_discount_usd end)) as new_customer_referral_credit
+        ,zeroifnull(sum(case when awarded_cow_cash_entry_type like '%RETENTION%' then credit_discount_usd end)) as customer_retention_credit
+        ,zeroifnull(sum(case when credit_description like '%INR%' then credit_discount_usd end)) as inr_credit
+        ,zeroifnull(sum(case when credit_type = 'DOLLAR_AMOUNT' and credit_description like '%PRICE%' and credit then credit_discount_usd end)) as price_match_credit
 
     from credit
     group by 1
@@ -74,13 +81,18 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(credit_amounts.free_shipping_credit) as free_shipping_credit
         ,zeroifnull(credit_amounts.cs_cow_cash_credit) as cs_cow_cash_credit
         ,zeroifnull(credit_amounts.redeemed_gift_card_credit) as redeemed_gift_card_credit
+        ,zeroifnull(credit_amounts.new_member_promotion_credit) as new_member_promotion_credit
         ,zeroifnull(credit_amounts.replacement_item_credit) as replacement_item_credit
         ,zeroifnull(credit_amounts.marketing_pr_credit) as marketing_pr_credit
         ,zeroifnull(credit_amounts.cow_cash_promotion_credit) as cow_cash_promotion_credit
+        ,zeroifnull(credit_amounts.cow_cash_gift_card_promotion_credit) as cow_cash_gift_card_promotion_credit
         ,zeroifnull(credit_amounts.subscriber_five_pct_credit) as subscriber_five_pct_credit
         ,zeroifnull(credit_amounts.corp_gift_credit) as corp_gift_credit
         ,zeroifnull(credit_amounts.sales_marketing_referral_credit) as sales_marketing_referral_credit
         ,zeroifnull(credit_amounts.new_customer_referral_credit) as new_customer_referral_credit
+        ,zeroifnull(credit_amounts.customer_retention_credit) as customer_retention_credit
+        ,zeroifnull(credit_amounts.inr_credit) as inr_credit
+        ,zeroifnull(credit_amounts.price_match_credit) as price_match_credit
     from orders
         left join bid_amounts on orders.order_id = bid_amounts.order_id
         left join credit_amounts on orders.order_id = credit_amounts.order_id
@@ -118,13 +130,18 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 
         ,cs_cow_cash_credit
         ,redeemed_gift_card_credit
+        ,new_member_promotion_credit
         ,replacement_item_credit
         ,marketing_pr_credit
         ,cow_cash_promotion_credit
+        ,cow_cash_gift_card_promotion_credit
         ,subscriber_five_pct_credit
         ,corp_gift_credit
         ,sales_marketing_referral_credit
         ,new_customer_referral_credit
+        ,customer_retention_credit
+        ,inr_credit
+        ,price_match_credit
     from revenue_joins
 )
 
@@ -143,13 +160,18 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,free_shipping_credit
         ,cs_cow_cash_credit
         ,redeemed_gift_card_credit
+        ,new_member_promotion_credit
         ,replacement_item_credit
         ,marketing_pr_credit
         ,cow_cash_promotion_credit
+        ,cow_cash_gift_card_promotion_credit
         ,subscriber_five_pct_credit
         ,corp_gift_credit
         ,sales_marketing_referral_credit
         ,new_customer_referral_credit
+        ,customer_retention_credit
+        ,inr_credit
+        ,price_match_credit
     from fix_shipping_credits
 )
 
