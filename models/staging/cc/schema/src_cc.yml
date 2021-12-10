@@ -7730,3 +7730,60 @@ sources:
           - name: updated_at
             description: updated_at
 
+  - name: stripe
+    database: raw
+    schema: stripe
+    tables:
+      - name: refund
+        description: Refund transactions to customer payment method via Stripe
+        columns:
+          - name: id
+            description: Unique ID for the Stripe refund transaction
+            tests:
+              - unique
+              - not_null
+
+          - name: amount
+            description: Refund amount in cents
+
+          - name: connected_account_id
+            description: Connected account ID
+
+          - name: created
+            description: Timestamp for when the refund transaction was created UTC
+
+          - name: currency
+            description: The currency of the refund amount
+
+          - name: description
+            description: Refund description
+
+          - name: failure_reason
+            description: The reason the refund transaction failed
+
+          - name: metadata
+            description: A JSON blog that can contain meta data for the refund transaction. Value is blank most of the time
+
+          - name: reason
+            description: Reason for the refund (e.g. requested by customer, fraudulent, etc.)
+
+          - name: receipt_number
+            description: ID for the refund receipt
+
+          - name: status
+            description: Status of the refund (e.g. succeeded, etc.)
+
+          - name: balance_transaction_id
+            description: ID to tie the refund back to the balance transaction table in Stripe
+
+          - name: charge_id
+            description: ID to tie the refund back to the original charge on the customer payment method. This charge ID is also stored for paid order in `cc.orders`
+
+          - name: failure_balance_transaction_id
+            description: Failure balance transaction ID
+
+          - name: payment_intent_id
+            description: Payment intent ID
+
+          - name: _fivetran_synced
+            description: Timestamp for when the record was synced by Fivetran to the `raw` database in Snowflake
