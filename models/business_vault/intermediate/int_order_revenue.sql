@@ -54,7 +54,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(sum(case when credit_type = 'GIFT_CODE_DOLLAR_AMOUNT' or promotion_type = 'GIFT_CODE_PROMOTION' then credit_discount_usd end)) as new_customer_referral_credit
         ,zeroifnull(sum(case when awarded_cow_cash_entry_type like '%RETENTION%' then credit_discount_usd end)) as customer_retention_credit
         ,zeroifnull(sum(case when credit_description like '%INR%' then credit_discount_usd end)) as inr_credit
-        ,zeroifnull(sum(case when credit_type = 'DOLLAR_AMOUNT' and credit_description like '%PRICE%' and credit then credit_discount_usd end)) as price_match_credit
+        ,zeroifnull(sum(case when credit_type = 'DOLLAR_AMOUNT' and credit_description like '%PRICE%' then credit_discount_usd end)) as price_match_credit
 
     from credit
     group by 1
@@ -62,7 +62,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 
 ,refund_amounts as (
     select
-        order_id
+        stripe_charge_id
         ,sum(refund_amount_usd) as refund_amount_usd
     from refund
     group by 1
@@ -96,7 +96,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
     from orders
         left join bid_amounts on orders.order_id = bid_amounts.order_id
         left join credit_amounts on orders.order_id = credit_amounts.order_id
-        left join refund_amounts on orders.order_id = refund_amounts.order_id
+        left join refund_amounts on orders.stripe_charge_id = refund_amounts.stripe_charge_id
 )
 
 ,fix_shipping_credits as (

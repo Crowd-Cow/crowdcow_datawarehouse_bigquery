@@ -14,8 +14,8 @@ renamed as (
         ,{{ clean_strings('reason') }} as refund_reason
         ,receipt_number
         ,{{ clean_strings('status') }} as refund_status
-        ,{{ clean_strings('balance_transaction_id') }} as stripe_balance_transaction_id
-        ,{{ clean_strings('charge_id') }} as stripe_charge_id
+        ,balance_transaction_id as stripe_balance_transaction_id
+        ,charge_id as stripe_charge_id
 
     from source
 
