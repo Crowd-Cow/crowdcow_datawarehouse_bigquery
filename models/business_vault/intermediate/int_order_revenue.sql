@@ -58,7 +58,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,refund_amount_usd
         ,case when parent_order_id is not null
                         then product_revenue_usd
-                else product_revenue_usd + order_shipping_fee_usd - (discount_amount_usd + order_item_discount_usd) - refund_amount_usd end
+                else product_revenue_usd + order_shipping_fee_usd - (discount_amount_usd + order_item_discount_usd) - refund_amount_usd end as net_revenue_usd
     from revenue_joins
 )
 
