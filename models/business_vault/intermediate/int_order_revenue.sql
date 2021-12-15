@@ -55,7 +55,6 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,discount_amount_usd + order_item_discount_usd as discount_amount_usd
         ,discount_percent
         ,refund_amount_usd
-        ,product_revenue_usd + order_shipping_fee_usd - (discount_amount_usd + order_item_discount_usd) - refund_amount_usd as net_revenue_usd
     from revenue_joins
 )
 
