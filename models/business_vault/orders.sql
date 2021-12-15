@@ -32,11 +32,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(order_revenue.discount_percent) as discount_percent
         ,zeroifnull(order_revenue.discount_amount_usd) as discount_amount_usd
         ,zeroifnull(order_revenue.refund_amount_usd) as refund_amount_usd
-        ,zeroifnull(
-            case when orders.parent_order_id is not null
-                        then product_revenue_usd
-                else gross_revenue_usd - (discount_amount_usd + order_item_discount_usd) - refund_amount_usd end
-                    ) as net_revenue_usd
+        ,zeroifnull(order_refenue.net_revenue_usd) as net_revenue_usd
         ,flags.has_free_shipping
         ,flags.is_ala_carte_order
         ,flags.is_membership_order
