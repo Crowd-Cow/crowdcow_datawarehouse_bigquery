@@ -1,12 +1,8 @@
 with
 
-{# orders as ( select * from {{ ref('stg_cc__orders') }} )
-
-, #}
  is_bundle as ( select bid_item_id, bid_item_key from {{ ref('int_bid_item_skus') }} where is_single_sku_bid_item = false )
-/*  Do I need to use any */ 
 
-, category_reassignment as ( 
+,category_reassignment as ( 
     select distinct order_id
         , bid_id 
         , bid_quantity
@@ -15,7 +11,7 @@ with
     left join {{ ref('skus') }} on skus.sku_key = order_item_details.sku_key
 )
 
-, units_by_category as ( 
+,units_by_category as ( 
     select distinct order_id
         , sum(case when modified_category = 'BEEF' then bid_quantity else 0 end) as beef_units
         , sum(case when modified_category = 'BISON' then bid_quantity else 0 end) as bison_units
@@ -39,7 +35,7 @@ with
     group by 1
 )
 
-, pct_category as (
+,pct_category as (
     select distinct order_id
         , beef_units/total_units as pct_beef
         , bison_units/total_units as pct_bison
