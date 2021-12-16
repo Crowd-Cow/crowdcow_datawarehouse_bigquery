@@ -36,6 +36,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,coalesce(farm.is_cargill,FALSE) as is_cargill
         ,coalesce(farm.is_edm,FALSE) as is_edm
         ,coalesce(sku_vendor.is_marketplace,FALSE) as is_marketplace
+        ,sku_vendor.sku_vendor_name
         ,sku.vendor_funded_discount_start_at_utc
         ,sku.vendor_funded_discount_end_at_utc
         ,sku.promotion_start_at_utc
