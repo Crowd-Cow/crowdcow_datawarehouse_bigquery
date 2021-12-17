@@ -8,7 +8,7 @@ models:
         description: "Order ID"
         tests:
           - unique
-          - not null 
+          - not_null 
 
       - name: beef_units
         description: "Units assigned to the category beef"
