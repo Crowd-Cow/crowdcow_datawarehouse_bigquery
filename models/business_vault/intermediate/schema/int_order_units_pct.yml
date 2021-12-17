@@ -6,6 +6,9 @@ models:
     columns:
       - name: order_id
         description: "Order ID"
+        tests:
+          - unique
+          - not null 
 
       - name: beef_units
         description: "Units assigned to the category beef"
