@@ -57,4 +57,27 @@ with
     from units_by_category
 )
 
-select * from pct_category
+, join_units_pct as ( 
+    select units_by_category.*
+        ,pct_beef
+        ,pct_bison
+        ,pct_chicken
+        ,pct_desserts
+        ,pct_duck
+        ,pct_game_meat
+        ,pct_japanese_wagyu
+        ,pct_lamb
+        ,pct_pet_food
+        ,pct_plant_based_proteins
+        ,pct_pork
+        ,pct_salts_seasonings
+        ,pct_seafood
+        ,pct_starters_sides
+        ,pct_turkey
+        ,pct_wagyu
+        ,pct_bundle 
+    from units_by_category
+    left join pct_category on pct_category.order_id = units_by_category.order_id
+) 
+
+select * from join_units_pct
