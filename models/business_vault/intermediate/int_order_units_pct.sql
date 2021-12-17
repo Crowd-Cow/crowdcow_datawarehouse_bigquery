@@ -1,18 +1,18 @@
 with
-
- is_bundle as ( select bid_item_id, bid_item_key from {{ ref('int_bid_item_skus') }} where is_single_sku_bid_item = false )
+order_item_details as ( select * from {{ ref('order_item_details') }} )
+, skus as ( select * from {{ ref('skus') }} )
 
 ,category_reassignment as ( 
     select distinct order_id
         ,bid_id 
         ,bid_quantity
-        ,case when bid_item_id in (select bid_item_id from is_bundle) then 'BUNDLE' else category end as modified_category
-    from {{ ref('order_item_details') }}
-    left join {{ ref('skus') }} on skus.sku_key = order_item_details.sku_key
+        ,case when NOT is_single_sku_bid_item then 'BUNDLE' else category end as modified_category
+    from order_item_details
+    left join skus on skus.sku_key = order_item_details.sku_key
 )
 
 ,units_by_category as ( 
-    select distinct order_id
+    select order_id
         ,sum(case when modified_category = 'BEEF' then bid_quantity else 0 end) as beef_units
         ,sum(case when modified_category = 'BISON' then bid_quantity else 0 end) as bison_units
         ,sum(case when modified_category = 'CHICKEN' then bid_quantity else 0 end) as chicken_units
@@ -30,54 +30,31 @@ with
         ,sum(case when modified_category = 'TURKEY' then bid_quantity else 0 end) as turkey_units
         ,sum(case when modified_category = 'WAGYU' then bid_quantity else 0 end) as wagyu_units
         ,sum(case when modified_category = 'BUNDLE' then bid_quantity else 0 end) as bundle_units
-        ,zeroifnull(sum(bid_quantity)) as total_units
+        ,sum(bid_quantity) as total_units
     from category_reassignment
     group by 1
 )
 
 ,pct_category as (
-    select distinct order_id
-        ,beef_units/total_units as pct_beef
-        ,bison_units/total_units as pct_bison
-        ,chicken_units/total_units as pct_chicken
-        ,desserts_units/ total_units as pct_desserts
-        ,duck_units/ total_units as pct_duck
-        ,game_meat_units/ total_units as pct_game_meat
-        ,japanese_wagyu_units/ total_units as pct_japanese_wagyu
-        ,lamb_units/ total_units as pct_lamb
-        ,pet_food_units/ total_units as pct_pet_food
-        ,plant_based_proteins_units/ total_units as pct_plant_based_proteins
-        ,pork_units/ total_units as pct_pork
-        ,salts_seasonings_units/ total_units as pct_salts_seasonings
-        ,seafood_units/ total_units as pct_seafood
-        ,starters_sides_units/ total_units as pct_starters_sides
-        ,turkey_units/ total_units as pct_turkey
-        ,wagyu_units/ total_units as pct_wagyu
-        ,bundle_units/ total_units as pct_bundle
+    select units_by_category.*
+        ,div0(beef_units,total_units) as pct_beef
+        ,div0(bison_units,total_units) as pct_bison
+        ,div0(chicken_units,total_units) as pct_chicken
+        ,div0(desserts_units, total_units) as pct_desserts
+        ,div0(duck_units,total_units) as pct_duck
+        ,div0(game_meat_units,total_units) as pct_game_meat
+        ,div0(japanese_wagyu_units,total_units) as pct_japanese_wagyu
+        ,div0(lamb_units,total_units) as pct_lamb
+        ,div0(pet_food_units,total_units) as pct_pet_food
+        ,div0(plant_based_proteins_units,total_units) as pct_plant_based_proteins
+        ,div0(pork_units,total_units) as pct_pork
+        ,div0(salts_seasonings_units,total_units) as pct_salts_seasonings
+        ,div0(seafood_units,total_units) as pct_seafood
+        ,div0(starters_sides_units,total_units) as pct_starters_sides
+        ,div0(turkey_units,total_units) as pct_turkey
+        ,div0(wagyu_units,total_units) as pct_wagyu
+        ,div0(bundle_units,total_units) as pct_bundle
     from units_by_category
 )
 
-, join_units_pct as ( 
-    select units_by_category.*
-        ,pct_beef
-        ,pct_bison
-        ,pct_chicken
-        ,pct_desserts
-        ,pct_duck
-        ,pct_game_meat
-        ,pct_japanese_wagyu
-        ,pct_lamb
-        ,pct_pet_food
-        ,pct_plant_based_proteins
-        ,pct_pork
-        ,pct_salts_seasonings
-        ,pct_seafood
-        ,pct_starters_sides
-        ,pct_turkey
-        ,pct_wagyu
-        ,pct_bundle 
-    from units_by_category
-    left join pct_category on pct_category.order_id = units_by_category.order_id
-) 
-
-select * from join_units_pct
+select * from pct_category

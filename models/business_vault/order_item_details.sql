@@ -97,6 +97,7 @@ order_item as ( select * from {{ ref('order_items') }} )
         ,sku_price_proportion
         ,total_sku_price
         ,sku_product_revenue
+        ,is_single_sku_bid_item
         ,bid_created_at_utc
         ,bid_updated_at_utc
     from sku_calculations
