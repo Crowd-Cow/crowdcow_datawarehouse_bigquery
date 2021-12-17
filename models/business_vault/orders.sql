@@ -4,6 +4,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,order_revenue as ( select * from {{ ref('int_order_revenue') }} )
 ,flags as ( select * from {{ ref('int_order_flags') }} )
 ,ranks as ( select * from {{ ref('int_order_ranks') }} )
+,units as ( select * from {{ ref('int_order_units_pct') }} )
 
 ,order_joins as (
     select
@@ -75,10 +76,45 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.order_first_stuck_at_utc
         ,orders.order_scheduled_fulfillment_date_utc
         ,orders.order_scheduled_arrival_date_utc
+        ,units.beef_units
+        ,units.bison_units
+        ,units.chicken_units
+        ,units.desserts_units
+        ,units.duck_units
+        ,units.game_meat_units
+        ,units.japanese_wagyu_units
+        ,units.lamb_units
+        ,units.pet_food_units
+        ,units.plant_based_proteins_units
+        ,units.pork_units
+        ,units.salts_seasonings_units
+        ,units.seafood_units
+        ,units.starters_sides_units
+        ,units.turkey_units
+        ,units.wagyu_units
+        ,units.bundle_units
+        ,units.pct_beef
+        ,units.pct_bison
+        ,units.pct_chicken
+        ,units.pct_desserts
+        ,units.pct_duck
+        ,units.pct_game_meat
+        ,units.pct_japanese_wagyu
+        ,units.pct_lamb
+        ,units.pct_pet_food
+        ,units.pct_plant_based_proteins
+        ,units.pct_pork
+        ,units.pct_salts_seasonings
+        ,units.pct_seafood
+        ,units.pct_starters_sides
+        ,units.pct_turkey
+        ,units.pct_wagyu
+        ,units.pct_bundle
     from orders
         left join order_revenue on orders.order_id = order_revenue.order_id
         left join flags on orders.order_id = flags.order_id
         left join ranks on orders.order_id = ranks.order_id
+        left join units on orders.order_id = units.order_id
 )
 
 select * from order_joins
