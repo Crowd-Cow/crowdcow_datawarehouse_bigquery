@@ -1,0 +1,116 @@
+version: 2
+
+models:
+  - name: int_order_units_pct
+    description: "Business logic to identify units by category for a given order and the pct of units for that order. A bundle is considered 1 unit"
+    columns:
+      - name: order_id
+        description: "Order ID"
+        tests:
+          - unique
+          - not_null 
+
+      - name: beef_units
+        description: "Units assigned to the category beef"
+
+      - name: bison_units
+        description: "Units assigned to the category bison"
+
+      - name: chicken_units
+        description: "Units assigned to the category chicken"
+
+      - name: desserts_units
+        description: "Units assigned to the category dessert"
+
+      - name: duck_units
+        description: "Units assigned to the category duck"
+
+      - name: game_meat_units
+        description: "Units assigned to the category game meat"
+
+      - name: japanese_wagyu_units
+        description: "Units assigned to the category japanese wagyu"
+
+      - name: lamb_units
+        description: "Units assigned to the category lamb"
+
+      - name: pet_food_units
+        description: "Units assigned to the category pet food"
+
+      - name: plant_based_proteins_units
+        description: "Units assigned to the category plant based proteins"
+
+      - name: pork_units
+        description: "Units assigned to the category pork"
+
+      - name: salts_seasonings_units
+        description: "Units assigned to the category salts and seasonings"
+
+      - name: seafood_units
+        description: "Units assigned to the category seafood"
+
+      - name: starters_sides_units
+        description: "Units assigned to the category starters and sides"
+
+      - name: turkey_units
+        description: "Units assigned to the category turkey"
+
+      - name: wagyu_units
+        description: "Units assigned to the category wagyu"
+
+      - name: bundle_units
+        description: "Units assigned to the category bundle"
+
+      - name: total_units
+        description: "Total units in an order"
+
+      - name: pct_beef
+        description: "Pct of units that from the beef category"
+
+      - name: pct_bison
+        description: "Pct of units that from the bison category"
+
+      - name: pct_chicken
+        description: "Pct of units that from the chicken category"
+
+      - name: pct_desserts
+        description: "Pct of units that from the dessert category"
+
+      - name: pct_duck
+        description: "Pct of units that from the duck category"
+
+      - name: pct_game_meat
+        description: "Pct of units that from the game meat category"
+
+      - name: pct_japanese_wagyu
+        description: "Pct of units that from the japanese wagyu category"
+
+      - name: pct_lamb
+        description: "Pct of units that from the lamb category"
+
+      - name: pct_pet_food
+        description: "Pct of units that from the pet food category"
+
+      - name: pct_plant_based_proteins
+        description: "Pct of units that from the plant based proteins category"
+
+      - name: pct_pork
+        description: "Pct of units that from the pork category"
+
+      - name: pct_salts_seasonings
+        description: "Pct of units that from the salts and seasonings category"
+
+      - name: pct_seafood
+        description: "Pct of units that from the seafood category"
+
+      - name: pct_starters_sides
+        description: "Pct of units that from the starters and sides category"
+
+      - name: pct_turkey
+        description: "Pct of units that from the turkey category"
+
+      - name: pct_wagyu
+        description: "Pct of units that from the wagyu category"
+
+      - name: pct_bundle
+        description: "Pct of units that from the bundle category"

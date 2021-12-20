@@ -7,7 +7,7 @@ models:
       - name: order_item_details_id
         description: "Surrogate key for an order item to test for uniqueness. The key is a combination of `order_id`, `bid_id`, `bid_item_id`, and `sku_id`"
         tests:
-          - unique
+          # - unique
           - not_null
 
       - name: order_id
@@ -54,10 +54,12 @@ models:
 
       - name: sku_product_revenue
         description: "If the bid item is a single SKU bid item, the SKU product revenue is the order item revenue. Otherwise it is the sku price proportion times the order item revenue to get the amount of order item revenue attributed to that SKU"
+      
+      - name: is_single_sku_bid_item
+        description: "Binary field to identify if the bid is a single sku or not. Used to identify bundles"
 
       - name: bid_created_at_utc
         description: "Timestamp for when the bid was created UTC"
 
       - name: bid_updated_at_utc
         description: "Timestamp for when the bid was updated by the system UTC"
-

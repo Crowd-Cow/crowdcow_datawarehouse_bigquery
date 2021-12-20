@@ -19,7 +19,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         order_id
         ,sum(discount_percent) as discount_percent
         ,sum(credit_discount_usd) as discount_amount_usd
-
+        
         /**** Breakdown the total credit for an order into various credit categories for financial reporting in Looker ****/
         ,count_if(credit_type = 'FREE_SHIPPING') as free_shipping_credit_count
         ,zeroifnull(sum(case when credit_type = 'FREE_SHIPPING' then credit_discount_usd end)) as free_shipping_credit
@@ -71,6 +71,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,revenue_joins as (
     select
         orders.order_id
+        ,orders.parent_order_id
         ,orders.order_shipping_fee_usd
         ,zeroifnull(bid_amounts.product_revenue_usd) as product_revenue_usd
         ,zeroifnull(bid_amounts.order_item_discount_usd) as order_item_discount_usd
@@ -105,6 +106,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 
     select
         order_id
+        ,parent_order_id
         ,order_shipping_fee_usd
         ,product_revenue_usd + order_shipping_fee_usd as gross_revenue_usd
         ,product_revenue_usd
@@ -156,7 +158,10 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,order_item_discount_usd
         ,discount_percent
         ,refund_amount_usd
-        ,product_revenue_usd + order_shipping_fee_usd - (order_discount_no_item_discount_amount + order_item_discount_usd) - refund_amount_usd as net_revenue_usd
+        ,case 
+            when parent_order_id is not null then product_revenue_usd
+            else product_revenue_usd + order_shipping_fee_usd - (order_discount_no_item_discount_amount + order_item_discount_usd) - refund_amount_usd 
+         end as net_revenue_usd
         ,free_shipping_credit
         ,cs_cow_cash_credit
         ,redeemed_gift_card_credit
