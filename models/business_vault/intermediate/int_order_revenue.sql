@@ -158,10 +158,12 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,order_item_discount_usd
         ,discount_percent
         ,refund_amount_usd
+        
         ,case 
             when parent_order_id is not null then product_revenue_usd
             else product_revenue_usd + order_shipping_fee_usd - (order_discount_no_item_discount_amount + order_item_discount_usd) - refund_amount_usd 
          end as net_revenue_usd
+
         ,free_shipping_credit
         ,cs_cow_cash_credit
         ,redeemed_gift_card_credit
