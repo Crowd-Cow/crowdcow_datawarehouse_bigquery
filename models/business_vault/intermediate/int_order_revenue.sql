@@ -26,7 +26,14 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(sum(case when awarded_cow_cash_entry_type = 'CUSTOMER_SERVICE' and awarded_cow_cash_message not like '%GIVEAWAY%' then credit_discount_usd end)) as cs_cow_cash_credit
         ,zeroifnull(sum(case when awarded_cow_cash_entry_type = 'GIFT_CARD' then credit_discount_usd end)) as redeemed_gift_card_credit
         ,zeroifnull(sum(case when is_new_member_promotion then credit_discount_usd end)) as new_member_promotion_credit
-        
+        ,zeroifnull(sum(case when awarded_cow_cash_entry_type = 'PROMOTION' or awarded_cow_cash_message like '%POSTCARD%' then credit_discount_usd end)) as cow_cash_promotion_credit
+        ,zeroifnull(sum(case when awarded_cow_cash_entry_type = 'GIFT_CARD_PROMOTION' then credit_discount_usd end)) as cow_cash_gift_card_promotion_credit
+        ,zeroifnull(sum(case when credit_type = 'SUBSCRIPTION_FIVE_PERCENT' then credit_discount_usd end)) as subscriber_five_pct_credit
+        ,zeroifnull(sum(case when awarded_cow_cash_entry_type = 'BULK_ORDER' then credit_discount_usd end)) as corp_gift_credit
+        ,zeroifnull(sum(case when awarded_cow_cash_entry_type like '%REFER%' then credit_discount_usd end)) as sales_marketing_referral_credit
+        ,zeroifnull(sum(case when credit_type = 'GIFT_CODE_DOLLAR_AMOUNT' or promotion_type = 'GIFT_CODE_PROMOTION' then credit_discount_usd end)) as new_customer_referral_credit
+        ,zeroifnull(sum(case when awarded_cow_cash_entry_type like '%RETENTION%' then credit_discount_usd end)) as customer_retention_credit
+
         ,zeroifnull(
             sum(
                 case when credit_description like any ('%REPLACE%','%MISSING%','%LOST%','%STRIPE%','%ALREADY PAID%'
@@ -37,7 +44,6 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
                 then credit_discount_usd end
             )
         ) as replacement_item_credit
-        
         ,zeroifnull(
             sum(
                 case when (credit_description like any ('%EVENT%','%SAMPLE%','%TASTING%','%INFLUENCER%','%GIVEAWAY%','%GIFT%','%MARKETING%')
@@ -45,14 +51,6 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
                 then credit_discount_usd end
             )
         ) as marketing_pr_credit
-        
-        ,zeroifnull(sum(case when awarded_cow_cash_entry_type = 'PROMOTION' or awarded_cow_cash_message like '%POSTCARD%' then credit_discount_usd end)) as cow_cash_promotion_credit
-        ,zeroifnull(sum(case when awarded_cow_cash_entry_type = 'GIFT_CARD_PROMOTION' then credit_discount_usd end)) as cow_cash_gift_card_promotion_credit
-        ,zeroifnull(sum(case when credit_type = 'SUBSCRIPTION_FIVE_PERCENT' then credit_discount_usd end)) as subscriber_five_pct_credit
-        ,zeroifnull(sum(case when awarded_cow_cash_entry_type = 'BULK_ORDER' then credit_discount_usd end)) as corp_gift_credit
-        ,zeroifnull(sum(case when awarded_cow_cash_entry_type like '%REFER%' then credit_discount_usd end)) as sales_marketing_referral_credit
-        ,zeroifnull(sum(case when credit_type = 'GIFT_CODE_DOLLAR_AMOUNT' or promotion_type = 'GIFT_CODE_PROMOTION' then credit_discount_usd end)) as new_customer_referral_credit
-        ,zeroifnull(sum(case when awarded_cow_cash_entry_type like '%RETENTION%' then credit_discount_usd end)) as customer_retention_credit
         ,zeroifnull(sum(case when credit_description like '%INR%' then credit_discount_usd end)) as inr_credit
         ,zeroifnull(sum(case when credit_type = 'DOLLAR_AMOUNT' and credit_description like '%PRICE%' then credit_discount_usd end)) as price_match_credit
 
@@ -158,7 +156,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,order_item_discount_usd
         ,discount_percent
         ,refund_amount_usd
-        
+
         ,case 
             when parent_order_id is not null then product_revenue_usd
             else product_revenue_usd + order_shipping_fee_usd - (order_discount_no_item_discount_amount + order_item_discount_usd) - refund_amount_usd 

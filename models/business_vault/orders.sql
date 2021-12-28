@@ -15,6 +15,8 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.subscription_id
         ,orders.fc_id
         ,orders.visit_id
+        ,orders.stripe_charge_id
+        ,orders.order_identifier
         ,orders.order_type
         ,orders.stripe_failure_code
         ,orders.order_delivery_street_address_1
