@@ -10,7 +10,7 @@ renamed as (
         id as sku_id
         ,dbt_scd_id as sku_key
         ,non_member_promotion_start_at as non_member_promotion_start_at_utc
-        ,{{ cents_to_usd('average_cost_in_cents') }} as average_cost_usd
+        ,{{ cents_to_usd('average_cost_in_cents') }} as sku_cost_usd
         ,promotion_start_at as promotion_start_at_utc
         ,{{ clean_strings('vendor_funded_discount_name') }} as vendor_funded_discount_name
         ,sku_code
@@ -22,7 +22,7 @@ renamed as (
         ,{{ cents_to_usd('platform_fee_in_cents') }} as platform_fee_usd
         ,{{ clean_strings('name') }} as sku_name
         ,{{ cents_to_usd('fulfillment_fee_in_cents') }} as fulfillment_fee_usd
-        ,{{ cents_to_usd('price_in_cents') }} as price_usd
+        ,{{ cents_to_usd('price_in_cents') }} as sku_price_usd
         ,{{ cents_to_usd('marketplace_cost_in_cents') }} as marketplace_cost_usd
         ,created_at as created_at_utc
         ,sku_vendor_id
