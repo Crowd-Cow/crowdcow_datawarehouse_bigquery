@@ -1,6 +1,7 @@
 /**** Getting a complete historical picture of SKU changes, specifically prices, required combining snapshots ****/
 /**** from our old Postgres datawarehouse with our new Snowflake warehouse ***/
 /**** This script is what was used to combine both snapshots, as well as validations used to verify accuracy of code ****/
+/**** Link to full Snowflake query: https://app.snowflake.com/us-east-1/lna65058/w1KrwMstbpvt#query ****/
 
 /**** Create combined snapshot table ****/
 create or replace table kdent_analytics_dev.snapshots.combined_skus_ss as (
