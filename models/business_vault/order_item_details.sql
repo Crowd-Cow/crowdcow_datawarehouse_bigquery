@@ -2,30 +2,7 @@ with
 
 order_item as ( select * from {{ ref('order_items') }} )
 ,bid_item_sku as ( select * from {{ ref('int_bid_item_skus') }} )
-
-/**** NOTE: This is a really really really bad thing to do unless you have no other choice. Tables should always use the {{ ref }} dbt macro to make sure dbt can map model dependencies ****/
-/**** In this case, we need more history that what is included in the `analytics.snapshots.skus_ss` table. ****/
-/**** Until we can combine the old snapshot with the new snapshot, we'll need to use the old one. This should be replaced with the combined snapshot as soon as possible ****/
 ,sku as ( select * from {{ ref('skus') }} )
-
-/**** The dbt valid dates need to be adjusted for the old snapshot. This adjustment has already been done for the new snapshot ****/
-/**** Once the combined snapshot is available, this CTE should be removed ****/
-/**,adjust_sku_dbt_dates as (
-    select
-        id as sku_id
-        ,price as sku_price_usd
-        ,cost as sku_cost_usd
-        ,dbt_valid_from
-        ,dbt_valid_to
-    
-        ,case
-            when dbt_valid_from = first_value(dbt_valid_from) over(partition by id order by dbt_valid_from) then '1970-01-01'
-            else dbt_valid_from
-         end as adjusted_dbt_valid_from
-
-        ,coalesce(dbt_valid_to,'2999-01-01') as adjusted_dbt_valid_to
-    from sku     
-)**/
 
 ,join_bid_item_skus as (
     select  
