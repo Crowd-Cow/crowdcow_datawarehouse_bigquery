@@ -18,7 +18,7 @@ models:
       - name: non_member_promotion_start_at_utc
         description: Non member promotion start at utc
 
-      - name: average_cost_usd
+      - name: sku_cost_usd
         description: Average cost in USD
 
       - name: promotion_start_at_utc
@@ -54,7 +54,7 @@ models:
       - name: fulfillment_fee_usd
         description: Fulfillment fee in USD
 
-      - name: price_usd
+      - name: sku_price_usd
         description: Price in USD
 
       - name: marketplace_cost_usd
