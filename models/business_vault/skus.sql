@@ -17,12 +17,12 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,farm.sub_category
         ,cut.cut_name
         ,sku.sku_weight
-        ,sku.average_cost_usd
+        ,sku.sku_cost_usd
         ,sku.platform_fee_usd
         ,sku.fulfillment_fee_usd
         ,sku.payment_processing_fee_usd
         ,sku.standard_price_usd
-        ,sku.price_usd
+        ,sku.sku_price_usd
         ,sku.marketplace_cost_usd
         ,sku.average_box_quantity
         ,sku.vendor_funded_discount_name

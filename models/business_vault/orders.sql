@@ -95,6 +95,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,units.turkey_units
         ,units.wagyu_units
         ,units.bundle_units
+        ,units.total_units
         ,units.pct_beef
         ,units.pct_bison
         ,units.pct_chicken

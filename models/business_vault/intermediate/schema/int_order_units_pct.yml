@@ -114,3 +114,6 @@ models:
 
       - name: pct_bundle
         description: "Pct of units that from the bundle category"
+      
+      - name: total_units
+        description: "Total units (bundles are considered 1 unit)"

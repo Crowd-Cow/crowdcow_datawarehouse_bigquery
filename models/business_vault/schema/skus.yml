@@ -37,7 +37,7 @@ models:
       - name: sku_weight
         description: "SKU weight"
 
-      - name: average_cost_usd
+      - name: sku_cost_usd
         description: "Average SKU cost USD"
 
       - name: platform_fee_usd
@@ -52,7 +52,7 @@ models:
       - name: standard_price_usd
         description: "Standard price USD"
 
-      - name: price_usd
+      - name: sku_price_usd
         description: "Price USD"
 
       - name: marketplace_cost_usd
