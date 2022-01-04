@@ -1,7 +1,7 @@
 with
 
 credit as ( select * from {{ ref('stg_cc__credits') }} )
-,cow_cash as ( select * from {{ ref('stg_cc__cow_cash_entries') }} )
+,awarded_cow_cash as ( select * from {{ ref('stg_cc__cow_cash_entries') }} )
 ,promotion as ( select * from {{ ref('stg_cc__promotions') }} )
 
 ,add_cow_cash_information as (
@@ -22,7 +22,7 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
         ,credit.created_at_utc
         ,credit.updated_at_utc
     from credit
-        left join cow_cash as awarded_cow_cash on credit.cow_cash_entry_source_id = awarded_cow_cash.cow_cash_id
+        left join awarded_cow_cash on credit.cow_cash_entry_source_id = awarded_cow_cash.cow_cash_id
 )
 
 ,add_promotion_info as (
@@ -61,26 +61,26 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
         ,credit_description
 
         ,case
-            when (credit_description like '%LATE%' and credit_description not like '%RELATED%')
-                or credit_description like any ('%DELAY%','%ARRIVED LATE%','%DELIVERY FAILURE%') then 'LATE SHIPMENT'
-            when credit_description like any ('%LOST%','%MISSING ORDER%','%NEVER ARRIVE%','%UNDELIVER%','%NON-DELIVER%') then 'LOST ORDER'
-            when credit_description like '%THAW%' then 'THAWED'
-            when credit_description like any ('%INVENTORY%','%INR%','%OOS%','%MISSING_ITEM%','%ITEM MISSING%','%MISSING FROM%') then  'MISSING ITEM'
-            when credit_description like '%LEAK%' then 'LEAKER'
-            when credit_description = 'REPLACEMENT'
-                or credit_description like any ('REPLACEMENT ORDER%','REPLACEMENT 2%','REPLACEMENT FOR%') then 'REPLACEMENT'
-            when credit_description like any ('%NEW SUB%','%FIRST SUB%','%1ST SUB%','%SUBSCRIPTION PRICE%','%SUBSCRIBER DISCOUNT%','%SUBSCRIPTION DISCOUNT%'
-                ,'%MEMBER DISCOUNT%','%MEMBERSHIP DISCOUNT%','%MEMBER PRICING%','%MEMBER PRICE%','%MEMBERSHIP PRICING%','%MEMBERSHIP PRICE%','%SUBSCRIPTION PRICING%') then 'MEMBER PRICE FIX'
-            when credit_description like any ('%GB PROMO%','%BACON PROMO%','%HONORING PROMO%','%BEEF PROMO%','%WAGYU PROMO%','%FREE PROMO%') then 'PRODUCT PROMO'
-            when credit_description like '%QUALITY%' then 'QUALITY ISSUE'
-            when credit_description like '%MISSING_PROMO%' then 'MISSING PROMO'
-            when credit_description like '%MATCH%' then 'PRICE MATCH'
-            when credit_description like any ('%FEDEX%','%DAMAGE%','%AXLEHIRE%') then 'CARRIER ISSUE'
-            when credit_description like any ('%ACCIDENTAL SUBSCRIPTION%','%UNINTENDED SUBSCRIPTION%','%NOT WANT SUB%') then 'DID NOT WANT MEMBERSHIP'
-            when credit_description like any ('%MARKETING%','%INFLUENCER%','%AMBASSADOR%') then 'MARKETING'
-            when credit_description like '%WHOLESALE%' then 'WHOLESALE DISCOUNT'
-         end as credit_group
-         
+            when credit_type = 'FREE_SHIPPING' then 'Free Shipping'
+            when credit_type = 'SUBSCRIPTION_FIVE_PERCENT'
+                or (credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'SUBSCRIPTION') then 'Membership 5%'
+            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'CUSTOMER_SERVICE' then 'CARE Credits'
+            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'REFERRAL' then 'Acquisition Marketing - Member Referral'
+            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'BULK_ORDER' then 'Corporate Gifting'
+            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'GIFT_CARD' then 'Gift Card Redemption'
+            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'PROMOTION' then 'Acquisition Marketing - Promotion Credits'
+            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'GIFT_CARD_PROMOTION' then 'Acquisition Marketing - Gift'
+            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'RETENTION_OFFER' then 'Retention Marketing'
+            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'REFERRED_CREDIT' then 'Acquisition Marketing - Member Referral'
+            when credit_type = 'DOLLAR_AMOUNT' and promotion_id in (28,29,30) then 'Acquisition Marketing - Promotion Credits'
+            when credit_type = 'DOLLAR_AMOUNT' and promotion_id is null then 'Various -- ?'
+            when credit_type in ('GIFT_CODE_DOLLAR_AMOUNT','PERCENT_DISCOUNT') and promotion = 7 then 'Acquisition Marketing - Gift'
+            when credit_type = 'GIFT_CODE_DOLLAR_AMOUNT' and promotion_id = 10 then 'Acquisition Marketing - Member Referral'
+            when credit_type = 'GIFT_CODE_DOLLAR_AMOUNT' and promotion_id = 8 then 'Acquisition Marketing - Influencer'
+            else 'Other - UNKNOWN'
+        end as credit_business_group
+
+
         ,awarded_cow_cash_entry_type
         ,awarded_cow_cash_message
         ,promotion_type
