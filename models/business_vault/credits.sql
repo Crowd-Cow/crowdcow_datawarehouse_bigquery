@@ -50,7 +50,7 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
         left join promotion on add_cow_cash_information.promotion_id = promotion.promotion_id
 )
 
-,group_credit_descriptions as (
+,group_credits as (
     select
         credit_id
         ,promotion_id
@@ -80,6 +80,25 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
             else 'Other - UNKNOWN'
         end as credit_business_group
 
+        ,case
+            when credit_type = 'FREE_SHIPPING' then '41305 - Free Shipping'
+            when credit_type = 'SUBSCRIPTION_FIVE_PERCENT'
+                or (credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'SUBSCRIPTION') then '41303 - Subscription Rewards'
+            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'CUSTOMER_SERVICE' then '41307 - Care Concessions'
+            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'REFERRAL' then '61145 - Referral Credits'
+            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'BULK_ORDER' then 'Corporate Gifting'
+            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'GIFT_CARD' then 'Gift Card Redemption'
+            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'PROMOTION' then '41306 - Other'
+            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'GIFT_CARD_PROMOTION' then '41306 - Other'
+            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'RETENTION_OFFER' then '41306 - Other'
+            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'REFERRED_CREDIT' then '41306 - Other'
+            when credit_type = 'DOLLAR_AMOUNT' and promotion_id in (28,29,30) then '41301 - New Customer Subscriptions'
+            when credit_type = 'DOLLAR_AMOUNT' and promotion_id is null then 'Various -- ?'
+            when credit_type in ('GIFT_CODE_DOLLAR_AMOUNT','PERCENT_DISCOUNT') and promotion = 7 then '41306 - Other'
+            when credit_type = 'GIFT_CODE_DOLLAR_AMOUNT' and promotion_id = 10 then '41301 - New Customer Subscriptions'
+            when credit_type = 'GIFT_CODE_DOLLAR_AMOUNT' and promotion_id = 8 then '41301 - New Customer Subscriptions'
+            else 'Other - UNKNOWN'
+        end as credit_financial_account
 
         ,awarded_cow_cash_entry_type
         ,awarded_cow_cash_message
@@ -94,4 +113,4 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
     from add_promotion_info
 )
 
-select * from group_credit_descriptions
+select * from group_credits
