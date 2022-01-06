@@ -91,6 +91,13 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
             end
         ,2) as item_merch_discount
 
+        ,round(
+            case
+                when promotion_id is not null then bid_list_price_usd
+                else 0
+            end
+        ,2) as item_promotion_discount
+
         ,bid_non_member_price_usd
         ,bid_member_price_usd
         ,bid_quantity
