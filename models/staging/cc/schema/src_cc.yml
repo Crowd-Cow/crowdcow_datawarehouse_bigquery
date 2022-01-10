@@ -1,6 +1,7 @@
 version: 2
 
 sources:
+
   - name: cc
     database: raw
     schema: cc_cc
@@ -7729,4 +7730,3 @@ sources:
             description: created_at
           - name: updated_at
             description: updated_at
-

@@ -1,0 +1,30 @@
+version: 2
+
+sources:
+
+  - name: forecast
+    database: raw
+    schema: crowdcow_forecasting
+    tables:
+      - name: fc_cat_subcat_cut_daily_forecasts
+        description: Inventory forecast at the farm category and sub category level. Forecast is run weekly and has a horizon of 100 days
+
+        columns:
+          - name: item_id
+            description: A surrogate key for the forcasted item. Consits of FC ID, category, sub category, and cut ID
+
+          - name: date
+            description: Forecast date
+
+          - name: p10
+            description: Weighted loss quantile prediction. The true value is expected to be lower than the predicted value 10% of the time. For more information see AWS documentation [here](https://docs.aws.amazon.com/forecast/latest/dg/metrics.html#metrics-wQL)
+
+          - name: p50
+            description: Weighted loss quantile prediction. The true value is expected to be lower than the predicted value 50% of the time. For more information see AWS documentation [here](https://docs.aws.amazon.com/forecast/latest/dg/metrics.html#metrics-wQL)
+          
+          - name: p75
+            description: Weighted loss quantile prediction. The true value is expected to be lower than the predicted value 75% of the time. For more information see AWS documentation [here](https://docs.aws.amazon.com/forecast/latest/dg/metrics.html#metrics-wQL)
+
+          - name: p90
+            description: Weighted loss quantile prediction. The true value is expected to be lower than the predicted value 90% of the time. For more information see AWS documentation [here](https://docs.aws.amazon.com/forecast/latest/dg/metrics.html#metrics-wQL)
+            
