@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_forecasting__cat_subcat_daily
+  - name: cat_subcat_daily_forecast
     description: "Daily forecast for items at the FC, farm category, farm sub category, cut level. Forecast horizon is 100 days"
     columns:
       - name: forecast_id
@@ -39,3 +39,4 @@ models:
 
       - name: p90
         description: "Weighted loss quantile prediction. The true value is expected to be lower than the predicted value 90% of the time. For more information see AWS documentation [here](https://docs.aws.amazon.com/forecast/latest/dg/metrics.html#metrics-wQL)"
+        
