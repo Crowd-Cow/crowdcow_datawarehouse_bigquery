@@ -19,11 +19,10 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
 ,aggregate_tags as (
     select
         user_id
-        ,listagg(key, ' | ') within group (order by key) as tag_list
-        ,count(distinct key) as tag_count
-    from raw.cc_cc.tags
-    where not _fivetran_deleted
-        and user_id is not null
+        ,listagg(tag_name, ' | ') within group (order by tag_name) as tag_list
+        ,count(distinct tag_name) as tag_count
+    from segmentation_tags
+    where user_id is not null
     group by 1
 )
 

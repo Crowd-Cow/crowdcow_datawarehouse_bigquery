@@ -6740,6 +6740,20 @@ sources:
           - name: updated_at
             description: updated_at
 
+      - name: tag_definitions
+        description: User segmentation tag definitions
+
+        columns:
+          - name: tag_name
+            description: User segmentation tag name
+
+          - name: tag_definition
+            description: User segementation tag definition
+
+          - name: user_count
+            description: User count for the segmentation tag name
+
+
       - name: testimonials
         description: testimonials
 

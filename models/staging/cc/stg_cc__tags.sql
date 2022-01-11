@@ -4,7 +4,7 @@ tag as ( select * from {{ source('cc', 'tags') }} where not _fivetran_deleted)
 
 select
     id as tag_id
-    ,key as tag_key
+    ,{{ clean_strings('key') }} as tag_name
     ,user_id
     ,purpose as tag_purpose
     ,created_at as created_at_utc
