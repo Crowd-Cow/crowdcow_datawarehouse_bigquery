@@ -79,6 +79,12 @@ models:
       - name: does_allow_sms
         description: "Boolean indicating if the user's phone number allows SMS texting"
 
+      - name: tag_list
+        description: An aggregated list of user segmentation tags associated with the user
+
+      - name: tag_count
+        description: The total number of segmentation tags associated with the user
+
       - name: user_last_sign_in_at_utc
         description: "User last signed in timestamp in UTC"
 

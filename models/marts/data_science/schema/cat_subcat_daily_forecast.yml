@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: cat_subcat_daily_forecast
+    description: "Daily forecast for items at the FC, farm category, farm sub category, cut level. Forecast horizon is 100 days"
+    columns:
+      - name: forecast_id
+        description: "Surrogage key combining `item_id` and `forecast_date` to create a unique key for the forcast record"
+        tests:
+          - unique
+          - not_null
+
+      - name: item_id
+        description: "A surrogate key for the forcasted item. Consits of FC ID, category, sub category, and cut ID"
+
+      - name: fc_id
+        description: "Fulfillment center ID of the forecasted item"
+
+      - name: category
+        description: "Farm category of the forecasted item"
+
+      - name: sub_category
+        description: "Farm sub category of the forecasted item"
+
+      - name: cut_id
+        description: "Cut ID of the forecasted item"
+
+      - name: forecast_date
+        description: "Forecast date"
+
+      - name: p10
+        description: "Weighted loss quantile prediction. The true value is expected to be lower than the predicted value 10% of the time. For more information see AWS documentation [here](https://docs.aws.amazon.com/forecast/latest/dg/metrics.html#metrics-wQL)"
+
+      - name: p50
+        description: "Weighted loss quantile prediction. The true value is expected to be lower than the predicted value 50% of the time. For more information see AWS documentation [here](https://docs.aws.amazon.com/forecast/latest/dg/metrics.html#metrics-wQL)"
+
+      - name: p75
+        description: "Weighted loss quantile prediction. The true value is expected to be lower than the predicted value 75% of the time. For more information see AWS documentation [here](https://docs.aws.amazon.com/forecast/latest/dg/metrics.html#metrics-wQL)"
+
+      - name: p90
+        description: "Weighted loss quantile prediction. The true value is expected to be lower than the predicted value 90% of the time. For more information see AWS documentation [here](https://docs.aws.amazon.com/forecast/latest/dg/metrics.html#metrics-wQL)"
+        

@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: stg_reference__tag_definitions
+    description: "Staging model for tag definition reference"
+    columns:
+
+      - name: tag_name
+        description: User segmentation tag definition
+
+      - name: tag_definition
+        description: User segmentation tag definition
+        
