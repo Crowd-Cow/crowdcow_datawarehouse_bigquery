@@ -4,6 +4,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
 ,user_order_activity as ( select * from {{ ref('int_user_order_activity') }} )
 ,memberships as (select * from {{ ref('stg_cc__subscriptions') }})
 ,phone_number as ( select * from {{ ref('stg_cc__phone_numbers') }} )
+,segmentation_tags as ( select * from {{ ref('stg_cc__tags') }} )
 
 ,membership_count as (
     select
@@ -12,6 +13,17 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,count_if(not is_uncancelled_membership) as total_cancelled_membership_count
         ,count(subscription_id) - count_if(not is_uncancelled_membership) as total_uncancelled_memberships
     from memberships
+    group by 1
+)
+
+,aggregate_tags as (
+    select
+        user_id
+        ,listagg(key, ' | ') within group (order by key) as tag_list
+        ,count(distinct key) as tag_count
+    from raw.cc_cc.tags
+    where not _fivetran_deleted
+        and user_id is not null
     group by 1
 )
 
@@ -38,10 +50,13 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.average_ala_carte_order_frequncy_days
         ,user_order_activity.customer_cohort_date
         ,user_order_activity.membership_cohort_date
+        ,aggregate_tags.tag_list
+        ,aggregate_tags.tag_count
     from users
         left join membership_count on users.user_id = membership_count.user_id
         left join user_order_activity on users.user_id = user_order_activity.user_id
         left join phone_number on users.phone_number_id = phone_number.phone_number_id
+        left join aggregate_tags on users.user_id = aggregate_tags.user_id
 )
 
 ,final as (
@@ -83,6 +98,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,is_active_member_90_day
         ,is_ala_carte_attrition_risk
         ,does_allow_sms
+        ,tag_list
+        ,tag_count
         ,user_last_sign_in_at_utc
         ,created_at_utc
         ,updated_at_utc
