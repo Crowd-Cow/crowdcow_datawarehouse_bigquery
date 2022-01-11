@@ -30,16 +30,16 @@ credit as ( select * from {{ ref('credits') }} )
         ,order_id
 
         ,case
-            when discounts.index = 0 then 'Membership 5%'
-            when discounts.index = 1 then 'Merchandising Discount'
-            when discounts.index = 2 and promotion_id in (18,20,22) then 'Membership Promotions'
-            when discounts.index = 2 and promotion_id not in (18,20,22) then 'Other Item Level Promotions'
+            when discounts.index = 0 then 'MEMBERSHIP 5%'
+            when discounts.index = 1 then 'MERCHANDISING DISCOUNT'
+            when discounts.index = 2 and promotion_id in (18,20,22) then 'MEMBERSHIP PROMOTIONS'
+            when discounts.index = 2 and promotion_id not in (18,20,22) then 'OTHER ITEM LEVEL PROMOTIONS'
          end as business_group
 
         ,case
-            when discounts.index = 0 then '41303 - Subscription Rewards'
-            when discounts.index = 1 then '41300 - Merch Discounts - Retail'
-            when discounts.index = 2 and promotion_id is not null then '41301 - New Customer Subscriptions'
+            when discounts.index = 0 then '41303 - SUBSCRIPTION REWARDS'
+            when discounts.index = 1 then '41300 - MERCH DISCOUNTS - RETAIL'
+            when discounts.index = 2 and promotion_id is not null then '41301 - NEW CUSTOMER SUBSCRIPTIONS'
          end as financial_account
 
         ,round(discounts.value,2) as discount_usd
