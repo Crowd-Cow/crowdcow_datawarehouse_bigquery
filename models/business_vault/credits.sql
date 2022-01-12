@@ -2,7 +2,7 @@ with
 
 credit as ( select * from {{ ref('stg_cc__credits') }} )
 ,awarded_cow_cash as ( select * from {{ ref('stg_cc__cow_cash_entries') }} )
-,promotion as ( select * from {{ ref('stg_cc__promotions') }} )
+,promotion as ( select * from {{ ref('promotions') }} )
 ,orders as ( select * from {{ ref('stg_cc__orders') }} )
 
 ,add_cow_cash_information as (
@@ -42,9 +42,7 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
         ,add_cow_cash_information.discount_percent
         ,add_cow_cash_information.is_hidden_from_user
         ,add_cow_cash_information.is_controlled_by_promotion
-        ,coalesce(promotion.promotion_type in ('FREE_GROUND_BEEF','FREE_GROUND_WAGYU','FREE_SAUSAGE','FREE_PATTIES','FREE_SUMMER_SEAFOOD_BOX','NEW_SUBSCRIPTION_FREE_SPARERIBS','NEW_SUBSCRIPTION_25_PERCENT'
-                         ,'FREE_SALMON','SUBSCRIPTION_LIFETIME_GROUND_BEEF','SUBSCRIPTION_LIFETIME_GROUND_WAGYU','FREE_STEAK','SUBSCRIPTION_LIFETIME_BACON','SUBSCRIPTION_100_OFF_3_ORDERS'
-                         ,'SUBSCRIPTION_100_OFF_34_33_33','SUBSCRIPTION_100_OFF_10_X_10'),FALSE) as is_new_member_promotion
+        ,promotion.is_new_member_promotion
         ,add_cow_cash_information.created_at_utc
         ,add_cow_cash_information.updated_at_utc
     from add_cow_cash_information

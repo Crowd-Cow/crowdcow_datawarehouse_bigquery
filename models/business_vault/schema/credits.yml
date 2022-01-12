@@ -25,11 +25,17 @@ models:
       - name: credit_type
         description: "Credit type"
 
-      - name: awarded_cow_cash_entry_type
-        description: "The entry type of the Cow Cash that was awarded. This is used to break down different types of Cow Cash credits since the usage entry for Cow Cahs is always `ORDER`"
-
       - name: credit_description
         description: "Credit description"
+
+      - name: credit_business_group
+        description: "A business group classification for the credit (e.g. CARE credit, Acquisition Marketing, etc)"
+
+      - name: credit_financial_account
+        description: "The financial account the credit should be booked to. Not all credits have a financial account (e.g. gift card redemptions, corp gifts, etc.)"
+
+      - name: awarded_cow_cash_entry_type
+        description: "The entry type of the Cow Cash that was awarded. This is used to break down different types of Cow Cash credits since the usage entry for Cow Cahs is always `ORDER`"
 
       - name: awarded_cow_cash_message
         description: "The message of the Cow Cash that was awarded"
@@ -45,6 +51,9 @@ models:
 
       - name: is_controlled_by_promotion
         description: "Boolean indicating if the credit is controlled by a promotion"
+
+      - name: is_new_member_promotion
+        description: "Boolean indicating if this is considered a new member promotion"
 
       - name: created_at_utc
         description: "Timestamp for when the credit was created UTC"
