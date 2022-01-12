@@ -74,14 +74,6 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,ranks.completed_gift_card_order_rank
         ,ranks.paid_gift_card_order_rank
         ,ranks.cancelled_gift_card_order_rank
-        ,orders.order_created_at_utc
-        ,orders.order_updated_at_utc
-        ,orders.order_checkout_completed_at_utc
-        ,orders.order_cancelled_at_utc
-        ,orders.order_paid_at_utc
-        ,orders.order_first_stuck_at_utc
-        ,orders.order_scheduled_fulfillment_date_utc
-        ,orders.order_scheduled_arrival_date_utc
         ,units.beef_units
         ,units.bison_units
         ,units.chicken_units
@@ -117,6 +109,15 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,units.pct_turkey
         ,units.pct_wagyu
         ,units.pct_bundle
+        ,orders.order_created_at_utc
+        ,orders.order_updated_at_utc
+        ,orders.order_checkout_completed_at_utc
+        ,orders.order_cancelled_at_utc
+        ,orders.order_paid_at_utc
+        ,orders.order_first_stuck_at_utc
+        ,orders.order_scheduled_fulfillment_date_utc
+        ,orders.order_scheduled_arrival_date_utc
+        
     from orders
         left join order_revenue on orders.order_id = order_revenue.order_id
         left join flags on orders.order_id = flags.order_id
