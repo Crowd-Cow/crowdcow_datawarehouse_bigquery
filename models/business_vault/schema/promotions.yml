@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: promotions
+    description: "Business logic model for promotions"
+    columns:
+      - name: promotion_id
+        description: "Promotion ID"
+
+      - name: promotion_type
+        description: "Promotion Type"
+
+      - name: is_new_member_promotion
+        description: "Boolean indicating if this is considered a new member promotion"
+
+      - name: is_always_available
+        description: "Boolean indicating if this promotion is always available"
+
+      - name: must_be_assigned_to_user
+        description: "Boolean indicating if this promotion must be assigned to a user"
+
+      - name: must_be_assigned_to_order
+        description: "Boolean indicating if this promotion must be assigned to an order"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created UTC"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated UTC"
+

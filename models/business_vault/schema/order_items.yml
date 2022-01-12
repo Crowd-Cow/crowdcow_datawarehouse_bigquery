@@ -16,6 +16,9 @@ models:
       - name: bid_item_id
         description: "Bid item ID"
 
+      - name: promotion_id
+        description: "Promotion ID"
+
       - name: bid_token
         description: "Bid token"
 
@@ -49,8 +52,17 @@ models:
       - name: order_item_revenue
         description: "Order item revenue before discounting of the item. Basic calculation is price * quantity. The price is list price if available. Otherwise it is item price"
 
-      - name: order_item_discount
+      - name: total_order_item_discount
         description: "The total amount of item discounts applied to the item. The difference between the list price and price paid * quantity"
+
+      - name: item_member_discount
+        description: "The amount of the `total_order_item_discount` attributed to the membership standard 5% off list price"
+
+      - name: item_merch_discount
+        description: "The amount of the `total_order_item_discount` attributed to any difference over the standard 5% member discount"
+
+      - name: item_promotion_discount
+        description: "If a promotion is associated with this item, the discount amount is the `bid_price_paid_usd`"
 
       - name: bid_non_member_price_usd
         description: "Bid non member price USD"

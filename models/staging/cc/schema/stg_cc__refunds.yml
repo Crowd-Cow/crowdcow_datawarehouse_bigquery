@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: stg_cc__refunds
-    description: "Staging model for refunds"
+    description: "Staging model for refunds. This uses the Stripe refund data as the source vs. CC schema refunds, which stopped reporting refunds in March 2019"
     columns:
       - name: refund_id
         description: "Refund ID"
@@ -10,30 +10,27 @@ models:
           - unique
           - not_null
 
-      - name: refund_reason
-        description: "Refund reason"
-
-      - name: stripe_balance_transaction_id
-        description: "Corresponding Stripe balance transaction ID"
-
-      - name: stripe_refund_id
-        description: "Corresponding Stripe refund ID"
+      - name: refund_amount_usd
+        description: Refund amount USD
 
       - name: created_at_utc
-        description: "Timestamp for when the record was created UTC"
+        description: Timestamp for when the refund transaction was created UTC
 
-      - name: updated_at_utc
-        description: "Timestamp for when the record was updated UTC"
+      - name: currency
+        description: Currency of the refund amount
 
-      - name: refund_created_at_utc
-        description: "Timestamp for when the refund was created UTC"
+      - name: refund_reason
+        description: Reason for the refund (e.g. requested by customer, fraudulent, etc.)
+
+      - name: receipt_number
+        description: ID for the receipt of the refund transaction
+
+      - name: refund_status
+        description: Status of the refund (e.g. succeeded, etc.)
+
+      - name: stripe_balance_transaction_id
+        description: ID to tie the refund transaction back to the balance transaction table in Stripe
 
       - name: stripe_charge_id
-        description: "Corresponding Stripe charge ID"
-
-      - name: order_id
-        description: "Order ID"
-
-      - name: refund_amount_usd
-        description: "Refund amount in USD"
-
+        description: ID to tie the refund to the original charge to the customer payment method. This ID will also tie the refund back to the order that was refunded
+        

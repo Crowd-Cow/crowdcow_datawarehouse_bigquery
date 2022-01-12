@@ -1,0 +1,66 @@
+version: 2
+
+models:
+  - name: credits
+    description: "Business logic to describe credits"
+    columns:
+      - name: credit_id
+        description: "Credit ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: promotion_id
+        description: "Promotion ID"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: order_id
+        description: "Order ID"
+
+      - name: cow_cash_entry_source_id
+        description: "Cow cash entry source ID. This is the ID of the Cow Cash entry that awarded the Cow Cash to the user. The credit is the usage of this awarded Cow Cash"
+
+      - name: credit_type
+        description: "Credit type"
+
+      - name: credit_description
+        description: "Credit description"
+
+      - name: credit_business_group
+        description: "A business group classification for the credit (e.g. CARE credit, Acquisition Marketing, etc)"
+
+      - name: credit_financial_account
+        description: "The financial account the credit should be booked to. Not all credits have a financial account (e.g. gift card redemptions, corp gifts, etc.)"
+
+      - name: awarded_cow_cash_entry_type
+        description: "The entry type of the Cow Cash that was awarded. This is used to break down different types of Cow Cash credits since the usage entry for Cow Cahs is always `ORDER`"
+
+      - name: awarded_cow_cash_message
+        description: "The message of the Cow Cash that was awarded"
+
+      - name: promotion_type
+        description: "Promotion type"
+
+      - name: credit_discount_usd
+        description: "The amount of the credit in USD"
+
+      - name: discount_percent
+        description: "The percent discount applied to the order"
+
+      - name: is_hidden_from_user
+        description: "Boolean indicating if this credit is hidden from the user"
+
+      - name: is_controlled_by_promotion
+        description: "Boolean indicating if the credit is controlled by a promotion"
+
+      - name: is_new_member_promotion
+        description: "Boolean indicating if this is considered a new member promotion"
+
+      - name: created_at_utc
+        description: "Timestamp for when the credit was created UTC"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the credit was updated by the system UTC"
+

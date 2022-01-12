@@ -15,6 +15,8 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.subscription_id
         ,orders.fc_id
         ,orders.visit_id
+        ,orders.stripe_charge_id
+        ,orders.order_identifier
         ,orders.order_type
         ,orders.stripe_failure_code
         ,orders.order_delivery_street_address_1
@@ -27,13 +29,17 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.billing_city
         ,orders.billing_state
         ,orders.billing_postal_code
-        ,zeroifnull(order_revenue.gross_revenue_usd) as gross_revenue_usd
-        ,zeroifnull(order_revenue.product_revenue_usd) as product_revenue_usd
-        ,zeroifnull(order_revenue.order_shipping_fee_usd) as shipping_revenue_usd    
-        ,zeroifnull(order_revenue.discount_percent) as discount_percent
-        ,zeroifnull(order_revenue.discount_amount_usd) as discount_amount_usd
-        ,zeroifnull(order_revenue.refund_amount_usd) as refund_amount_usd
-        ,zeroifnull(order_revenue.net_revenue_usd) as net_revenue_usd
+        ,zeroifnull(order_revenue.gross_product_revenue) as gross_product_revenue
+        ,zeroifnull(order_revenue.membership_discount) as membership_discount
+        ,zeroifnull(order_revenue.merch_discount) as merch_discount
+        ,zeroifnull(order_revenue.net_product_revenue) as net_product_revenue
+        ,orders.order_shipping_fee_usd as shipping_revenue
+        ,zeroifnull(order_revenue.free_shipping_discount) as free_shipping_discount
+        ,zeroifnull(order_revenue.gross_revenue) as gross_revenue
+        ,zeroifnull(order_revenue.new_member_discount) as new_member_discount
+        ,zeroifnull(order_revenue.refund_amount) as refund_amount
+        ,zeroifnull(order_revenue.other_discount) as other_discount
+        ,zeroifnull(order_revenue.net_revenue) as net_revenue
         ,flags.has_free_shipping
         ,flags.is_ala_carte_order
         ,flags.is_membership_order
@@ -68,14 +74,6 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,ranks.completed_gift_card_order_rank
         ,ranks.paid_gift_card_order_rank
         ,ranks.cancelled_gift_card_order_rank
-        ,orders.order_created_at_utc
-        ,orders.order_updated_at_utc
-        ,orders.order_checkout_completed_at_utc
-        ,orders.order_cancelled_at_utc
-        ,orders.order_paid_at_utc
-        ,orders.order_first_stuck_at_utc
-        ,orders.order_scheduled_fulfillment_date_utc
-        ,orders.order_scheduled_arrival_date_utc
         ,units.beef_units
         ,units.bison_units
         ,units.chicken_units
@@ -111,6 +109,15 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,units.pct_turkey
         ,units.pct_wagyu
         ,units.pct_bundle
+        ,orders.order_created_at_utc
+        ,orders.order_updated_at_utc
+        ,orders.order_checkout_completed_at_utc
+        ,orders.order_cancelled_at_utc
+        ,orders.order_paid_at_utc
+        ,orders.order_first_stuck_at_utc
+        ,orders.order_scheduled_fulfillment_date_utc
+        ,orders.order_scheduled_arrival_date_utc
+        
     from orders
         left join order_revenue on orders.order_id = order_revenue.order_id
         left join flags on orders.order_id = flags.order_id

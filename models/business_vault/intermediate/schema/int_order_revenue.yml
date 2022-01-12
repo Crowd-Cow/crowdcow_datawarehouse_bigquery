@@ -6,25 +6,60 @@ models:
     columns:
       - name: order_id
         description: "Order ID"
+        tests:
+            - unique
+            - not_null
 
-      - name: order_shipping_fee_usd
-        description: "The shipping revenue for an order"
+      - name: gross_product_revenue
+        description: >
+          Product revenue for an order. Calculated as the sum of `bid list price * bid quantity` for all bids in an order. 
+          Bid list price does not include item discounts.
 
-      - name: gross_revenue_usd
-        description: "Gross revenue for an order. Calculated as `product revenue + shipping revenue`"
+      - name: membership_discount
+        description: "Discount amount associated with the standard 5% membership discount applied to items"
 
-      - name: product_revenue_usd
-        description: "Product revenue for an order. Calculated as the sum of `bid list price * bid quantity` for all bids in an order. Bid list price does not include item discounts."
+      - name: merch_discount
+        description: "Item discount attributed to the amount above and beyone the standard 5% member discount applied to an item"
 
-      - name: discount_amount_usd
-        description: "Total discount amount for an order. This includes all order level discounts (e.g. free shipping, promos, etc.) as well as item level discounts (e.g. member vs non-member pricing."
+      - name: net_product_revenue
+        description: >
+          Net product revenue calculation:
+          `gross_product_revenue`
+          `- membership_discount`
+          `- merch_discount`
 
-      - name: discount_percent
-        description: "The total discount percent that was applied to an order"
+      - name: shipping_revenue
+        description: "The revenue attributed to shipping the order"
 
-      - name: refund_amount_usd
-        description: "The total refund amount for an order"
+      - name: free_shipping_discount
+        description: "The amount of discount applied to offset the shipping cost of an order"
 
-      - name: net_revenue_usd
-        description: "The net revenue for an order. Calculated as `product revenue + shipping revenue - discounts - refunds`"
+      - name: gross_revenue
+        description: >
+          Gross revenue calculation:
+          `gross_product_revenue`
+          `- membership_discount`
+          `- merch_discount`
+          `+ shipping_revenue` 
+          `- free_shipping_discount`
 
+      - name: new_member_discount
+        description: "Discount amount attributed to any promotion that is considered a new member promotion"
+
+      - name: refund_amount
+        description: "The total amount of refunds for the order"
+
+      - name: other_discount
+        description: "Discount amounts associated with various reasons (e.g. CARE credits, marketing, etc)"
+
+      - name: net_revenue
+        description: >
+          Net revenue calculation:
+          `gross_product_revenue`
+           `- membership_discount`
+           `- merch_discount`
+           `+ shipping_revenue`
+           `- free_shipping_discount`
+           `- new_member_discount`
+           `- refund_amount`
+           `- other_discount`
