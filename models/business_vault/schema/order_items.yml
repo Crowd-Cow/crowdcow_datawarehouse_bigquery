@@ -16,6 +16,9 @@ models:
       - name: bid_item_id
         description: "Bid item ID"
 
+      - name: promotion_id
+        description: "Promotion ID"
+
       - name: bid_token
         description: "Bid token"
 

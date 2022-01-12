@@ -82,7 +82,11 @@ models:
         description: "Item discount attributed to the amount above and beyone the standard 5% member discount applied to an item"
 
       - name: net_product_revenue
-        description: `gross_product_revenue - membership_discount - merch_discount`
+        description: >
+          Net product revenue calculation:
+          `gross_product_revenue`
+          `- membership_discount`
+          `- merch_discount`
 
       - name: shipping_revenue
         description: "The revenue attributed to shipping the order"
@@ -91,7 +95,13 @@ models:
         description: "The amount of discount applied to offset the shipping cost of an order"
 
       - name: gross_revenue
-        description: `gross_product_revenue - membership_discount - merch_discount + shipping_revenue - free_shipping_discount`
+        description: >
+          Gross revenue calculation:
+          `gross_product_revenue`
+          `- membership_discount`
+          `- merch_discount`
+          `+ shipping_revenue` 
+          `- free_shipping_discount`
 
       - name: new_member_discount
         description: "Discount amount attributed to any promotion that is considered a new member promotion"
@@ -104,14 +114,15 @@ models:
 
       - name: net_revenue
         description: >
-          `gross_product_revenue
-           - membership_discount
-           - merch_discount
-           + shipping_revenue
-           - free_shipping_discount
-           - new_member_discount
-           - refund_amount
-           - other_discount`
+          Net revenue calculation:
+          `gross_product_revenue`
+           `- membership_discount`
+           `- merch_discount`
+           `+ shipping_revenue`
+           `- free_shipping_discount`
+           `- new_member_discount`
+           `- refund_amount`
+           `- other_discount`
 
       - name: has_free_shipping
         description: "Boolean indicating if the order had a free shipping discount applied"

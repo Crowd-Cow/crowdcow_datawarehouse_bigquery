@@ -40,6 +40,9 @@ models:
       - name: awarded_cow_cash_message
         description: "The message of the Cow Cash that was awarded"
 
+      - name: promotion_type
+        description: "Promotion type"
+
       - name: credit_discount_usd
         description: "The amount of the credit in USD"
 
