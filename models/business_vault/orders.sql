@@ -29,13 +29,16 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.billing_city
         ,orders.billing_state
         ,orders.billing_postal_code
-        ,zeroifnull(order_revenue.gross_revenue_usd) as gross_revenue_usd
-        ,zeroifnull(order_revenue.product_revenue_usd) as product_revenue_usd
-        ,zeroifnull(order_revenue.order_shipping_fee_usd) as shipping_revenue_usd    
-        ,zeroifnull(order_revenue.discount_percent) as discount_percent
-        ,zeroifnull(order_revenue.total_order_discount) as total_order_discount
+        ,zeroifnull(order_revenue.gross_product_revenue) as gross_product_revenue
+        ,zeroifnull(order_revenue.membership_discount) as membership_discount
+        ,zeroifnull(order_revenue.merch_discount) as merch_discount
+        ,orders.order_shipping_fee_usd
+        ,zeroifnull(order_revenue.free_shipping_discount) as free_shipping_discount
+        ,zeroifnull(order_revenue.gross_revenue) as gross_revenue
+        ,zeroifnull(order_revenue.new_member_discount) as new_member_discount
         ,zeroifnull(order_revenue.refund_amount_usd) as refund_amount_usd
-        ,zeroifnull(order_revenue.net_revenue_usd) as net_revenue_usd
+        ,zeroifnull(order_revenue.other_discount) as other_discount
+        ,zeroifnull(order_revenue.net_revenue) as net_revenue
         ,flags.has_free_shipping
         ,flags.is_ala_carte_order
         ,flags.is_membership_order

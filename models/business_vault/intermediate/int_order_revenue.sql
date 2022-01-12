@@ -2,30 +2,48 @@ with
 
 orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,order_item as ( select * from {{ ref('order_items') }} )
-,credit as ( select * from {{ ref('credits') }} )
+,discount as ( select * from {{ ref('discounts') }} )
 ,refund as ( select * from {{ ref('stg_cc__refunds') }} )
 
 ,bid_amounts as (
     select 
         order_id
-        ,sum(order_item_revenue) as product_revenue_usd
-        ,sum(order_item_discount) as order_item_discount_usd
+        ,sum(order_item_revenue) as gross_product_revenue
     from order_item
     group by 1
 )
 
-,credit_amounts as (
+,discount_amounts as (
     select
         order_id
-        ,sum(discount_percent) as discount_percent
-        ,sum(credit_discount_usd) as discount_amount_usd
+        ,sum(discount_usd) as total_discount_amount_usd
         
         /**** Breakdown the total credit for an order into various credit categories for financial reporting in Looker ****/
-        ,count_if(credit_type = 'FREE_SHIPPING') as free_shipping_credit_count
-        ,zeroifnull(sum(case when credit_type = 'FREE_SHIPPING' then credit_discount_usd end)) as free_shipping_credit
-        ,zeroifnull(sum())
+        ,count_if(business_group = 'FREE_SHIPPING') as free_shipping_credit_count
+        ,zeroifnull(sum(case when business_group = 'FREE_SHIPPING' then discount_usd end)) as free_shipping_discount
+        ,zeroifnull(sum(case when business_group = 'MEMBERSHIP 5%' then discount_usd end)) as membership_discount
+        ,zeroifnull(sum(case when business_group = 'MERCHANDISING DISCOUNT' then discount_usd end)) as merch_discount
+        ,zeroifnull(
+            sum(
+                case 
+                    when business_group in ('ACQUISITION MARKETING - PROMOTION CREDITS','MEMBERSHIP PROMOTIONS','OTHER ITEM LEVEL PROMOTIONS') 
+                        and is_new_member_promotion 
+                    then discount_usd 
+                end
+            )
+        ) as new_member_discount
+        ,zeroifnull(
+            sum(
+                case
+                    when business_group in ('ACQUISITION MARKETING - GIFT', 'ACQUISITION MARKETING - INFLUENCER','ACQUISITION MARKETING - MEMBER REFERRAL'
+                        ,'ACQUISITION MARKETING - PROMOTION CREDITS','CARE CREDITS','OTHER - UNKNOWN','OTHER ITEM LEVEL PROMOTIONS','RETENTION MARKETING'
+                        ,'VARIOUS -- ?') and not is_new_member_promotion
+                    then discount_usd
+                end
+            )
+        ) as other_discount
 
-    from credit
+    from discount
     group by 1
 )
 
@@ -42,16 +60,17 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         orders.order_id
         ,orders.parent_order_id
         ,orders.order_shipping_fee_usd
-        ,zeroifnull(bid_amounts.product_revenue_usd) as product_revenue_usd
-        ,zeroifnull(bid_amounts.order_item_discount_usd) as order_item_discount_usd
-        ,zeroifnull(credit_amounts.discount_amount_usd) as discount_amount_usd
+        ,zeroifnull(bid_amounts.gross_product_revenue) as gross_product_revenue
+        ,zeroifnull(discount_amounts.free_shipping_credit_count) as free_shipping_credit_count
+        ,zeroifnull(discount_amounts.free_shipping_discount) as free_shipping_discount
+        ,zeroifnull(discount_amounts.membership_discount) as membership_discount
+        ,zeroifnull(discount_amounts.merch_discount) as merch_discount
+        ,zeroifnull(discount_amounts.new_member_discount) as new_member_discount
+        ,zeroifnull(discount_amounts.other_discount) as other_discount
         ,zeroifnull(refund_amounts.refund_amount_usd) as refund_amount_usd
-        ,zeroifnull(credit_amounts.discount_percent) as discount_percent
-        ,zeroifnull(credit_amounts.free_shipping_credit_count) as free_shipping_credit_count
-        ,zeroifnull(credit_amounts.free_shipping_credit) as free_shipping_credit
     from orders
         left join bid_amounts on orders.order_id = bid_amounts.order_id
-        left join credit_amounts on orders.order_id = credit_amounts.order_id
+        left join discount_amounts on orders.order_id = discount_amounts.order_id
         left join refund_amounts on orders.stripe_charge_id = refund_amounts.stripe_charge_id
 )
 
@@ -63,62 +82,59 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         order_id
         ,parent_order_id
         ,order_shipping_fee_usd
-        ,product_revenue_usd + order_shipping_fee_usd as gross_revenue_usd
-        ,product_revenue_usd
-        ,discount_percent
+        ,gross_product_revenue
+
+        ,case
+            when free_shipping_credit_count > 0 and free_shipping_discount = 0 then order_shipping_fee_usd
+            else free_shipping_discount
+         end as free_shipping_discount
+
+         ,membership_discount
+         ,merch_discount
+         ,new_member_discount
+         ,other_discount
         ,refund_amount_usd
 
-        ,case
-            when free_shipping_credit_count > 0 and free_shipping_credit = 0 then discount_amount_usd + order_item_discount_usd + order_shipping_fee_usd
-            else discount_amount_usd + order_item_discount_usd
-         end as total_order_discount
-
-        ,case
-            when free_shipping_credit_count > 0 and free_shipping_credit = 0 then discount_amount_usd + order_shipping_fee_usd
-            else discount_amount_usd
-         end as order_discount_no_item_discount_amount
-
-        ,order_item_discount_usd
-
-        ,case
-            when free_shipping_credit_count > 0 and free_shipping_credit = 0 then order_shipping_fee_usd
-            else free_shipping_credit
-         end as free_shipping_credit
     from revenue_joins
 )
 
 ,revenue_calculations as (
     select
         order_id
+        ,gross_product_revenue
+        ,membership_discount
+        ,merch_discount
+        
+        ,gross_product_revenue 
+         - membership_discount 
+         - merch_discount as net_product_revenue
+        
         ,order_shipping_fee_usd
-        ,product_revenue_usd + order_shipping_fee_usd as gross_revenue_usd
-        ,product_revenue_usd
-        ,total_order_discount
-        ,order_discount_no_item_discount_amount
-        ,order_item_discount_usd
-        ,discount_percent
+        ,free_shipping_discount
+        
+        ,gross_product_revenue 
+         - membership_discount 
+         - merch_discount
+         + order_shipping_fee_usd 
+         - free_shipping_discount as gross_revenue
+        
+        ,new_member_discount
         ,refund_amount_usd
+        ,other_discount
 
         ,case 
-            when parent_order_id is not null then product_revenue_usd
-            else product_revenue_usd + order_shipping_fee_usd - (order_discount_no_item_discount_amount + order_item_discount_usd) - refund_amount_usd 
-         end as net_revenue_usd
+            when parent_order_id is not null then gross_product_revenue
+            else 
+                gross_product_revenue 
+                - membership_discount 
+                - merch_discount
+                + order_shipping_fee_usd 
+                - free_shipping_discount
+                - new_member_discount
+                - refund_amount_usd
+                - other_discount
+         end as net_revenue
 
-        ,free_shipping_credit
-        ,cs_cow_cash_credit
-        ,redeemed_gift_card_credit
-        ,new_member_promotion_credit
-        ,replacement_item_credit
-        ,marketing_pr_credit
-        ,cow_cash_promotion_credit
-        ,cow_cash_gift_card_promotion_credit
-        ,subscriber_five_pct_credit
-        ,corp_gift_credit
-        ,sales_marketing_referral_credit
-        ,new_customer_referral_credit
-        ,customer_retention_credit
-        ,inr_credit
-        ,price_match_credit
     from fix_shipping_credits
 )
 
