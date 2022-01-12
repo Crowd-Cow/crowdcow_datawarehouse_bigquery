@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: promotions
+    description: ""
+    columns:
+      - name: promotion_id
+        description: ""
+
+      - name: promotion_type
+        description: ""
+
+      - name: is_new_member_promotion
+        description: ""
+
+      - name: is_always_available
+        description: ""
+
+      - name: must_be_assigned_to_user
+        description: ""
+
+      - name: must_be_assigned_to_order
+        description: ""
+
+      - name: created_at_utc
+        description: ""
+
+      - name: updated_at_utc
+        description: ""
+

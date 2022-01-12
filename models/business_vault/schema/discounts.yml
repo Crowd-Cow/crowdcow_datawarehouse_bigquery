@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: discounts
+    description: "Business logic model that combines order level credit discounts with item level discounts/promotions into a single table"
+    columns:
+      - name: discount_detail_id
+        description: "A surrogate key to give the discount record a unique value. It combines `discount_source`,`discount_id`,`order_id`,`business_group`"
+        tests:
+          - unique
+          - not_null
+
+      - name: discount_source
+        description: "The source of the discount. Either `CREDIT DISCOUNTS` or `ITEM DISCOUNTS`"
+
+      - name: discount_id
+        description: "An ID carried over from the source type. For credits it's the `credit_id`. For items it's the `bid_id` of the item"
+
+      - name: promotion_id
+        description: "The promotion ID associated with the discount"
+
+      - name: promotion_type
+        description: "The promotion type associated with the discount"
+
+      - name: order_id
+        description: "Order ID"
+
+      - name: business_group
+        description: "A business group classification for the discount (e.g. CARE credit, Merch discount, etc)"
+
+      - name: financial_account
+        description: "The financial account the credit amount should be booked to. Not all discounts are booked to a financial account (e.g. gift card redemptions, corp gift orders, etc.)"
+
+      - name: discount_usd
+        description: "The amount of the discount"
+
+      - name: is_new_member_promotion
+        description: "Boolean indicating if the promotion tied to the discount is considered a new member promotion"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created. For credits it is the credit `created_at`. For items it is the bid `created_at`"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated. For credits it is the credit `created_at`. For items it is the bid `created_at`"
