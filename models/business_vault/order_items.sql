@@ -93,7 +93,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
 
         ,round(
             case
-                when promotion_id is not null then bid_list_price_usd
+                when promotion_id is not null then bid_price_paid_usd
                 else 0
             end
         ,2) as item_promotion_discount

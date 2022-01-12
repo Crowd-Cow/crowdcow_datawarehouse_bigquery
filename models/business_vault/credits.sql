@@ -3,6 +3,7 @@ with
 credit as ( select * from {{ ref('stg_cc__credits') }} )
 ,awarded_cow_cash as ( select * from {{ ref('stg_cc__cow_cash_entries') }} )
 ,promotion as ( select * from {{ ref('stg_cc__promotions') }} )
+,orders as ( select * from {{ ref('stg_cc__orders') }} )
 
 ,add_cow_cash_information as (
     select
@@ -50,6 +51,14 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
         left join promotion on add_cow_cash_information.promotion_id = promotion.promotion_id
 )
 
+,add_order_type as (
+    select
+        add_promotion_info.*
+        ,orders.order_type
+    from add_promotion_info
+        left join orders on add_promotion_info.order_id = orders.order_id
+)
+
 ,group_credits as (
     select
         credit_id
@@ -64,16 +73,21 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
             when credit_type = 'FREE_SHIPPING' then 'FREE SHIPPING'
             when credit_type = 'SUBSCRIPTION_FIVE_PERCENT'
                 or (credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'SUBSCRIPTION') then 'MEMBERSHIP 5%'
-            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'CUSTOMER_SERVICE' then 'CARE CREDITS'
+            when (credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'CUSTOMER_SERVICE') 
+                or (credit_type = 'DOLLAR_AMOUNT' and promotion_id is null and order_type in ('AMAZON','E-COMMERCE')) then 'CARE CREDITS'
             when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'REFERRAL' then 'ACQUISITION MARKETING - MEMBER REFERRAL'
-            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'BULK_ORDER' then 'CORPORATE GIFTING'
+            when (credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'BULK_ORDER') 
+                or (credit_type = 'DOLLAR_AMOUNT' and promotion_id is null and order_type = 'BULK ORDER') then 'CORPORATE GIFTING'
             when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'GIFT_CARD' then 'GIFT CARD REDEMPTION'
             when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'PROMOTION' then 'ACQUISITION MARKETING - PROMOTION CREDITS'
             when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'GIFT_CARD_PROMOTION' then 'ACQUISITION MARKETING - GIFT'
             when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'RETENTION_OFFER' then 'RETENTION MARKETING'
             when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'REFERRED_CREDIT' then 'ACQUISITION MARKETING - MEMBER REFERRAL'
             when credit_type = 'DOLLAR_AMOUNT' and promotion_id in (28,29,30) then 'ACQUISITION MARKETING - PROMOTION CREDITS'
-            when credit_type = 'DOLLAR_AMOUNT' and promotion_id is null then 'VARIOUS -- ?'
+            when credit_type = 'DOLLAR_AMOUNT' and promotion_id is null and order_type = 'REPLACEMENT' then 'REPLACEMENTS'
+            when credit_type = 'DOLLAR_AMOUNT' and promotion_id is null 
+                and order_type in ('MARKETING EVENTS','MARKETING INFLUENCER','PHOTO SHOOTS','PR SAMPLES','WHOLESALE','WHOLESALE SAMPLES') then 'MARKETING PR'
+            when credit_type = 'DOLLAR_AMOUNT' and promotion_id is null and order_type = 'GIFT' then 'INTERNAL - HR RELATED'
             when credit_type in ('GIFT_CODE_DOLLAR_AMOUNT','PERCENT_DISCOUNT') and promotion_id = 7 then 'ACQUISITION MARKETING - GIFT'
             when credit_type = 'GIFT_CODE_DOLLAR_AMOUNT' and promotion_id = 10 then 'ACQUISITION MARKETING - MEMBER REFERRAL'
             when credit_type = 'GIFT_CODE_DOLLAR_AMOUNT' and promotion_id = 8 then 'ACQUISITION MARKETING - INFLUENCER'
@@ -84,16 +98,21 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
             when credit_type = 'FREE_SHIPPING' then '41305 - FREE SHIPPING'
             when credit_type = 'SUBSCRIPTION_FIVE_PERCENT'
                 or (credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'SUBSCRIPTION') then '41303 - SUBSCRIPTION REWARDS'
-            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'CUSTOMER_SERVICE' then '41307 - CARE CONCESSIONS'
+            when (credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'CUSTOMER_SERVICE') 
+                or (credit_type = 'DOLLAR_AMOUNT' and promotion_id is null and order_type in ('AMAZON','E-COMMERCE')) then '41307 - CARE CONCESSIONS'
             when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'REFERRAL' then '61145 - REFERRAL CREDITS'
-            when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'BULK_ORDER' then 'CORPORATE GIFTING'
+            when (credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'BULK_ORDER') 
+                or (credit_type = 'DOLLAR_AMOUNT' and promotion_id is null and order_type = 'BULK ORDER') then 'CORPORATE GIFTING'
             when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'GIFT_CARD' then 'GIFT CARD REDEMPTION'
             when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'PROMOTION' then '41301 - NEW CUSTOMER SUBSCRIPTIONS'
             when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'GIFT_CARD_PROMOTION' then '41306 - OTHER'
             when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'RETENTION_OFFER' then '41306 - OTHER'
             when credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'REFERRED_CREDIT' then '61145 - REFERRAL CREDITS'
             when credit_type = 'DOLLAR_AMOUNT' and promotion_id in (28,29,30) then '41301 - NEW CUSTOMER SUBSCRIPTIONS'
-            when credit_type = 'DOLLAR_AMOUNT' and promotion_id is null then 'VARIOUS -- ?'
+            when credit_type = 'DOLLAR_AMOUNT' and promotion_id is null and order_type = 'REPLACEMENT' then 'REPLACEMENTS'
+            when credit_type = 'DOLLAR_AMOUNT' and promotion_id is null 
+                and order_type in ('MARKETING EVENTS','MARKETING INFLUENCER','PHOTO SHOOTS','PR SAMPLES','WHOLESALE','WHOLESALE SAMPLES') then 'MARKETING PR'
+            when credit_type = 'DOLLAR_AMOUNT' and promotion_id is null and order_type = 'GIFT' then 'INTERNAL - HR RELATED'
             when credit_type in ('GIFT_CODE_DOLLAR_AMOUNT','PERCENT_DISCOUNT') and promotion_id = 7 then '41306 - OTHER'
             when credit_type = 'GIFT_CODE_DOLLAR_AMOUNT' and promotion_id = 10 then '61145 - REFERRAL CREDITS'
             when credit_type = 'GIFT_CODE_DOLLAR_AMOUNT' and promotion_id = 8 then '41301 - NEW CUSTOMER SUBSCRIPTIONS'
@@ -110,7 +129,7 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
         ,is_new_member_promotion
         ,created_at_utc
         ,updated_at_utc
-    from add_promotion_info
+    from add_order_type
 )
 
 select * from group_credits

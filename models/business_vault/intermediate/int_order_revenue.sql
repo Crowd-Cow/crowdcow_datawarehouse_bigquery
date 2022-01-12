@@ -19,8 +19,8 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,sum(discount_usd) as total_discount_amount_usd
         
         /**** Breakdown the total credit for an order into various credit categories for financial reporting in Looker ****/
-        ,count_if(business_group = 'FREE_SHIPPING') as free_shipping_credit_count
-        ,zeroifnull(sum(case when business_group = 'FREE_SHIPPING' then discount_usd end)) as free_shipping_discount
+        ,count_if(business_group = 'FREE SHIPPING') as free_shipping_credit_count
+        ,zeroifnull(sum(case when business_group = 'FREE SHIPPING' then discount_usd end)) as free_shipping_discount
         ,zeroifnull(sum(case when business_group = 'MEMBERSHIP 5%' then discount_usd end)) as membership_discount
         ,zeroifnull(sum(case when business_group = 'MERCHANDISING DISCOUNT' then discount_usd end)) as merch_discount
         ,zeroifnull(
@@ -36,8 +36,8 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
             sum(
                 case
                     when business_group in ('ACQUISITION MARKETING - GIFT', 'ACQUISITION MARKETING - INFLUENCER','ACQUISITION MARKETING - MEMBER REFERRAL'
-                        ,'ACQUISITION MARKETING - PROMOTION CREDITS','CARE CREDITS','OTHER - UNKNOWN','OTHER ITEM LEVEL PROMOTIONS','RETENTION MARKETING'
-                        ,'VARIOUS -- ?') and not is_new_member_promotion
+                        ,'ACQUISITION MARKETING - PROMOTION CREDITS','CARE CREDITS','OTHER - UNKNOWN','OTHER ITEM LEVEL PROMOTIONS','RETENTION MARKETING')
+                        and not is_new_member_promotion
                     then discount_usd
                 end
             )
@@ -122,18 +122,23 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,refund_amount_usd
         ,other_discount
 
-        ,case 
-            when parent_order_id is not null then gross_product_revenue
-            else 
-                gross_product_revenue 
-                - membership_discount 
-                - merch_discount
-                + order_shipping_fee_usd 
-                - free_shipping_discount
-                - new_member_discount
-                - refund_amount_usd
-                - other_discount
-         end as net_revenue
+        ,round(
+            case 
+                when parent_order_id is not null then 
+                    gross_product_revenue 
+                    - membership_discount 
+                    - merch_discount
+                else 
+                    gross_product_revenue 
+                    - membership_discount 
+                    - merch_discount
+                    + order_shipping_fee_usd 
+                    - free_shipping_discount
+                    - new_member_discount
+                    - refund_amount_usd
+                    - other_discount
+            end
+        ,2) as net_revenue
 
     from fix_shipping_credits
 )
