@@ -60,7 +60,7 @@ credit as ( select * from {{ ref('credits') }} )
         ,union_discounts.business_group
         ,union_discounts.financial_account
         ,union_discounts.discount_usd
-        ,promotion.is_new_member_promotion
+        ,coalesce(promotion.is_new_member_promotion,FALSE) as is_new_member_promotion
         ,union_discounts.created_at_utc
         ,union_discounts.updated_at_utc
     from union_discounts
