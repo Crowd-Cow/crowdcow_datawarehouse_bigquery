@@ -62,12 +62,12 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.order_shipping_fee_usd
         ,zeroifnull(bid_amounts.gross_product_revenue) as gross_product_revenue
         ,zeroifnull(discount_amounts.free_shipping_credit_count) as free_shipping_credit_count
-        ,zeroifnull(discount_amounts.free_shipping_discount) as free_shipping_discount
-        ,zeroifnull(discount_amounts.membership_discount) as membership_discount
-        ,zeroifnull(discount_amounts.merch_discount) as merch_discount
-        ,zeroifnull(discount_amounts.new_member_discount) as new_member_discount
-        ,zeroifnull(discount_amounts.other_discount) as other_discount
-        ,zeroifnull(refund_amounts.refund_amount_usd) as refund_amount_usd
+        ,zeroifnull(discount_amounts.free_shipping_discount) * -1 as free_shipping_discount
+        ,zeroifnull(discount_amounts.membership_discount) * -1 as membership_discount
+        ,zeroifnull(discount_amounts.merch_discount) * -1 as merch_discount
+        ,zeroifnull(discount_amounts.new_member_discount) * -1 as new_member_discount
+        ,zeroifnull(discount_amounts.other_discount) * -1 as other_discount
+        ,zeroifnull(refund_amounts.refund_amount_usd) * -1 as refund_amount_usd
     from orders
         left join bid_amounts on orders.order_id = bid_amounts.order_id
         left join discount_amounts on orders.order_id = discount_amounts.order_id
@@ -85,7 +85,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,gross_product_revenue
 
         ,case
-            when free_shipping_credit_count > 0 and free_shipping_discount = 0 then order_shipping_fee_usd
+            when free_shipping_credit_count > 0 and free_shipping_discount = 0 then order_shipping_fee_usd * -1
             else free_shipping_discount
          end as free_shipping_discount
 
@@ -106,17 +106,17 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,merch_discount
         
         ,gross_product_revenue 
-         - membership_discount 
-         - merch_discount as net_product_revenue
+         + membership_discount 
+         + merch_discount as net_product_revenue
         
         ,order_shipping_fee_usd as shipping_revenue
         ,free_shipping_discount
         
         ,gross_product_revenue 
-         - membership_discount 
-         - merch_discount
-         + order_shipping_fee_usd 
-         - free_shipping_discount as gross_revenue
+         + membership_discount 
+         + merch_discount
+         - order_shipping_fee_usd 
+         + free_shipping_discount as gross_revenue
         
         ,new_member_discount
         ,refund_amount_usd as refund_amount
@@ -126,17 +126,17 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
             case 
                 when parent_order_id is not null then 
                     gross_product_revenue 
-                    - membership_discount 
-                    - merch_discount
+                    + membership_discount 
+                    + merch_discount
                 else 
                     gross_product_revenue 
-                    - membership_discount 
-                    - merch_discount
-                    + order_shipping_fee_usd 
-                    - free_shipping_discount
-                    - new_member_discount
-                    - refund_amount_usd
-                    - other_discount
+                    + membership_discount 
+                    + merch_discount
+                    - order_shipping_fee_usd 
+                    + free_shipping_discount
+                    + new_member_discount
+                    + refund_amount_usd
+                    + other_discount
             end
         ,2) as net_revenue
 
