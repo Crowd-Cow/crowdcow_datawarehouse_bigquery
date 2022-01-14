@@ -23,7 +23,12 @@ source as ( select * from {{ source('forecast', 'fc_cat_subcat_cut_daily_forecas
         ,item_id
         ,split_part(item_id,'--',1)::int as fc_id
         ,{{ clean_strings("split_part(item_id,'--',2)") }} as category
-        ,{{ clean_strings("split_part(item_id,'--',3)") }} as sub_category
+
+        ,case
+            when split_part(item_id,'--',3) = 'na' then null
+            else {{ clean_strings("split_part(item_id,'--',3)") }}
+         end as sub_category
+
         ,split_part(item_id,'--',4)::int as cut_id
         ,date as forecast_date
         ,p10
