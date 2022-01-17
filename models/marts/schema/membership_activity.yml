@@ -1,0 +1,50 @@
+version: 2
+
+models:
+  - name: membership_activity
+    description: "Data mart to analyze net membership activity on a daily, weekly, and monthly basis"
+    columns:
+      - name: membership_activity_id
+        description: "A surrogate key to provide a unique record for membership activity. Key consists of `calendar_date`, `membership_event`, and `subscription_id`"
+        tests:
+          - unique
+          - not_null
+      
+      - name: calendar_date
+        description: "Calendar day value"
+
+      - name: calendar_date_week
+        description: "The week value of the calendar day"
+
+      - name: calendar_date_month
+        description: "The month value of the calendar day"
+
+      - name: membership_event
+        description: "Describes the kind of membership event taking place: `MEMBERSHIP CREATED` or `MEMBERSHIP CANCELLED`"
+
+      - name: subscription_id
+        description: "Membership ID"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: membership_date
+        description: "The relevant date of the membership event. Either the `subscription_created_at_utc` or the `subscription_cancelled_at_utc`"
+
+      - name: membership_created
+        description: "The date value of the `subscription_created_at_utc` timestamp"
+
+      - name: membership_cancelled
+        description: "The date value of the `subscription_cancelled_at_utc` timestamp"
+
+      - name: membership_change
+        description: "The net effect of the membership event. The value is 1 for `MEMBERSHIP CREATED` and -1 for `MEMBERSHIP CANCELLED`"
+
+      - name: net_daily_uncancelled_memberships
+        description: "The count of all uncancelled, or cancellation is after the current row calendar date, memberships at a daily date grain"
+
+      - name: net_weekly_uncancelled_memberships
+        description: "The count of all uncancelled, or cancellation is after the current row calendar date, memberships at a weekly date grain"
+
+      - name: net_monthly_uncancelled_memberships
+        description: "The count of all uncancelled, or cancellation is after the current row calendar date, memberships at a monthly date grain"
