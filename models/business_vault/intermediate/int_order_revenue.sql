@@ -115,7 +115,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,gross_product_revenue 
          + membership_discount 
          + merch_discount
-         - order_shipping_fee_usd 
+         + order_shipping_fee_usd 
          + free_shipping_discount as gross_revenue
         
         ,new_member_discount
@@ -132,7 +132,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
                     gross_product_revenue 
                     + membership_discount 
                     + merch_discount
-                    - order_shipping_fee_usd 
+                    + order_shipping_fee_usd 
                     + free_shipping_discount
                     + new_member_discount
                     + refund_amount_usd
