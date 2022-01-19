@@ -7802,3 +7802,22 @@ sources:
 
           - name: _fivetran_synced
             description: Timestamp for when the record was synced by Fivetran to the `raw` database in Snowflake
+
+  - name: google_sheets
+    database: raw
+    schema: google_sheets
+
+    tables:
+      - name: ccpa_requests
+        description: users who have requested to be removed from data and being contacted
+        columns:
+          - name: first_name
+            description: user's first name
+          - name: last_name
+            description: user's last name
+          - name: email_address
+            description: user's email address
+          - name: admin_link
+            description: link to user's admin page
+          - name: date_received
+            description: date ccpa request was received
