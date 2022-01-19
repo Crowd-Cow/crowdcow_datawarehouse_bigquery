@@ -20,27 +20,24 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         
         /**** Breakdown the total credit for an order into various credit categories for financial reporting in Looker ****/
         ,count_if(business_group = 'FREE SHIPPING') as free_shipping_credit_count
-        ,zeroifnull(sum(case when business_group = 'FREE SHIPPING' then discount_usd end)) as free_shipping_discount
-        ,zeroifnull(sum(case when business_group = 'MEMBERSHIP 5%' then discount_usd end)) as membership_discount
-        ,zeroifnull(sum(case when business_group = 'MERCHANDISING DISCOUNT' then discount_usd end)) as merch_discount
-        ,zeroifnull(
-            sum(
-                case 
-                    when business_group in ('ACQUISITION MARKETING - PROMOTION CREDITS','MEMBERSHIP PROMOTIONS','OTHER ITEM LEVEL PROMOTIONS') 
-                        and is_new_member_promotion 
-                    then discount_usd 
-                end
-            )
+        ,sum(case when business_group = 'FREE SHIPPING' then discount_usd end) as free_shipping_discount
+        ,sum(case when business_group = 'MEMBERSHIP 5%' then discount_usd end) as membership_discount
+        ,sum(case when business_group = 'MERCHANDISING DISCOUNT' then discount_usd end) as merch_discount
+        ,sum(
+            case 
+                when business_group in ('ACQUISITION MARKETING - PROMOTION CREDITS','MEMBERSHIP PROMOTIONS','OTHER ITEM LEVEL PROMOTIONS') 
+                    and is_new_member_promotion 
+                then discount_usd 
+            end
         ) as new_member_discount
-        ,zeroifnull(
-            sum(
-                case
-                    when business_group in ('ACQUISITION MARKETING - GIFT', 'ACQUISITION MARKETING - INFLUENCER','ACQUISITION MARKETING - MEMBER REFERRAL'
-                        ,'ACQUISITION MARKETING - PROMOTION CREDITS','CARE CREDITS','OTHER - UNKNOWN','OTHER ITEM LEVEL PROMOTIONS','RETENTION MARKETING')
-                        and not is_new_member_promotion
-                    then discount_usd
-                end
-            )
+        ,sum(case when business_group in ('GIFT CARD REDEMPTION','CORPORATE GIFTING') then discount_usd end) as gift_redemption
+        ,sum(
+            case
+                when business_group in ('ACQUISITION MARKETING - GIFT', 'ACQUISITION MARKETING - INFLUENCER','ACQUISITION MARKETING - MEMBER REFERRAL'
+                    ,'ACQUISITION MARKETING - PROMOTION CREDITS','CARE CREDITS','OTHER - UNKNOWN','OTHER ITEM LEVEL PROMOTIONS','RETENTION MARKETING')
+                    and not is_new_member_promotion
+                then discount_usd
+            end
         ) as other_discount
 
     from discount
@@ -66,6 +63,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(discount_amounts.membership_discount) * -1 as membership_discount
         ,zeroifnull(discount_amounts.merch_discount) * -1 as merch_discount
         ,zeroifnull(discount_amounts.new_member_discount) * -1 as new_member_discount
+        ,zeroifnull(discount_amounts.gift_redemption) * -1 as gift_redemption
         ,zeroifnull(discount_amounts.other_discount) * -1 as other_discount
         ,zeroifnull(refund_amounts.refund_amount_usd) * -1 as refund_amount_usd
     from orders
@@ -89,10 +87,11 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
             else free_shipping_discount
          end as free_shipping_discount
 
-         ,membership_discount
-         ,merch_discount
-         ,new_member_discount
-         ,other_discount
+        ,membership_discount
+        ,merch_discount
+        ,new_member_discount
+        ,gift_redemption
+        ,other_discount
         ,refund_amount_usd
 
     from revenue_joins
@@ -119,6 +118,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
          + free_shipping_discount as gross_revenue
         
         ,new_member_discount
+        ,gift_redemption
         ,refund_amount_usd as refund_amount
         ,other_discount
 
@@ -136,6 +136,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
                     + free_shipping_discount
                     + new_member_discount
                     + refund_amount_usd
+                    + gift_redemption
                     + other_discount
             end
         ,2) as net_revenue

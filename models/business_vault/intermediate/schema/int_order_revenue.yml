@@ -46,6 +46,9 @@ models:
       - name: new_member_discount
         description: "Discount amount attributed to any promotion that is considered a new member promotion"
 
+      - name: gift_redemption
+        descrpition: "Discount amount attributed to a redemption of a gift card or a corp gift order credit"
+
       - name: refund_amount
         description: "The total amount of refunds for the order"
 

@@ -38,6 +38,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(order_revenue.gross_revenue) as gross_revenue
         ,zeroifnull(order_revenue.new_member_discount) as new_member_discount
         ,zeroifnull(order_revenue.refund_amount) as refund_amount
+        ,zeroifnull(order_revenue.gift_redemption) as gift_redemption
         ,zeroifnull(order_revenue.other_discount) as other_discount
         ,zeroifnull(order_revenue.net_revenue) as net_revenue
         ,flags.has_free_shipping

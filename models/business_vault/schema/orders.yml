@@ -109,6 +109,9 @@ models:
       - name: refund_amount
         description: "The total amount of refunds for the order"
 
+      - name: gift_redemption
+        descrpition: "Discount amount attributed to a redemption of a gift card or a corp gift order credit"
+
       - name: other_discount
         description: "Discount amounts associated with various reasons (e.g. CARE credits, marketing, etc)"
 
