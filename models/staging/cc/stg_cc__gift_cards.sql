@@ -20,7 +20,7 @@ renamed as (
         ,suspicion_found_at as suspicion_found_at_utc
         ,user_id
         ,suspicion_resolved_at as suspicion_resolved_at_utc
-        ,{{ clean_strings('amount_frauded_in_cents') }} as gift_card_fraud_amount_usd
+        ,{{ cents_to_usd('amount_frauded_in_cents') }} as gift_card_fraud_amount_usd
         ,{{ clean_strings('image_url') }} as image_url
         ,{{ clean_strings('code') }} as gift_card_code
         ,updated_at as updated_at_utc
