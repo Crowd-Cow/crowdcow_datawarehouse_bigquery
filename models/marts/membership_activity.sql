@@ -5,6 +5,9 @@ dates as (
         calendar_date
         ,calendar_date_week
         ,calendar_date_month
+        ,fiscal_week_num
+        ,fiscal_month
+        ,fiscal_year
     from {{ ref('retail_calendar') }}
     where calendar_date <= sysdate()::date
 )
@@ -17,6 +20,9 @@ dates as (
         dates.calendar_date
         ,dates.calendar_date_week
         ,dates.calendar_date_month
+        ,dates.fiscal_week_num
+        ,dates.fiscal_month
+        ,dates.fiscal_year
         ,'MEMBERSHIP CREATED' as membership_event
         ,membership.subscription_id
         ,membership.user_id
@@ -33,6 +39,9 @@ dates as (
         dates.calendar_date
         ,dates.calendar_date_week
         ,dates.calendar_date_month
+        ,dates.fiscal_week_num
+        ,dates.fiscal_month
+        ,dates.fiscal_year
         ,'MEMBERSHIP CANCELLED' as membership_event
         ,cancelled_membership.subscription_id
         ,cancelled_membership.user_id
