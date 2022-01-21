@@ -1,13 +1,7 @@
-{{
-  config(
-    tags=["staging", "spreadsheet"],
-    materialized = "view"
-  )
-}}
 
 select
-   first_name
-  ,last_name
+   {{ clean_strings('first_name') }} as first_name
+  ,{{ clean_strings('last_name') }} as last_name
   ,email_address as email
   ,admin_link
   ,date_received::date as date_received

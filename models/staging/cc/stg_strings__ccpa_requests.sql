@@ -1,9 +1,3 @@
-{{
-  config(
-    tags=["staging", "spreadsheet"],
-    materialized = "view"
-  )
-}}
 
 {% set column_names = [
      "first_name"
