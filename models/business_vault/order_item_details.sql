@@ -85,7 +85,6 @@ order_item as ( select * from {{ ref('order_items') }} )
         ,sku_price_usd
         ,bid_sku_price
         ,sku_price_proportion
-        ,bid_gross_product_revenue
         ,sku_gross_product_revenue
         ,sku_membership_discount
         ,sku_merch_discount
