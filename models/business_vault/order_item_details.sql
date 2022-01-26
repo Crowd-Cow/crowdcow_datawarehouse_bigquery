@@ -51,20 +51,26 @@ order_item as ( select * from {{ ref('order_items') }} )
     select
         *
          
-        ,case
-            when is_single_sku_bid_item or sku_id is null then bid_gross_product_revenue
-            else sku_price_proportion * bid_gross_product_revenue
-         end as sku_gross_product_revenue
+        ,round(
+            case
+                when is_single_sku_bid_item or sku_id is null then bid_gross_product_revenue
+                else sku_price_proportion * bid_gross_product_revenue
+            end 
+        ,2) as sku_gross_product_revenue
 
-        ,case
-            when is_single_sku_bid_item or sku_id is null then item_member_discount
-            else sku_price_proportion * item_member_discount
-         end as sku_membership_discount
+        ,round(
+            case
+                when is_single_sku_bid_item or sku_id is null then item_member_discount
+                else sku_price_proportion * item_member_discount
+            end
+        ,2) as sku_membership_discount
 
-        ,case
-            when is_single_sku_bid_item or sku_id is null then item_merch_discount
-            else sku_price_proportion * item_merch_discount
-         end as sku_merch_discount
+        ,round(
+            case
+                when is_single_sku_bid_item or sku_id is null then item_merch_discount
+                else sku_price_proportion * item_merch_discount
+            end
+         ,2) as sku_merch_discount
 
     from join_historical_sku_info
 )

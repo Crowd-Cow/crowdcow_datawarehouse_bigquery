@@ -41,8 +41,8 @@ models:
       - name: bid_list_price_usd
         description: "The list price of the bid that was captured at the time the bid was created"
 
-     - name: sku_price_usd
-       description: "The price of the SKU at the time the bid was created"
+      - name: sku_price_usd
+        description: "The price of the SKU at the time the bid was created"
 
       - name: bid_sku_price
         description: "The total numbers of SKUS (sku quantity * bid quantity) times the price of the SKU at the time the bid was created"
