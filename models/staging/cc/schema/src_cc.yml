@@ -6753,6 +6753,21 @@ sources:
           - name: user_count
             description: User count for the segmentation tag name
 
+      - name: static_fiscal_calendar
+        descripiton: Static fiscal calendar reference table
+
+        columns:
+          - name: calendar_date
+            description: Calendar date
+
+          - name: calendar_week
+            description: Calendar week
+
+          - name: fiscal_week
+            description: Fiscal week number
+
+          - name: fiscal_quarter
+            description: Fiscal year number
 
       - name: testimonials
         description: testimonials
