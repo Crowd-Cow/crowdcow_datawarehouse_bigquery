@@ -47,7 +47,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,fill_type
         ,bid_list_price_usd
         ,bid_price_paid_usd
-        ,bid_list_price_usd * bid_quantity as order_item_revenue
+        ,bid_list_price_usd * bid_quantity as bid_gross_product_revenue
         ,(bid_list_price_usd - bid_price_paid_usd) * bid_quantity as total_order_item_discount
         ,bid_non_member_price_usd
         ,bid_member_price_usd
@@ -74,7 +74,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,fill_type
         ,bid_list_price_usd
         ,bid_price_paid_usd
-        ,order_item_revenue
+        ,bid_gross_product_revenue
         ,total_order_item_discount
 
         ,round(
