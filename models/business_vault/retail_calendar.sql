@@ -1,7 +1,7 @@
 with 
 
-static_fiscal_calendar as ( select * from {{ ref('stg_reference__static_fiscal_calendar') }} )
-,date_spine as ( select * from {{ ref('stg_reference__date_spine') }} )
+date_spine as ( select * from {{ ref('stg_reference__date_spine') }} )
+/*,static_fiscal_calendar as ( select * from {{ ref('stg_reference__static_fiscal_calendar') }} )
 
 ,add_fiscal_periods as (
     select
@@ -12,7 +12,7 @@ static_fiscal_calendar as ( select * from {{ ref('stg_reference__static_fiscal_c
         ,null::int as fiscal_month
     from date_spine
         left join static_fiscal_calendar on date_spine.calendar_date = static_fiscal_calendar.calendar_date
-)
+)*/
 
 
 /**** We do not use a standard fiscal calendar and instead have opted for a custom created fiscal calendar *****/
@@ -20,7 +20,7 @@ static_fiscal_calendar as ( select * from {{ ref('stg_reference__static_fiscal_c
 /**** Instead a manually created spreadsheet with fiscal weeks have been uploaded to use as a reference ****/
 /**** The commented code below represents an attempt to automate the custom fiscal calendar and the logic is not correc ****/
 
-{# ,retail_periods as ( 
+,retail_periods as ( 
     select
         *
         ,dense_rank() over(partition by fiscal_year_start order by fiscal_year_start,calendar_date_week_sun) as fiscal_week_num
@@ -76,6 +76,8 @@ static_fiscal_calendar as ( select * from {{ ref('stg_reference__static_fiscal_c
         ,year(fiscal_year_start) as fiscal_year
 
     from {{ ref('stg_reference__date_spine') }}
-) #}
+)
 
-select * from add_fiscal_periods 
+select * from retail_periods
+
+--select * from add_fiscal_periods 
