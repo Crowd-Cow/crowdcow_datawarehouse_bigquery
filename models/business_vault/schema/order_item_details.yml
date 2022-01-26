@@ -35,26 +35,36 @@ models:
       - name: sku_quantity
         description: "The quantity of SKUs for this particular bid item"
 
-      - name: item_sku_quantity
+      - name: bid_sku_quantity
         description: "The total number of SKUs for this item. The number of SKUs contained in the bid item times the number of bids added for this order (bid quantity)"
 
       - name: bid_list_price_usd
         description: "The list price of the bid that was captured at the time the bid was created"
 
-      - name: order_item_revenue
-        description: "The list price of the bid times the quantity of bids for the order"
-
       - name: sku_price_usd
         description: "The price of the SKU at the time the bid was created"
+
+      - name: bid_sku_price
+        description: "The total numbers of SKUS (sku quantity * bid quantity) times the price of the SKU at the time the bid was created"
 
       - name: sku_price_proportion
         description: "The proportion of the order item revenue that can be attributed to the given SKU"
 
-      - name: total_sku_price
-        description: "The total numbers of SKUS (sku quantity * bid quantity) times the price of the SKU at the time the bid was created"
-
-      - name: sku_product_revenue
+      - name: sku_gross_product_revenue
         description: "If the bid item is a single SKU bid item, the SKU product revenue is the order item revenue. Otherwise it is the sku price proportion times the order item revenue to get the amount of order item revenue attributed to that SKU"
+
+      - name: sku_membership_discount
+        description: "If the bid item is a single SKU bid item, the SKU membership discount is the order item membership discount. Otherwise it is the sku price proportion times the order item membership discount to get the amount of discount attributed to that SKU"
+
+      - name: sku_merch_discount
+        description: "If the bid item is a single SKU bid item, the SKU merch discount is the order item merch discount. Otherwise it is the sku price proportion times the order item merch discount to get the amount of discount attributed to that SKU"
+
+      - name: sku_net_product_revenue
+        description: >
+          SKU net product revenue calculation:
+          `sku_gross_product_revenue`
+          `- sku_membership_discount`
+          `- sku_merch_discount`
       
       - name: is_single_sku_bid_item
         description: "Binary field to identify if the bid is a single sku or not. Used to identify bundles"
