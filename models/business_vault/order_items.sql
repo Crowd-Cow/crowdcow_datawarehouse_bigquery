@@ -15,6 +15,9 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,bid_items.bid_item_name
         ,bid_items.bid_item_type
         ,bid_items.bid_item_subtype
+        ,coalesce(bid_items.bid_item_list_price_usd,bid_items.bid_item_price_usd) as bid_item_list_price_usd
+        ,coalesce(bid_items.bid_item_member_price_usd,bid_items.bid_item_price_usd) as bid_item_member_price_usd
+        ,coalesce(bid_items.bid_item_non_member_price_usd, bid_items.bid_item_price_usd) as bid_item_non_member_price_usd
         ,bids.autofill_reason
         ,bids.fill_type
         ,coalesce(bids.bid_list_price_usd,bids.item_price_usd) as bid_list_price_usd
@@ -29,6 +32,48 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         left join bid_items on bids.bid_item_id = bid_items.bid_item_id
             and bids.created_at_utc >= bid_items.adjusted_dbt_valid_from
             and bids.created_at_utc < bid_items.adjusted_dbt_valid_to
+)
+
+,update_promotion_bid_prices as (
+    select
+        order_id
+        ,bid_id
+        ,bid_item_id
+        ,promotion_id
+        ,bid_token
+        ,product_id
+        ,product_name
+        ,bid_item_name
+        ,bid_item_type
+        ,bid_item_subtype
+        ,autofill_reason
+        ,fill_type
+        
+        ,case
+            when promotion_id is not null and bid_list_price_usd = 0 then bid_item_list_price_usd
+            else bid_list_price_usd
+         end as bid_list_price_usd
+
+        ,case
+            when promotion_id = 11 then 0
+            else bid_price_paid_usd
+         end as bid_price_paid_usd
+        
+        ,case
+            when promotion_id is not null and bid_member_price_usd = 0 then bid_item_member_price_usd
+            else bid_member_price_usd
+         end as bid_member_price_usd
+
+        ,case
+            when promotion_id is not null and bid_non_member_price_usd = 0 then bid_item_non_member_price_usd
+            else bid_non_member_price_usd
+         end as bid_non_member_price_usd
+
+        ,bid_quantity
+        ,created_at_utc
+        ,updated_at_utc
+        ,first_stuck_at_utc
+    from order_item_joins
 )
 
 ,order_item_revenue_calculations as (
@@ -55,7 +100,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,created_at_utc
         ,updated_at_utc
         ,first_stuck_at_utc
-    from order_item_joins
+    from update_promotion_bid_prices
 )
 
 ,order_item_discount_calculations as (
@@ -79,27 +124,27 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
 
         ,round(
             case
-                when total_order_item_discount > 0 then bid_list_price_usd * .05 -- Standard member discount is 5%
+                when promotion_id is null and total_order_item_discount > 0 then bid_list_price_usd * .05 -- Standard member discount is 5%
                 else 0
             end
         ,2) as item_member_discount
     
         ,round(
             case
-                when total_order_item_discount > 0 then total_order_item_discount - (bid_list_price_usd * .05) -- Anything above the standard 5% member discount should be considered a merch discount
+                when promotion_id is null and total_order_item_discount > 0 then total_order_item_discount - (bid_list_price_usd * .05) -- Anything above the standard 5% member discount should be considered a merch discount
                 else 0
             end
         ,2) as item_merch_discount
 
         ,round(
             case
-                when promotion_id is not null then bid_price_paid_usd
+                when promotion_id is not null then total_order_item_discount
                 else 0
             end
         ,2) as item_promotion_discount
 
-        ,bid_non_member_price_usd
         ,bid_member_price_usd
+        ,bid_non_member_price_usd
         ,bid_quantity
         ,created_at_utc
         ,updated_at_utc
