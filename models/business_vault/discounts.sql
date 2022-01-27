@@ -32,7 +32,7 @@ credit as ( select * from {{ ref('credits') }} )
         ,case
             when discounts.index = 0 then 'MEMBERSHIP 5%'
             when discounts.index = 1 then 'MERCHANDISING DISCOUNT'
-            when discounts.index = 2 and promotion_id in (18,20,22) then 'MEMBERSHIP PROMOTIONS'
+            when discounts.index = 2 and promotion_id in (18,20,22) then 'MEMBERSHIP FREE PROTEIN PROMOTIONS'
             when discounts.index = 2 and promotion_id not in (18,20,22) then 'OTHER ITEM LEVEL PROMOTIONS'
          end as business_group
 
