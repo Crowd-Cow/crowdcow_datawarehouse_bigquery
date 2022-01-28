@@ -1,0 +1,152 @@
+version: 2
+
+models:
+  - name: stg_cc__shipments
+    description: "Staging model for shipments"
+    columns:
+      - name: shipment_id
+        description: "Shipment ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: latest_temperature_icon
+        description: "Icon representing the latest temperature at the location being shipped to"
+
+      - name: ready_for_pickup_at_utc
+        description: "Timestamp for when the shipment is ready to be picked up UTC"
+
+      - name: easypost_tracking_code
+        description: "Easypost shipment tracking code"
+
+      - name: easypost_postage_carrier
+        description: "Postage carrier name for the shipment"
+
+      - name: print_queue_item_id
+        description: "Print queue item id"
+
+      - name: delivery_window_end_at_utc
+        description: "Timestamp for the end of the delivery window UTC"
+
+      - name: easypost_postage_rate_usd
+        description: "Easypost postage rate cost for the shipment"
+
+      - name: mean_temperature
+        description: "Mean temperature for the location being shipped to"
+
+      - name: box_type_id
+        description: "Type of box used for the shipment"
+
+      - name: easypost_shipment_id
+        description: "Easypost shipment ID"
+
+      - name: delivery_window_start_at_utc
+        description: "Timestamp for when the delivery window starts UTC"
+
+      - name: easypost_shipping_label_url
+        description: "URL for the Easypost shipping label"
+
+      - name: shipped_at_utc
+        description: "Timestamp for when the order was shipped"
+
+      - name: delivered_at_utc
+        description: "Timestamp for when the order was delivered"
+
+      - name: delivery_method
+        description: "Method used for the shipment"
+
+      - name: easypost_original_estimated_delivery_date_utc
+        description: "Timestamp for the original delivery date given by Easypost UTC"
+
+      - name: easypost_postage_rate_id
+        description: "Easypost postage rate ID"
+
+      - name: marked_not_shipped_at_utc
+        description: "Timestamp for when an order is marked as not shipped"
+
+      - name: fc_id
+        description: "Fulfillment center ID"
+
+      - name: maximum_temperature
+        description: "The maximum temperature at the location being shipped to"
+
+      - name: temperature_last_updated_at_utc
+        description: "Timestamp for when weather information was updated for the location being shipped to"
+
+      - name: easypost_postage_label_id
+        description: "Easypost postage lable ID"
+
+      - name: postage_paid_at_utc
+        description: "Timestamp for when the postsage was paid for UTC"
+
+      - name: item_weight
+        description: "The weight of the order"
+
+      - name: scanned_box_type_id
+        description: "Scanned box type ID"
+
+      - name: easypost_estimated_delivery_date_utc
+        description: "Timestamp for when the shipment is estimated to be delivered"
+
+      - name: packaging_freight_component_cost_usd
+        description: "Cost of packaging components"
+
+      - name: minimum_temperature
+        description: "The minimum temperature at the location being shipped to"
+
+      - name: scheduled_fulfillment_date_utc
+        description: "Timestamp for when the order is scheduled to be fulfilled UTC"
+
+      - name: order_id
+        description: "Order ID"
+
+      - name: latest_tracking_details_updated_at_utc
+        description: "Timestamp for when the latest tracking details were update for the shipment UTC"
+
+      - name: available_for_pickup_at_utc
+        description: "Timestamp fo when the shipment is available to be picked up by the carrier UTC"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created UTC"
+
+      - name: easypost_delivery_days
+        description: "The number of days it will take to deliver the shipment"
+
+      - name: lost_at_utc
+        description: "Timestamp for when the shipment was marked as lost UTC"
+
+      - name: pickup_at_description
+        description: "Description for the location where the shipment should be picked up"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated by the system UTC"
+
+      - name: easypost_postage_service
+        description: "The type of postage service being used for the shipment"
+
+      - name: packaging_materials_component_cost_usd
+        description: "The cost of packaging material components for the shipment"
+
+      - name: shipment_token
+        description: "Shipment token"
+
+      - name: shipment_notes
+        description: "Notes about the shipment"
+
+      - name: latest_temperature
+        description: "The latest temperature for the location being shipped to"
+
+      - name: does_use_zpl
+        description: "Boolean indicating if the shipment uses ZPL"
+
+      - name: does_receive_tracking_updates
+        description: "Boolean indicating if the shipment receives tracking updates"
+
+      - name: is_easypost_delivery_date_guaranteed
+        description: "Boolean indicating if the shipment is Easypost delivery date guaranteed"
+
+      - name: fc_locations_id
+        description: "Fulfillment center locations ID"
+
+      - name: fc_location_id
+        description: "Fulfillment center location ID"
