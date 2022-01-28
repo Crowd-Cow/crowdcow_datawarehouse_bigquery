@@ -361,3 +361,9 @@ models:
       - name: order_scheduled_arrival_date_utc
         description: "Timestamp of when the order is scheduled to arrive in UTC"
 
+      - name: shipped_at_utc
+        description: "Timestamp for when the order was shipped"
+
+      - name: delivered_at_utc
+        description: "Timestamp for when the order was delivered"
+

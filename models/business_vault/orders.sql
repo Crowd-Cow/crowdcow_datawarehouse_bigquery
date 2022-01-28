@@ -5,6 +5,16 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,flags as ( select * from {{ ref('int_order_flags') }} )
 ,ranks as ( select * from {{ ref('int_order_ranks') }} )
 ,units as ( select * from {{ ref('int_order_units_pct') }} )
+,shipments as ( select * from {{ ref('stg_cc__shipments') }} )
+
+,order_shipment as (
+    select
+        order_id
+        ,max(shipped_at_utc) as shipped_at_utc
+        ,max(delivered_at_utc) as delivered_at_utc
+    from shipments
+    group by 1
+)
 
 ,order_joins as (
     select
@@ -119,12 +129,15 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.order_first_stuck_at_utc
         ,orders.order_scheduled_fulfillment_date_utc
         ,orders.order_scheduled_arrival_date_utc
+        ,order_shipment.shipped_at_utc
+        ,order_shipment.delivered_at_utc
         
     from orders
         left join order_revenue on orders.order_id = order_revenue.order_id
         left join flags on orders.order_id = flags.order_id
         left join ranks on orders.order_id = ranks.order_id
         left join units on orders.order_id = units.order_id
+        left join order_shipment on orders.order_id = order_shipment.order_id
 )
 
 select * from order_joins
