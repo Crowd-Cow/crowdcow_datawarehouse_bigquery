@@ -32,6 +32,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(order_revenue.gross_product_revenue) as gross_product_revenue
         ,zeroifnull(order_revenue.membership_discount) as membership_discount
         ,zeroifnull(order_revenue.merch_discount) as merch_discount
+        ,zeroifnull(order_revenue.free_protein_promotion) as free_protein_promotion
         ,zeroifnull(order_revenue.net_product_revenue) as net_product_revenue
         ,orders.order_shipping_fee_usd as shipping_revenue
         ,zeroifnull(order_revenue.free_shipping_discount) as free_shipping_discount

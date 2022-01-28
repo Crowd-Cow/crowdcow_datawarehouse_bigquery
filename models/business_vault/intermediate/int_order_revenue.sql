@@ -23,6 +23,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,sum(case when business_group = 'FREE SHIPPING' then discount_usd end) as free_shipping_discount
         ,sum(case when business_group = 'MEMBERSHIP 5%' then discount_usd end) as membership_discount
         ,sum(case when business_group = 'MERCHANDISING DISCOUNT' then discount_usd end) as merch_discount
+        ,sum(case when business_group = 'MEMBERSHIP FREE PROTEIN PROMOTIONS' then discount_usd end) as free_protein_promotion
         ,sum(
             case 
                 when business_group in ('ACQUISITION MARKETING - PROMOTION CREDITS','MEMBERSHIP PROMOTIONS','OTHER ITEM LEVEL PROMOTIONS') 
@@ -62,6 +63,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(discount_amounts.free_shipping_discount) * -1 as free_shipping_discount
         ,zeroifnull(discount_amounts.membership_discount) * -1 as membership_discount
         ,zeroifnull(discount_amounts.merch_discount) * -1 as merch_discount
+        ,zeroifnull(discount_amounts.free_protein_promotion) * -1 as free_protein_promotion
         ,zeroifnull(discount_amounts.new_member_discount) * -1 as new_member_discount
         ,zeroifnull(discount_amounts.gift_redemption) * -1 as gift_redemption
         ,zeroifnull(discount_amounts.other_discount) * -1 as other_discount
@@ -89,6 +91,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 
         ,membership_discount
         ,merch_discount
+        ,free_protein_promotion
         ,new_member_discount
         ,gift_redemption
         ,other_discount
@@ -103,10 +106,12 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,gross_product_revenue
         ,membership_discount
         ,merch_discount
+        ,free_protein_promotion
         
         ,gross_product_revenue 
          + membership_discount 
-         + merch_discount as net_product_revenue
+         + merch_discount
+         + free_protein_promotion as net_product_revenue
         
         ,order_shipping_fee_usd as shipping_revenue
         ,free_shipping_discount
@@ -114,6 +119,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,gross_product_revenue 
          + membership_discount 
          + merch_discount
+         + free_protein_promotion
          + order_shipping_fee_usd 
          + free_shipping_discount as gross_revenue
         
@@ -128,10 +134,12 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
                     gross_product_revenue 
                     + membership_discount 
                     + merch_discount
+                    + free_protein_promotion
                 else 
                     gross_product_revenue 
                     + membership_discount 
                     + merch_discount
+                    + free_protein_promotion
                     + order_shipping_fee_usd 
                     + free_shipping_discount
                     + new_member_discount
