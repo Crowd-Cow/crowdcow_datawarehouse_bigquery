@@ -62,6 +62,8 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,flags.is_gift_order
         ,flags.is_bulk_gift_order
         ,flags.is_gift_card_order
+        ,flags.has_shipped
+        ,flags.has_been_delivered
         ,ranks.overall_order_rank
         ,ranks.completed_order_rank
         ,ranks.paid_order_rank

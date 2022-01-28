@@ -160,6 +160,12 @@ models:
       - name: is_gift_card_order
         description: "Boolean indicating if the order is a gift card order"
 
+      - name: has_shipped
+        description: "Boolean indicating if the order has been shipped"
+
+      - name: has_been_delivered
+        description: "Boolean indicating if the order has been delivered"
+
       - name: overall_order_rank
         description: "Overall order rank for a user regardless of order type or status"
 
