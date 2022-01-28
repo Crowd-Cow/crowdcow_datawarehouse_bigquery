@@ -81,6 +81,9 @@ models:
       - name: merch_discount
         description: "Item discount attributed to the amount above and beyone the standard 5% member discount applied to an item"
 
+      - name: free_protein_promotion
+        description: "Item discount applied by a free protein promotion (e.g. free ground beef for life, etc)"
+
       - name: net_product_revenue
         description: >
           Net product revenue calculation:
