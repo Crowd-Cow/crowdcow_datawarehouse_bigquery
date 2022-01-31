@@ -11,7 +11,7 @@ renamed as (
         ,{{ clean_strings('recipient_email') }} as recipient_email
         ,order_id
         ,suggested_product_id
-        ,{{ clean_strings('token') }} as gift_info_token
+        ,token as gift_info_token
         ,updated_at as updated_at_utc
         ,frauded_at as frauded_at_utc
         ,{{ clean_strings('recipient_name') }} as recipient_name

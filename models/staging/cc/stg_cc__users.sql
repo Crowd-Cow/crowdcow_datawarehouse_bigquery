@@ -24,7 +24,7 @@ renamed as (
         ,{{ clean_strings('last_geocoded_ip_address') }} as user_last_geocoded_ip_address
         ,{{ clean_strings('last_sign_in_ip') }} as user_last_sign_in_ip
         ,full_contact_data_updated_at as full_contact_data_updated_at_utc
-        ,{{ clean_strings('referrer_token') }} as user_referrer_token
+        ,referrer_token as user_referrer_token
         ,fc_id as full_contact_id
         ,{{ clean_strings('fc_given_name') }} as full_contact_given_name
         ,{{ clean_strings('fc_family_name') }} as full_contact_family_name
@@ -69,7 +69,7 @@ renamed as (
         ,utm_time as utm_time_at_utc
         ,{{ clean_strings('utm_content') }} as utm_content
         ,{{ clean_strings('roles_for_notifications') }} as user_roles_for_notifications
-        ,{{ clean_strings('token') }} as user_token
+        ,token as user_token
         ,created_at created_at_utc
         ,{{ clean_strings('campaign_id') }} as campaign_id
         ,{{ clean_strings('utm_source') }} as utm_source

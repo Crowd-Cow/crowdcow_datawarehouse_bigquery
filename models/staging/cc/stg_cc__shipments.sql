@@ -44,7 +44,7 @@ source as ( select * from {{ source('cc', 'shipments') }} where not _fivetran_de
         ,updated_at as updated_at_utc
         ,{{ clean_strings('easypost_postage_service') }} as easypost_postage_service
         ,{{ cents_to_usd('packaging_materials_component_cost_cents') }} as packaging_materials_component_cost_usd
-        ,{{ clean_strings('token') }} as shipment_token
+        ,token as shipment_token
         ,{{ clean_strings('shipment_notes') }} as shipment_notes
         ,latest_temperature
         ,use_zpl as does_use_zpl

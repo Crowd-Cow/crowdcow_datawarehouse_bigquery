@@ -125,10 +125,10 @@ base_visits as (
         ,coalesce(visit_landing_page_path,'') as visit_landing_page_path
 
         /** Extract user token from the landing page URL **/
-        ,case
+        ,lower(case
             when visit_landing_page_path like '/L_U%' then split_part(visit_landing_page_path,'/',3)
             else coalesce(object_pick(parsed_landing_page:parameters,'C'):C::text,object_pick(parsed_landing_page:parameters,'USER_TOKEN'):USER_TOKEN::text)
-         end as visit_landing_page_user_token
+         end) as visit_landing_page_user_token
 
         ,coalesce(visit_referring_domain,'') as visit_referring_domain
         ,visit_referrer

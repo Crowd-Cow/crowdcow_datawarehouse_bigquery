@@ -27,7 +27,7 @@ event_order_complete as (
     ,user_id
     ,event_json:experiments           as experiments
     ,event_json:member::boolean       as is_member
-    ,{{ clean_strings('event_json:"$event_id"::text') }}  as order_token
+    ,event_json:"$event_id"::text  as order_token
     ,event_json:brands                as bid_item_brands
     ,event_json:categories            as bid_item_categories
     ,{{ clean_strings('event_json:currency::text') }}     as currency

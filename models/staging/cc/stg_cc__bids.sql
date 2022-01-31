@@ -29,7 +29,7 @@ renamed as (
     ,{{ clean_strings('item_photo_url') }} as item_photo_url
     ,subscription_id
     ,custom_subscription_item_id
-    ,{{ clean_strings('token') }} as bid_token
+    ,token as bid_token
     ,{{ clean_strings('reason') }} as autofill_reason
     ,target_sku_id
     ,fill_score

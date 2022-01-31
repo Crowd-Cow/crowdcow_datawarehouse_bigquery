@@ -19,7 +19,7 @@ renamed as (
         ,reward_frequency as subscription_reward_frequency
         ,cancelled_at as subscription_cancelled_at_utc
         ,user_id
-        ,{{ clean_strings('token') }} as subscription_token
+        ,token as subscription_token
         ,{{ cents_to_usd('price_in_cents') }} as subscription_price_usd
         ,cancelled_reason as subscription_cancelled_reason
         ,{{ clean_strings('signup_state') }} as subscription_signup_status

@@ -16,7 +16,7 @@ renamed as (
     ,{{ clean_strings('campaign_type') }} as partner_campaign_type
     ,{{ clean_strings('promo_description') }} as partner_promo_description
     ,{{ clean_strings('path') }} as partner_path
-    ,{{ clean_strings('token') }} as partner_token
+    ,token as partner_token
     ,{{ clean_strings('page_text') }} as partner_page_text
     ,{{ clean_strings('page_title') }} as partner_page_title
     ,{{ clean_strings('notes') }} as partner_notes

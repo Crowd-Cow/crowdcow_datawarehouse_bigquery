@@ -25,7 +25,7 @@ renamed as (
     ,quantity_available
     ,{{ cents_to_usd('strike_through_price_cents') }} as strike_through_price_usd
     ,{{ clean_strings('subtype') }} as bid_item_subtype
-    ,{{ clean_strings('token') }} as bid_item_token
+    ,token as bid_item_token
     ,updated_at as updated_at_utc
     ,product_variant_id
     ,max_dynamic_quantity  

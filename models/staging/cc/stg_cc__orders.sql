@@ -58,7 +58,7 @@ renamed as (
     ,picked_at as order_picked_at_utc
     ,{{ clean_strings('selected_delivery_method') }} as order_selected_delivery_method
     ,{{ clean_strings('override_postage_service') }} as order_override_postage_service
-    ,{{ clean_strings('token') }} as order_token
+    ,token as order_token
     ,{{ cents_to_usd('credit_total_cents') }} as order_total_discount_usd
     ,day_out_notified_at as order_day_out_notified_at_utc
     ,print_last_attempted_at as order_print_last_attempted_at_utc
