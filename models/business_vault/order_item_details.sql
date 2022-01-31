@@ -15,6 +15,7 @@ order_item as ( select * from {{ ref('order_items') }} )
         ,order_item.bid_gross_product_revenue
         ,order_item.item_member_discount * -1 as item_member_discount
         ,order_item.item_merch_discount * -1 as item_merch_discount
+        ,order_item.item_promotion_discount * -1 as item_promotion_discount
         ,order_item.created_at_utc as bid_created_at_utc
         ,order_item.updated_at_utc as bid_updated_at_utc
         ,bid_item_sku.sku_id
@@ -72,6 +73,13 @@ order_item as ( select * from {{ ref('order_items') }} )
             end
          ,2) as sku_merch_discount
 
+        ,round(
+            case
+                when is_single_sku_bid_item or sku_id is null then item_promotion_discount
+                else sku_price_proportion * item_promotion_discount
+            end
+         ,2) as sku_free_protein_promotion
+
     from join_historical_sku_info
 )
 
@@ -94,10 +102,12 @@ order_item as ( select * from {{ ref('order_items') }} )
         ,sku_gross_product_revenue
         ,sku_membership_discount
         ,sku_merch_discount
+        ,sku_free_protein_promotion
         
         ,sku_gross_product_revenue
          + sku_membership_discount
          + sku_merch_discount
+         + sku_free_protein_promotion
         as sku_net_product_revenue
 
         ,is_single_sku_bid_item
