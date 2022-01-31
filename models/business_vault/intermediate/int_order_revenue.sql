@@ -20,26 +20,13 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         
         /**** Breakdown the total credit for an order into various credit categories for financial reporting in Looker ****/
         ,count_if(business_group = 'FREE SHIPPING') as free_shipping_credit_count
-        ,sum(case when business_group = 'FREE SHIPPING' then discount_usd end) as free_shipping_discount
-        ,sum(case when business_group = 'MEMBERSHIP 5%' then discount_usd end) as membership_discount
-        ,sum(case when business_group = 'MERCHANDISING DISCOUNT' then discount_usd end) as merch_discount
-        ,sum(case when business_group = 'MEMBERSHIP FREE PROTEIN PROMOTIONS' then discount_usd end) as free_protein_promotion
-        ,sum(
-            case 
-                when business_group in ('ACQUISITION MARKETING - PROMOTION CREDITS','MEMBERSHIP PROMOTIONS','OTHER ITEM LEVEL PROMOTIONS') 
-                    and is_new_member_promotion 
-                then discount_usd 
-            end
-        ) as new_member_discount
-        ,sum(case when business_group in ('GIFT CARD REDEMPTION','CORPORATE GIFTING') then discount_usd end) as gift_redemption
-        ,sum(
-            case
-                when business_group in ('ACQUISITION MARKETING - GIFT', 'ACQUISITION MARKETING - INFLUENCER','ACQUISITION MARKETING - MEMBER REFERRAL'
-                    ,'ACQUISITION MARKETING - PROMOTION CREDITS','CARE CREDITS','OTHER - UNKNOWN','OTHER ITEM LEVEL PROMOTIONS','RETENTION MARKETING')
-                    and not is_new_member_promotion
-                then discount_usd
-            end
-        ) as other_discount
+        ,sum(case when revenue_waterfall_bucket = 'FREE SHIPPING DISCOUNT' then discount_usd end) as free_shipping_discount
+        ,sum(case when revenue_waterfall_bucket = 'MEMBERSHIP DISCOUNT' then discount_usd end) as membership_discount
+        ,sum(case when revenue_waterfall_bucket = 'MERCH DISCOUNT' then discount_usd end) as merch_discount
+        ,sum(case when revenue_waterfall_bucket = 'FREE PROTEIN PROMOTION' then discount_usd end) as free_protein_promotion
+        ,sum(case when revenue_waterfall_bucket = 'NEW MEMBER DISCOUNT' then discount_usd end) as new_member_discount
+        ,sum(case when revenue_waterfall_bucket = 'GIFT REDEMPTION' then discount_usd end) as gift_redemption
+        ,sum(case when revenue_waterfall_bucket = 'OTHER DISCOUNT' then discount_usd end) as other_discount
 
     from discount
     group by 1

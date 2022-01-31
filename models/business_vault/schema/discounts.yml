@@ -31,6 +31,9 @@ models:
       - name: financial_account
         description: "The financial account the credit amount should be booked to. Not all discounts are booked to a financial account (e.g. gift card redemptions, corp gift orders, etc.)"
 
+      - name: revenue_waterfall_bucket
+        description: "The revenue waterfall bucket the discount is associated with"
+
       - name: discount_usd
         description: "The amount of the discount"
 

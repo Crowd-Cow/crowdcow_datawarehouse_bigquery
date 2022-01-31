@@ -68,4 +68,37 @@ credit as ( select * from {{ ref('credits') }} )
     where business_group is not null
 )
 
-select * from add_promotion_type
+,group_by_revenue_bucket as (
+    select 
+        *
+        
+        ,case
+            when business_group = 'FREE SHIPPING' then 'FREE SHIPPING DISCOUNT'
+            when business_group = 'MEMBERSHIP 5%' then 'MEMBERSHIP DISCOUNT'
+            when business_group = 'MERCHANDISING DISCOUNT' then 'MERCH DISCOUNT'
+            when business_group = 'MEMBERSHIP FREE PROTEIN PROMOTIONS' then 'FREE PROTEIN PROMOTION'
+            when business_group in ('ACQUISITION MARKETING - PROMOTION CREDITS','MEMBERSHIP PROMOTIONS','OTHER ITEM LEVEL PROMOTIONS')
+                and is_new_member_promotion then 'NEW MEMBER DISCOUNT'
+            when business_group in ('GIFT CARD REDEMPTION','CORPORATE GIFTING') then 'GIFT REDEMPTION'
+            when business_group in ('ACQUISITION MARKETING - GIFT', 'ACQUISITION MARKETING - INFLUENCER','ACQUISITION MARKETING - MEMBER REFERRAL'
+                    ,'ACQUISITION MARKETING - PROMOTION CREDITS','CARE CREDITS','OTHER - UNKNOWN','OTHER ITEM LEVEL PROMOTIONS','RETENTION MARKETING')
+                    and not is_new_member_promotion then 'OTHER DISCOUNT'
+        end as revenue_waterfall_bucket
+    from add_promotion_type 
+)
+
+select
+    discount_detail_id
+    ,discount_source
+    ,discount_id
+    ,promotion_id
+    ,promotion_type
+    ,order_id
+    ,business_group
+    ,financial_account
+    ,revenue_waterfall_bucket
+    ,discount_usd
+    ,is_new_member_promotion
+    ,created_at_utc
+    ,updated_at_utc
+from group_by_revenue_bucket
