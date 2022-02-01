@@ -31,6 +31,12 @@ events as (
       ,event_json:referrer_url::text as referrer_url
       ,event_json:subscription_id::text as subscription_id
       ,event_json:title::text as title
+      ,event_json:old_scheduled_arrival_date::timestamp as old_scheduled_arrival_date
+      ,event_json:new_scheduled_arrival_date::timestamp as new_scheduled_arrival_date
+      ,event_json:old_scheduled_fulfillmet_date::timestamp as old_scheduled_fulfillment_date
+      ,event_json:new_scheduled_fulfillment_date::timestamp as new_scheduled_fulfillment_date
+      ,event_json:reason::text as reason
+      ,event_json:user_making_change_id::int as user_making_change_id
       ,event_json
   from {{ ref('base_cc__ahoy_events') }}
 
@@ -59,6 +65,12 @@ events as (
     ,{{ clean_strings('referrer_url') }} as referrer_url
     ,{{ clean_strings('subscription_id') }} as subscription_id
     ,{{ clean_strings('title') }} as title
+    ,old_scheduled_arrival_date
+    ,new_scheduled_arrival_date
+    ,old_scheduled_fulfillment_date
+    ,new_scheduled_fulfillment_date
+    ,{{ clean_strings('reason') }} as reason
+    ,user_making_change_id
   from events
 )
 
