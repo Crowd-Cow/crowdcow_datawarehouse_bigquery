@@ -2,7 +2,8 @@
   config(
     materialized = 'incremental',
     unique_key = 'event_id',
-    tags=["events"]
+    tags=["events"],
+    enabled = false
   )
 }}
     
