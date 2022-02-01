@@ -1,4 +1,8 @@
-
+{{
+  config(
+    enabled = false
+    )
+}}
 
 select
    {{ clean_strings('first_name') }} as first_name

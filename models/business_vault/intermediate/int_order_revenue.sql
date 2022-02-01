@@ -3,7 +3,7 @@ with
 orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,order_item as ( select * from {{ ref('order_items') }} )
 ,discount as ( select * from {{ ref('discounts') }} )
-,refund as ( select * from {{ ref('stg_cc__refunds') }} )
+,refund as ( select * from {{ ref('stg_stripe__refunds') }} )
 
 ,bid_amounts as (
     select 

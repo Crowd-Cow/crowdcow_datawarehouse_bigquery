@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_cc__refunds
+  - name: stg_stripe__refunds
     description: "Staging model for refunds. This uses the Stripe refund data as the source vs. CC schema refunds, which stopped reporting refunds in March 2019"
     columns:
       - name: refund_id
