@@ -27,6 +27,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku.average_box_quantity
         ,sku.vendor_funded_discount_name
         ,sku.vendor_funded_discount_usd
+        ,sku.vendor_funded_discount_percent
         ,sku.promotional_price_usd
         ,sku.member_discount_percent
         ,sku.non_member_discount_percent

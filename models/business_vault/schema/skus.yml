@@ -67,6 +67,9 @@ models:
       - name: vendor_funded_discount_usd
         description: "Vendor funded discount USD"
 
+      - name: vendor_funded_discount_percent
+        description: "Vendor funded discount percent"
+
       - name: promotional_price_usd
         description: "Promotional price USD"
 
