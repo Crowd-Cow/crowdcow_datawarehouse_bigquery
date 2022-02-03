@@ -41,7 +41,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.order_cancelled_at_utc is not null as is_cancelled_order
         ,orders.order_checkout_completed_at_utc is null and orders.order_cancelled_at_utc is not null as is_abandonded_order
         ,has_shipping_credit.order_id is not null as has_free_shipping
-        ,gift_info.order_id is not null and not gift_info.is_gift_card and orders.parent_order_id is null and orders.order_type <> 'BULK ORDER' as is_gift_order
+        ,gift_info.order_id is not null and not gift_info.is_gift_card and orders.parent_order_id is null and orders.order_type = 'E-COMMERCE' as is_gift_order
         ,orders.parent_order_id is not null or orders.order_type = 'BULK ORDER' as is_bulk_gift_order
         ,gift_info.order_id is not null and gift_info.is_gift_card as is_gift_card_order
     from orders
