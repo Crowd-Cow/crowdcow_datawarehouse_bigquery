@@ -91,6 +91,9 @@ models:
       - name: ambassador_path
         description: "Ambassador landing page path"
 
+      - name: partner_id
+        description: "Partner ID of the source of the visit"
+
       - name: visit_city
         description: "Visit city"
 

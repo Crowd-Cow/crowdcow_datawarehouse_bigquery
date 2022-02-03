@@ -13,6 +13,9 @@ models:
       - name: user_id
         description: "User ID"
 
+      - name: partner_id
+        description: "Partner ID of the partner that was the source of the visit"
+
       - name: visit_token
         description: "Visit token"
 

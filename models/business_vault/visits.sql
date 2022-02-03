@@ -14,6 +14,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
     select 
         visits.visit_id
         ,visits.user_id
+        ,visits.partner_id
         ,visits.visit_token
         ,visits.visitor_token
         ,visits.visit_browser

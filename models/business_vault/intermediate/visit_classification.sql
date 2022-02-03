@@ -21,6 +21,15 @@ base_visits as (
 ,ambassadors as ( select * from {{ ref('stg_cc__ambassadors') }} )
 ,partners as ( select * from {{ ref('stg_cc__partners') }} )
 
+,most_current_partner_path as (
+    select
+        partner_id
+        ,partner_path
+        ,row_number() over(partition by partner_path order by created_at_utc desc) as rn
+    from staging.stg_cc__partners
+    qualify rn = 1
+)
+
 ,ambassador_paths as (
     select distinct
         partners.partner_path
@@ -104,6 +113,7 @@ base_visits as (
         ,parse_url(visits.visit_landing_page):parameters:UTM_CAMPAIGN::text as landing_utm_campaign
         ,parse_url(visits.visit_landing_page):parameters:UTM_ADSET::text as landing_utm_adset
         ,ambassador_paths.partner_path as ambassador_path
+        ,most_current_partner_path.partner_id
         ,visits.visit_city
         ,visits.visit_country
         ,visits.visit_region
@@ -112,6 +122,7 @@ base_visits as (
         ,visits.updated_at_utc
     from visits
         left join ambassador_paths on parse_url(visits.visit_landing_page):path::text = ambassador_paths.partner_path
+        left join most_current_partner_path on parse_url(visits.visit_landing_page):path::text = most_current_partner_path.partner_path
 )
 
 ,combine_elements_extract_user_token as (
@@ -150,6 +161,7 @@ base_visits as (
         ,utm_content
         ,utm_term
         ,coalesce(ambassador_path,'') as ambassador_path
+        ,partner_id
         ,visit_city
         ,visit_country
         ,visit_region
@@ -250,6 +262,7 @@ base_visits as (
         ,sub_channel
         ,null::text as visit_attributed_source
         ,ambassador_path
+        ,partner_id
         ,visit_city
         ,visit_country
         ,visit_region
