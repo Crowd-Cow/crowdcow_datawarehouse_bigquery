@@ -40,10 +40,11 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
     group by 1
 )
 
-,revenue_joins as (
+,revenue_component_joins as (
     select
         orders.order_id
-        ,orders.parent_order_id
+        ,orders.order_type
+        ,parent_order_id
         ,orders.order_shipping_fee_usd
         ,zeroifnull(bid_amounts.gross_product_revenue) as gross_product_revenue
         ,zeroifnull(discount_amounts.free_shipping_credit_count) as free_shipping_credit_count
@@ -68,6 +69,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
     select
         order_id
         ,parent_order_id
+        ,order_type
         ,order_shipping_fee_usd
         ,gross_product_revenue
 
@@ -84,7 +86,90 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,other_discount
         ,refund_amount_usd
 
-    from revenue_joins
+    from revenue_component_joins
+)
+
+,create_bulk_order_revenue as (
+    select 
+        parent_order_id
+        ,count(order_id) as child_order_count
+        ,sum(gross_product_revenue) as gross_product_revenue
+        ,sum(membership_discount) as membership_discount
+        ,sum(merch_discount) as merch_discount
+        ,sum(free_protein_promotion) as free_protein_promotion
+        ,sum(order_shipping_fee_usd) as shipping_revenue
+        ,sum(free_shipping_discount) as free_shipping_discount
+        ,sum(new_member_discount) as new_member_discount
+        ,sum(refund_amount_usd) as refund_amount
+        ,sum(0) as gift_redemption --gift redemption value for bulk parent order is set to $0 since there shouldn't be any gift redemptions associated with parent orders
+        ,sum(other_discount) as other_discount
+    from fix_shipping_credits
+    where parent_order_id is not null
+    group by 1
+)
+
+,replace_bulk_parent_order_revenue as (
+    select
+        fix_shipping_credits.order_id
+        ,fix_shipping_credits.order_type
+        ,fix_shipping_credits.parent_order_id
+        ,create_bulk_order_revenue.parent_order_id is not null as has_children
+
+        /**** If the order type is 'BULK ORDER' and has no matching children orders all revenue components should be defaulted to $0 ****/
+        /**** These are parent orders with no children and according to eng should be treated as bugs and ignored ****/
+
+        ,case
+            when fix_shipping_credits.order_type = 'BULK ORDER' and create_bulk_order_revenue.parent_order_id is null then 0
+            else coalesce(create_bulk_order_revenue.gross_product_revenue, fix_shipping_credits.gross_product_revenue)
+         end  as gross_product_revenue
+
+        ,case
+            when fix_shipping_credits.order_type = 'BULK ORDER' and create_bulk_order_revenue.parent_order_id is null then 0
+            else coalesce(create_bulk_order_revenue.membership_discount, fix_shipping_credits.membership_discount)
+         end as membership_discount
+
+        ,case
+            when fix_shipping_credits.order_type = 'BULK ORDER' and create_bulk_order_revenue.parent_order_id is null then 0
+            else coalesce(create_bulk_order_revenue.merch_discount, fix_shipping_credits.merch_discount) 
+         end as merch_discount
+
+        ,case
+            when fix_shipping_credits.order_type = 'BULK ORDER' and create_bulk_order_revenue.parent_order_id is null then 0
+            else coalesce(create_bulk_order_revenue.free_protein_promotion, fix_shipping_credits.free_protein_promotion) 
+         end as free_protein_promotion
+
+        ,case
+            when fix_shipping_credits.order_type = 'BULK ORDER' and create_bulk_order_revenue.parent_order_id is null then 0
+            else coalesce(create_bulk_order_revenue.shipping_revenue, fix_shipping_credits.order_shipping_fee_usd) 
+         end as shipping_revenue
+
+        ,case
+            when fix_shipping_credits.order_type = 'BULK ORDER' and create_bulk_order_revenue.parent_order_id is null then 0
+            else coalesce(create_bulk_order_revenue.free_shipping_discount, fix_shipping_credits.free_shipping_discount) 
+         end as free_shipping_discount
+
+        ,case
+            when fix_shipping_credits.order_type = 'BULK ORDER' and create_bulk_order_revenue.parent_order_id is null then 0
+            else coalesce(create_bulk_order_revenue.new_member_discount, fix_shipping_credits.new_member_discount) 
+         end as new_member_discount
+
+        ,case
+            when fix_shipping_credits.order_type = 'BULK ORDER' and create_bulk_order_revenue.parent_order_id is null then 0
+            else coalesce(create_bulk_order_revenue.refund_amount, fix_shipping_credits.refund_amount_usd) 
+         end as refund_amount
+
+        ,case
+            when fix_shipping_credits.order_type = 'BULK ORDER' and create_bulk_order_revenue.parent_order_id is null then 0
+            else coalesce(create_bulk_order_revenue.gift_redemption, fix_shipping_credits.gift_redemption) 
+        end as gift_redemption
+
+        ,case
+            when fix_shipping_credits.order_type = 'BULK ORDER' and create_bulk_order_revenue.parent_order_id is null then 0
+            else coalesce(create_bulk_order_revenue.other_discount, fix_shipping_credits.other_discount) 
+         end as other_discount
+
+    from fix_shipping_credits
+        left join create_bulk_order_revenue on fix_shipping_credits.order_id = create_bulk_order_revenue.parent_order_id
 )
 
 ,revenue_calculations as (
@@ -100,43 +185,35 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
          + merch_discount
          + free_protein_promotion as net_product_revenue
         
-        ,order_shipping_fee_usd as shipping_revenue
+        ,shipping_revenue
         ,free_shipping_discount
         
         ,gross_product_revenue 
          + membership_discount 
          + merch_discount
          + free_protein_promotion
-         + order_shipping_fee_usd 
+         + shipping_revenue 
          + free_shipping_discount as gross_revenue
         
         ,new_member_discount
         ,gift_redemption
-        ,refund_amount_usd as refund_amount
+        ,refund_amount
         ,other_discount
 
         ,round(
-            case 
-                when parent_order_id is not null then 
-                    gross_product_revenue 
-                    + membership_discount 
-                    + merch_discount
-                    + free_protein_promotion
-                else 
-                    gross_product_revenue 
-                    + membership_discount 
-                    + merch_discount
-                    + free_protein_promotion
-                    + order_shipping_fee_usd 
-                    + free_shipping_discount
-                    + new_member_discount
-                    + refund_amount_usd
-                    + gift_redemption
-                    + other_discount
-            end
+            gross_product_revenue 
+            + membership_discount 
+            + merch_discount
+            + free_protein_promotion
+            + shipping_revenue 
+            + free_shipping_discount
+            + new_member_discount
+            + refund_amount
+            + gift_redemption
+            + other_discount
         ,2) as net_revenue
 
-    from fix_shipping_credits
+    from replace_bulk_parent_order_revenue
 )
 
 select * from revenue_calculations
