@@ -27,7 +27,12 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.visit_id
         ,orders.stripe_charge_id
         ,orders.order_identifier
-        ,orders.order_type
+        
+        ,case
+            when orders.parent_order_id is not null then 'CORP GIFT'
+            else orders.order_type
+         end as order_type
+        
         ,orders.stripe_failure_code
         ,orders.order_delivery_street_address_1
         ,orders.order_delivery_street_address_2
@@ -140,6 +145,10 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         left join ranks on orders.order_id = ranks.order_id
         left join units on orders.order_id = units.order_id
         left join order_shipment on orders.order_id = order_shipment.order_id
+    
+    /**** Removing these order types because they are just shell orders that provide no data value ****/
+    /**** Children orders contain all the necessary information for revenue, addresses, dates, etc for the order ****/
+    where orders.order_type not in ('BULK ORDER','BULK GIFT')
 )
 
 select * from order_joins
