@@ -45,7 +45,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         orders.order_id
         ,orders.order_type
         ,parent_order_id
-        ,orders.order_shipping_fee_usd
+        ,orders.order_shipping_fee_usd as shipping_revenue
         ,zeroifnull(bid_amounts.gross_product_revenue) as gross_product_revenue
         ,zeroifnull(discount_amounts.free_shipping_credit_count) as free_shipping_credit_count
         ,zeroifnull(discount_amounts.free_shipping_discount) * -1 as free_shipping_discount
@@ -55,7 +55,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(discount_amounts.new_member_discount) * -1 as new_member_discount
         ,zeroifnull(discount_amounts.gift_redemption) * -1 as gift_redemption
         ,zeroifnull(discount_amounts.other_discount) * -1 as other_discount
-        ,zeroifnull(refund_amounts.refund_amount_usd) * -1 as refund_amount_usd
+        ,zeroifnull(refund_amounts.refund_amount_usd) * -1 as refund_amount
     from orders
         left join bid_amounts on orders.order_id = bid_amounts.order_id
         left join discount_amounts on orders.order_id = discount_amounts.order_id
@@ -70,11 +70,11 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         order_id
         ,parent_order_id
         ,order_type
-        ,order_shipping_fee_usd
+        ,shipping_revenue
         ,gross_product_revenue
 
         ,case
-            when free_shipping_credit_count > 0 and free_shipping_discount = 0 then order_shipping_fee_usd * -1
+            when free_shipping_credit_count > 0 and free_shipping_discount = 0 then shipping_revenue * -1
             else free_shipping_discount
          end as free_shipping_discount
 
@@ -84,12 +84,12 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,new_member_discount
         ,gift_redemption
         ,other_discount
-        ,refund_amount_usd
+        ,refund_amount
 
     from revenue_component_joins
 )
 
-,create_bulk_order_revenue as (
+{# ,create_bulk_order_revenue as (
     select 
         parent_order_id
         ,count(order_id) as child_order_count
@@ -170,7 +170,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 
     from fix_shipping_credits
         left join create_bulk_order_revenue on fix_shipping_credits.order_id = create_bulk_order_revenue.parent_order_id
-)
+) #}
 
 ,revenue_calculations as (
     select
@@ -213,7 +213,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
             + other_discount
         ,2) as net_revenue
 
-    from replace_bulk_parent_order_revenue
+    from fix_shipping_credits
 )
 
 select * from revenue_calculations
