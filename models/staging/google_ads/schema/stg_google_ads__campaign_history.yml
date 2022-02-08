@@ -1,0 +1,68 @@
+version: 2
+
+models:
+  - name: stg_google_ads__campaign_history
+    description: Staging model for Google Ads campaign history
+    columns:
+      - name: campaign_id
+        description: Campaign ID
+
+      - name: updated_at_utc
+        description: Timestamp for when the record was updated by the source
+
+      - name: customer_id
+        description: Google Ads customer account ID
+
+      - name: base_campaign_id
+        description: Parent ID for the campaign record
+
+      - name: ad_serving_optimization_status
+        description: Ad serving optimization status
+
+      - name: advertising_channel_subtype
+        description: Advertising channel subtype
+
+      - name: advertising_channel_type
+        description: Advertising channel type
+
+      - name: experiment_type
+        description: Experiment type
+
+      - name: end_date
+        description: Date the campaign is scheduled to end
+
+      - name: final_url_suffix
+        description: Final URL suffix
+
+      - name: frequency_caps
+        description: Frequency caps
+
+      - name: campaign_name
+        description: Campaign name
+
+      - name: optimization_score
+        description: Optimization score
+
+      - name: payment_mode
+        description: Payment mode for the campaign (e.g. clicks, conversions)
+
+      - name: serving_status
+        description: Serving status of the campaign
+
+      - name: start_date
+        description: Date the campaign is scheduled to start
+
+      - name: campaign_status
+        description: Campaign status
+
+      - name: tracking_url_template
+        description: Tracking URL template
+
+      - name: vanity_pharma_display_url_mode
+        description: Vanity pharma display URL mode
+
+      - name: vanity_pharma_text
+        description: Vanity pharma text
+
+      - name: video_brand_safety_suitability
+        description: Video brand safety suitability

@@ -1,0 +1,148 @@
+version: 2
+
+sources:
+
+- name: google_ads
+  database: raw
+  schema: google_ads
+  
+  tables:
+    - name: campaign_history
+      description: Google Ads campaign history
+      tests:
+        - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - id
+              - updated_at
+      columns:
+        - name: id
+          description: Campaign ID
+
+        - name: updated_at
+          description: Timestamp for when the record was updated by the source
+
+        - name: customer_id
+          description: Google Ads customer account ID
+
+        - name: base_campaign_id
+          description: Parent ID for the campaign record
+
+        - name: ad_serving_optimization_status
+          description: Ad serving optimization status
+
+        - name: advertising_channel_subtype
+          description: Advertising channel subtype
+
+        - name: advertising_channel_type
+          description: Advertising channel type
+
+        - name: experiment_type
+          description: Experiment type
+
+        - name: end_date
+          description: Date the campaign is scheduled to end
+
+        - name: final_url_suffix
+          description: Final URL suffix
+
+        - name: frequency_caps
+          description: Frequency caps
+
+        - name: name
+          description: Campaign name
+
+        - name: optimization_score
+          description: Optimization score
+
+        - name: payment_mode
+          description: Payment mode for the campaign (e.g. clicks, conversions)
+
+        - name: serving_status
+          description: Serving status of the campaign
+
+        - name: start_date
+          description: Date the campaign is scheduled to start
+
+        - name: status
+          description: Campaign status
+
+        - name: tracking_url_template
+          description: Tracking URL template
+
+        - name: vanity_pharma_display_url_mode
+          description: Vanity pharma display URL mode
+
+        - name: vanity_pharma_text
+          description: Vanity pharma text
+
+        - name: video_brand_safety_suitability
+          description: Video brand safety suitability
+
+        - name: _fivetran_synced
+          description: Timestamp for when therecord was synced by Fivetran to the `raw` database in Snowflake
+
+    - name: campaign_stats
+      description: Google Ads campaign stats (e.g. spend, clicks, impressions)
+      columns:
+        - name: customer_id
+          description: Google Ads customer account ID
+
+        - name: date
+          description: Campaign stats date
+
+        - name: _fivetran_id
+          description: Unique ID provided by Fivetran
+
+        - name: base_campaign
+          description: Base campaign ID path
+
+        - name: conversion_value
+          description: Conversion value
+
+        - name: conversions
+          description: Number of conversions
+
+        - name: interactions
+          description: Number of interactions
+
+        - name: ad_network_type
+          description: Ad network type
+
+        - name: interaction_event_types
+          description: Interaction event types
+
+        - name: id
+          description: Campaign ID
+
+        - name: impressions
+          description: Number of impressions
+
+        - name: active_view_viewability
+          description: Active view viewability
+
+        - name: device
+          description: Type of device viewing the add (e.g. desktop, tablet, mobile)
+
+        - name: view_through_conversions
+          description: View through conversions
+
+        - name: active_view_impressions
+          description: Active view impressions
+
+        - name: clicks
+          description: Number of clicks
+
+        - name: active_view_measurable_impressions
+          description: Active view measurable_impressions
+
+        - name: active_view_measurable_cost_micros
+          description: Active view measurable cost micros
+
+        - name: active_view_measurability
+          description: Active view measurability
+
+        - name: cost_micros
+          description: Cost amount in micros. Divide by 1,000,000 to get the cost in dollars
+
+        - name: _fivetran_synced
+          description: Timestamp for when the record was synced by Fivetran to the `raw` database in Snowflake

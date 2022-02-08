@@ -1,0 +1,64 @@
+version: 2
+
+models:
+
+  - name: stg_google_ads__campaign_stats
+    description: Staging model for Google Ads campaign performance stats
+    columns:
+      - name: customer_id
+        description: Google Ads customer account ID
+
+      - name: campaign_stat_date
+        description: Campaign stats date
+
+      - name: base_campaign
+        description: Base campaign ID path
+
+      - name: conversion_value
+        description: Conversion value
+
+      - name: conversions
+        description: Number of conversions
+
+      - name: interactions
+        description: Number of interactions
+
+      - name: ad_network_type
+        description: Ad network type
+
+      - name: interaction_event_types
+        description: Interaction event types
+
+      - name: campaign_id
+        description: Campaign ID
+
+      - name: impressions
+        description: Number of impressions
+
+      - name: active_view_viewability
+        description: Active view viewability
+
+      - name: device
+        description: Type of device viewing the add (e.g. desktop, tablet, mobile)
+
+      - name: view_through_conversions
+        description: View through conversions
+
+      - name: active_view_impressions
+        description: Active view impressions
+
+      - name: clicks
+        description: Number of clicks
+
+      - name: active_view_measurable_impressions
+        description: Active view measurable_impressions
+
+      - name: active_view_measurable_cost_micros
+        description: Active view measurable cost micros
+
+      - name: active_view_measurability
+        description: Active view measurability
+
+      - name: cost
+        description: Cost amount in dollars
+        
