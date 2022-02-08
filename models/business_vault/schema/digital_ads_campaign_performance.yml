@@ -26,5 +26,8 @@ models:
       - name: clicks
         description: Total clicks for the campaign for the day
 
+      - name: conversions
+        description: Total conversions for the campaign for the day
+
       - name: view_through_conversions
         description: Total view through conversions for the campaign for the day

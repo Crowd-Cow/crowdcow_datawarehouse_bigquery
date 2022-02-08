@@ -26,6 +26,7 @@ campaign_history as ( select * from {{ ref('stg_google_ads__campaign_history') }
         ,sum(campaign_stats.cost) as spend
         ,sum(campaign_stats.impressions) as impressions
         ,sum(campaign_stats.clicks) as clicks
+        ,sum(campaign_stats.conversions) as conversions
         ,sum(campaign_stats.view_through_conversions) as view_through_conversions
     from campaign_stats
         left join campaigns on campaign_stats.campaign_id = campaigns.campaign_id
