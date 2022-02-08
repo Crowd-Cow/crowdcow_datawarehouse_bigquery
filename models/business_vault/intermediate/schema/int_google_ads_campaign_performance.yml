@@ -1,0 +1,33 @@
+version: 2
+
+models:
+
+  - name: int_google_ads_campaign_performance
+    description: Intermediate model to summary Google Ads campaign performance
+    columns:
+      - name: campaign_performance_id
+        description: A surrogate key to ensure uniqueness for the performance stats. A combination of `campaign_stat_date`, `campaign_name`, and `adertising_channel_type`
+        tests:
+          - unique
+          - not_null
+
+      - name: campaign_stat_date
+        description: Date for the campaign performance stats
+
+      - name: campaign_name
+        description: Campaign name
+
+      - name: advertising_channel_type
+        description: Advertising channel type
+      
+      - name: spend
+        description: Total spend for the campaign for the day
+
+      - name: impressions
+        description: Total impressions for the campaign for the day
+
+      - name: clicks
+        description: Total clicks for the campaign for the day
+
+      - name: view_through_conversions
+        description: Total view through conversions for the campaign for the day
