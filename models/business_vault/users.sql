@@ -5,6 +5,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
 ,memberships as (select * from {{ ref('stg_cc__subscriptions') }})
 ,phone_number as ( select * from {{ ref('stg_cc__phone_numbers') }} )
 ,segmentation_tags as ( select * from {{ ref('stg_cc__tags') }} )
+,ccpa_users as ( select distinct  user_token from {{ ref('ccpa_requests') }} )
 
 ,membership_count as (
     select
@@ -51,11 +52,13 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.membership_cohort_date
         ,aggregate_tags.tag_list
         ,aggregate_tags.tag_count
+        ,ccpa_users.user_token is not null as is_ccpa
     from users
         left join membership_count on users.user_id = membership_count.user_id
         left join user_order_activity on users.user_id = user_order_activity.user_id
         left join phone_number on users.phone_number_id = phone_number.phone_number_id
         left join aggregate_tags on users.user_id = aggregate_tags.user_id
+        left join ccpa_users on users.user_token = ccpa_users.user_token
 )
 
 ,final as (
@@ -103,6 +106,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,created_at_utc
         ,updated_at_utc
     from user_joins
+    where not is_ccpa
 )
 
 select * from final
