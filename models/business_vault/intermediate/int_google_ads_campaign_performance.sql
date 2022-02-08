@@ -12,6 +12,7 @@ campaign_history as ( select * from {{ ref('stg_google_ads__campaign_history') }
             when advertising_channel_type = 'UNKOWN' and campaign_name like '%_DISCOVERY%' then 'DISCOVERY'
             else advertising_channel_type
          end as advertising_channel_type
+         
         ,row_number() over(partition by campaign_id order by updated_at_utc desc) as rn
     from campaign_history
     qualify rn = 1
