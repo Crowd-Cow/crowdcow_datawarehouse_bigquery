@@ -24,7 +24,7 @@ renamed as (
     ,event_id as order_event_id -- As found in cc.events, not an Ahoy Event
     ,{{ clean_strings('session_id') }} as order_session_id
     ,created_by_user_id as order_created_by_user_id
-    ,coolant_weight_in_pounds as order_coolant_weight_in_pounds
+    ,coolant_weight_in_pounds as coolant_weight_in_pounds
     ,{{ clean_strings('portion_errors') }} as order_portion_errors
     ,order_contents_last_notified_hash
     ,{{ clean_strings('packing_notes') }} as order_packing_notes
