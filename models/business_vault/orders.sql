@@ -26,6 +26,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.fc_id
         ,orders.visit_id
         ,orders.stripe_charge_id
+        ,{{ get_join_key('fcs','fc_key','fc_id','orders','fc_id','order_created_at_utc') }} as fc_key
         ,orders.order_identifier
         
         ,case

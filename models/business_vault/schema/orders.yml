@@ -31,6 +31,9 @@ models:
       - name: stripe_charge_id
         description: "Stripe charge ID that can be used to link back to the `stripe.charges` table"
 
+      - name: fc_key
+        description: The FC key that can be used to join to FCs to get the appropriate historical information for the FC at the time the order was created
+
       - name: order_identifier
         description: "Order identifier"
 
