@@ -21,7 +21,7 @@ models:
       - name: updated_at_utc
         description: Timestamp the entry was updated at in UTC
 
-      - name: fulfillment_center_id
+      - name: fc_id
         description: Fulfillment center ID
 
       - name: created_by

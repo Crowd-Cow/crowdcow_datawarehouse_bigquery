@@ -11,7 +11,7 @@ renamed as (
         , dbt_scd_id as pipeline_schedule_key
         , {{ clean_strings('status') }} as status
         , updated_at as updated_at_utc
-        , fc_id as fulfillment_center_id
+        , fc_id
         , created_by
         , {{ clean_strings('schedule_type') }} as schedule_type
         , created_at as created_at_utc

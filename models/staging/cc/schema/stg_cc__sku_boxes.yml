@@ -15,8 +15,8 @@ models:
           - unique
           - not_null
 
-      - name: fulfillment_center_id
-        description: FC related to the sku box
+      - name: fc_id
+        description: Fulfillment center related to the sku box
 
       - name: sku_id
         description: Business ID for the sku
