@@ -26,7 +26,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.fc_id
         ,orders.visit_id
         ,orders.stripe_charge_id
-        ,{{ get_join_key('fcs','fc_key','fc_id','orders','fc_id','order_created_at_utc') }} as fc_key
+        ,{{ get_join_key('fcs','fc_key','fc_id','orders','fc_id','order_updated_at_utc') }} as fc_key
         ,orders.order_identifier
         
         ,case
@@ -58,6 +58,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(order_revenue.gift_redemption) as gift_redemption
         ,zeroifnull(order_revenue.other_discount) as other_discount
         ,zeroifnull(order_revenue.net_revenue) as net_revenue
+        ,orders.coolant_weight_in_pounds
         ,flags.has_free_shipping
         ,flags.is_ala_carte_order
         ,flags.is_membership_order
