@@ -9,6 +9,7 @@ order_item as ( select * from {{ ref('order_items') }} )
         order_item.order_id
         ,order_item.bid_id
         ,order_item.bid_item_id
+        ,order_item.promotion_id
         ,order_item.bid_item_name
         ,order_item.bid_quantity
         ,order_item.bid_list_price_usd
@@ -91,6 +92,7 @@ order_item as ( select * from {{ ref('order_items') }} )
         ,bid_item_id
         ,sku_id
         ,sku_key
+        ,promotion_id
         ,bid_item_name
         ,bid_quantity
         ,sku_quantity
