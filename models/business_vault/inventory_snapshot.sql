@@ -1,7 +1,7 @@
 with
 
 /*** Only starting with dates after 2021-10-28 since that is when we started fully snapshotting the `sku_boxes` data in the new model ***/
-dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} where calendar_date >= '2021-10-28' and calendar_date <= sysdate()::date )
+dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} where calendar_date >= '2021-10-28' and calendar_date < sysdate()::date )
 ,sku_box as ( select * from {{ ref('stg_cc__sku_boxes') }} )
 ,fc_location as ( select * from {{ ref('stg_cc__fc_locations') }} )
 ,fc as ( select * from {{ ref('fcs') }} )
@@ -33,7 +33,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,delivered_at_utc
         ,moved_to_picking_at_utc
         ,dbt_valid_from::date as dbt_valid_from
-        ,coalesce(dbt_valid_to,sysdate()::date + 1)::date as dbt_valid_to
+        ,coalesce(dbt_valid_to,sysdate())::date as dbt_valid_to
         ,row_number() over(partition by sku_box_id, dbt_valid_from::date order by dbt_valid_from desc) as rn
     from sku_box
     qualify rn = 1
