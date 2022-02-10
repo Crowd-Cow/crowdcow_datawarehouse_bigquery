@@ -97,6 +97,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
          end as quantity_sellable
         
         ,fc_location.is_sellable
+        ,daily_sku_boxes.is_destroyed
         ,daily_sku_boxes.created_at_utc
         ,daily_sku_boxes.updated_at_utc
         ,daily_sku_boxes.marked_not_for_sale_at_utc
@@ -134,6 +135,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,sku_box_locations.quarantined_quantity
         ,sku_box_locations.quantity_sellable
         ,sku_box_locations.is_sellable
+        ,sku_box_locations.is_destroyed
         ,sku_box_locations.created_at_utc
         ,sku_box_locations.updated_at_utc
         ,sku_box_locations.marked_not_for_sale_at_utc

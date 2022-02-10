@@ -82,6 +82,9 @@ models:
       - name: is_sellable
         description: "Boolean indicating if the SKU box is in a sellable FC location"
 
+      - name: is_destroyed
+        descripiton: "Boolean indicating if the SKU box has been marked as destroyed"
+
       - name: created_at_utc
         description: "Timestamp for when the SKU box record was created UTC"
 
