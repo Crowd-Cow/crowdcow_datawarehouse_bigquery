@@ -7,6 +7,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
 ,fc as ( select * from {{ ref('fcs') }} )
 ,sku as ( select * from {{ ref('skus') }} )
 ,lot as ( select * from {{ ref('lots') }} )
+,sku_vendor as ( select * from {{ ref('stg_cc__sku_vendors') }} )
 
 ,inventory_snapshot as (
     select
@@ -106,7 +107,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         left join fc_location on daily_sku_boxes.fc_location_parent_id = fc_location.fc_location_id
 )
 
-,inventory_with_join_keys as (
+,inventory_joins as (
     select 
         {{ dbt_utils.surrogate_key(['snapshot_date','sku_box_key'] ) }} as inventory_snapshot_id
         ,snapshot_date
@@ -122,6 +123,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,sku_box_locations.pallet_id
         ,sku_box_locations.fc_location_id
         ,sku_box_locations.sku_box_name
+        ,sku_vendor.sku_vendor_name as sku_box_owner_name
         ,sku_box_locations.location_type
         ,sku_box_locations.location_name
         ,sku_box_locations.min_weight
@@ -139,6 +141,9 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,sku_box_locations.delivered_at_utc
         ,sku_box_locations.moved_to_picking_at_utc
     from sku_box_locations
+        left join sku_vendor on sku_box_locations.owner_id = sku_vendor.sku_vendor_id
+
+        /*** Get various join keys to be able to grab information at the time of snapshot date ****/
         left join fc on sku_box_locations.fc_id = fc.fc_id
             and snapshot_date >= fc.adjusted_dbt_valid_from
             and snapshot_date < fc.adjusted_dbt_valid_to
@@ -148,6 +153,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         left join lot on sku_box_locations.lot_id = lot.lot_id
             and snapshot_date >= lot.adjusted_dbt_valid_from
             and snapshot_date < lot.adjusted_dbt_valid_to
+        
 )
 
-select * from inventory_with_join_keys
+select * from inventory_joins

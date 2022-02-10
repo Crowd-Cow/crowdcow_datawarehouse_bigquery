@@ -49,6 +49,9 @@ models:
       - name: sku_box_name
         description: "SKU box name"
 
+      - name: sku_box_owner_name
+        description: "The sku vendor name of the owner of the SKU box"
+
       - name: location_type
         description: "Fulfillment center location type (e.g. receiving, pallet, sku box, etc."
 
