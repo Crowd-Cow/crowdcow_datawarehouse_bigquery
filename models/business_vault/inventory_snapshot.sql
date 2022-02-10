@@ -25,7 +25,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,quantity_reserved
         ,quantity - quantity_reserved as quantity_available
         ,quarantined_quantity
-        ,fc_location_parent_id
+        ,fc_location_parent_id as fc_location_id
         ,created_at_utc
         ,updated_at_utc
         ,marked_not_for_sale_at_utc
@@ -57,7 +57,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,inventory_snapshot.quantity_reserved
         ,inventory_snapshot.quantity - quantity_reserved as quantity_available
         ,inventory_snapshot.quarantined_quantity
-        ,inventory_snapshot.fc_location_parent_id
+        ,inventory_snapshot.fc_location_id
         ,inventory_snapshot.marked_destroyed_at_utc is not null as is_destroyed
         ,inventory_snapshot.created_at_utc
         ,inventory_snapshot.updated_at_utc
@@ -72,24 +72,9 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
 
 ,sku_box_locations as (
     select 
-        daily_sku_boxes.snapshot_date
-        ,daily_sku_boxes.sku_box_id
-        ,daily_sku_boxes.sku_box_key
-        ,daily_sku_boxes.fc_id
-        ,daily_sku_boxes.sku_id
-        ,daily_sku_boxes.owner_id
-        ,daily_sku_boxes.lot_id
-        ,daily_sku_boxes.pallet_id
-        ,daily_sku_boxes.fc_location_parent_id as fc_location_id
-        ,daily_sku_boxes.sku_box_name
+        daily_sku_boxes.*
         ,fc_location.location_type
         ,fc_location.location_name
-        ,daily_sku_boxes.min_weight
-        ,daily_sku_boxes.max_weight
-        ,daily_sku_boxes.quantity
-        ,daily_sku_boxes.quantity_reserved
-        ,daily_sku_boxes.quantity_available
-        ,daily_sku_boxes.quarantined_quantity
         
         ,case 
             when fc_location.is_sellable then daily_sku_boxes.quantity_available  
@@ -97,51 +82,22 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
          end as quantity_sellable
         
         ,fc_location.is_sellable
-        ,daily_sku_boxes.is_destroyed
-        ,daily_sku_boxes.created_at_utc
-        ,daily_sku_boxes.updated_at_utc
-        ,daily_sku_boxes.marked_not_for_sale_at_utc
-        ,daily_sku_boxes.marked_destroyed_at_utc
-        ,daily_sku_boxes.delivered_at_utc
-        ,daily_sku_boxes.moved_to_picking_at_utc
     from daily_sku_boxes
-        left join fc_location on daily_sku_boxes.fc_location_parent_id = fc_location.fc_location_id
+        left join fc_location on daily_sku_boxes.fc_location_id = fc_location.fc_location_id
 )
 
 ,inventory_joins as (
     select 
         {{ dbt_utils.surrogate_key(['snapshot_date','sku_box_key'] ) }} as inventory_snapshot_id
-        ,snapshot_date
-        ,sku_box_id
-        ,sku_box_key
-        ,sku_box_locations.fc_id
+        ,sku_box_locations.*
         ,fc.fc_key
-        ,sku_box_locations.sku_id
         ,sku.sku_key
-        ,sku_box_locations.owner_id
-        ,sku_box_locations.lot_id
         ,lot.lot_key
-        ,sku_box_locations.pallet_id
-        ,sku_box_locations.fc_location_id
-        ,sku_box_locations.sku_box_name
         ,sku_vendor.sku_vendor_name as sku_box_owner_name
-        ,sku_box_locations.location_type
-        ,sku_box_locations.location_name
-        ,sku_box_locations.min_weight
-        ,sku_box_locations.max_weight
-        ,sku_box_locations.quantity
-        ,sku_box_locations.quantity_reserved
-        ,sku_box_locations.quantity_available
-        ,sku_box_locations.quarantined_quantity
-        ,sku_box_locations.quantity_sellable
-        ,sku_box_locations.is_sellable
-        ,sku_box_locations.is_destroyed
-        ,sku_box_locations.created_at_utc
-        ,sku_box_locations.updated_at_utc
-        ,sku_box_locations.marked_not_for_sale_at_utc
-        ,sku_box_locations.marked_destroyed_at_utc
-        ,sku_box_locations.delivered_at_utc
-        ,sku_box_locations.moved_to_picking_at_utc
+        ,sku.sku_price_usd
+        ,sku.sku_cost_usd
+        ,sku.marketplace_cost_usd
+        ,sku.is_marketplace
     from sku_box_locations
         left join sku_vendor on sku_box_locations.owner_id = sku_vendor.sku_vendor_id
 
@@ -158,4 +114,57 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         
 )
 
-select * from inventory_joins
+,add_sku_metrics as (
+    select
+        inventory_snapshot_id
+        ,snapshot_date
+        ,sku_box_id
+        ,sku_box_key
+        ,fc_id
+        ,fc_key
+        ,sku_id
+        ,sku_key
+        ,owner_id
+        ,lot_id
+        ,lot_key
+        ,pallet_id
+        ,fc_location_id
+        ,sku_box_name
+        ,sku_box_owner_name
+        ,location_type
+        ,location_name
+        ,min_weight
+        ,max_weight
+        ,quantity
+        ,quantity * sku_price_usd as potential_revenue
+        ,quantity * sku_cost_usd as owned_sku_cost
+        ,quantity * marketplace_cost_usd as marketplace_sku_cost
+        ,quantity_reserved
+        ,quantity_reserved * sku_price_usd as potential_revenue_reserved
+        ,quantity_reserved * sku_cost_usd as owned_sku_reserved_cost
+        ,quantity_reserved * marketplace_cost_usd as marketplace_sku_reserved_cost
+        ,quantity_available
+        ,quantity_available * sku_price_usd as potential_revenue_available
+        ,quantity_available * sku_cost_usd as owned_sku_available_cost
+        ,quantity_available * marketplace_cost_usd as marketplace_sku_available_cost
+        ,quarantined_quantity
+        ,quarantined_quantity * sku_price_usd as potential_revenue_quarantined
+        ,quarantined_quantity * sku_cost_usd as owned_sku_quarantined_cost
+        ,quarantined_quantity * marketplace_cost_usd as marketplace_sku_quarantined_cost
+        ,quantity_sellable
+        ,quantity_sellable * sku_price_usd as potential_revenue_sellable
+        ,quantity_sellable * sku_cost_usd as owned_sku_sellable_cost
+        ,quantity_sellable * marketplace_cost_usd as marketplace_sku_sellable_cost
+        ,is_sellable
+        ,is_destroyed
+        ,is_marketplace
+        ,created_at_utc
+        ,updated_at_utc
+        ,marked_not_for_sale_at_utc
+        ,marked_destroyed_at_utc
+        ,delivered_at_utc
+        ,moved_to_picking_at_utc
+    from inventory_joins
+)
+
+select * from add_sku_metrics
