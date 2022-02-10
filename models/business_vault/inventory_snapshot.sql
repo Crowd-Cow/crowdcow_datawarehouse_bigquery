@@ -24,7 +24,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,quantity
         ,quantity_reserved
         ,quantity - quantity_reserved as quantity_available
-        ,quarantined_quantity
+        ,quantity_quarantined
         ,fc_location_parent_id as fc_location_id
         ,created_at_utc
         ,updated_at_utc
@@ -56,7 +56,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,inventory_snapshot.quantity
         ,inventory_snapshot.quantity_reserved
         ,inventory_snapshot.quantity - quantity_reserved as quantity_available
-        ,inventory_snapshot.quarantined_quantity
+        ,inventory_snapshot.quantity_quarantined
         ,inventory_snapshot.fc_location_id
         ,inventory_snapshot.marked_destroyed_at_utc is not null as is_destroyed
         ,inventory_snapshot.created_at_utc
@@ -137,24 +137,19 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,max_weight
         ,quantity
         ,quantity * sku_price_usd as potential_revenue
-        ,quantity * sku_cost_usd as owned_sku_cost
-        ,quantity * marketplace_cost_usd as marketplace_sku_cost
+        ,iff(is_marketplace,quantity * marketplace_cost_usd,quantity * sku_cost_usd) as sku_cost
         ,quantity_reserved
         ,quantity_reserved * sku_price_usd as potential_revenue_reserved
-        ,quantity_reserved * sku_cost_usd as owned_sku_reserved_cost
-        ,quantity_reserved * marketplace_cost_usd as marketplace_sku_reserved_cost
+        ,iff(is_marketplace,quantity_reserved * marketplace_cost_usd,quantity_reserved * sku_cost_usd) as sku_cost_reserved
         ,quantity_available
         ,quantity_available * sku_price_usd as potential_revenue_available
-        ,quantity_available * sku_cost_usd as owned_sku_available_cost
-        ,quantity_available * marketplace_cost_usd as marketplace_sku_available_cost
-        ,quarantined_quantity
-        ,quarantined_quantity * sku_price_usd as potential_revenue_quarantined
-        ,quarantined_quantity * sku_cost_usd as owned_sku_quarantined_cost
-        ,quarantined_quantity * marketplace_cost_usd as marketplace_sku_quarantined_cost
+        ,iff(is_marketplace,quantity_available * marketplace_cost_usd, quantity_available * sku_cost_usd) as sku_cost_available
+        ,quantity_quarantined
+        ,quantity_quarantined * sku_price_usd as potential_revenue_quarantined
+        ,iff(is_marketplace,quantity_quarantined * marketplace_cost_usd, quantity_quarantined * sku_cost_usd) as sku_cost_quarantined
         ,quantity_sellable
         ,quantity_sellable * sku_price_usd as potential_revenue_sellable
-        ,quantity_sellable * sku_cost_usd as owned_sku_sellable_cost
-        ,quantity_sellable * marketplace_cost_usd as marketplace_sku_sellable_cost
+        ,iff(is_marketplace,quantity_sellable * marketplace_cost_usd, quantity_sellable * sku_cost_usd) as sku_cost_sellable
         ,is_sellable
         ,is_destroyed
         ,is_marketplace

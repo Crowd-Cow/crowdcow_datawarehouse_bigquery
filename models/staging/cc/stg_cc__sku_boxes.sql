@@ -14,7 +14,7 @@ renamed as (
         ,marked_destroyed_at as marked_destroyed_at_utc
         ,quantity
         ,max_weight
-        ,quarantined_quantity
+        ,quarantined_quantity as quantity_quarantined
         ,created_at as created_at_utc
         ,{{ clean_strings('name') }} as sku_box_name
         ,fc_location_parent_id
