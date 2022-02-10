@@ -1,0 +1,62 @@
+version: 2
+
+models:
+  - name: stg_cc__fc_locations
+    description: "Staging model for fulfillment center locations of SKU boxes"
+    columns:
+      - name: fc_location_id
+        description: "Fulfillment center location ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated by the system UTC"
+
+      - name: sad_cow_bin_id
+        description: "Sad Cow bin ID"
+
+      - name: location_name
+        description: "Fulfillment center location name"
+
+      - name: fc_location_parent_id
+        description: "Fulfillment center location parent ID. You can find more information on how the hierarchy works [here](https://github.com/Crowd-Cow/crowdcow/blob/422682853813070d52fabd5e388253164ad01152/app/models/fc_location.rb)"
+
+      - name: merchandising_request_status
+        description: "Merchandising request status"
+
+      - name: fc_transfer_status
+        description: "Fulfillment center transfer status"
+
+      - name: on_deck_score
+        description: "On deck score"
+
+      - name: position
+        description: "Location position"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created UTC"
+
+      - name: fc_id
+        description: "Fulfillment center ID"
+
+      - name: barcode
+        description: "SKU box barcode value"
+
+      - name: picking_priority
+        description: "Picking priority of the SKU box"
+
+      - name: location_type
+        description: "Location type (e.g. receiving, pallet, sku box, etc.)"
+
+      - name: marked_destroyed_at_utc
+        description: "Timestamp for when the SKU box was marked as destroyed UTC"
+
+      - name: sku_box_id
+        description: "SKU box ID"
+
+      - name: is_sellable
+        description: "Boolean indicating if the SKU box is in a sellable location"
+
+      - name: is_on_deck
+        description: "Boolean indicating if the SKU box is on deck"
