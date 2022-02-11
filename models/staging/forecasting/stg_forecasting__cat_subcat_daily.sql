@@ -13,7 +13,7 @@ source as ( select * from {{ source('forecast', 'fc_cat_subcat_cut_daily_forecas
         ,p50
         ,p75
         ,p90
-    from raw.crowdcow_forecasting.fc_cat_subcat_cut_daily_forecasts
+    from source
 )
 
 ,renamed as (
