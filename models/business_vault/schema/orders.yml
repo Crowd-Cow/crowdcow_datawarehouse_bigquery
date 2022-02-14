@@ -376,3 +376,6 @@ models:
       - name: delivered_at_utc
         description: "Timestamp for when the order was delivered"
 
+      - name: customer_viewed_at_utc
+        description: "Timestamp for when a customer viewed the order"
+

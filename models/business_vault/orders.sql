@@ -136,6 +136,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.order_cancelled_at_utc
         ,orders.order_paid_at_utc
         ,orders.order_first_stuck_at_utc
+        ,orders.customer_viewed_at_utc
         ,orders.order_scheduled_fulfillment_date_utc
         ,orders.order_scheduled_arrival_date_utc
         ,order_shipment.shipped_at_utc
