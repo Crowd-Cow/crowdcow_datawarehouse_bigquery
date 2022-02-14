@@ -1,6 +1,6 @@
 with
 
-lot as ( select * from {{ ref('lots_ss') }} )
+lot as ( select * from {{ source('cc', 'lots') }} where not _fivetran_deleted )
 
 ,renamed as (
     select
@@ -21,17 +21,6 @@ lot as ( select * from {{ ref('lots_ss') }} )
         ,delivered_at as delivered_at_utc
         ,created_at as created_at_utc
         ,owner_id
-        ,dbt_scd_id as lot_key
-        ,dbt_updated_at
-        ,dbt_valid_from
-        ,dbt_valid_to
-
-        ,case
-            when dbt_valid_from = first_value(dbt_valid_from) over(partition by id order by dbt_valid_from) then '1970-01-01'
-            else dbt_valid_from
-         end as adjusted_dbt_valid_from
-
-        ,coalesce(dbt_valid_to,'2999-01-01') as adjusted_dbt_valid_to
     from lot
 )
 

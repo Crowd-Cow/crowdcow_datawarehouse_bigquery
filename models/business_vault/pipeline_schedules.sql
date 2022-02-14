@@ -107,12 +107,12 @@ pipeline_schedule as ( select * from {{ ref('stg_cc__pipeline_schedules') }} )
         ,pivot_schedule_types.fc_in_status
         ,pivot_schedule_types.fc_in_offsite_storage_id
         ,fc_in_actor.pipeline_actor_name as fc_in_name
-        ,fc_in_actor.pipeline_actor_id as fc_in_fc_id
+        ,fc_in_actor.actor_id as fc_in_fc_id
         ,pivot_schedule_types.fc_scan_proposed_date
         ,pivot_schedule_types.fc_scan_actual_date
         ,pivot_schedule_types.fc_scan_status
         ,fc_scan_actor.pipeline_actor_name as fc_scan_name
-        ,fc_scan_actor.pipeline_actor_id as fc_scan_fc_id
+        ,fc_scan_actor.actor_id as fc_scan_fc_id
     from pivot_schedule_types
         left join actor as farm_out_actor on pivot_schedule_types.farm_out_actor_id = farm_out_actor.pipeline_actor_id
         left join actor as slaughter_kill_actor on pivot_schedule_types.slaughter_kill_actor_id = slaughter_kill_actor.pipeline_actor_id
