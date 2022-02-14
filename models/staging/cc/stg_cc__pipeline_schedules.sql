@@ -11,7 +11,7 @@ renamed as (
         ,{{ clean_strings('status') }} as status
         ,updated_at as updated_at_utc
         ,fc_id
-        ,{{ clean_strings ('created_by') }} as created_by
+        ,created_by
         ,{{ clean_strings('schedule_type') }} as schedule_type
         ,created_at as created_at_utc
         ,actual_date 
