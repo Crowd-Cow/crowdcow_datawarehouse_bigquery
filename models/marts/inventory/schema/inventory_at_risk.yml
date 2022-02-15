@@ -1,0 +1,89 @@
+version: 2
+
+models:
+  - name: inventory_at_risk
+    description: "Inventory data mart analysis that looks at historical inventory snapshots and expected inventory receivables to determine which SKUs are at risk of going OOS"
+    columns:
+      - name: snapshot_id
+        description: A surrogate key to provide uniqueness testing. Combination of `snapshot_date`, `sku_id`, and `fc_id`
+        tests:
+          - unique
+          - not_null
+
+      - name: sku_id
+        description: "SKU ID"
+
+      - name: fc_id
+        description: "Fulfillment center ID"
+
+      - name: snapshot_date
+        description: "Snapshot date"
+
+      - name: fc_name
+        description: "Fulfillment center name"
+
+      - name: category
+        description: "SKU category"
+
+      - name: sub_category
+        description: "SKU sub category"
+
+      - name: cut_name
+        description: "SKU cut name"
+
+      - name: is_always_in_stock
+        description: "Boolean indicating if this SKU is considered always in stock"
+
+      - name: quantity
+        description: "Current quantity of the SKU at the FC"
+
+      - name: quantity_reserved
+        description: "Current quantity of the SKU at the FC that is reserved"
+
+      - name: quantity_sellable
+        description: "Current quantity of the SKU at the FC that is in a sellable location"
+
+      - name: potential_revenue
+        description: "Potential revenue of the SKU at the FC"
+
+      - name: avg_forecasted_weekly_units
+        description: "Average weekly units of forecasted demand for this SKU at this FC"
+
+      - name: next_pipeline_order_date
+        description: "The date of when the next pipeline order is expected to be scanned at the FC"
+
+      - name: next_order_quantity
+        description: "The quantity of the next pipeline order at this FC"
+
+      - name: avg_weekly_potential_revenue
+        description: "The average weekly potential revenue of this SKU at this FC"
+
+      - name: wos
+        description: "Weeks of stock for this SKU at this FC"
+
+      - name: est_wos_total
+        description: "Estimated weeks of stock total at this FC"
+
+      - name: pct_reserved
+        description: "The percent of SKUs reserved at this FC"
+
+      - name: est_oos_date
+        description: "The estimated date for when this SKU will go out of stock at this FC"
+
+      - name: is_oos_sku
+        description: "Boolean indicating if this SKU is going to go out of stock. True if the SKU is an always in stock SKU, and the WOS < 1"
+
+      - name: is_at_risk_sku
+        description: "Boolean indicating if this is an at risk SKU. True if the SKU is an always in stock SKU, between 1 and 4 WOS, and the estimated out of stock date is before the next scheduled pipeline order"
+
+      - name: should_check_with_fc
+        description: "Boolean indicating if this SKU should be checked at the FC. True if the SKU is an always in stock SKU, the total estimated WOS at the FC is higher than the WOS for the SKU, and the WOS for the SKU < 2"
+
+      - name: is_oos_sku_rank
+        description: The rank by potential revenue (highest to lowest), by day, of a SKU that is considered `is_oos_sku`
+
+      - name: is_at_risk_rank
+        description: The rank by potential revenue (highest to lowest), by day, of a SKU that is considered `is_at_risk_sku`
+
+      - name: should_check_with_fc_rank
+        description: The rank by potential revenue (highest to lowest), by day, of a SKU that is considered `should_check_with_fc` 

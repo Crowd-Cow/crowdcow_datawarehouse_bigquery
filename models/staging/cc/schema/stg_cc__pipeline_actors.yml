@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: stg_cc__pipeline_actors
+    description: Stagin model for pipeline actors (e.g. butchers, processors, FCs, etc)
+    columns:
+      - name: pipeline_actor_id
+        description: Pipeline actor ID
+        tests:
+          - unique
+          - not_null
+
+      - name: updated_at_utc
+        description: Timestamp for when the record was updated in the system UTC
+
+      - name: email_address
+        description: Email address of the pipeline actor
+
+      - name: actor_type
+        description: The type of actor (e.g. farm, processor, FC, slaugher, etc.)
+
+      - name: erp_id
+        description: ERP ID
+
+      - name: pipeline_actor_name
+        description: Name of the pipeline actor
+
+      - name: created_at_utc
+        description: Timestamp for when the record was created UTC
+
+      - name: actor_id
+        description: The specific CC ID of the actor. For example, if the actor type is "FC" then the `actor_id` represents the `fc_id`
+
+      - name: should_notify_of_payment
+        description: Boolean indicating if the actor should be notified of payment
+        

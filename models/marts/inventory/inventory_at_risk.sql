@@ -101,11 +101,21 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
 
 ,add_risk_flags as (
     select
-        *
+        {{ dbt_utils.surrogate_key(['snapshot_date', 'sku_id', 'fc_id']) }} as snapshot_id
+        ,*
         ,is_always_in_stock and wos < 1 as is_oos_sku
         ,is_always_in_stock and wos between 1 and 4 and est_oos_date < next_pipeline_order_date as is_at_risk_sku
         ,is_always_in_stock and est_wos_total > wos and wos < 2 as should_check_with_fc
     from calcs
 )
 
-select * from add_risk_flags
+,add_ranks as (
+    select
+        *
+        ,rank() over(partition by snapshot_date,is_oos_sku order by potential_revenue desc) as is_oos_sku_rank
+        ,rank() over(partition by snapshot_date,is_at_risk_sku order by potential_revenue desc) as is_at_risk_rank
+        ,rank() over(partition by snapshot_date,should_check_with_fc order by potential_revenue desc) as should_check_with_fc_rank
+    from add_risk_flags
+)
+
+select * from add_ranks

@@ -15,6 +15,7 @@ pipeline_schedule as ( select * from {{ ref('stg_cc__pipeline_schedules') }} )
         ,last_value(offsite_storage_id) over(partition by pipeline_order_id,schedule_type order by pipeline_schedule_id) as last_offsite_storage_id
         ,row_number() over(partition by pipeline_order_id,schedule_type order by pipeline_schedule_id desc) as rn
     from pipeline_schedule
+    where pipeline_order_id is not null
     qualify rn = 1
 )
 
