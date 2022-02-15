@@ -12,6 +12,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,fc.fc_name
         ,sku.category
         ,sku.sub_category
+        ,sku.sku_id
         ,sku.cut_id
         ,sku.cut_name
         ,{{ dbt_utils.surrogate_key(['inventory.snapshot_date','sku.category','sku.sub_category','sku.cut_id','inventory.fc_id']) }} as join_key
@@ -23,7 +24,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         left join sku on inventory.sku_key = sku.sku_key
         left join fc on inventory.fc_key = fc.fc_key
     where not inventory.is_destroyed
-    group by 1,2,3,4,5,6,7
+    group by 1,2,3,4,5,6,7,8
 )
 
 ,inventory_forecast as (
@@ -43,7 +44,9 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
 
 ,join_forecast as (
     select
-        inventory_aggregation.snapshot_date
+        inventory_aggregation.sku_id
+        ,inventory_aggregation.fc_id
+        ,inventory_aggregation.snapshot_date
         ,inventory_aggregation.fc_name
         ,inventory_aggregation.category
         ,inventory_aggregation.sub_category
@@ -68,7 +71,6 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         * 7 
         * (1 - div0(quantity_reserved,quantity_sellable)))::int as est_oos_date
     from join_forecast
-    where dayname(snapshot_date) = 'Sun' --only need the snapshot at the first of the week to do inventory forecasting
 )
 
 select * from calcs
