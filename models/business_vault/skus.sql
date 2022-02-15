@@ -4,6 +4,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
 ,cut as ( select * from {{ ref('stg_cc__cuts') }} )
 ,farm as ( select * from {{ ref('farms') }} )
 ,sku_vendor as ( select * from {{ ref('stg_cc__sku_vendors') }} )
+,ais as ( select * from {{ ref('stg_gs__always_in_stock') }} )
 
 ,sku_joins as (
     select 
@@ -11,6 +12,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku.sku_key
         ,sku.cut_id
         ,sku.sku_vendor_id
+        ,{{ dbt_utils.surrogate_key(['farm.category','farm.sub_category','cut.cut_name','sku.sku_name']) }} as ais_id
         ,sku.sku_barcode
         ,farm.farm_name
         ,farm.category
@@ -63,4 +65,57 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         left join sku_vendor on sku.sku_vendor_id = sku_vendor.sku_vendor_id
 )
 
-select * from sku_joins
+,add_ais_flag as (
+    select
+        sku_joins.sku_id
+        ,sku_joins.sku_key
+        ,sku_joins.cut_id
+        ,sku_joins.sku_vendor_id
+        ,sku_joins.sku_barcode
+        ,sku_joins.farm_name
+        ,sku_joins.category
+        ,sku_joins.sub_category
+        ,sku_joins.cut_name
+        ,sku_joins.sku_weight
+        ,sku_joins.sku_cost_usd
+        ,sku_joins.platform_fee_usd
+        ,sku_joins.fulfillment_fee_usd
+        ,sku_joins.payment_processing_fee_usd
+        ,sku_joins.standard_price_usd
+        ,sku_joins.sku_price_usd
+        ,sku_joins.marketplace_cost_usd
+        ,sku_joins.average_box_quantity
+        ,sku_joins.vendor_funded_discount_name
+        ,sku_joins.vendor_funded_discount_usd
+        ,sku_joins.vendor_funded_discount_percent
+        ,sku_joins.promotional_price_usd
+        ,sku_joins.member_discount_percent
+        ,sku_joins.non_member_discount_percent
+        ,sku_joins.is_bulk_receivable
+        ,sku_joins.is_presellable
+        ,sku_joins.is_virtual_inventory
+        ,sku_joins.is_cargill
+        ,sku_joins.is_edm
+        ,sku_joins.is_marketplace
+        ,coalesce(ais.is_always_in_stock,FALSE) as is_always_in_stock
+        ,sku_joins.sku_vendor_name
+        ,sku_joins.vendor_funded_discount_start_at_utc
+        ,sku_joins.vendor_funded_discount_end_at_utc
+        ,sku_joins.promotion_start_at_utc
+        ,sku_joins.promotion_end_at_utc
+        ,sku_joins.member_discount_start_at_utc
+        ,sku_joins.member_discount_end_at_utc
+        ,sku_joins.non_member_discount_start_at_utc
+        ,sku_joins.non_member_discount_end_at_utc
+        ,sku_joins.active_at_utc
+        ,sku_joins.created_at_utc
+        ,sku_joins.updated_at_utc
+        ,sku_joins.dbt_valid_from
+        ,sku_joins.dbt_valid_to
+        ,sku_joins.adjusted_dbt_valid_from
+        ,sku_joins.adjusted_dbt_valid_to
+    from sku_joins
+        left join ais on sku_joins.ais_id = ais.ais_id
+)
+
+select * from add_ais_flag

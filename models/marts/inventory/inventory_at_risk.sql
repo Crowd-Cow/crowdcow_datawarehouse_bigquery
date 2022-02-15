@@ -16,6 +16,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,sku.sku_id
         ,sku.cut_id
         ,sku.cut_name
+        ,sku.is_always_in_stock
         ,{{ dbt_utils.surrogate_key(['inventory.snapshot_date','sku.category','sku.sub_category','sku.cut_id','inventory.fc_id']) }} as join_key
         ,sum(inventory.quantity) as quantity
         ,sum(inventory.potential_revenue) as potential_revenue
@@ -25,7 +26,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         left join sku on inventory.sku_key = sku.sku_key
         left join fc on inventory.fc_key = fc.fc_key
     where not inventory.is_destroyed
-    group by 1,2,3,4,5,6,7,8
+    group by 1,2,3,4,5,6,7,8,9
 )
 
 ,inventory_forecast as (
@@ -63,6 +64,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,inventory_aggregation.category
         ,inventory_aggregation.sub_category
         ,inventory_aggregation.cut_name
+        ,inventory_aggregation.is_always_in_stock
         ,inventory_aggregation.quantity
         ,inventory_aggregation.quantity_reserved
         ,inventory_aggregation.quantity_sellable
@@ -72,7 +74,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,first_value(first_available_pipeline_order.fc_scan_proposed_date) 
             over(partition by inventory_aggregation.sku_id,inventory_aggregation.fc_id,inventory_aggregation.snapshot_date 
                 order by first_available_pipeline_order.fc_scan_proposed_date) as next_pipeline_order_date
-                
+
         ,first_value(first_available_pipeline_order.ordered_quantity) 
             over(partition by inventory_aggregation.sku_id,inventory_aggregation.fc_id,inventory_aggregation.snapshot_date 
                 order by first_available_pipeline_order.fc_scan_proposed_date) as next_order_quantity
@@ -97,4 +99,13 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
     from join_forecast
 )
 
-select * from calcs
+,add_risk_flags as (
+    select
+        *
+        ,is_always_in_stock and wos < 1 as is_oos_sku
+        ,is_always_in_stock and wos between 1 and 4 and est_oos_date < next_pipeline_order_date as is_at_risk_sku
+        ,is_always_in_stock and est_wos_total > wos and wos < 2 as should_check_with_fc
+    from calcs
+)
+
+select * from add_risk_flags
