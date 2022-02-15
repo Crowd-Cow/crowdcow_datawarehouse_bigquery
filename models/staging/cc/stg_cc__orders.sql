@@ -45,6 +45,7 @@ renamed as (
     ,confirmed_at as order_confirmed_at_utc
     ,first_stuck_at as order_first_stuck_at_utc
     ,customer_viewed_at as customer_viewed_at_utc
+    ,next_box_notified_at as next_box_notified_at_utc
     ,print_pick_label_last_attempted_at as order_print_pick_label_last_attempted_at_utc
     ,delivery_locked_at as order_delivery_locked_at_utc
     ,picked_up_at as order_picked_up_at_utc

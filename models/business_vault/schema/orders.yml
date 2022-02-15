@@ -379,3 +379,6 @@ models:
       - name: customer_viewed_at_utc
         description: "Timestamp for when a customer viewed the order"
 
+      - name: next_box_notified_at_utc
+        description: "Timestamp for when customer was notified of next order"
+
