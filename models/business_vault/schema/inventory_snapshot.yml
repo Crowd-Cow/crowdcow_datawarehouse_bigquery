@@ -34,11 +34,8 @@ models:
       - name: owner_id
         description: "SKU vendor ID for the SKU box owner"
 
-      - name: lot_id
-        description: "Lot ID"
-
-      - name: lot_key
-        description: "The lot information at the time the snapshot was taken. This can be used for joins in the BI layer"
+      - name: lot_number
+        description: "Lot number"
 
       - name: pallet_id
         description: "Pallet ID"
@@ -67,17 +64,47 @@ models:
       - name: quantity
         description: "The quantity of SKUs in the box"
 
+      - name: potential_revenue
+        description: "Potential revenue based on remaining SKUs in the box (SKU price * quantity)"
+
+      - name: sku_cost
+        description: "Cost of SKUs remaining in the box. (SKU cost * quantity)"
+
       - name: quantity_reserved
         description: "The quantity of SKUs in the box that are reserved for orders and are not sellable"
+
+      - name: potential_revenue_reserved
+        description: "Potential revenue based on remaining reserved SKUs in the box (SKU price * quantity)"
+
+      - name: sku_cost_reserved
+        description: "Cost of reserved SKUs remaining in the box. (SKU cost * quantity)"
 
       - name: quantity_available
         description: "The quantity of total SKUs in the box minus SKUs that are reserved for orders"
 
-      - name: quarantined_quantity
+      - name: potential_revenue_available
+        description: "Potential revenue based on remaining available SKUs in the box (SKU price * quantity)"
+
+      - name: sku_cost_available
+        description: "Cost of available SKUs remaining in the box. (SKU cost * quantity)"
+
+      - name: quantity_quarantined
         description: "The quantity of SKUs that are quarantined"
+
+      - name: potential_revenue_quarantined
+        description: "Potential revenue based on remaining quarantined SKUs in the box (SKU price * quantity)"
+
+      - name: sku_cost_quarantined
+        description: "Cost of quarantined SKUs remaining in the box. (SKU cost * quantity)"
 
       - name: quantity_sellable
         description: "The quantity of available SKUs that are in a 'Sellable' SKU location as determined by the `is_sellable` boolean flag"
+
+      - name: potential_revenue_sellable
+        description: "Potential revenue based on remaining sellable SKUs in the box (SKU price * quantity)"
+
+      - name: sku_cost_sellable
+        description: "Cost of sellable SKUs remaining in the box. (SKU cost * quantity)"
 
       - name: is_sellable
         description: "Boolean indicating if the SKU box is in a sellable FC location"
