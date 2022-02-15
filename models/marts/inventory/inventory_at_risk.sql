@@ -4,6 +4,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
 ,forecast as ( select * from {{ ref('stg_forecasting__cat_subcat_daily') }} )
 ,sku as ( select * from {{ ref('skus') }} )
 ,fc as ( select * from {{ ref('fcs') }} )
+,receivable as ( select * from {{ ref('pipeline_receivables') }} )
 
 ,inventory_aggregation as (
     select
@@ -42,8 +43,19 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
     from forecast
 )
 
-,join_forecast as (
+,first_available_pipeline_order as (
     select
+        sku_id
+        ,fc_id
+        ,fc_scan_proposed_date::date as fc_scan_proposed_date
+        ,sum(quantity) as ordered_quantity
+    from receivable
+    where not is_destroyed
+    group by 1,2,3
+)
+
+,join_forecast as (
+    select distinct
         inventory_aggregation.sku_id
         ,inventory_aggregation.fc_id
         ,inventory_aggregation.snapshot_date
@@ -56,8 +68,20 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,inventory_aggregation.quantity_sellable
         ,inventory_aggregation.potential_revenue
         ,round(inventory_forecast.avg_forecasted_weekly_units,2) as avg_forecasted_weekly_units
+        
+        ,first_value(first_available_pipeline_order.fc_scan_proposed_date) 
+            over(partition by inventory_aggregation.sku_id,inventory_aggregation.fc_id,inventory_aggregation.snapshot_date 
+                order by first_available_pipeline_order.fc_scan_proposed_date) as next_pipeline_order_date
+                
+        ,first_value(first_available_pipeline_order.ordered_quantity) 
+            over(partition by inventory_aggregation.sku_id,inventory_aggregation.fc_id,inventory_aggregation.snapshot_date 
+                order by first_available_pipeline_order.fc_scan_proposed_date) as next_order_quantity
+
     from inventory_aggregation
         inner join inventory_forecast on inventory_aggregation.join_key = inventory_forecast.join_key
+        left join first_available_pipeline_order on inventory_aggregation.sku_id = first_available_pipeline_order.sku_id
+            and inventory_aggregation.fc_id = first_available_pipeline_order.fc_id
+            and inventory_aggregation.snapshot_date <= first_available_pipeline_order.fc_scan_proposed_date
 )
 
 ,calcs as (
