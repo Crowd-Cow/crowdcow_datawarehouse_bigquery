@@ -9,7 +9,7 @@ receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
     
         ,case
             when pipeline_schedule.fc_scan_actual_date is not null then 'COMPLETED'
-            when pipeline_schedule.fc_in_offsite_storage_id is not null then 'IN OFFSITE STORAGE'
+            when pipeline_schedule.fc_in_offsite_storage_name is not null then 'IN OFFSITE STORAGE'
             when pipeline_schedule.fc_in_actual_date is not null then 'ARRIVED AT FC'
             when pipeline_schedule.processor_out_actual_date is not null then 'IN TRANSIT TO FC'
             when pipeline_schedule.processor_in_actual_date is not null then 'ARRIVED AT PROCESSOR'
@@ -56,12 +56,12 @@ receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
         ,pipeline_schedule.processor_out_proposed_date
         ,pipeline_schedule.processor_out_actual_date
         ,pipeline_schedule.processor_out_status
-        ,pipeline_schedule.processor_out_offsite_storage_id
+        ,pipeline_schedule.processor_out_offsite_storage_name
         ,pipeline_schedule.processor_out_name
         ,pipeline_schedule.fc_in_proposed_date
         ,pipeline_schedule.fc_in_actual_date
         ,pipeline_schedule.fc_in_status
-        ,pipeline_schedule.fc_in_offsite_storage_id
+        ,pipeline_schedule.fc_in_offsite_storage_name
         ,pipeline_schedule.fc_in_name
         ,pipeline_schedule.fc_in_fc_id
         ,pipeline_schedule.fc_scan_proposed_date

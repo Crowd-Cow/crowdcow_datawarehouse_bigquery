@@ -7,7 +7,7 @@ locations as ( select * from {{ source('cc', 'fc_locations') }} where not _fivet
         id as fc_location_id
         ,updated_at as updated_at_utc
         ,sad_cow_bin_id
-        ,name as location_name
+        ,{{ clean_strings('name') }} as location_name
         ,parent_id as fc_location_parent_id
         ,{{ clean_strings('merchandising_request_status') }} as merchandising_request_status
         ,{{ clean_strings('fc_transfer_status') }} as fc_transfer_status
