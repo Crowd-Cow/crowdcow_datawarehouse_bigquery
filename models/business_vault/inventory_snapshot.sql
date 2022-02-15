@@ -92,7 +92,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,sku_box_locations.*
         ,fc.fc_key
         ,sku.sku_key
-        ,lot.lot_key
+        ,lot.lot_number
         ,sku_vendor.sku_vendor_name as sku_box_owner_name
         ,sku.sku_price_usd
         ,sku.sku_cost_usd
@@ -100,6 +100,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,sku.is_marketplace
     from sku_box_locations
         left join sku_vendor on sku_box_locations.owner_id = sku_vendor.sku_vendor_id
+        left join lot on sku_box_locations.lot_id = lot.lot_id
 
         /*** Get various join keys to be able to grab information at the time of snapshot date ****/
         left join fc on sku_box_locations.fc_id = fc.fc_id
@@ -108,9 +109,6 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         left join sku on sku_box_locations.sku_id = sku.sku_id
             and snapshot_date >= sku.adjusted_dbt_valid_from
             and snapshot_date < sku.adjusted_dbt_valid_to
-        left join lot on sku_box_locations.lot_id = lot.lot_id
-            and snapshot_date >= lot.adjusted_dbt_valid_from
-            and snapshot_date < lot.adjusted_dbt_valid_to
         
 )
 
@@ -125,8 +123,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,sku_id
         ,sku_key
         ,owner_id
-        ,lot_id
-        ,lot_key
+        ,lot_number
         ,pallet_id
         ,fc_location_id
         ,sku_box_name

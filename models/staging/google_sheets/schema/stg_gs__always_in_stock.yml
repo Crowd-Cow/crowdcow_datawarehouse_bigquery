@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: stg_gs__always_in_stock
+    description: Staging model for the always in stock SKU reference data
+    columns:
+      - name: ais_id
+        description: Always in stock ID. A surrogate key combination of `category`, `sub_category`, `cut_name`, and `sku_name`
+        tests:
+          - unique
+          - not_null
+
+      - name: category
+        description: SKU category
+
+      - name: sub_category
+        description: SKU sub category
+
+      - name: cut_name
+        description: SKU cut name
+
+      - name: sku_name
+        description: SKU name
+
+      - name: is_always_in_stock
+        description: Boolean indicating if the SKU is considered an always in stock SKU
+
+      - name: is_active_item_sold
+        description: Boolean indicating if the SKU is considered an active item sold. This field should be validate before being used since it is manually updated in a spreadsheet and may not be accurate
+      

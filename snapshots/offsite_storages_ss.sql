@@ -1,4 +1,4 @@
-{% snapshot ofsite_storages_ss %}
+{% snapshot offsite_storages_ss %}
 
 {{
    config(

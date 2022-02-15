@@ -1,0 +1,134 @@
+version: 2
+
+models:
+  - name: pipeline_schedules
+    description: "Business logic model for pipeline schedules"
+    columns:
+      - name: pipeline_order_id
+        description: "Pipeline order ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: farm_out_proposed_date
+        description: "The proposed date for when the receivable will leave the farm"
+
+      - name: farm_out_actual_date
+        description: "The actual date when the receivavle left the farm"
+
+      - name: farm_id
+        description: "The ID of the farm"
+
+      - name: farm_out_name
+        description: "The name of the farm"
+
+      - name: farm_out_status
+        description: "The current farm out status"
+
+      - name: slaughter_kill_proposed_date
+        description: "The proposed date for slaughter"
+
+      - name: slaughter_kill_actual_date
+        description: "The actual date for slaughter"
+
+      - name: slaughter_kill_name
+        description: "Name of the slaughter provider"
+
+      - name: slaughter_kill_status
+        description: "The current slaughter status"
+
+      - name: slaughter_out_proposed_date
+        description: "The proposed date for when the receivables leave the slaughter provider"
+
+      - name: slaughter_out_actual_date
+        description: "The actual date the receivables leave the slaughter provider"
+
+      - name: slaughter_out_name
+        description: "The name of the slaughter provider"
+
+      - name: slaughter_out_status
+        description: "The current slaughter out status"
+
+      - name: packer_in_proposed_date
+        description: "The proposed date for when the receivables get to the packer"
+
+      - name: packer_in_actual_date
+        description: "The actual date the receivables get to the packer"
+
+      - name: packer_in_name
+        description: "The name of the packer"
+
+      - name: packer_in_status
+        description: "The current status of packer arrival"
+
+      - name: packer_out_proposed_date
+        description: "The proposed date for when the receivables leave the packer"
+
+      - name: packer_out_actual_date
+        description: "The actual date the receivables leave the packer"
+
+      - name: packer_out_name
+        description: "The name of the packer"
+
+      - name: packer_out_status
+        description: "The current packer out status"
+
+      - name: processor_in_proposed_date
+        description: "The proposed date for when the receivables arrive at the processor"
+
+      - name: processor_in_actual_date
+        description: "The actual date for when the receivables arrive at the processor"
+
+      - name: processor_in_name
+        description: "The name of the processor"
+
+      - name: processor_in_status
+        description: "The current processor in status"
+
+      - name: processor_out_proposed_date
+        description: "The proposed date for when the receivables leave the processor"
+
+      - name: processor_out_actual_date
+        description: "The actual date the receivables leave the processor"
+
+      - name: processor_out_name
+        description: "The name of the processor"
+
+      - name: processor_out_status
+        description: "The current processor out status"
+
+      - name: processor_out_offsite_storage_name
+        description: "The name of the offsite storage location for the processor, if applicable"
+
+      - name: fc_in_proposed_date
+        description: "The proposed date for when the receivables get to the FC"
+
+      - name: fc_in_actual_date
+        description: "The actual date the receivables get to the FC"
+
+      - name: fc_in_fc_id
+        description: "The FC ID"
+
+      - name: fc_in_name
+        description: "The FC name"
+
+      - name: fc_in_status
+        description: "The current FC in status"
+
+      - name: fc_in_offsite_storage_name
+        description: "The name of the offsite storage location at the FC, if applicable"
+
+      - name: fc_scan_proposed_date
+        description: "The proposed date for when receivables will be scanned at the FC"
+
+      - name: fc_scan_actual_date
+        description: "The actual date receivables were scanned at the FC"
+
+      - name: fc_scan_fc_id
+        description: "FC scan FC ID"
+
+      - name: fc_scan_name
+        description: "The name of the FC were receivables were scanned"
+
+      - name: fc_scan_status
+        description: "The current FC scan status"
