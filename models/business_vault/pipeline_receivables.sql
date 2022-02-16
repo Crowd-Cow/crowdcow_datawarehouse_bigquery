@@ -2,10 +2,12 @@ with
 
 receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
 ,pipeline_schedule as ( select * from {{ ref('pipeline_schedules') }} )
+,pipeline_order as ( select * from {{ ref('stg_cc__pipeline_orders') }} )
 
 ,pipeline_receivable as (
     select
         receivable.pipeline_order_id
+        ,pipeline_order.lot_number
     
         ,case
             when pipeline_schedule.fc_scan_actual_date is not null then 'COMPLETED'
@@ -70,6 +72,7 @@ receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
         ,pipeline_schedule.fc_scan_name
     from receivable
         left join pipeline_schedule on receivable.pipeline_order_id = pipeline_schedule.pipeline_order_id
+        left join pipeline_order on receivable.pipeline_order_id = pipeline_order.pipeline_order_id
 )
 
 select * from pipeline_receivable

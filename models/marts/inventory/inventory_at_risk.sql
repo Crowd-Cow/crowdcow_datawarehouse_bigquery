@@ -6,7 +6,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
 ,fc as ( select * from {{ ref('fcs') }} )
 ,receivable as ( select * from {{ ref('pipeline_receivables') }} )
 
-,inventory_aggregation as (
+,inventory_aggregation_sku as (
     select
         inventory.snapshot_date
         ,inventory.fc_id
@@ -16,7 +16,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,sku.sku_id
         ,sku.cut_id
         ,sku.cut_name
-        ,sku.is_always_in_stock
+        ,coalesce(sku.is_always_in_stock,FALSE) as is_always_in_stock
         ,{{ dbt_utils.surrogate_key(['inventory.snapshot_date','sku.category','sku.sub_category','sku.cut_id','inventory.fc_id']) }} as join_key
         ,sum(inventory.quantity) as quantity
         ,sum(inventory.potential_revenue) as potential_revenue
@@ -27,6 +27,80 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         left join fc on inventory.fc_key = fc.fc_key
     where not inventory.is_destroyed
     group by 1,2,3,4,5,6,7,8,9
+)
+
+,first_available_pipeline_order as (
+    select
+        sku_id
+        ,fc_id
+        ,lot_number
+        ,farm_out_name as farm_name
+        ,fc_scan_proposed_date::date as fc_scan_proposed_date
+        ,sum(quantity) as ordered_quantity
+    from receivable
+    where not is_destroyed
+    group by 1,2,3,4,5
+)
+
+,add_next_order as (
+    select distinct
+        inventory_aggregation_sku.snapshot_date
+        ,inventory_aggregation_sku.fc_id
+        ,inventory_aggregation_sku.fc_name
+        ,inventory_aggregation_sku.category
+        ,inventory_aggregation_sku.sub_category
+        ,inventory_aggregation_sku.sku_id
+        ,inventory_aggregation_sku.cut_id
+        ,inventory_aggregation_sku.cut_name
+        ,inventory_aggregation_sku.is_always_in_stock
+        ,inventory_aggregation_sku.join_key
+        ,inventory_aggregation_sku.quantity
+        ,inventory_aggregation_sku.potential_revenue
+        ,inventory_aggregation_sku.quantity_reserved
+        ,inventory_aggregation_sku.quantity_sellable
+    
+        ,first_value(first_available_pipeline_order.fc_scan_proposed_date) 
+            over(partition by inventory_aggregation_sku.cut_id,inventory_aggregation_sku.fc_id,inventory_aggregation_sku.snapshot_date 
+                order by first_available_pipeline_order.fc_scan_proposed_date) as next_pipeline_order_date
+
+        ,first_value(first_available_pipeline_order.ordered_quantity) 
+            over(partition by inventory_aggregation_sku.cut_id,inventory_aggregation_sku.fc_id,inventory_aggregation_sku.snapshot_date
+                order by first_available_pipeline_order.fc_scan_proposed_date) as next_order_quantity
+    
+        ,first_value(first_available_pipeline_order.farm_name) 
+            over(partition by inventory_aggregation_sku.cut_id,inventory_aggregation_sku.fc_id,inventory_aggregation_sku.snapshot_date
+                order by first_available_pipeline_order.fc_scan_proposed_date) as next_order_farm
+    
+        ,first_value(first_available_pipeline_order.lot_number) 
+            over(partition by inventory_aggregation_sku.cut_id,inventory_aggregation_sku.fc_id,inventory_aggregation_sku.snapshot_date
+                order by first_available_pipeline_order.fc_scan_proposed_date) as next_order_lot_number
+    
+    from inventory_aggregation_sku
+        left join first_available_pipeline_order on inventory_aggregation_sku.sku_id = first_available_pipeline_order.sku_id
+            and inventory_aggregation_sku.fc_id = first_available_pipeline_order.fc_id
+            and inventory_aggregation_sku.snapshot_date <= first_available_pipeline_order.fc_scan_proposed_date
+        
+)
+
+,inventory_aggregation_cut as (
+    select
+        snapshot_date
+        ,fc_name
+        ,category
+        ,sub_category
+        ,cut_name
+        ,is_always_in_stock
+        ,join_key
+        ,next_pipeline_order_date
+        ,next_order_quantity
+        ,next_order_farm
+        ,next_order_lot_number
+        ,sum(quantity) as quantity
+        ,sum(potential_revenue) as potential_revenue
+        ,sum(quantity_reserved) as quantity_reserved
+        ,sum(quantity_sellable) as quantity_sellable
+    from add_next_order 
+    group by 1,2,3,4,5,6,7,8,9,10,11
 )
 
 ,inventory_forecast as (
@@ -57,33 +131,24 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
 
 ,join_forecast as (
     select distinct
-        inventory_aggregation.sku_id
-        ,inventory_aggregation.fc_id
-        ,inventory_aggregation.snapshot_date
-        ,inventory_aggregation.fc_name
-        ,inventory_aggregation.category
-        ,inventory_aggregation.sub_category
-        ,inventory_aggregation.cut_name
-        ,inventory_aggregation.is_always_in_stock
-        ,inventory_aggregation.quantity
-        ,inventory_aggregation.quantity_reserved
-        ,inventory_aggregation.quantity_sellable
-        ,inventory_aggregation.potential_revenue
+        inventory_aggregation_cut.snapshot_date
+        ,inventory_aggregation_cut.fc_name
+        ,inventory_aggregation_cut.category
+        ,inventory_aggregation_cut.sub_category
+        ,inventory_aggregation_cut.cut_name
+        ,inventory_aggregation_cut.is_always_in_stock
+        ,inventory_aggregation_cut.next_pipeline_order_date
+        ,inventory_aggregation_cut.next_order_quantity
+        ,inventory_aggregation_cut.next_order_farm
+        ,inventory_aggregation_cut.next_order_lot_number
+        ,inventory_aggregation_cut.quantity
+        ,inventory_aggregation_cut.quantity_reserved
+        ,inventory_aggregation_cut.quantity_sellable
+        ,inventory_aggregation_cut.potential_revenue
         ,round(inventory_forecast.avg_forecasted_weekly_units,2) as avg_forecasted_weekly_units
-        
-        ,first_value(first_available_pipeline_order.fc_scan_proposed_date) 
-            over(partition by inventory_aggregation.sku_id,inventory_aggregation.fc_id,inventory_aggregation.snapshot_date 
-                order by first_available_pipeline_order.fc_scan_proposed_date) as next_pipeline_order_date
 
-        ,first_value(first_available_pipeline_order.ordered_quantity) 
-            over(partition by inventory_aggregation.sku_id,inventory_aggregation.fc_id,inventory_aggregation.snapshot_date 
-                order by first_available_pipeline_order.fc_scan_proposed_date) as next_order_quantity
-
-    from inventory_aggregation
-        inner join inventory_forecast on inventory_aggregation.join_key = inventory_forecast.join_key
-        left join first_available_pipeline_order on inventory_aggregation.sku_id = first_available_pipeline_order.sku_id
-            and inventory_aggregation.fc_id = first_available_pipeline_order.fc_id
-            and inventory_aggregation.snapshot_date <= first_available_pipeline_order.fc_scan_proposed_date
+    from inventory_aggregation_cut
+        left join inventory_forecast on inventory_aggregation_cut.join_key = inventory_forecast.join_key
 )
 
 ,calcs as (
@@ -101,7 +166,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
 
 ,add_risk_flags as (
     select
-        {{ dbt_utils.surrogate_key(['snapshot_date', 'sku_id', 'fc_id']) }} as snapshot_id
+        {{ dbt_utils.surrogate_key(['snapshot_date', 'fc_name','category','sub_category','cut_name','is_always_in_stock']) }} as snapshot_id
         ,*
         ,is_always_in_stock and wos < 1 as is_oos_sku
         ,is_always_in_stock and wos between 1 and 4 and est_oos_date < next_pipeline_order_date as is_at_risk_sku

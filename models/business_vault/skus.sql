@@ -18,6 +18,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,farm.category
         ,farm.sub_category
         ,cut.cut_name
+        ,sku.sku_name
         ,sku.sku_weight
         ,sku.sku_cost_usd
         ,sku.platform_fee_usd
@@ -76,6 +77,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku_joins.category
         ,sku_joins.sub_category
         ,sku_joins.cut_name
+        ,sku_joins.sku_name
         ,sku_joins.sku_weight
         ,sku_joins.sku_cost_usd
         ,sku_joins.platform_fee_usd
