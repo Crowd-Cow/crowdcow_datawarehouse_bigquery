@@ -118,17 +118,6 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
     from forecast
 )
 
-,first_available_pipeline_order as (
-    select
-        sku_id
-        ,fc_id
-        ,fc_scan_proposed_date::date as fc_scan_proposed_date
-        ,sum(quantity) as ordered_quantity
-    from receivable
-    where not is_destroyed
-    group by 1,2,3
-)
-
 ,join_forecast as (
     select distinct
         inventory_aggregation_cut.snapshot_date
