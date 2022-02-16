@@ -1,10 +1,11 @@
 with 
 
-source as ( select * from {{ source('forecast', 'fc_cat_subcat_cut_daily_forecasts') }} )
+source as ( select * from {{ ref('fc_cat_subcat_cut_daily_forecast_ss') }} where dbt_valid_to is null)
 
 ,clean_up_id as (
     select
-        case
+        id as forecast_id
+        ,case
             when item_id = 'null' then null
             else item_id
         end as item_id
@@ -19,7 +20,7 @@ source as ( select * from {{ source('forecast', 'fc_cat_subcat_cut_daily_forecas
 ,renamed as (
 
     select
-        {{ dbt_utils.surrogate_key(['item_id','date']) }} as forecast_id
+        forecast_id
         ,item_id
         ,split_part(item_id,'--',1)::int as fc_id
         ,{{ clean_strings("split_part(item_id,'--',2)") }} as category
