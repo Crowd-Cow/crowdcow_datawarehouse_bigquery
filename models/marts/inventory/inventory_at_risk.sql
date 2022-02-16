@@ -112,9 +112,9 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
 ,add_ranks as (
     select
         *
-        ,rank() over(partition by snapshot_date,is_oos_sku order by potential_revenue desc) as is_oos_sku_rank
-        ,rank() over(partition by snapshot_date,is_at_risk_sku order by potential_revenue desc) as is_at_risk_rank
-        ,rank() over(partition by snapshot_date,should_check_with_fc order by potential_revenue desc) as should_check_with_fc_rank
+        ,rank() over(partition by snapshot_date,is_oos_sku order by avg_weekly_potential_revenue desc) as is_oos_sku_rank
+        ,rank() over(partition by snapshot_date,is_at_risk_sku order by avg_weekly_potential_revenue desc) as is_at_risk_rank
+        ,rank() over(partition by snapshot_date,should_check_with_fc order by avg_weekly_potential_revenue desc) as should_check_with_fc_rank
     from add_risk_flags
 )
 
