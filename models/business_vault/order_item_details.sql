@@ -34,8 +34,8 @@ order_item as ( select * from {{ ref('order_items') }} )
         join_bid_item_skus.*
         ,sku.sku_key
         ,sku.sku_price_usd
-        ,sku.sku_cost_usd
-        ,sku.sku_price_usd * join_bid_item_skus.bid_sku_quantity as bid_sku_price
+        ,iff(sku.is_marketplace,sku.marketplace_cost_usd,sku.sku_cost_usd) as sku_cost_usd
+        ,sku.is_marketplace
         
         ,case
             when div0(sku.sku_price_usd * join_bid_item_skus.bid_sku_quantity,join_bid_item_skus.bid_gross_product_revenue) > 1 
@@ -52,7 +52,8 @@ order_item as ( select * from {{ ref('order_items') }} )
 ,sku_proportion_calculations as (
     select
         *
-         
+        ,sku_price_usd * bid_sku_quantity as bid_sku_price
+        ,sku_cost_usd * bid_sku_quantity as bid_sku_cost
         ,round(
             case
                 when is_single_sku_bid_item or sku_id is null then bid_gross_product_revenue
@@ -99,7 +100,9 @@ order_item as ( select * from {{ ref('order_items') }} )
         ,bid_sku_quantity
         ,bid_list_price_usd
         ,sku_price_usd
+        ,sku_cost_usd
         ,bid_sku_price
+        ,bid_sku_cost
         ,sku_price_proportion
         ,sku_gross_product_revenue
         ,sku_membership_discount
@@ -113,6 +116,7 @@ order_item as ( select * from {{ ref('order_items') }} )
         as sku_net_product_revenue
 
         ,is_single_sku_bid_item
+        ,is_marketplace
         ,bid_created_at_utc
         ,bid_updated_at_utc
     from sku_proportion_calculations
