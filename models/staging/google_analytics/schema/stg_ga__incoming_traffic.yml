@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: stg_ga__incoming_traffic
+    description: Staging model for Google Analyics incoming traffic
+    columns:
+      - name: date
+        description: date of visit
+
+      - name: channel_grouping
+        description: rule based grouping of traffic sources
+
+      - name: landing_page_path
+        description: landing page customer arrived at
+
+      - name: medium
+        description: the general category of the source
+
+      - name: source
+        description: the origin of the traffic
+
+      - name: new_users
+        description: volume of visitors who, according to Google's tracking snippet, have never been to the site before and initiated their first session on the site
+
+      - name: percent_new_visits
+        description: the percent of total users who came to the website for the first time
+
+      - name: percent_new_sessions
+        description: the percent of total users who came to the website for the first time
+
+      - name: users
+        description: volume of visitors who visited the site
