@@ -7566,6 +7566,32 @@ sources:
           - name: retention_offers_accepted
             description: retention_offers_accepted
 
+      - name: vendor_funded_discounts
+        description: vendor_funded_discounts
+
+        columns:
+          - name: end_at
+            description: end_at
+          - name: discount_cents
+            description: discount_cents
+          - name: name
+            description: name
+          - name: created_at
+            description: created_at
+          - name: start_at
+            description: start_at
+          - name: id
+            description: id
+            tests:
+              - unique
+              - not_null
+          - name: sku_id
+            description: sku_id
+          - name: discount_percent
+            description: discount_percent
+          - name: updated_at
+            description: updated_at
+
       - name: vendor_tags
         description: vendor_tags
 
