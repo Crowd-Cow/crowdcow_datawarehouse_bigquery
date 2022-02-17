@@ -2,6 +2,7 @@ with
 
 orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,order_revenue as ( select * from {{ ref('int_order_revenue') }} )
+,order_cost as ( select * from {{ ref('int_order_cost') }} )
 ,flags as ( select * from {{ ref('int_order_flags') }} )
 ,ranks as ( select * from {{ ref('int_order_ranks') }} )
 ,units as ( select * from {{ ref('int_order_units_pct') }} )
@@ -58,6 +59,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(order_revenue.gift_redemption) as gift_redemption
         ,zeroifnull(order_revenue.other_discount) as other_discount
         ,zeroifnull(order_revenue.net_revenue) as net_revenue
+        ,zeroifnull(order_cost.product_cost) as product_cost
         ,orders.coolant_weight_in_pounds
         ,flags.has_free_shipping
         ,flags.is_ala_carte_order
@@ -145,6 +147,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         
     from orders
         left join order_revenue on orders.order_id = order_revenue.order_id
+        left join order_cost on orders.order_id = order_cost.order_id
         left join flags on orders.order_id = flags.order_id
         left join ranks on orders.order_id = ranks.order_id
         left join units on orders.order_id = units.order_id
