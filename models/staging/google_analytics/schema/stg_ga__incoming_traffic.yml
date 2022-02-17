@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_google_analytics__incoming_traffic
+  - name: stg_ga__incoming_traffic
     description: Staging model for Google Analyics incoming traffic
     columns:
       - name: date
