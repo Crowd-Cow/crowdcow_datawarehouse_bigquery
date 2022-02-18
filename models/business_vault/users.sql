@@ -47,7 +47,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
 
         ,user_order_activity.average_order_frequency_days
         ,user_order_activity.average_membership_order_frequency_days
-        ,user_order_activity.average_ala_carte_order_frequncy_days
+        ,user_order_activity.average_ala_carte_order_frequency_days
         ,user_order_activity.customer_cohort_date
         ,user_order_activity.membership_cohort_date
         ,aggregate_tags.tag_list

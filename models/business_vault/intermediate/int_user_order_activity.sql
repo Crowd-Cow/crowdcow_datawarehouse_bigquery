@@ -47,7 +47,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         user_id
         ,avg(days_to_next_paid_order) as average_order_frequency_days
         ,avg(days_to_next_paid_membership_order) as average_membership_order_frequency_days
-        ,avg(days_to_next_paid_ala_carte_order) as average_ala_carte_order_frequncy_days
+        ,avg(days_to_next_paid_ala_carte_order) as average_ala_carte_order_frequency_days
     from order_frequency
     group by 1
 )
@@ -62,7 +62,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,zeroifnull(order_count.total_active_90_day_order_count) as total_active_90_day_order_count
         ,average_order_frequency_days
         ,average_membership_order_frequency_days
-        ,average_ala_carte_order_frequncy_days
+        ,average_ala_carte_order_frequency_days
         ,order_cohorts.customer_cohort_date
         ,order_cohorts.membership_cohort_date
         ,order_cohorts.last_paid_membership_order_date
