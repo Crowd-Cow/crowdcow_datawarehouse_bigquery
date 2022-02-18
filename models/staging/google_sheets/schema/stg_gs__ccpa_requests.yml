@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: stg_gs__ccpa_requests
+    description: Staging model for CCPA request reference file
+    columns:
+      - name: first_name
+        description: First name of the person requesting a CCPA removal
+
+      - name: last_name
+        description: Last name of the person requesting a CCPA removal
+
+      - name: email
+        description: Email address of the person requesting a CCPA removal
+        tests:
+          - unique
+          - not_null
+
+      - name: admin_link
+        description: Admin link to user's information
+
+      - name: date_received
+        description: Date the CCPA request was received
