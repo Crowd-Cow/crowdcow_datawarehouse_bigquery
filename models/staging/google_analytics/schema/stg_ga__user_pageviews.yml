@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: stg_ga__user_pageviews
+    description: Staging model for Google Analyics user pageviews
+    columns:
+      - name: date
+        description: date of visit
+
+      - name: page_path
+        description: path of page that user visited
+
+      - name: exits
+        description: the number of times visitors have left a site from a single page
+
+      - name: new_users
+        description: volume of visitors who, according to Google's tracking snippet, have never been to the site before and initiated their first session on the site
+
+      - name: users
+        description: volume of visitors who visited the site
+
+      - name: avg_time_on_page
+        description: the average amount of time that visitors spend on the page across sessions
+
+      - name: bounces
+        description: volume of users who visit a single page on the site and then exits without triggering any other requests during that session
+
+      - name: entrances
+        description: shows how many users began their session with that page
