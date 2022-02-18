@@ -60,19 +60,19 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,inventory_aggregation_sku.quantity_sellable
     
         ,first_value(first_available_pipeline_order.fc_scan_proposed_date) 
-            over(partition by inventory_aggregation_sku.cut_id,inventory_aggregation_sku.fc_id,inventory_aggregation_sku.snapshot_date 
+            over(partition by inventory_aggregation_sku.category,inventory_aggregation_sku.sub_category,inventory_aggregation_sku.cut_id,inventory_aggregation_sku.fc_id,inventory_aggregation_sku.snapshot_date 
                 order by first_available_pipeline_order.fc_scan_proposed_date) as next_pipeline_order_date
 
         ,first_value(first_available_pipeline_order.ordered_quantity) 
-            over(partition by inventory_aggregation_sku.cut_id,inventory_aggregation_sku.fc_id,inventory_aggregation_sku.snapshot_date
+            over(partition by inventory_aggregation_sku.category,inventory_aggregation_sku.sub_category,inventory_aggregation_sku.cut_id,inventory_aggregation_sku.fc_id,inventory_aggregation_sku.snapshot_date 
                 order by first_available_pipeline_order.fc_scan_proposed_date) as next_order_quantity
     
         ,first_value(first_available_pipeline_order.farm_name) 
-            over(partition by inventory_aggregation_sku.cut_id,inventory_aggregation_sku.fc_id,inventory_aggregation_sku.snapshot_date
+            over(partition by inventory_aggregation_sku.category,inventory_aggregation_sku.sub_category,inventory_aggregation_sku.cut_id,inventory_aggregation_sku.fc_id,inventory_aggregation_sku.snapshot_date 
                 order by first_available_pipeline_order.fc_scan_proposed_date) as next_order_farm
     
         ,first_value(first_available_pipeline_order.lot_number) 
-            over(partition by inventory_aggregation_sku.cut_id,inventory_aggregation_sku.fc_id,inventory_aggregation_sku.snapshot_date
+            over(partition by inventory_aggregation_sku.category,inventory_aggregation_sku.sub_category,inventory_aggregation_sku.cut_id,inventory_aggregation_sku.fc_id,inventory_aggregation_sku.snapshot_date 
                 order by first_available_pipeline_order.fc_scan_proposed_date) as next_order_lot_number
     
     from inventory_aggregation_sku
