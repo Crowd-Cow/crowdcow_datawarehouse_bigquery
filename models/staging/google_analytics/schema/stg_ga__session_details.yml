@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: stg_ga__session_details
+    description: Staging model for Google Analyics session details
+    columns:
+      - name: date
+        description: date of visit
+
+      - name: new_users
+        description: volume of visitors who, according to Google's tracking snippet, have never been to the site before and initiated their first session on the site
+
+      - name: sessions
+        description: a group of interactions recorded when a user visits the website within a given period. sessions end after 30 min of inactivity or when user leaves site.
+
+      - name: avg_session_duration
+        description: the average length of sessions on a website
+      
+      - name: transaction_revenue
+        description: the total revenue generated for each transaction, including fees like tax and shipping costs
+    
+      - name: pageviews_per_session
+        description: the average number of pages a person views in a given session
+
+      - name: users
+        description: volume of visitors who visited the site

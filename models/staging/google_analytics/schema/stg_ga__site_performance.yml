@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: stg_ga__site_performance
+    description: Staging model for Google Analyics session details
+    columns:
+      - name: date
+        description: date of visit
+
+      - name: avg_redirection_time
+        description: the average time (in seconds) spent in redirects before fetching this page. If there are no redirects, this is 0
+
+      - name: dom_latency_metrics_sample
+        description: sample set (or count) of pageviews used to calculate the averages for site speed DOM metrics
+
+      - name: avg_page_load_time
+        description: the average amount of time (in seconds) it takes that page to load, from initiation of the pageview (e.g., click on a page link) to load completion in the browser.
