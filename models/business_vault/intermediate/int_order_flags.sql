@@ -2,7 +2,7 @@ with
 
 orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,shipping_credit as ( select * from {{ ref('stg_cc__credits') }} )
-,shipment as ( select * from stg_cc__shipments )
+,shipment as ( select * from {{ ref('stg_cc__shipments') }} )
 
 ,gift_card as (
     select
