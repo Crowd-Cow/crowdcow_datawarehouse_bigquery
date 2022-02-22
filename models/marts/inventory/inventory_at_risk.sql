@@ -143,6 +143,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
 ,calcs as (
     select *
     ,div0(potential_revenue,quantity) * avg_forecasted_weekly_units as avg_weekly_potential_revenue
+    ,iff(div0(potential_revenue,quantity) * avg_forecasted_weekly_units > potential_revenue,div0(potential_revenue,quantity) * avg_forecasted_weekly_units - potential_revenue,0) as potential_missed_revenue
     ,div0(quantity_sellable,avg_forecasted_weekly_units) as wos
     ,div0(quantity,avg_forecasted_weekly_units) as est_wos_total
     ,div0(quantity_reserved,quantity_sellable) as pct_reserved
