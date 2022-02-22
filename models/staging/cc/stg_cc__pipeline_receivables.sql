@@ -18,7 +18,7 @@ renamed as (
         ,received_at as received_at_utc
         ,pipeline_order_id
         ,updated_at as updated_at_utc
-
+        ,{{ cents_to_usd('cost_in_cents') }} as cost_per_unit_usd
     from source
 
 )
