@@ -30,6 +30,7 @@ receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
         ,receivable.marked_destroyed_at_utc
         ,receivable.created_at_utc
         ,receivable.updated_at_utc
+        ,receivable.cost_per_unit_usd
         ,pipeline_schedule.farm_out_proposed_date
         ,pipeline_schedule.farm_out_actual_date
         ,pipeline_schedule.farm_out_status
