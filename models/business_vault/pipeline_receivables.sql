@@ -3,6 +3,7 @@ with
 receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
 ,pipeline_schedule as ( select * from {{ ref('pipeline_schedules') }} )
 ,pipeline_order as ( select * from {{ ref('stg_cc__pipeline_orders') }} )
+,sku as ( select * from {{ ref('skus') }} )
 
 ,pipeline_receivable as (
     select
@@ -25,6 +26,7 @@ receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
     
         ,pipeline_schedule.fc_scan_fc_id as fc_id
         ,receivable.sku_id
+        ,sku.cut_id
         ,receivable.quantity
         ,receivable.marked_destroyed_at_utc is not null as is_destroyed
         ,receivable.marked_destroyed_at_utc
@@ -74,6 +76,9 @@ receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
     from receivable
         left join pipeline_schedule on receivable.pipeline_order_id = pipeline_schedule.pipeline_order_id
         left join pipeline_order on receivable.pipeline_order_id = pipeline_order.pipeline_order_id
+        left join sku on receivable.sku_id = sku.sku_id
+            and receivable.updated_at_utc >= sku.adjusted_dbt_valid_from
+            and receivable.updated_at_utc < sku.adjusted_dbt_valid_to
 )
 
 select * from pipeline_receivable
