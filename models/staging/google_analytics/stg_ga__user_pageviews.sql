@@ -11,4 +11,5 @@ date::date as date
 ,bounces
 ,entrances
 ,users
+,pageviews
 from user_pageviews
