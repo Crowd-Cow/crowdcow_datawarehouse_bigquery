@@ -9,6 +9,9 @@ models:
 
       - name: page_path
         description: path of page that user visited
+      
+      - name: pageviews
+        description: volume of pageviews
 
       - name: exits
         description: the number of times visitors have left a site from a single page
