@@ -29,7 +29,8 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.stripe_charge_id
         ,{{ get_join_key('fcs','fc_key','fc_id','orders','fc_id','order_updated_at_utc') }} as fc_key
         ,orders.order_identifier
-        
+        ,orders.current_state
+
         ,case
             when orders.parent_order_id is not null then 'CORP GIFT'
             else orders.order_type
@@ -61,6 +62,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(order_revenue.net_revenue) as net_revenue
         ,zeroifnull(order_cost.product_cost) as product_cost
         ,orders.coolant_weight_in_pounds
+        ,orders.bids_count
         ,flags.has_free_shipping
         ,flags.is_ala_carte_order
         ,flags.is_membership_order
@@ -73,6 +75,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,flags.is_gift_card_order
         ,flags.has_shipped
         ,flags.has_been_delivered
+        ,flags.is_fulfillment_at_risk
         ,ranks.overall_order_rank
         ,ranks.completed_order_rank
         ,ranks.paid_order_rank
