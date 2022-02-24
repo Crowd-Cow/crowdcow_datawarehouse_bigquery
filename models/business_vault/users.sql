@@ -53,7 +53,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,aggregate_tags.tag_list
         ,aggregate_tags.tag_count
         ,ccpa_users.user_token is not null as is_ccpa
-        ,case when users.banned_at_utc is not null then true else false end as is_banned
+        ,users.banned_at_utc is not null as is_banned
 
     from users
         left join membership_count on users.user_id = membership_count.user_id
