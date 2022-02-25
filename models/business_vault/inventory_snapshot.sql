@@ -134,19 +134,19 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,max_weight
         ,quantity
         ,quantity * sku_price_usd as potential_revenue
-        ,iff(is_marketplace,quantity * marketplace_cost_usd,quantity * sku_cost_usd) as sku_cost
+        ,quantity * sku_cost_usd as sku_cost
         ,quantity_reserved
         ,quantity_reserved * sku_price_usd as potential_revenue_reserved
-        ,iff(is_marketplace,quantity_reserved * marketplace_cost_usd,quantity_reserved * sku_cost_usd) as sku_cost_reserved
+        ,quantity_reserved * sku_cost_usd as sku_cost_reserved
         ,quantity_available
         ,quantity_available * sku_price_usd as potential_revenue_available
-        ,iff(is_marketplace,quantity_available * marketplace_cost_usd, quantity_available * sku_cost_usd) as sku_cost_available
+        ,quantity_available * sku_cost_usd as sku_cost_available
         ,quantity_quarantined
         ,quantity_quarantined * sku_price_usd as potential_revenue_quarantined
-        ,iff(is_marketplace,quantity_quarantined * marketplace_cost_usd, quantity_quarantined * sku_cost_usd) as sku_cost_quarantined
+        ,quantity_quarantined * sku_cost_usd as sku_cost_quarantined
         ,quantity_sellable
         ,quantity_sellable * sku_price_usd as potential_revenue_sellable
-        ,iff(is_marketplace,quantity_sellable * marketplace_cost_usd, quantity_sellable * sku_cost_usd) as sku_cost_sellable
+        ,quantity_sellable * sku_cost_usd as sku_cost_sellable
         ,is_sellable
         ,is_destroyed
         ,is_marketplace
