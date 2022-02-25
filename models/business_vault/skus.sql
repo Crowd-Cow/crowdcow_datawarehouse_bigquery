@@ -20,13 +20,13 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,cut.cut_name
         ,sku.sku_name
         ,sku.sku_weight
-        ,sku.sku_cost_usd
+        ,sku.owned_sku_cost_usd
+        ,sku.marketplace_cost_usd
         ,sku.platform_fee_usd
         ,sku.fulfillment_fee_usd
         ,sku.payment_processing_fee_usd
         ,sku.standard_price_usd
         ,sku.sku_price_usd
-        ,sku.marketplace_cost_usd
         ,sku.average_box_quantity
         ,sku.vendor_funded_discount_name
         ,sku.vendor_funded_discount_usd
@@ -66,7 +66,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         left join sku_vendor on sku.sku_vendor_id = sku_vendor.sku_vendor_id
 )
 
-,add_ais_flag as (
+,final as (
     select
         sku_joins.sku_id
         ,sku_joins.sku_key
@@ -79,13 +79,14 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku_joins.cut_name
         ,sku_joins.sku_name
         ,sku_joins.sku_weight
-        ,sku_joins.sku_cost_usd
+        ,sku_joins.owned_sku_cost_usd
+        ,sku_joins.marketplace_cost_usd
+        ,iff(sku_joins.is_marketplace,sku_joins.marketplace_cost_usd,sku_joins.owned_sku_cost_usd) as sku_cost_usd
         ,sku_joins.platform_fee_usd
         ,sku_joins.fulfillment_fee_usd
         ,sku_joins.payment_processing_fee_usd
         ,sku_joins.standard_price_usd
         ,sku_joins.sku_price_usd
-        ,sku_joins.marketplace_cost_usd
         ,sku_joins.average_box_quantity
         ,sku_joins.vendor_funded_discount_name
         ,sku_joins.vendor_funded_discount_usd
@@ -120,4 +121,4 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         left join ais on sku_joins.ais_id = ais.ais_id
 )
 
-select * from add_ais_flag
+select * from final
