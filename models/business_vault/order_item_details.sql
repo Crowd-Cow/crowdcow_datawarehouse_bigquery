@@ -34,7 +34,7 @@ order_item as ( select * from {{ ref('order_items') }} )
         join_bid_item_skus.*
         ,sku.sku_key
         ,sku.sku_price_usd
-        ,iff(sku.is_marketplace,sku.marketplace_cost_usd,sku.sku_cost_usd) as sku_cost_usd
+        ,sku.sku_cost_usd
         ,sku.is_marketplace
         
         ,case
