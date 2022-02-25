@@ -93,4 +93,7 @@ models:
 
       - name: updated_at_utc
         description: "Timestamp for when the user record was updated in UTC"
+      
+      - name: is_banned
+        description: "User has been banned"
 
