@@ -7,7 +7,7 @@ order_item_details as ( select * from {{ ref('order_item_details') }} )
     select distinct order_id
         ,bid_id 
         ,bid_quantity
-        ,iff(is_single_sku_bid_item,'BUNDLE',category) as modified_category
+        ,iff(not order_item_details.is_single_sku_bid_item,'BUNDLE',sku.category) as modified_category
     from order_item_details
         left join sku on order_item_details.sku_key = sku.sku_key
 )
