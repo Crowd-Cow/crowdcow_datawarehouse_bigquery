@@ -63,7 +63,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,gift_info.order_id is not null and gift_info.is_gift_card as is_gift_card_order
         ,shipping_flags.shipped_at_utc is not null as has_shipped
         ,shipping_flags.delivered_at_utc is not null as has_been_delivered
-        ,fulfillment_risk.is_fulfillment_risk
+        ,coalesce(fulfillment_risk.is_fulfillment_risk,FALSE) as is_fulfillment_risk
     from orders
         left join gift_info on orders.order_id = gift_info.order_id 
         left join has_shipping_credit on orders.order_id = has_shipping_credit.order_id
