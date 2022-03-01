@@ -2,6 +2,7 @@ with
 
 order_item as ( select * from {{ ref('order_items') }} )
 ,bid_item_sku as ( select * from {{ ref('int_bid_item_skus') }} )
+,sku as ( select * from {{ ref('skus') }} )
 
 ,join_bid_item_skus as (
     select  
@@ -31,9 +32,9 @@ order_item as ( select * from {{ ref('order_items') }} )
 ,join_historical_sku_info as (
     select
         join_bid_item_skus.*
-        ,sku.sku_key
-        ,sku.sku_price_usd
-        ,sku.sku_cost_usd
+        ,sku.sku_key as ordered_sku_key
+        ,sku_price_usd * bid_sku_quantity as bid_sku_price
+        ,sku_cost_usd * bid_sku_quantity as bid_sku_cost
         
         ,case
             when div0(sku.sku_price_usd * join_bid_item_skus.bid_sku_quantity,join_bid_item_skus.bid_gross_product_revenue) > 1 
