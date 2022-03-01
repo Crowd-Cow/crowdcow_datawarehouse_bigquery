@@ -53,6 +53,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,aggregate_tags.tag_list
         ,aggregate_tags.tag_count
         ,ccpa_users.user_token is not null as is_ccpa
+        ,users.user_banned_at_utc is not null as is_banned
+
     from users
         left join membership_count on users.user_id = membership_count.user_id
         left join user_order_activity on users.user_id = user_order_activity.user_id
@@ -105,6 +107,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_last_sign_in_at_utc
         ,created_at_utc
         ,updated_at_utc
+        ,is_banned
     from user_joins
     where not is_ccpa
 )

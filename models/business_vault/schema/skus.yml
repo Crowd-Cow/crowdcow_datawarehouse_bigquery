@@ -19,6 +19,9 @@ models:
       - name: sku_vendor_id
         description: "SKU Vendor ID"
 
+      - name: ais_id
+        description: "Surrogate key to join to always in stock information. Combines `farm.category`, `farm.sub_category`, `cut.cut_name`, `sku.sku_name`"
+
       - name: barcode
         description: "SKU barcode"
 
@@ -37,8 +40,14 @@ models:
       - name: sku_weight
         description: "SKU weight"
 
+      - name: owned_sku_cost_usd
+        description: "The owned cost of a SKU"
+
+      - name: market_place_cost_usd
+        description: "The marketplace cost of a SKU "
+
       - name: sku_cost_usd
-        description: "Average SKU cost USD"
+        description: "Either the owned SKU cost or the marketplace SKU cost depending on the value of the `is_marketplace` field"
 
       - name: platform_fee_usd
         description: "Platform fee USD"

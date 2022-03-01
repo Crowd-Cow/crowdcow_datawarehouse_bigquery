@@ -18,8 +18,8 @@ models:
       - name: non_member_promotion_start_at_utc
         description: Non member promotion start at utc
 
-      - name: sku_cost_usd
-        description: Average cost in USD
+      - name: owned_sku_cost_usd
+        description: The owned cost of the SKU
 
       - name: promotion_start_at_utc
         description: Promotion start at UTC

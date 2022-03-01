@@ -37,6 +37,9 @@ models:
       - name: order_identifier
         description: "Order identifier"
 
+      - name: current_state
+        description: "Current state of order"
+
       - name: order_type
         description: "Order type"
 
@@ -133,6 +136,9 @@ models:
            `- refund_amount`
            `- other_discount`
 
+      - name: bids_count
+        description: "Bid count"
+
       - name: has_free_shipping
         description: "Boolean indicating if the order had a free shipping discount applied"
 
@@ -168,6 +174,9 @@ models:
 
       - name: has_been_delivered
         description: "Boolean indicating if the order has been delivered"
+        
+      - name: is_fulfillment_at_risk
+        description: "Fulfillment at risk"
 
       - name: overall_order_rank
         description: "Overall order rank for a user regardless of order type or status"
