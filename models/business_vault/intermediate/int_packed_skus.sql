@@ -14,6 +14,7 @@ order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
         ,sku_reservation.bid_item_id is null as is_packed_item_only
         ,sku_reservation.original_quantity as packed_sku_quantity
         ,sku_reservation.sku_reservation_quantity
+        ,sku.sku_price_usd * sku_reservation.original_quantity as packed_sku_price
         ,sku.sku_cost_usd * sku_reservation.original_quantity as packed_sku_cost
         ,order_packed_sku.created_at_utc as packed_created_at_utc
         ,order_packed_sku.updated_at_utc as packed_updated_at_utc
@@ -36,6 +37,7 @@ order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
         ,packed_sku_key
         ,is_packed_item_only
         ,packed_sku_quantity
+        ,packed_sku_price
         ,packed_sku_cost
         ,packed_created_at_utc
         ,packed_updated_at_utc

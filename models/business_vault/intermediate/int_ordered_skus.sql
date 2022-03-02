@@ -42,6 +42,14 @@ order_item as ( select * from {{ ref('order_items') }} )
             else div0(sku.sku_price_usd * join_bid_item_skus.bid_sku_quantity,join_bid_item_skus.bid_gross_product_revenue)
          end as sku_price_proportion
 
+        ,case
+            when div0(join_bid_item_skus.bid_sku_quantity,sum(bid_sku_quantity) 
+                    over(partition by join_bid_item_skus.order_id, join_bid_item_skus.bid_id, join_bid_item_skus.bid_item_id)) > 1
+                or join_bid_item_skus.sku_id is null then 1
+            else div0(join_bid_item_skus.bid_sku_quantity,sum(bid_sku_quantity) 
+                    over(partition by join_bid_item_skus.order_id, join_bid_item_skus.bid_id, join_bid_item_skus.bid_item_id))
+        end as sku_quantity_proportion
+
     from join_bid_item_skus
         left join sku on join_bid_item_skus.sku_id = sku.sku_id
             and join_bid_item_skus.bid_created_at_utc >= sku.adjusted_dbt_valid_from
