@@ -30,7 +30,8 @@ order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
 
 ,remove_dups as (
     select
-        order_id
+        {{ dbt_utils.surrogate_key(['order_id','bid_id','bid_item_id','sku_id']) }} as packed_item_id
+        ,order_id
         ,bid_id
         ,bid_item_id
         ,sku_id

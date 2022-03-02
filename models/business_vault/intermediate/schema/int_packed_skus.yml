@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: int_packed_skus
+    description: Intermediate model to combine packed SKUs and SKU reservations
+    columns:
+      - name: packed_item_id
+        description: Surrogate key to provide uniqueness to packed items. Combines `order_id`, `bid_id`, `bid_item_id`, and `sku_id`
+        tests:
+          - unique
+          - not_null
+
+      - name: order_id
+        description: Order ID
+
+      - name: bid_id
+        description: Bid ID
+
+      - name: bid_item_id
+        description: Bid item ID
+
+      - name: sku_id
+        description: SKU ID
+
+      - name: packed_sku_key
+        description: The SKU key that can be used to join to SKUs to get the appropriate historical information for the SKU at the time the item was packed
+
+      - name: is_packed_item_only
+        description: Boolean indicating if the packed item is only for packing and not ordered (e.g. handwritten notes, inserts, etc)
+
+      - name: packed_sku_quantity
+        description: The number of SKUs packed for this item
+
+      - name: packed_sku_cost
+        description: The SKU cost for the packed SKUs at the time the item was packed
+
+      - name: packed_created_at_utc
+        description: Timestamp for when the item was packed UTC
+
+      - name: packed_updated_at_utc
+        description: Timestamp for when the packed item information was updated by the system UTC
+        

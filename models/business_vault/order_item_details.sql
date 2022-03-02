@@ -127,8 +127,6 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
          + sku_free_protein_promotion
         as sku_net_product_revenue
 
-        ,sku_cost
-
         ,is_single_sku_bid_item
         ,is_item_packed
         ,bid_created_at_utc
@@ -160,7 +158,6 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
         ,0 as sku_merch_discount
         ,0 as sku_free_protein_promotion
         ,0 as sku_net_product_revenue
-        ,packed_sku_cost as sku_cost
         ,TRUE as is_single_sku_bid_item
         ,TRUE as is_item_packed
         ,null::timestamp as bid_created_at_utc

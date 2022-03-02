@@ -24,7 +24,10 @@ models:
         description: "SKU ID"
 
       - name: sku_key
-        description: "The SKU key that can be used to join to SKUs to get the appropriate historical information for the SKU at the time the bid was created"
+        description: "The SKU key that can be used to join to SKUs to get the appropriate historical information for the SKU at the time the item was either added to a customer's order or when it was packed"
+
+      - name: promotion_id
+        description: "Promotion ID"
 
       - name: bid_item_name
         description: "Bid item name"
@@ -32,20 +35,17 @@ models:
       - name: bid_quantity
         description: "The quantity of bids added for this order"
 
-      - name: sku_quantity
-        description: "The quantity of SKUs for this particular bid item"
-
       - name: bid_sku_quantity
         description: "The total number of SKUs for this item. The number of SKUs contained in the bid item times the number of bids added for this order (bid quantity)"
 
       - name: bid_list_price_usd
         description: "The list price of the bid that was captured at the time the bid was created"
 
-      - name: sku_price_usd
-        description: "The price of the SKU at the time the bid was created"
-
       - name: bid_sku_price
         description: "The total numbers of SKUS (sku quantity * bid quantity) times the price of the SKU at the time the bid was created"
+
+      - name: bid_sku_cost
+        description: "The total cost of the item added to a customer's cart. Calculated as (`sku_quantity * bid_quantity`)"
 
       - name: sku_price_proportion
         description: "The proportion of the order item revenue that can be attributed to the given SKU"
@@ -71,10 +71,19 @@ models:
           `- sku_free_protein_promotion`
       
       - name: is_single_sku_bid_item
-        description: "Binary field to identify if the bid is a single sku or not. Used to identify bundles"
+        description: "Boolean field to identify if the bid is a single sku or not. Used to identify bundles"
+
+      - name: is_item_packed
+        description: "Boolean indicating if the item that was ordered has been packed"
 
       - name: bid_created_at_utc
         description: "Timestamp for when the bid was created UTC"
 
       - name: bid_updated_at_utc
         description: "Timestamp for when the bid was updated by the system UTC"
+
+      - name: packed_created_at_utc
+        description: "Timestamp for when the item was packed UTC"
+
+      - name: packed_updated_at_utc
+        description: "Timestamp for when the packed item was updated by the system UTC"
