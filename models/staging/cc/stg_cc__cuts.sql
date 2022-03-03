@@ -10,7 +10,7 @@ renamed as (
         id as cut_id
         ,dbt_scd_id as cut_key
         ,sort_order
-        ,product_subtype
+        ,{{ clean_strings('product_subtype') }} as product_subtype
         ,hard_scan_weight_min
         ,{{ clean_strings('pretty_name') }} as cut_pretty_name
         ,hard_scan_weight_max
@@ -21,12 +21,12 @@ renamed as (
         ,named_cut_weight_max
         ,merchandising_target_weight
         ,average_box_quantity
-        ,product_type
+        ,{{ clean_strings('product_type') }} as product_type
         ,created_at as created_at_utc
-        ,sales_category
-        ,{{clean_strings('name') }} as cut_name
-        ,named_cut_weight_target
-        ,rounding_rule
+        ,{{ clean_strings('sales_category') }} as sales_category
+        ,{{ clean_strings('name') }} as cut_name
+        ,{{ clean_strings('named_cut_weight_target') }} as named_cut_weight_target
+        ,{{ clean_strings('rounding_rule') }} as rounding_rule
         ,{{ clean_strings('generic_description_override') }} as generic_description_override
         ,popular_cut as is_popular_cut
         ,in_use as is_in_use
