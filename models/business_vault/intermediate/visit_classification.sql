@@ -190,7 +190,7 @@ base_visits as (
             when utm_source like '%GEIST%' then 'GEIST'
             when visit_landing_page like '%/L_U%' and visit_landing_page_user_token <> '' then 'USER REFERRAL'
             when utm_medium like '%PARTNER%' then 'PARTNER'
-            when utm_medium like '%AFFILIATE%' or utm_source like '%SHAREASALE%' or visit_landing_page like '%/AFFILIATE-GIVEAWAY%' then 'AFFILIATE'
+            when utm_medium like '%AFFILIATE%' or utm_source like '%SHAREASALE%' or visit_landing_page like any ('%/AFFILIATE-GIVEAWAY%','%/FREE-PRODUCT%') then 'AFFILIATE'
             when utm_medium like '%AMBASSADOR%' or visit_landing_page like '%/AMBASSADOR-GIVEAWAY%' or ambassador_path <> '' then 'AMBASSADOR'
             when utm_medium like '%INFLUENCER%' or visit_referring_domain like '%INFLUENCER%' then 'INFLUENCER'
             when utm_medium like '%SMS%' or utm_source like '%ATTENTIVE%' then 'SMS - MARKETING'
