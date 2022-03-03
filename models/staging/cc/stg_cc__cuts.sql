@@ -25,7 +25,7 @@ renamed as (
         ,created_at as created_at_utc
         ,{{ clean_strings('sales_category') }} as sales_category
         ,{{ clean_strings('name') }} as cut_name
-        ,{{ clean_strings('named_cut_weight_target') }} as named_cut_weight_target
+        ,named_cut_weight_target
         ,{{ clean_strings('rounding_rule') }} as rounding_rule
         ,{{ clean_strings('generic_description_override') }} as generic_description_override
         ,popular_cut as is_popular_cut
@@ -47,4 +47,3 @@ renamed as (
 )
 
 select * from renamed
-
