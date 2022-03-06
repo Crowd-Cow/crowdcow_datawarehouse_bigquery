@@ -124,21 +124,21 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
 
         ,round(
             case
-                when promotion_id is null and total_order_item_discount > 0 then (bid_list_price_usd * .05) * -1 -- Standard member discount is 5%
+                when promotion_id is null and total_order_item_discount > 0 then (bid_list_price_usd * .05)  -- Standard member discount is 5%
                 else 0
             end
         ,2) as item_member_discount
     
         ,round(
             case
-                when promotion_id is null and total_order_item_discount > 0 then (total_order_item_discount - (bid_list_price_usd * .05)) *  -1 -- Anything above the standard 5% member discount should be considered a merch discount
+                when promotion_id is null and total_order_item_discount > 0 then (total_order_item_discount - (bid_list_price_usd * .05))  -- Anything above the standard 5% member discount should be considered a merch discount
                 else 0
             end
         ,2) as item_merch_discount
 
         ,round(
             case
-                when promotion_id is not null then total_order_item_discount * -1
+                when promotion_id is not null then total_order_item_discount
                 else 0
             end
         ,2) as item_promotion_discount

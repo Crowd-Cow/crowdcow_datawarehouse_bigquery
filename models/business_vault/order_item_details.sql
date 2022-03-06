@@ -28,9 +28,9 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
         ,ordered_items.bid_quantity
         ,ordered_items.bid_list_price_usd
         ,ordered_items.bid_gross_product_revenue
-        ,ordered_items.item_member_discount
-        ,ordered_items.item_merch_discount
-        ,ordered_items.item_promotion_discount
+        ,ordered_items.item_member_discount * -1 as item_member_discount
+        ,ordered_items.item_merch_discount * -1 as item_merch_discount
+        ,ordered_items.item_promotion_discount * -1 as item_promotion_discount
         ,ordered_items.bid_created_at_utc
         ,ordered_items.bid_updated_at_utc
         ,ordered_items.sku_id
