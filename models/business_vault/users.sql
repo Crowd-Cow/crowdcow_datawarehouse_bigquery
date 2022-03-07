@@ -6,6 +6,16 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
 ,phone_number as ( select * from {{ ref('stg_cc__phone_numbers') }} )
 ,segmentation_tags as ( select * from {{ ref('stg_cc__tags') }} )
 ,ccpa_users as ( select distinct  user_token from {{ ref('ccpa_requests') }} )
+,visit as ( select * from {{ ref('base_cc__ahoy_visits') }} )
+
+,user_visits as (
+    select
+        user_id
+        ,first_value(visit_id) over(partition by user_id order by started_at_utc, visit_id) as first_visit_id
+    from staging.base_cc__ahoy_visits
+    where user_id is not null
+    qualify row_number() over(partition by user_id order by started_at_utc, visit_id) = 1
+)
 
 ,membership_count as (
     select
@@ -50,6 +60,9 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.average_ala_carte_order_frequency_days
         ,user_order_activity.customer_cohort_date
         ,user_order_activity.membership_cohort_date
+        ,user_order_activity.first_completed_order_date
+        ,user_order_activity.first_completed_order_visit_id
+        ,user_visits.first_visit_id
         ,aggregate_tags.tag_list
         ,aggregate_tags.tag_count
         ,ccpa_users.user_token is not null as is_ccpa
@@ -61,6 +74,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         left join phone_number on users.phone_number_id = phone_number.phone_number_id
         left join aggregate_tags on users.user_id = aggregate_tags.user_id
         left join ccpa_users on users.user_token = ccpa_users.user_token
+        left join user_visits on users.user_id = user_visits.user_id
 )
 
 ,final as (
@@ -94,6 +108,12 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,average_membership_order_frequency_days
         ,average_ala_carte_order_frequency_days
         ,days_from_ala_carte_to_membership
+        
+        ,case
+            when first_completed_order_date::date - created_at_utc::date <= 10 then first_visit_id
+            else first_completed_order_visit_id
+         end as attributed_visit_id
+
         ,is_member
         ,is_cancelled_member
         ,is_lead
