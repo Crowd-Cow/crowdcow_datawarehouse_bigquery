@@ -12,7 +12,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
     select
         user_id
         ,first_value(visit_id) over(partition by user_id order by started_at_utc, visit_id) as first_visit_id
-    from staging.base_cc__ahoy_visits
+    from visit
     where user_id is not null
     qualify row_number() over(partition by user_id order by started_at_utc, visit_id) = 1
 )
@@ -63,6 +63,12 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.first_completed_order_date
         ,user_order_activity.first_completed_order_visit_id
         ,user_visits.first_visit_id
+
+        ,case
+            when user_order_activity.first_completed_order_date::date - users.created_at_utc::date <= 10 then user_visits.first_visit_id
+            else user_order_activity.first_completed_order_visit_id
+         end as attributed_visit_id
+
         ,aggregate_tags.tag_list
         ,aggregate_tags.tag_count
         ,ccpa_users.user_token is not null as is_ccpa
@@ -108,12 +114,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,average_membership_order_frequency_days
         ,average_ala_carte_order_frequency_days
         ,days_from_ala_carte_to_membership
-        
-        ,case
-            when first_completed_order_date::date - created_at_utc::date <= 10 then first_visit_id
-            else first_completed_order_visit_id
-         end as attributed_visit_id
-
+        ,attributed_visit_id
         ,is_member
         ,is_cancelled_member
         ,is_lead
