@@ -120,7 +120,7 @@ renamed as (
     ,{{ clean_strings('stripe_card_address_2') }} as billing_address_2
     ,{{ clean_strings('stripe_card_city') }} as billing_city
     ,{{ clean_strings('stripe_card_state') }} as billing_state
-    ,{{ clean_strings('stripe_card_zip') }} as billing_postal_code
+    ,left({{ clean_strings('stripe_card_zip') }},5) as billing_postal_code
     ,{{ clean_strings('stripe_card_brand') }} as stripe_card_brand
     ,stripe_card_exp_month
     ,stripe_card_id_last_updated_at as stripe_card_id_last_updated_at_utc
