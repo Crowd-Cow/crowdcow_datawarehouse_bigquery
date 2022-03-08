@@ -7,6 +7,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
 ,segmentation_tags as ( select * from {{ ref('stg_cc__tags') }} )
 ,ccpa_users as ( select distinct  user_token from {{ ref('ccpa_requests') }} )
 ,visit as ( select * from {{ ref('base_cc__ahoy_visits') }} )
+,postal_code as ( select * from {{ ref('stg_cc__postal_codes') }} )
 
 ,user_visits as (
     select
@@ -73,6 +74,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,aggregate_tags.tag_count
         ,ccpa_users.user_token is not null as is_ccpa
         ,users.user_banned_at_utc is not null as is_banned
+        ,postal_code.state_code
+        ,postal_code.city_name
 
     from users
         left join membership_count on users.user_id = membership_count.user_id
@@ -81,6 +84,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         left join aggregate_tags on users.user_id = aggregate_tags.user_id
         left join ccpa_users on users.user_token = ccpa_users.user_token
         left join user_visits on users.user_id = user_visits.user_id
+        left join postal_code on users.user_zip = postal_code.postal_code
 )
 
 ,final as (
@@ -103,6 +107,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,phone_number
         ,phone_type
         ,user_roles_for_access
+        ,state_code
+        ,city_name
         ,user_zip
         ,user_token
         ,user_referrer_token

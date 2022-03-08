@@ -108,7 +108,7 @@ renamed as (
         ,account_breach_reset_password_at as user_account_breach_reset_password_at_utc
         ,{{ cents_to_usd('pay_rate_cents') }} as user_pay_rate_usd
         ,vacation_begins_at as user_vacation_begins_at_utc
-        ,{{ clean_strings('zip') }} as user_zip
+        ,left(replace({{ clean_strings('zip') }},'~',''),5) as user_zip
         ,last_sign_in_at as user_last_sign_in_at_utc
         ,alternate_phone_number_id
         ,{{ clean_strings('roles_for_access') }} as user_roles_for_access
