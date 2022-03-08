@@ -23,6 +23,8 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,min(case when is_paid_order and is_membership_order then order_paid_at_utc::date end) as membership_cohort_date
         ,max(case when is_paid_order and is_membership_order then order_paid_at_utc::date end) as last_paid_membership_order_date
         ,max(case when is_paid_order and is_ala_carte_order then order_paid_at_utc::date end) as last_paid_ala_carte_order_date
+        ,max(case when completed_order_rank = 1 then order_checkout_completed_at_utc end) as first_completed_order_date
+        ,max(case when completed_order_rank = 1 then visit_id end) as first_completed_order_visit_id
     from order_info
     group by 1
 )
@@ -67,6 +69,8 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,order_cohorts.membership_cohort_date
         ,order_cohorts.last_paid_membership_order_date
         ,order_cohorts.last_paid_ala_carte_order_date
+        ,order_cohorts.first_completed_order_date
+        ,order_cohorts.first_completed_order_visit_id
     from user
         left join order_count on user.user_id = order_count.user_id
         left join order_cohorts on user.user_id = order_cohorts.user_id
