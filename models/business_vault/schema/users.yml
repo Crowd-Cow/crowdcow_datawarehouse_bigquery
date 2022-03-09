@@ -55,8 +55,20 @@ models:
       - name: membership_cohort_date
         description: "Assigns the user to a membership cohort that starts on the date of their first paid/uncancelled membership order. The user stays in this cohort even if they cancel this membership and sign up for a new one later."
 
+      - name: average_order_frequency_days
+        description: "The average number of days between paid orders for a user"
+
+      - name: average_membership_order_frequency_days
+        description: "The average number of days between paid membership orders for a user"
+
+      - name: average_ala_carte_order_frequency_days
+        description: "The average number of days between paid ala carte orders for a user"
+
       - name: days_from_ala_carte_to_membership
         description: "The number of days a customer takes to go from being an ala carte only customer to a member"
+
+      - name: attributed_visit_id
+        description: "The visit id attributed to the acquisition of a user. If the first completed order for a user is within 10 days of when the user account was created, this is the first visit to the site. If the first completed order is more than 10 days from user creation, this is the visit id associated with the first completed order for a user"
         
       - name: is_member
         description: "The user has had at least one membership at some point. The membership can be cancelled or uncancelled. If this value is FALSE, the user has never had a membership."
