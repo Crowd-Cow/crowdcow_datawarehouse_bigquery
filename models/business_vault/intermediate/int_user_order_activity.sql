@@ -14,7 +14,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,count_if(is_paid_order and not is_cancelled_order and is_membership_order and sysdate()::date - order_paid_at_utc::date <= 90) as last_90_days_paid_membership_order_count
         ,sum(iff(is_paid_order and not is_cancelled_order,net_revenue,0)) as lifetime_net_revenue
         ,count_if(is_paid_order and not is_cancelled_order) as lifetime_paid_order_count
-        ,max(iff(is_completed_order and not is_paid_order and not is_cancelled_order,completed_order_rank,0)) as last_completed_unpaid_order_rank
+        ,count_if(completed_order_rank = 1 and not is_paid_order and not is_cancelled_order) as total_completed_unpaid_uncancelled_orders
         ,count_if(is_gift_order and is_paid_order and not is_cancelled_order) as total_paid_gift_order_count
         ,sum(iff(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('month',-6,sysdate()),net_revenue,0)) as six_month_net_revenue
         ,sum(iff(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('month',-12,sysdate()),net_revenue,0)) as twelve_month_net_revenue
@@ -76,7 +76,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,zeroifnull(user_percentiles.last_90_days_paid_membership_order_count) as last_90_days_paid_membership_order_count
         ,zeroifnull(user_percentiles.lifetime_net_revenue) as lifetime_net_revenue
         ,zeroifnull(user_percentiles.lifetime_paid_order_count) as lifetime_paid_order_count
-        ,zeroifnull(user_percentiles.last_completed_unpaid_order_rank) as last_completed_unpaid_order_rank
+        ,zeroifnull(user_percentiles.total_completed_unpaid_uncancelled_orders) as total_completed_unpaid_uncancelled_orders
         ,zeroifnull(user_percentiles.total_paid_gift_order_count) as total_paid_gift_order_count
         ,zeroifnull(user_percentiles.six_month_net_revenue) as six_month_net_revenue
         ,zeroifnull(user_percentiles.twelve_month_net_revenue) as twelve_month_net_revenue
