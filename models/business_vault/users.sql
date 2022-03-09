@@ -113,10 +113,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,is_purchasing_customer
         ,is_purchasing_member
         ,is_active_member_90_day
-        ,is_ala_carte_attrition_risk
         ,does_allow_sms
-        ,tag_list
-        ,tag_count
         ,user_last_sign_in_at_utc
         ,created_at_utc
         ,updated_at_utc
