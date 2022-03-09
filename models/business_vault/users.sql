@@ -4,7 +4,6 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
 ,user_order_activity as ( select * from {{ ref('int_user_order_activity') }} )
 ,memberships as (select * from {{ ref('stg_cc__subscriptions') }})
 ,phone_number as ( select * from {{ ref('stg_cc__phone_numbers') }} )
-,segmentation_tags as ( select * from {{ ref('stg_cc__tags') }} )
 ,ccpa_users as ( select distinct  user_token from {{ ref('ccpa_requests') }} )
 ,visit as ( select * from {{ ref('base_cc__ahoy_visits') }} )
 ,postal_code as ( select * from {{ ref('stg_cc__postal_codes') }} )
@@ -25,16 +24,6 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,count_if(not is_uncancelled_membership) as total_cancelled_membership_count
         ,count(subscription_id) - count_if(not is_uncancelled_membership) as total_uncancelled_memberships
     from memberships
-    group by 1
-)
-
-,aggregate_tags as (
-    select
-        user_id
-        ,listagg(tag_name, ' | ') within group (order by tag_name) as tag_list
-        ,count(distinct tag_name) as tag_count
-    from segmentation_tags
-    where user_id is not null
     group by 1
 )
 
@@ -70,8 +59,6 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
             else user_order_activity.first_completed_order_visit_id
          end as attributed_visit_id
 
-        ,aggregate_tags.tag_list
-        ,aggregate_tags.tag_count
         ,ccpa_users.user_token is not null as is_ccpa
         ,users.user_banned_at_utc is not null as is_banned
         ,postal_code.state_code
