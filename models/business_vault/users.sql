@@ -39,7 +39,6 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.user_id is not null and user_order_activity.total_paid_ala_carte_order_count > 0 and membership_count.total_membership_count = 0 as is_purchasing_customer
         ,user_order_activity.user_id is not null and user_order_activity.total_paid_membership_order_count > 0 as is_purchasing_member
         ,user_order_activity.user_id is not null and user_order_activity.total_active_90_day_order_count > 0 as is_active_member_90_day
-        ,sysdate()::date - user_order_activity.last_paid_ala_carte_order_date > 45 as is_ala_carte_attrition_risk
         
         ,case
             when user_order_activity.customer_cohort_date < user_order_activity.membership_cohort_date then membership_cohort_date - customer_cohort_date
