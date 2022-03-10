@@ -39,3 +39,22 @@ macros:
             - `create`: This will clone the database given in the `clone_db` argument
             - `destroy`: This will destroy the cloned dev database that was created by the create action
             - `dry_run`: This will output the SQL statements used in the `create` and `destroy` actions so you can check to make sure the SQL is doing what is intended
+
+  - name: generate_tag
+    description: '{{ doc("generate_tag") }}'
+    arguments:
+      - name: ref
+        type: string
+        description: The dbt model reference that the tag values will be generated from
+
+      - name: id_field
+        type: string
+        description: The name of the `id_field` that can be used to join back to other tables (e.g. `user_id`, `order_id`, etc)
+
+      - name: tag_key
+        type: string
+        description: The tag value that acts as a short description of what the tag represents
+
+      - name: tag_purpose
+        type: string
+        description: The purpose of the tag (e.g. `user_segment`, etc.)

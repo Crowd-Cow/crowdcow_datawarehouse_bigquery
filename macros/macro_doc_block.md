@@ -18,3 +18,11 @@ This can be useful to make sure the clone/drop table statement will do what is i
 Command to run the macro from the command line: `dbt run-operation setup_dev_env --args '{ "clone_db": "<db_name>", "action":"<create/destroy/dry_run>"}'`
 
 {% enddocs %}
+
+{% docs generate_tag %}
+
+This macro can be used to generate the basic SQL (`select` and `from` statement) for a segmentation tag based on various activity
+
+The macro will not genereate the logic for the tag. That should be done in the dbt model that the macro is being used in.
+
+{% enddocs %}
