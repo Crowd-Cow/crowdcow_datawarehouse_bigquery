@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: user_tags
+    description: User segmentation tags based on various user activities
+    columns:
+      - name: tag_id
+        description: Surrogate key to provide a uniqueness check. Combines `user_id` and `tag_key`
+        tests:
+          - unique
+          - not_null
+      
+      - name: tag_source_table
+        description: The source table that was used to generate the logic for the tag
+
+      - name: user_id
+        description: User ID
+      
+      - name: tag_key
+        description: The tag key value that gives a short description of the what the tag is
+
+      - name: tag_purpose
+        description: The purpose of the tag (e.g. user segmentation)
+
+      - name: created_at_utc
+        description: Timestamp for when the tag was created
+
+      - name: updated_at_utc
+        description: Timestamp for when the tag was created. Currently the same as `created_at_utc`
+        

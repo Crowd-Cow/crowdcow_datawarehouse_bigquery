@@ -13,14 +13,56 @@ models:
       - name: order_user_id
         description: "User ID for users that have placed orders"
 
+      - name: total_completed_membership_orders
+        description: "The total number of checkout completed membership order for the user"
+
       - name: total_paid_ala_carte_order_count
         description: "The total number of paid, uncancelled ala carte orders for the user"
 
       - name: total_paid_membership_order_count
         description: "The total paid, uncancelled membership orders for a user"
 
-      - name: total_active_90_day_order_count
-        description: "Total number of paid, uncancelled membership orders for a user in the past 90 days"
+      - name: last_90_days_paid_membership_order_count
+        description: "The total number of paid membership orders in the last 90 days for a user"
+
+      - name: lifetime_net_revenue
+        description: "The total net revenue over the lifetime of a user"
+
+      - name: lifetime_paid_order_count
+        description: "The total number of paid orders over the lifetime of a user"
+
+      - name: total_completed_unpaid_uncancelled_orders
+        description: "The total number of checkout completed orders that have not been paid or cancelled for a user"
+
+      - name: total_paid_gift_order_count
+        description: "The total number of gift orders for a user"
+
+      - name: six_month_net_revenue
+        description: "The total net revenue for a user over the past 6 months"
+
+      - name: twelve_month_net_revenue
+        description: "The total net revenue for a user over the past 12 months"
+
+      - name: twelve_month_purchase_count
+        description: "The total number of paid orders for a user over the past 12 months"
+
+      - name: last_90_days_paid_order_count
+        description: "The total number of paid orders for a user over the past 90 days"
+
+      - name: last_180_days_paid_order_count
+        description: "The total number of paid orders for a user over the past 180 days"
+
+      - name: recent_delivered_order_count
+        description: "The total number of delivered orders for a user over the past 7 days"
+
+      - name: six_month_net_revenue_percentile
+        description: "The percentile rank of a user based on total net revenue amount over the past 6 months"
+
+      - name: twelve_month_net_revenue_percentile
+        description: "The percentile rank of a user based on total net revenue amount over the past 12  months"
+
+      - name: lifetime_net_revenue_percentile
+        description: "The percentile rank of a user based on total net revenue amount over the lifetime of a user"
 
       - name: average_order_frequency_days
         description: "The average number of days between paid, uncancelled orders for a user"
@@ -46,5 +88,5 @@ models:
       - name: first_completed_order_date
         description: "The checkout completed date for the first completed order for a user"
 
-      - name: first_completed_order_date
+      - name: first_completed_order_visit_id
         description: "The visit id associated with the first completed order for a user"
