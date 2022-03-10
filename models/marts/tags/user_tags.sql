@@ -1,3 +1,16 @@
+{{
+    config(
+        post_hook = [
+            "copy into @USER_SEGMENTATION_TAGS/users/user_tags.csv from (select tag_id as id,tag_key as key,user_id,tag_purpose as purpose,created_at_utc as created_at,updated_at_utc as updated_at from {{ this }})
+                single = true
+                overwrite = true
+                header = true
+                max_file_size = 4900000000
+                file_format='csv_with_headers';"
+        ]
+    )
+}}
+
 with
 
 employee as (
