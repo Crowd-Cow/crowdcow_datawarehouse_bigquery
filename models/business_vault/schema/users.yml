@@ -34,6 +34,12 @@ models:
       - name: user_roles_for_access
         description: "User roles for access given to Crowd Cow employees"
 
+      - name: state_code
+        description: "State code of the zip the user entered into the Crowd Cow site"
+
+      - name: city_name
+        description: "City name of the zip the user entered into the Crowd Cow site"
+
       - name: user_zip
         description: "User zip"
 
@@ -67,6 +73,54 @@ models:
       - name: days_from_ala_carte_to_membership
         description: "The number of days a customer takes to go from being an ala carte only customer to a member"
 
+      - name: lifetime_net_revenue
+        description: "The total net revenue over the lifetime of a user"
+
+      - name: lifetime_paid_order_count
+        description: "The total number of paid orders over the lifetime of a user"
+
+      - name: total_completed_unpaid_uncancelled_orders
+        description: "The total number of checkout completed orders that have not been paid or cancelled for a user"
+
+      - name: total_paid_ala_carte_order_count
+        description: "The total number of paid, uncancelled ala carte orders for the user"
+
+      - name: total_paid_membership_order_count
+        description: "The total paid, uncancelled membership orders for a user"
+
+      - name: last_90_days_paid_membership_order_count
+        description: "The total number of paid membership orders in the last 90 days for a user"
+
+      - name: last_90_days_paid_order_count
+        description: "The total number of paid orders for a user over the past 90 days"
+
+      - name: last_180_days_paid_order_count
+        description: "The total number of paid orders for a user over the past 180 days"
+
+      - name: twelve_month_purchase_count
+        description: "The total number of paid orders for a user over the past 12 months"
+
+      - name: total_paid_gift_order_count
+        description: "The total number of gift orders for a user"
+
+      - name: recent_delivered_order_count
+        description: "The total number of delivered orders for a user over the past 7 days"
+
+      - name: six_month_net_revenue
+        description: "The total net revenue for a user over the past 6 months"
+
+      - name: twelve_month_net_revenue
+        description: "The total net revenue for a user over the past 12 months"
+
+      - name: six_month_net_revenue_percentile
+        description: "The percentile rank of a user based on total net revenue amount over the past 6 months"
+
+      - name: twelve_month_net_revenue_percentile
+        description: "The percentile rank of a user based on total net revenue amount over the past 12  months"
+
+      - name: lifetime_net_revenue_percentile
+        description: "The percentile rank of a user based on total net revenue amount over the lifetime of a user"
+
       - name: attributed_visit_id
         description: "The visit id attributed to the acquisition of a user. If the first completed order for a user is within 10 days of when the user account was created, this is the first visit to the site. If the first completed order is more than 10 days from user creation, this is the visit id associated with the first completed order for a user"
         
@@ -90,12 +144,6 @@ models:
 
       - name: does_allow_sms
         description: "Boolean indicating if the user's phone number allows SMS texting"
-
-      - name: tag_list
-        description: An aggregated list of user segmentation tags associated with the user
-
-      - name: tag_count
-        description: The total number of segmentation tags associated with the user
 
       - name: user_last_sign_in_at_utc
         description: "User last signed in timestamp in UTC"

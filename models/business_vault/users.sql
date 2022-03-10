@@ -4,7 +4,6 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
 ,user_order_activity as ( select * from {{ ref('int_user_order_activity') }} )
 ,memberships as (select * from {{ ref('stg_cc__subscriptions') }})
 ,phone_number as ( select * from {{ ref('stg_cc__phone_numbers') }} )
-,segmentation_tags as ( select * from {{ ref('stg_cc__tags') }} )
 ,ccpa_users as ( select distinct  user_token from {{ ref('ccpa_requests') }} )
 ,visit as ( select * from {{ ref('base_cc__ahoy_visits') }} )
 ,postal_code as ( select * from {{ ref('stg_cc__postal_codes') }} )
@@ -28,16 +27,6 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
     group by 1
 )
 
-,aggregate_tags as (
-    select
-        user_id
-        ,listagg(tag_name, ' | ') within group (order by tag_name) as tag_list
-        ,count(distinct tag_name) as tag_count
-    from segmentation_tags
-    where user_id is not null
-    group by 1
-)
-
 ,user_joins as (
     select
         users.*
@@ -49,8 +38,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.order_user_id is null as is_lead
         ,user_order_activity.user_id is not null and user_order_activity.total_paid_ala_carte_order_count > 0 and membership_count.total_membership_count = 0 as is_purchasing_customer
         ,user_order_activity.user_id is not null and user_order_activity.total_paid_membership_order_count > 0 as is_purchasing_member
-        ,user_order_activity.user_id is not null and user_order_activity.total_active_90_day_order_count > 0 as is_active_member_90_day
-        ,sysdate()::date - user_order_activity.last_paid_ala_carte_order_date > 45 as is_ala_carte_attrition_risk
+        ,user_order_activity.user_id is not null and user_order_activity.last_90_days_paid_membership_order_count > 0 as is_active_member_90_day
         
         ,case
             when user_order_activity.customer_cohort_date < user_order_activity.membership_cohort_date then membership_cohort_date - customer_cohort_date
@@ -70,18 +58,31 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
             else user_order_activity.first_completed_order_visit_id
          end as attributed_visit_id
 
-        ,aggregate_tags.tag_list
-        ,aggregate_tags.tag_count
         ,ccpa_users.user_token is not null as is_ccpa
         ,users.user_banned_at_utc is not null as is_banned
         ,postal_code.state_code
         ,postal_code.city_name
+        ,zeroifnull(user_order_activity.lifetime_net_revenue) as lifetime_net_revenue
+        ,zeroifnull(user_order_activity.lifetime_paid_order_count) as lifetime_paid_order_count
+        ,zeroifnull(user_order_activity.total_completed_unpaid_uncancelled_orders) as total_completed_unpaid_uncancelled_orders
+        ,zeroifnull(user_order_activity.total_paid_ala_carte_order_count) as total_paid_ala_carte_order_count
+        ,zeroifnull(user_order_activity.total_paid_membership_order_count) as total_paid_membership_order_count
+        ,zeroifnull(user_order_activity.last_90_days_paid_membership_order_count) as last_90_days_paid_membership_order_count
+        ,zeroifnull(user_order_activity.total_paid_gift_order_count) as total_paid_gift_order_count
+        ,zeroifnull(user_order_activity.six_month_net_revenue) as six_month_net_revenue
+        ,zeroifnull(user_order_activity.twelve_month_net_revenue) as twelve_month_net_revenue
+        ,zeroifnull(user_order_activity.twelve_month_purchase_count) as twelve_month_purchase_count
+        ,zeroifnull(user_order_activity.last_90_days_paid_order_count) as last_90_days_paid_order_count
+        ,zeroifnull(user_order_activity.last_180_days_paid_order_count) as last_180_days_paid_order_count
+        ,zeroifnull(user_order_activity.recent_delivered_order_count) as recent_delivered_order_count
+        ,zeroifnull(user_order_activity.six_month_net_revenue_percentile) as six_month_net_revenue_percentile
+        ,zeroifnull(user_order_activity.twelve_month_net_revenue_percentile) as twelve_month_net_revenue_percentile
+        ,zeroifnull(user_order_activity.lifetime_net_revenue_percentile) as lifetime_net_revenue_percentile
 
     from users
         left join membership_count on users.user_id = membership_count.user_id
         left join user_order_activity on users.user_id = user_order_activity.user_id
         left join phone_number on users.phone_number_id = phone_number.phone_number_id
-        left join aggregate_tags on users.user_id = aggregate_tags.user_id
         left join ccpa_users on users.user_token = ccpa_users.user_token
         left join user_visits on users.user_id = user_visits.user_id
         left join postal_code on users.user_zip = postal_code.postal_code
@@ -120,6 +121,22 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,average_membership_order_frequency_days
         ,average_ala_carte_order_frequency_days
         ,days_from_ala_carte_to_membership
+        ,lifetime_net_revenue
+        ,lifetime_paid_order_count
+        ,total_completed_unpaid_uncancelled_orders
+        ,total_paid_ala_carte_order_count
+        ,total_paid_membership_order_count
+        ,last_90_days_paid_membership_order_count
+        ,last_90_days_paid_order_count
+        ,last_180_days_paid_order_count
+        ,twelve_month_purchase_count
+        ,total_paid_gift_order_count
+        ,recent_delivered_order_count
+        ,six_month_net_revenue
+        ,twelve_month_net_revenue
+        ,six_month_net_revenue_percentile
+        ,twelve_month_net_revenue_percentile
+        ,lifetime_net_revenue_percentile
         ,attributed_visit_id
         ,is_member
         ,is_cancelled_member
@@ -127,14 +144,11 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,is_purchasing_customer
         ,is_purchasing_member
         ,is_active_member_90_day
-        ,is_ala_carte_attrition_risk
+        ,is_banned
         ,does_allow_sms
-        ,tag_list
-        ,tag_count
         ,user_last_sign_in_at_utc
         ,created_at_utc
         ,updated_at_utc
-        ,is_banned
     from user_joins
     where not is_ccpa
 )
