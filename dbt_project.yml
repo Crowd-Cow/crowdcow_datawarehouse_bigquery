@@ -41,6 +41,9 @@ models:
     marts:
       +materialized: table
       +schema: datawarehouse
+      cargill:
+        +materialized: view
+        +schema: cargill
 
 tests:
   +store_failures: true
