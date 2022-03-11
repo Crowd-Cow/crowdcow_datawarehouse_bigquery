@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: int_recent_user_identities
+    description: "Intermediate model to select only the most recent identity information for a user"
+    columns:
+      - name: user_id
+        description: "User ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: first_name
+        description: "User first name"
+
+      - name: last_name
+        description: "User last name"
+
+      - name: full_name
+        description: "User full name"

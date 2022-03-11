@@ -7,6 +7,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
 ,ccpa_users as ( select distinct  user_token from {{ ref('ccpa_requests') }} )
 ,visit as ( select * from {{ ref('base_cc__ahoy_visits') }} )
 ,postal_code as ( select * from {{ ref('stg_cc__postal_codes') }} )
+,identity as ( select * from {{ ref('int_recent_user_identities') }} )
 
 ,user_visits as (
     select
@@ -30,6 +31,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
 ,user_joins as (
     select
         users.*
+        ,identity.first_name
+        ,identity.last_name
         ,phone_number.phone_type
         ,phone_number.phone_number
         ,phone_number.does_allow_sms
@@ -86,6 +89,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         left join ccpa_users on users.user_token = ccpa_users.user_token
         left join user_visits on users.user_id = user_visits.user_id
         left join postal_code on users.user_zip = postal_code.postal_code
+        left join identity on users.user_id = identity.user_id
 )
 
 ,final as (
@@ -102,6 +106,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
             else 'OTHER'
          end as user_type
         
+        ,first_name
+        ,last_name
         ,user_gender
         ,user_email_name
         ,user_email

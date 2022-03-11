@@ -16,6 +16,12 @@ models:
       - name: user_type
         description: "User type"
 
+      - name: first_name
+        description: "User first name"
+
+      - name: last_name
+        description: "User last name"
+
       - name: user_gender
         description: "User gender"
 

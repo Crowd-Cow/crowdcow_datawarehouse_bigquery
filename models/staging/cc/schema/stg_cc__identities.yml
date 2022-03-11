@@ -1,0 +1,63 @@
+version: 2
+
+models:
+  - name: stg_cc__identities
+    description: "Staging model for user identities"
+    columns:
+      - name: identity_id
+        description: Identity ID
+        tests:
+          - unique
+          - not_null
+
+      - name: first_name
+        description: User first name
+
+      - name: google_profile_url
+        description: Link to user Google profile
+
+      - name: timezone_offset
+        description: Timezone offset of the user
+
+      - name: identity_provider
+        description: Identity provider if applicable (e.g. Facebook, Google, etc.)
+
+      - name: full_name
+        description: Full name of the user
+
+      - name: image_url
+        description: Image URL
+
+      - name: user_id
+        description: User ID
+
+      - name: identity_token
+        description: Identity token
+
+      - name: gender
+        description: User gender
+
+      - name: created_at_utc
+        description: Timestamp for when the user identity was created
+
+      - name: last_name
+        description: User last name
+
+      - name: updated_at_utc
+        description: Timestamp for when the user identity was updated in the system
+
+      - name: facebook_profile_url
+        description: Link to user Facebook profile
+
+      - name: identity_uid
+        description: Identity UID
+
+      - name: email
+        description: User email
+
+      - name: is_google_email_verified
+        description: Boolean indicating if the user's Google account email address has been verified
+
+      - name: is_facebook_email_verified
+        description: Boolean indicating if the user's Facebook account email address has been verified
+        
