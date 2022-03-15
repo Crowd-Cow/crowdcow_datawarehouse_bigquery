@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: int_refunds
+    description: "Intermediate model to clean up refund amounts from Stripe"
+    columns:
+      - name: stripe_charge_id
+        description: "Stripe charge ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: refund_amount_usd
+        description: "Amount refunded to a customer's card"
