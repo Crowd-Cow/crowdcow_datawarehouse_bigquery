@@ -3,7 +3,7 @@ with
 orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,order_item as ( select * from {{ ref('order_items') }} )
 ,discount as ( select * from {{ ref('discounts') }} )
-,refund as ( select * from {{ ref('stg_stripe__refunds') }} )
+,refund as ( select * from {{ ref('int_refunds') }} )
 
 ,bid_amounts as (
     select 
@@ -32,14 +32,6 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
     group by 1
 )
 
-,refund_amounts as (
-    select
-        stripe_charge_id
-        ,sum(refund_amount_usd) as refund_amount_usd
-    from refund
-    group by 1
-)
-
 ,revenue_component_joins as (
     select
         orders.order_id
@@ -55,11 +47,11 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(discount_amounts.new_member_discount) * -1 as new_member_discount
         ,zeroifnull(discount_amounts.gift_redemption) * -1 as gift_redemption
         ,zeroifnull(discount_amounts.other_discount) * -1 as other_discount
-        ,zeroifnull(refund_amounts.refund_amount_usd) * -1 as refund_amount
+        ,zeroifnull(refund.refund_amount_usd) * -1 as refund_amount
     from orders
         left join bid_amounts on orders.order_id = bid_amounts.order_id
         left join discount_amounts on orders.order_id = discount_amounts.order_id
-        left join refund_amounts on orders.stripe_charge_id = refund_amounts.stripe_charge_id
+        left join refund on orders.stripe_charge_id = refund.stripe_charge_id
 )
 
 ,fix_shipping_credits as (

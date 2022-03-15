@@ -59,3 +59,210 @@ sources:
 
           - name: _fivetran_synced
             description: Timestamp for when the record was synced by Fivetran to the `raw` database in Snowflake
+
+      - name: charge
+        description: Charge transactions to a customer's card via Sripe
+        columns:
+          - name: id
+            description: Charge ID
+            tests:
+              - unique
+              - not_null`
+
+          - name: connected_account_id
+            description: Connected account ID
+
+          - name: amount
+            description: Amount charged to the card
+
+          - name: amount_refunded
+            description: Amount refunded to the card if applicable
+
+          - name: application
+            description: Application
+
+          - name: billing_detail_address_city
+            description: Billing detail address city
+
+          - name: billing_detail_address_country
+            description: Billing detail address country
+
+          - name: billing_detail_address_address_line_1
+            description: Billing detail address address line 1
+
+          - name: billing_detail_address_address_line_2
+            description: Billing detail address address line 2
+
+          - name: billing_detail_address_postal_code
+            description: Billing detail address postal code
+
+          - name: billing_detail_address_state
+            description: Billing detail address state
+
+          - name: billing_detail_email
+            description: Billing detail email
+
+          - name: billing_detail_name
+            description: Billing detail name
+
+          - name: billing_detail_phone
+            description: Billing detail phone
+
+          - name: application_fee_amount
+            description: Application fee amount
+
+          - name: calculated_statement_descriptor
+            description: Calculated statement descriptor
+
+          - name: captured
+            description: Captured
+
+          - name: created
+            description: Created timestamp
+
+          - name: currency
+            description: Currency of the charge amount
+
+          - name: description
+            description: Charge description
+
+          - name: destination
+            descritpion: Destination
+
+          - name: failure_code
+            description: Failure code
+
+          - name: failure_message
+            description: Failure message
+
+          - name: fraud_details_user_report
+            description: Fraud details user report
+
+          - name: fraud_details_stripe_report
+            description: Fraud details stripe report
+
+          - name: livemode
+            description: Live mode
+
+          - name: metadata
+            description: Charge metadata
+
+          - name: on_behalf_of
+            description: On behalf of
+
+          - name: outcome_network_status
+            description: Outcome network status
+
+          - name: outcome_reason
+            description: Outcome reason
+
+          - name: outcome_risk_level
+            description: Outcome risk level
+
+          - name: outcome_risk_score
+            description: Outcome risk score
+
+          - name: outcome_seller_message
+            description: Outcome seller message
+
+          - name: outcome_type
+            description: Outcome type
+
+          - name: paid
+            description: Charge was paid
+
+          - name: receipt_email
+            description: Receipt email
+
+          - name: receipt_url
+            description: Receipt URL
+
+          - name: refunded
+            description: Was the charge refunded
+
+          - name: shipping_address_city
+            description: Shipping detail address city
+
+          - name: shipping_address_country
+            description: Shipping detail address country
+
+          - name: shipping_address_address_line_1
+            description: Shipping detail address address line 1
+
+          - name: shipping_address_address_line_2
+            description: Shipping detail address address line 2
+
+          - name: shipping_address_postal_code
+            description: Shipping detail address postal code
+
+          - name: shipping_address_state
+            description: Shipping detail address state
+
+          - name: shipping_carrier
+            description: Shipping carrier
+
+          - name: shipping_name
+            description: Shipping name
+
+          - name: shipping_phone
+            description: Shipping phone
+
+          - name: shipping_tracking_number
+            description: Shipping tracking number
+
+          - name: card_id
+            description: Card ID
+
+          - name: bank_account_id
+            description: Bank account ID
+
+          - name: source_id
+            description: Source ID
+
+          - name: source_transfer
+            description: Source transfer
+
+          - name: statement_descriptor
+            description: Statement descriptor
+
+          - name: status
+            description: Status
+
+          - name: transfer_data_desitnation
+            description: Transfer data destination
+
+          - name: transfer_group
+            description: Transfer group
+
+          - name: balance_transaction_id
+            description: Balance transaction ID
+
+          - name: customer_id
+            description: Customer ID
+
+          - name: invoice_id
+            description: Invoice ID
+
+          - name: payment_intent_id
+            description: Payment intent ID
+
+          - name: payment_method_id
+            description: Payment method ID
+
+          - name: transfer_id
+            description: Transfer ID
+
+          - name: _fivetran_synced
+            description: Fivetran sync timestamp
+
+          - name: rule_rule
+            description: Rule rule
+
+          - name: rule_id
+            description: Rule ID
+
+          - name: rule_action
+            description: Rule action
+
+          - name: rule_predicate
+            description: rule_predicate
