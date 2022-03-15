@@ -44,6 +44,9 @@ models:
       cargill:
         +materialized: view
         +schema: cargill
+      fountain9:
+        +materialized: view
+        +schema: fountain9
 
 tests:
   +store_failures: true
