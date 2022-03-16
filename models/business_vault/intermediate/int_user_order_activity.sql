@@ -29,6 +29,14 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,max(iff(is_paid_order and is_ala_carte_order,order_paid_at_utc::date,null)) as last_paid_ala_carte_order_date
         ,max(iff(completed_order_rank = 1,order_checkout_completed_at_utc,null)) as first_completed_order_date
         ,max(iff(completed_order_rank = 1,visit_id,null)) as first_completed_order_visit_id
+        ,count_if(
+            not is_gift_order
+            and not is_gift_card_order
+            and not is_bulk_gift_order
+            and not is_cancelled_order
+            and is_paid_order
+            and (billing_state = 'CA' or order_delivery_state = 'CA')
+         ) as total_california_orders
     from order_info
     group by 1
 )
@@ -89,6 +97,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,zeroifnull(user_percentiles.six_month_net_revenue_percentile) as six_month_net_revenue_percentile
         ,zeroifnull(user_percentiles.twelve_month_net_revenue_percentile) as twelve_month_net_revenue_percentile
         ,zeroifnull(user_percentiles.lifetime_net_revenue_percentile) as lifetime_net_revenue_percentile
+        ,zeroifnull(user_percentiles.total_california_orders) as total_california_orders
         ,average_order_days.average_order_frequency_days
         ,average_order_days.average_membership_order_frequency_days
         ,average_order_days.average_ala_carte_order_frequency_days

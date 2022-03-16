@@ -115,6 +115,11 @@ employee as (
     where user_type in ('CUSTOMER','EMPLOYEE') and total_paid_gift_order_count > 0
 )
 
+,california_customer as (
+    {{ generate_tag('users','user_id','california_customer','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE') and total_california_orders > 0
+)
+
 select * from employee
 union all
 select * from recent_delivery
@@ -152,3 +157,5 @@ union all
 select * from inactive_member_180_day
 union all
 select * from gift_giver
+union all
+select * from california_customer

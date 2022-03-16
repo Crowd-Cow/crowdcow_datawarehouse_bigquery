@@ -82,6 +82,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,zeroifnull(user_order_activity.six_month_net_revenue_percentile) as six_month_net_revenue_percentile
         ,zeroifnull(user_order_activity.twelve_month_net_revenue_percentile) as twelve_month_net_revenue_percentile
         ,zeroifnull(user_order_activity.lifetime_net_revenue_percentile) as lifetime_net_revenue_percentile
+        ,zeroifnull(user_order_activity.total_california_orders) as total_california_orders
 
     from users
         left join membership_count on users.user_id = membership_count.user_id
@@ -145,6 +146,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,six_month_net_revenue_percentile
         ,twelve_month_net_revenue_percentile
         ,lifetime_net_revenue_percentile
+        ,total_california_orders
         ,attributed_visit_id
         ,is_member
         ,is_cancelled_member
