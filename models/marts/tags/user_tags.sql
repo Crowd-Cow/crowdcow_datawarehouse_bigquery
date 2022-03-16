@@ -27,22 +27,22 @@ employee as (
 
 ,recent_delivery as (
     {{ generate_tag('users','user_id','recent_delivery','user_segment')}}
-    where user_type = 'CUSTOMER' and recent_delivered_order_count >= 1
+    where user_type in ('CUSTOMER','EMPLOYEE') and recent_delivered_order_count >= 1
 )
 
 ,vip_new_customer as (
     {{ generate_tag('users','user_id','vip_new_customer','user_segment') }}
-    where user_type = 'CUSTOMER' and total_completed_unpaid_uncancelled_orders = 1 and lifetime_paid_order_count = 0
+    where user_type in ('CUSTOMER','EMPLOYEE') and total_completed_unpaid_uncancelled_orders = 1 and lifetime_paid_order_count = 0
 )
 
 ,vip_superstar as (
     {{ generate_tag('users','user_id','vip_superstar','user_segment') }}
-    where user_type = 'CUSTOMER' and six_month_net_revenue > 0 and six_month_net_revenue_percentile > 98
+    where user_type in ('CUSTOMER','EMPLOYEE') and six_month_net_revenue > 0 and six_month_net_revenue_percentile > 98
 )
 
 ,vip_frequent as (
     {{ generate_tag('users','user_id','vip_frequent','user_segment') }}
-    where user_type = 'CUSTOMER' and twelve_month_purchase_count >= 4
+    where user_type in ('CUSTOMER','EMPLOYEE') and twelve_month_purchase_count >= 4
 )
 
 ,vip_profit as (
@@ -52,12 +52,12 @@ employee as (
 
 ,member as (
     {{ generate_tag('users','user_id','member','user_segment') }}
-    where user_type = 'CUSTOMER' and is_member
+    where user_type in ('CUSTOMER','EMPLOYEE') and is_member
 )
 
 ,non_member as (
     {{ generate_tag('users','user_id','non_member','user_segment') }}
-    where user_type = 'CUSTOMER' and not is_member
+    where user_type in ('CUSTOMER','EMPLOYEE') and not is_member
 )
 
 ,internal as (
@@ -67,52 +67,52 @@ employee as (
 
 ,lead as (
     {{ generate_tag('users','user_id','lead','user_segment') }}
-    where user_type = 'CUSTOMER' and is_lead
+    where user_type in ('CUSTOMER','EMPLOYEE') and is_lead
 )
 
 ,cancelled_member as (
     {{ generate_tag('users','user_id','cancelled_member','user_segment') }}
-    where user_type = 'CUSTOMER' and is_member and is_cancelled_member
+    where user_type in ('CUSTOMER','EMPLOYEE') and is_member and is_cancelled_member
 )
 
 ,uncancelled_member as (
     {{ generate_tag('users','user_id','uncancelled_member','user_segment') }}
-    where user_type = 'CUSTOMER' and is_member and not is_cancelled_member
+    where user_type in ('CUSTOMER','EMPLOYEE') and is_member and not is_cancelled_member
 )
 
 ,purchasing_customer as (
     {{ generate_tag('users','user_id','purchasing_customer','user_segment') }}
-    where user_type = 'CUSTOMER' and is_purchasing_customer
+    where user_type in ('CUSTOMER','EMPLOYEE') and is_purchasing_customer
 )
 
 ,purchasing_member as (
     {{ generate_tag('users','user_id','purchasing_member','user_segment') }}
-    where user_type = 'CUSTOMER' and is_purchasing_member
+    where user_type in ('CUSTOMER','EMPLOYEE') and is_purchasing_member
 )
 
 ,active_member_90_day as (
     {{ generate_tag('users','user_id','90_day_active_member','user_segment') }}
-    where user_type = 'CUSTOMER' and is_member and not is_cancelled_member and last_90_days_paid_order_count > 0
+    where user_type in ('CUSTOMER','EMPLOYEE') and is_member and not is_cancelled_member and last_90_days_paid_order_count > 0
 )
 
 ,active_member_180_day as (
     {{ generate_tag('users','user_id','180_day_active_member','user_segment') }}
-    where user_type = 'CUSTOMER' and is_member and not is_cancelled_member and last_180_days_paid_order_count > 0
+    where user_type in ('CUSTOMER','EMPLOYEE') and is_member and not is_cancelled_member and last_180_days_paid_order_count > 0
 )
 
 ,inactive_member_90_day as (
     {{ generate_tag('users','user_id','90_day_inactive_member','user_segment') }}
-    where user_type = 'CUSTOMER' and is_member and not is_cancelled_member and last_90_days_paid_order_count = 0
+    where user_type in ('CUSTOMER','EMPLOYEE') and is_member and not is_cancelled_member and last_90_days_paid_order_count = 0
 )
 
 ,inactive_member_180_day as (
     {{ generate_tag('users','user_id','180_day_inactive_member','user_segment') }}
-    where user_type = 'CUSTOMER' and is_member and not is_cancelled_member and last_180_days_paid_order_count = 0
+    where user_type in ('CUSTOMER','EMPLOYEE') and is_member and not is_cancelled_member and last_180_days_paid_order_count = 0
 )
 
 ,gift_giver as (
     {{ generate_tag('users','user_id','gift_giver','user_segment') }}
-    where user_type = 'CUSTOMER' and total_paid_gift_order_count > 0
+    where user_type in ('CUSTOMER','EMPLOYEE') and total_paid_gift_order_count > 0
 )
 
 select * from employee
