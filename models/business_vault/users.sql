@@ -39,7 +39,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,membership_count.user_id is not null and total_completed_membership_orders > 0 as is_member
         ,membership_count.user_id is not null and membership_count.total_uncancelled_memberships = 0 as is_cancelled_member
         ,user_order_activity.order_user_id is null as is_lead
-        ,user_order_activity.user_id is not null and user_order_activity.total_paid_ala_carte_order_count > 0 and membership_count.total_membership_count = 0 as is_purchasing_customer
+        ,user_order_activity.user_id is not null and user_order_activity.total_paid_ala_carte_order_count > 0 and zeroifnull(membership_count.total_membership_count) = 0 as is_purchasing_customer
         ,user_order_activity.user_id is not null and user_order_activity.total_paid_membership_order_count > 0 as is_purchasing_member
         ,user_order_activity.user_id is not null and user_order_activity.last_90_days_paid_membership_order_count > 0 as is_active_member_90_day
         
@@ -74,6 +74,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,zeroifnull(user_order_activity.total_paid_gift_order_count) as total_paid_gift_order_count
         ,zeroifnull(user_order_activity.six_month_net_revenue) as six_month_net_revenue
         ,zeroifnull(user_order_activity.twelve_month_net_revenue) as twelve_month_net_revenue
+        ,zeroifnull(user_order_activity.six_month_paid_order_count) as six_month_paid_order_count
         ,zeroifnull(user_order_activity.twelve_month_purchase_count) as twelve_month_purchase_count
         ,zeroifnull(user_order_activity.last_90_days_paid_order_count) as last_90_days_paid_order_count
         ,zeroifnull(user_order_activity.last_180_days_paid_order_count) as last_180_days_paid_order_count
@@ -135,6 +136,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,last_90_days_paid_membership_order_count
         ,last_90_days_paid_order_count
         ,last_180_days_paid_order_count
+        ,six_month_paid_order_count
         ,twelve_month_purchase_count
         ,total_paid_gift_order_count
         ,recent_delivered_order_count
