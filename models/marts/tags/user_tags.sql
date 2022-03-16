@@ -51,7 +51,7 @@ employee as (
 )
 
 ,member as (
-    {{ generate_tag('users','user_id','member','user_segment') }}
+    {{ generate_tag('users','user_id','has_ever_been_member','user_segment') }}
     where user_type in ('CUSTOMER','EMPLOYEE') and is_member
 )
 
