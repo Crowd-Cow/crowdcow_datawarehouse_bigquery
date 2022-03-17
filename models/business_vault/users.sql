@@ -148,6 +148,42 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,lifetime_net_revenue_percentile
         ,total_california_orders
         ,attributed_visit_id
+        
+        ,nullif(
+            greatest(
+                nvl(unsubscribed_all_at_utc,'1970-01-01')
+                ,nvl(email_subscribed_often_at_utc,'1970-01-01')
+                ,nvl(email_subscribed_weekly_at_utc,'1970-01-01')
+            )
+        ,'1970-01-01') as last_email_preference_date
+        
+        ,case
+            when greatest(
+                    nvl(unsubscribed_all_at_utc,'1970-01-01')
+                    ,nvl(email_subscribed_often_at_utc,'1970-01-01')
+                    ,nvl(email_subscribed_weekly_at_utc,'1970-01-01')
+                ) = unsubscribed_all_at_utc 
+            then 'UNSUBSCRIBED ALL'
+            when greatest(
+                    nvl(unsubscribed_all_at_utc,'1970-01-01')
+                    ,nvl(email_subscribed_often_at_utc,'1970-01-01')
+                    ,nvl(email_subscribed_weekly_at_utc,'1970-01-01')
+                ) = email_subscribed_often_at_utc 
+                or (email_subscribed_often_at_utc is null 
+                    and unsubscribed_all_at_utc is null 
+                    and email_subscribed_often_at_utc is null 
+                    and has_opted_in_to_emails
+                )
+            then 'OFTEN'
+            when greatest(
+                    nvl(unsubscribed_all_at_utc,'1970-01-01')
+                    ,nvl(email_subscribed_often_at_utc,'1970-01-01')
+                    ,nvl(email_subscribed_weekly_at_utc,'1970-01-01')
+                ) = email_subscribed_weekly_at_utc 
+            then 'WEEKLY'
+            else 'NO SETTING'
+        end as user_email_preference
+        
         ,is_member
         ,is_cancelled_member
         ,is_lead
@@ -156,7 +192,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,is_active_member_90_day
         ,is_banned
         ,does_allow_sms
-        ,user_last_sign_in_at_utc
+        ,has_opted_in_to_emails
+        ,last_sign_in_at_utc
         ,created_at_utc
         ,updated_at_utc
     from user_joins

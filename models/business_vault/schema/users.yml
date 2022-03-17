@@ -129,7 +129,13 @@ models:
 
       - name: attributed_visit_id
         description: "The visit id attributed to the acquisition of a user. If the first completed order for a user is within 10 days of when the user account was created, this is the first visit to the site. If the first completed order is more than 10 days from user creation, this is the visit id associated with the first completed order for a user"
-        
+
+      - name: last_email_preference_date
+        description: "Timestamp of when the user last changed their email frequency preference"
+
+      - name: user_email_preference
+        description: "The user's email frequency preference. Set to `OFTEN`, `WEEKLY`, `UNSUBSCRIBED ALL`, `NO SETTING`"
+      
       - name: is_member
         description: "The user has had at least one membership at some point. The membership can be cancelled or uncancelled. If this value is FALSE, the user has never had a membership."
 
@@ -150,6 +156,9 @@ models:
 
       - name: does_allow_sms
         description: "Boolean indicating if the user's phone number allows SMS texting"
+
+      - name: has_opted_in_to_emails
+        description: "Boolean indicating if the user has opted in to receiving emails"
 
       - name: user_last_sign_in_at_utc
         description: "User last signed in timestamp in UTC"

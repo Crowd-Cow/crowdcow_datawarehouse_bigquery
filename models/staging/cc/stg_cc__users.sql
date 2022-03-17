@@ -46,26 +46,26 @@ renamed as (
         ,{{ clean_strings('fc_facebook_url') }} as full_contact_facebook_url
         ,{{ clean_strings('fc_image_url') }} as full_contact_image_url
         ,{{ cents_to_usd('cow_cash_balance_cents') }} as user_cow_cash_balance_usd
-        ,unsubscribed_all_at as user_unsubscribed_all_at_utc
+        ,unsubscribed_all_at as unsubscribed_all_at_utc
         ,{{ clean_strings('utm_campaign') }} as utm_campaign
         ,{{ clean_strings('vendor_access') }} as user_vendor_access
-        ,account_breach_checked_at as user_account_breach_checked_at_utc
-        ,remember_created_at as user_remember_created_at_utc
-        ,vacation_ends_at as user_vacation_ends_at_utc
+        ,account_breach_checked_at as account_breach_checked_at_utc
+        ,remember_created_at as remember_created_at_utc
+        ,vacation_ends_at as vacation_ends_at_utc
         ,{{ clean_strings('unlock_token') }} as user_unlock_token
         ,{{ clean_strings('encrypted_password') }} as user_encrypted_password
-        ,email_subscribed_often_at as user_email_subscribed_often_at_utc
+        ,email_subscribed_often_at as email_subscribed_often_at_utc
         ,updated_at as updated_at_utc
-        ,reorder_remind_date as user_remind_at_utc
+        ,reorder_remind_date as remind_at_utc
         ,referred_by_user_id
         ,{{ clean_strings('affiliate_transaction_id') }} as affiliate_transaction_id
         ,{{ clean_strings('referrer_url') }} as referrer_url
-        ,retention_offer_last_accepted_at as user_retention_offer_last_accepted_at_utc
+        ,retention_offer_last_accepted_at as retention_offer_last_accepted_at_utc
         ,banned_at as user_banned_at_utc
         ,{{ clean_strings('fb_id') }} as user_fb_id
         ,{{ clean_strings('banned_reason') }} as user_banned_reason 
-        ,support_state_updated_at as user_support_state_updated_at_utc
-        ,retention_offers_accepted as user_total_retention_offers_accepted
+        ,support_state_updated_at as support_state_updated_at_utc
+        ,retention_offers_accepted as total_retention_offers_accepted
         ,utm_time as utm_time_at_utc
         ,{{ clean_strings('utm_content') }} as utm_content
         ,{{ clean_strings('roles_for_notifications') }} as user_roles_for_notifications
@@ -73,8 +73,8 @@ renamed as (
         ,created_at created_at_utc
         ,{{ clean_strings('campaign_id') }} as campaign_id
         ,{{ clean_strings('utm_source') }} as utm_source
-        ,current_sign_in_at as user_current_sign_in_at_utc
-        ,email_subscribed_weekly_at as user_email_subscribed_weekly_at_utc
+        ,current_sign_in_at as current_sign_in_at_utc
+        ,email_subscribed_weekly_at as email_subscribed_weekly_at_utc
         ,{{ clean_strings('landing_page_source') }} as user_landing_page_source
         ,{{ clean_strings('stripe_customer_token') }} as stripe_customer_token
         ,banned_by_user_id
@@ -87,17 +87,17 @@ renamed as (
         ,merged_into_user_id
         ,mailchimp_unsubscribed_all_at as user_mailchimp_unsubscribed_all_at_utc
         ,{{ clean_strings('targetid') }} as user_target_id
-        ,email_validated_at as user_email_validated_at_utc
-        ,reset_password_sent_at as user_reset_password_sent_at_utc
+        ,email_validated_at as email_validated_at_utc
+        ,reset_password_sent_at as reset_password_sent_at_utc
         ,phone_number_id as phone_number_id
-        ,emails_paused_until_date as user_emails_paused_until_at_utc
+        ,emails_paused_until_date as emails_paused_until_at_utc
         ,{{ clean_strings('current_sign_in_ip') }} as user_current_sign_in_ip
         ,sign_in_count as user_total_sign_in_count
         ,{{ clean_strings('email_name') }} as user_email_name
         ,vip_level as user_vip_level
         ,{{ clean_strings('creativeid') }} as user_creative_id
-        ,predicted_reorder_date_updated_at as user_predicted_reorder_updated_at_utc
-        ,predicted_reorder_date as user_predicted_reorder_at_utc
+        ,predicted_reorder_date_updated_at as predicted_reorder_updated_at_utc
+        ,predicted_reorder_date as predicted_reorder_at_utc
         ,locked_at as user_locked_at_utc
         ,{{ clean_strings('original_url') }} as user_original_url
         ,{{ clean_strings('support_state') }} as user_support_status
@@ -105,19 +105,19 @@ renamed as (
         ,{{ clean_strings('confirmation_token') }} as user_confirmation_token
         ,{{ clean_strings('utm_medium') }} as utm_medium
         ,active_order_id
-        ,account_breach_reset_password_at as user_account_breach_reset_password_at_utc
+        ,account_breach_reset_password_at as account_breach_reset_password_at_utc
         ,{{ cents_to_usd('pay_rate_cents') }} as user_pay_rate_usd
-        ,vacation_begins_at as user_vacation_begins_at_utc
+        ,vacation_begins_at as vacation_begins_at_utc
         ,left(replace({{ clean_strings('zip') }},'~',''),5) as user_zip
-        ,last_sign_in_at as user_last_sign_in_at_utc
+        ,last_sign_in_at as last_sign_in_at_utc
         ,alternate_phone_number_id
         ,{{ clean_strings('roles_for_access') }} as user_roles_for_access
         ,{{ clean_strings('email_validation_code') }} as user_email_validation_code
         ,test_bucket as user_test_bucket
         ,{{ clean_strings('opt_out_list') }} as user_opt_out_list
         ,banned_from_referrals as user_is_banned_from_referrals
-        ,was_email_lead as user_was_email_lead
-        ,opted_in_to_emails as user_has_opted_in_to_emails
+        ,was_email_lead
+        ,opted_in_to_emails as has_opted_in_to_emails
         ,dbt_valid_to 
         ,dbt_valid_from
         ,dbt_scd_id as user_key
