@@ -8,6 +8,28 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
 ,visit as ( select * from {{ ref('base_cc__ahoy_visits') }} )
 ,postal_code as ( select * from {{ ref('stg_cc__postal_codes') }} )
 ,identity as ( select * from {{ ref('int_recent_user_identities') }} )
+,contact as ( select * from {{ ref('stg_pb__contacts') }} )
+
+,user_contacts as (
+    select 
+        user_token
+        ,last_call_at_utc
+        ,total_calls
+        ,call_result
+    from contact
+    where user_token is not null
+    qualify row_number() over(partition by user_token order by date_modified_at_utc desc) = 1
+)
+
+,most_recent_membership as (
+    select
+        user_id
+        ,subscription_id
+        ,subscription_created_at_utc as most_recent_membership_created_date
+        ,subscription_cancelled_at_utc as most_recent_membership_cancelled_date
+    from memberships
+    qualify row_number() over(partition by user_id order by subscription_created_at_utc desc) = 1
+)
 
 ,user_visits as (
     select
@@ -36,6 +58,11 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,phone_number.phone_type
         ,phone_number.phone_number
         ,phone_number.does_allow_sms
+        ,user_contacts.last_call_at_utc
+        ,user_contacts.total_calls
+        ,user_contacts.call_result
+        ,most_recent_membership.most_recent_membership_created_date
+        ,most_recent_membership.most_recent_membership_cancelled_date
         ,membership_count.user_id is not null and total_completed_membership_orders > 0 as is_member
         ,membership_count.user_id is not null and membership_count.total_uncancelled_memberships = 0 as is_cancelled_member
         ,user_order_activity.order_user_id is null as is_lead
@@ -92,6 +119,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         left join user_visits on users.user_id = user_visits.user_id
         left join postal_code on users.user_zip = postal_code.postal_code
         left join identity on users.user_id = identity.user_id
+        left join user_contacts on users.user_token = user_contacts.user_token
+        left join most_recent_membership on users.user_id = most_recent_membership.user_id 
 )
 
 ,final as (
@@ -147,6 +176,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,twelve_month_net_revenue_percentile
         ,lifetime_net_revenue_percentile
         ,total_california_orders
+        ,total_calls as total_phone_burner_calls
+        ,call_result as last_phone_burner_call_result
         ,attributed_visit_id
         
         ,nullif(
@@ -193,7 +224,12 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,is_banned
         ,does_allow_sms
         ,has_opted_in_to_emails
+        ,last_call_at_utc is not null as has_phone_burner_contact
+        ,most_recent_membership_created_date >= last_call_at_utc as did_create_membership_after_call
         ,last_sign_in_at_utc
+        ,last_call_at_utc
+        ,most_recent_membership_created_date
+        ,most_recent_membership_cancelled_date
         ,created_at_utc
         ,updated_at_utc
     from user_joins

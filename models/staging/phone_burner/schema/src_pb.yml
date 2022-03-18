@@ -1,0 +1,109 @@
+version: 2
+
+sources:
+
+- name: phone_burner
+  database: raw
+  schema: phone_burner
+  tables:
+    - name: contacts
+      description: Contact records for Phone Burner to do customer outreach
+      columns:
+        - name: user_id
+          description: Unique Phone Burner user ID
+          tests:
+            - unique
+            - not_null
+
+        - name: notes
+          description: JSON object containing information on any notes created during customer outreach
+
+        - name: owner_id
+          description: Phone burner owner ID
+
+        - name: latitude
+          description: Latitude associated with a customer
+
+        - name: primary_address
+          description: JSON object containing information about the customer's primary address (e.g. address, city, state, zip)
+
+        - name: phones
+          description: JSON object containing information on any phones associated with the customer
+
+        - name: language
+          description: Language associated with a customer
+
+        - name: raw_zip
+          description: Raw zip code information with no formatting
+
+        - name: primary_phone
+          description: JSON object containing information about the customer's primary phone number
+
+        - name: emails
+          description: JSON object containing information on any emails associated with the customer
+
+        - name: external_crm_data
+          description: JSON object containing information on any external CRM data associated with the customer
+
+        - name: contact_user_id
+          description: Contact user ID
+
+        - name: first_name
+          description: Customer's first name
+
+        - name: longitude
+          description: Longitude associated with a customer
+
+        - name: raw_phone
+          description: Raw phone number for the customer with no formatting applied
+
+        - name: original_ip
+          description: Original IP address associated with a customer
+
+        - name: _fivetran_batch
+          description: Fivetran batch ID
+
+        - name: last_login
+          description: Timestamp for the last login value of a customer
+
+        - name: custom_fields
+          description: JSON object containing information on any custom fields set up in Phone Burner. Crow Cow `user_token` can be found in this object
+
+        - name: last_call_time
+          description: Timestamp of the last attempted call to a customer. Timestamp is Central Time
+
+        - name: last_name
+          description: Customer's last name
+
+        - name: time_zone
+          description: Timezone associate with a customer
+
+        - name: total_calls
+          description: Number of total calls attempted to reach a customer
+
+        - name: date_added
+          dscription: Timestamp for when the contact was added to phone burner. Timestamp is Central Time
+
+        - name: location_name
+          description: Location name associated with the customer
+
+        - name: _fivetran_index
+          description: Fivetran index value
+
+        - name: date_modified
+          description: Timestamp for when the contact record was modified in Phone Burner. Timestamp is Central Time
+
+        - name: primary_email
+          description: JSON object containing information about the customer's primary email address
+
+        - name: region
+          description: Region associated with the customer
+
+        - name: do_not_call
+          description: Boolean indicating if the customer is on a do not call list
+
+        - name: call_result
+          description: Description of the results of a call (e.g. live answer, left message, etc.)
+
+        - name: _fivetran_synced
+          description: Timestamp for when the record was synced by fivetran. Timestamp is UTC
