@@ -1,0 +1,86 @@
+version: 2
+
+models:
+  - name: stg_pb__contacts
+    description: "Staging table for Phone Burner contacts"
+    columns:
+      - name: phone_burner_user_id
+        description: "The user ID in the Phone Burner system"
+
+      - name: notes
+        description: "Notes associated with the customer contact"
+
+      - name: owner_id
+        description: "Phone Burner owner ID"
+
+      - name: latitude
+        description: "Latitude associated with a customer"
+
+      - name: longitude
+        description: "Longitude associated with a customer"
+
+      - name: primary_address_line_1
+        description: "Primary address line 1 associated with a customer"
+
+      - name: primary_address_line_2
+        description: "Primary address line 2 associated with a customer"
+
+      - name: primary_address_city
+        description: "Primary city associated with a customer"
+
+      - name: primary_address_state
+        description: "Primary state associated with a customer"
+
+      - name: primary_address_postal_code
+        description: "Primary postal code associated with a customer"
+
+      - name: language
+        description: "Language associated with a customer"
+
+      - name: raw_zip
+        description: "Raw zip code for a customer with no formatting"
+
+      - name: primary_phone_number
+        description: "Primary phone number associated with a customer"
+
+      - name: primary_email_address
+        description: "Primary email address associated with a customer"
+
+      - name: contact_user_id
+        description: "Phone Burner contact user ID"
+
+      - name: first_name
+        description: "Customer first name"
+
+      - name: last_name
+        description: "Customer last name"
+
+      - name: user_token
+        description: "Crowd Cow user token"
+
+      - name: last_call_at_utc
+        description: "Timestamp for when the last call to the customer occurred"
+
+      - name: contact_timezone
+        description: "Timezone associated with a customer"
+
+      - name: location_name
+        description: "Location associated with a customer"
+
+      - name: region
+        description: "Region associated with a customer"
+
+      - name: is_do_not_call
+        description: "Boolean indicating the the customer is on a do not call list"
+
+      - name: call_result
+        description: "Results of the last call (e.g. Live answer, left message, etc.)"
+
+      - name: total_calls
+        description: "Total number of calls to a customer"
+
+      - name: date_added_at_utc
+        description: "Timestamp for when a customer contact was added to Phone Burner"
+
+      - name: date_modified_at_utc
+        description: "Timestamp for when a customer contact record was modified in Phone Burner"

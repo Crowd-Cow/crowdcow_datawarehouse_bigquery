@@ -127,6 +127,12 @@ models:
       - name: lifetime_net_revenue_percentile
         description: "The percentile rank of a user based on total net revenue amount over the lifetime of a user"
 
+      - name: total_phone_burner_call
+        description: "The total number of Phone Burner calls made to this customer"
+
+      - name: last_phone_burner_call_result
+        description: "The result of the last call made to the customer through Phone Burner (e.g. Live answer, left message, etc.)"
+
       - name: attributed_visit_id
         description: "The visit id attributed to the acquisition of a user. If the first completed order for a user is within 10 days of when the user account was created, this is the first visit to the site. If the first completed order is more than 10 days from user creation, this is the visit id associated with the first completed order for a user"
 
@@ -160,8 +166,23 @@ models:
       - name: has_opted_in_to_emails
         description: "Boolean indicating if the user has opted in to receiving emails"
 
-      - name: user_last_sign_in_at_utc
+      - name: has_phone_burner_contact
+        description: "Boolean indicating if the user has a Phone Burner contact record"
+
+      - name: did_create_membership_after_call
+        description: "Boolean indicating if the user created a membership after a Phone Burner call was made to the user"
+
+      - name: last_sign_in_at_utc
         description: "User last signed in timestamp in UTC"
+
+      - name: last_call_at_utc
+        description: "Timestamp of the most recent call made to a user through Phone Burner"
+
+      - name: most_recent_membership_created_date
+        description: "Timestamp of the most recently created membership for a user"
+
+      - name: most_recent_membership_cancelled_date
+        description: "Timestamp of the most recently cancelled membership for a user"
 
       - name: created_at_utc
         description: "Timestamp for when the user was created in UTC"
