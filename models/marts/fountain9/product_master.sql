@@ -7,5 +7,6 @@ select
     ,cut_name
     ,category
     ,sub_category
+    ,sku_vendor_name
 from sku
 where dbt_valid_to is null
