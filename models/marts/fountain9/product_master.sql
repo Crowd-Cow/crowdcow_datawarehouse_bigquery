@@ -7,6 +7,9 @@ select
     ,cut_name
     ,category
     ,sub_category
+    ,sku_id
+    ,sku_name
+    ,is_always_in_stock
     ,sku_vendor_name as brand
     ,'units' as uom
 from sku
