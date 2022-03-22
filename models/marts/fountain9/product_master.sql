@@ -7,6 +7,7 @@ select
     ,cut_name
     ,category
     ,sub_category
-    ,sku_vendor_name
+    ,sku_vendor_name as brand
+    ,'units' as uom
 from sku
 where dbt_valid_to is null
