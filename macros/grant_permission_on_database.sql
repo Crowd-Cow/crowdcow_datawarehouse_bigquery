@@ -2,6 +2,6 @@
 
     {% set sql="grant {} on database {} to role {}".format(permission_type, db, role) %}
     {% do run_query(sql) %}
-    {{ log("table cloned from {} to {}".format(src, dst), info=True) }}
+    {{ log("permission granted on {} to {}".format(db, role), info=True) }}
 
 {% endmacro %}
