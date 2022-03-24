@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: google_ads_customer_lists
+    description: "Generates various customer lists used to update Google Ads targeting"
+    columns:
+      - name: email
+        description: "User email address"
+        tests:
+          - unique
+          - not_null
+
+      - name: first_name
+        description: "User first name"
+
+      - name: last_name
+        description: "User last name"
+
+      - name: country
+        description: "User country (default is US)"
+
+      - name: zip
+        description: "User zip code"
+
+      - name: phone_number
+        description: "User phone number"
+
+      - name: is_customer_lead
+        description: "Boolean indicating that the user is on the 'Customer Lead' Google Ads list. Defined as any customer with a Crowd Cow account but no order activity ever"
+
+      - name: is_lead_and_registered_user
+        description: "Boolean indicating that the user is on the 'All Leads & User Registrations' list. Defined as all Crowd Cow customers"
+
+      - name: is_standard_customer
+        description: "Boolean indicating that the user is on the 'Standard Customer' list. Defined as customers with at least one paid/uncancelled order of any kind in the past 90 days"
+
+      - name: is_vip_customer
+        description: "Boolean indicating that the user is on the 'VIP Customers' list. Defined as any user that has a `vip_*` tag. For tag logic definitions, see the `user_tags` model"
