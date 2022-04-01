@@ -87,6 +87,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,user_first_subscription.user_id is not null and user_first_subscription.first_subscription_date < visit_clean_urls.started_at_utc as has_previous_subscription
         ,user_account.user_id is not null and user_account.first_creation_date < visit_clean_urls.started_at_utc as had_account_created
         ,visit_activity.visit_id is not null and subscribes - unsubscribes > 0 as did_subscribe
+        ,visit_activity.visit_id is not null and subscribes - unsubscribes < 0 as did_unsubscribe
         ,visit_activity.visit_id is not null and sign_ups > 0 as did_sign_up
         ,visit_activity.visit_id is not null and order_completes > 0 as did_complete_order
         ,visit_clean_urls.is_homepage_landing and (visit_activity.visit_id is null or (visit_activity.homepage_views = 1 and visit_activity.event_count = 1)) as did_bounce_homepage
