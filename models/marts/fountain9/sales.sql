@@ -41,11 +41,11 @@ select
     ,order_item_skus.sub_category
     ,order_item_skus.cut_id
     ,order_item_skus.cut_name
-    ,order_item_skus.sku_id
-    ,order_item_skus.sku_name
     ,sum(order_item_skus.bid_sku_quantity) as quantity_sold
     ,sum(order_item_skus.sku_net_product_revenue) as revenue
     ,round(avg(order_item_skus.bid_list_price_usd * sku_price_proportion),2) as avgerage_list_price
 from order_item_skus
     inner join order_fc on order_item_skus.order_id = order_fc.order_id
-group by 1,2,3,4,5,6,7,8
+where cut_id is not null
+    and category is not null
+group by 1,2,3,4,5,6
