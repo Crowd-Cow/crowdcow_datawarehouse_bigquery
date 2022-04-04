@@ -32,6 +32,7 @@ order_item as ( select * from {{ ref('order_item_details') }})
     where is_paid_order
         and not is_cancelled_order
         and not is_bulk_gift_order
+        and order_paid_at_utc >= '2019-01-01'
 )
 select
     order_fc.order_paid_at_utc::date as order_paid_date
