@@ -16,4 +16,4 @@ select
 from inventory
     left join sku on inventory.sku_key = sku.sku_key
     left join fc on inventory.fc_key = fc.fc_key
-where snapshot_date = sysdate()::date - 1
+where snapshot_date <= sysdate()::date - 1
