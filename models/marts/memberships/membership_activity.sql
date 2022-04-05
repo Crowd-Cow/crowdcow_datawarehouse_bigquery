@@ -2,9 +2,9 @@ with
 
 dates as (
     select
-        calendar_date
-        ,calendar_date_week
-        ,calendar_date_month
+        to_timestamp(calendar_date) as calendar_date
+        ,to_timestamp(calendar_date_week) as calendar_date_week
+        ,to_timestamp(calendar_date_month) as calendar_date_month
         ,fiscal_week_num
         ,fiscal_month
         ,fiscal_year
