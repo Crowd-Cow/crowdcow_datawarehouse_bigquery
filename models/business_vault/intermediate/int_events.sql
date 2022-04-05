@@ -9,9 +9,9 @@
 with
 
 events as ( select * from {{ ref('stg_cc__events') }}   
- 
+
     {% if is_incremental() %}
-      where started_at_utc >= coalesce((select max(started_at_utc) from {{ this }}), '1900-01-01')
+      where occurred_at_utc >= coalesce((select max(occurred_at_utc) from {{ this }}), '1900-01-01')
     {% endif %})
 
 ,event_details as (
@@ -53,6 +53,7 @@ events as ( select * from {{ ref('stg_cc__events') }}
               when event_name = 'ORDER_ENTER_PAYMENT' then 'PAYMENT INFO ENTERED'
               when category = 'ERROR' and action = 'ADDRESS-ERROR' then 'ADDRESS ERROR'
               when event_name = 'PRODUCT_CARD_VIEWED' then 'PDC VIEW'
+              when event_name = 'PRODUCT_CARD_CLICKED' then 'PDC CLICK'
               when event_name = 'CHECKOUT_ADD-PAYMENT-INFO' then 'PAYMENT INFO ADDED'
               else null
               end as event_type
