@@ -225,7 +225,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,does_allow_sms
         ,has_opted_in_to_emails
         ,last_call_at_utc is not null as has_phone_burner_contact
-        ,most_recent_membership_created_date >= last_call_at_utc as did_create_membership_after_call
+        ,most_recent_membership_created_date::date >= last_call_at_utc::date as did_create_membership_after_call
         ,last_sign_in_at_utc
         ,last_call_at_utc
         ,most_recent_membership_created_date
