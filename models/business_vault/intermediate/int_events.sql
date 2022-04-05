@@ -8,7 +8,11 @@
 
 with
 
-events as ( select * from {{ ref('stg_cc__events') }} )
+events as ( select * from {{ ref('stg_cc__events') }}   
+ 
+    {% if is_incremental() %}
+      where started_at_utc >= coalesce((select max(started_at_utc) from {{ this }}), '1900-01-01')
+    {% endif %})
 
 ,event_details as (
     select event_id
@@ -36,16 +40,16 @@ events as ( select * from {{ ref('stg_cc__events') }} )
         ,reason
         ,user_making_change_id
         ,case when event_name = 'VIEWED_PRODUCT' then 'PDP VIEW'
-              when event_name = 'PAGE_VIEW' then 'HOMEPAGE VIEW'
               when category = 'PRODUCT' and action = 'PAGE-INTERACTION' and label = 'CLICKED-ADD-TO-CART' then 'PDP ADD TO CART'
               when category = 'CHECKOUT' and action = 'VIEWED-UPSELL-CAROUSEL-PRODUCT-CARD' then 'VIEWED PDC UPSELL CAROUSEL'
               when category = 'CHECKOUT' and action = 'PAGE-INTERACTION' and label = 'VIEWED-UPSELL-CAROUSEL' then 'VIEWED CHECKOUT UPSELL CAROUSEL'
               when category = 'PRODUCT' and action = 'CART-UPSELL-QUICK-ADD' then 'UPSELL QUICK ADD FROM CAROUSEL'
-              when category = 'CHECKOUT' and action = 'REACHED-STEP' then 'CHECKOUT BUTTON CLICK IN CART'
               when event_name = 'ORDER_COMPLETE' then 'CHECKOUT COMPLETE'
-              when event_name = 'UNSUBSCRIBED' then 'UNSUBSCRIBED'
+              when event_name = 'UNSUBSCRIBED' then 'CANCELLED MEMBERSHIP'
+              when category = 'CART' and action = 'VIEW' then 'VIEWED SLIDEOUT CART'
+              when category = 'CHECKOUT' and action = 'REACHED-STEP' and label = '1' then 'CLICKED CHECKOUT'
               when event_name = 'PAGE_VIEW' and url like '%/O%/DELIVERY%' then 'VIEWED ADDRESS PAGE'
-              when event_name = 'PAGE_VIEW' and URL like '%/O%/PAYMENT%' then 'VIEWED PAYMENT PAGE'
+              when event_name = 'PAGE_VIEW' and url like '%/O%/PAYMENT%' then 'VIEWED PAYMENT PAGE'
               when event_name = 'ORDER_ENTER_PAYMENT' then 'PAYMENT INFO ENTERED'
               when category = 'ERROR' and action = 'ADDRESS-ERROR' then 'ADDRESS ERROR'
               when event_name = 'PRODUCT_CARD_VIEWED' then 'PDC VIEW'
