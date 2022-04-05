@@ -27,7 +27,7 @@ events as ( select * from {{ ref('stg_cc__events') }}
         ,label
         ,experiments
         ,is_member
-        ,token as order_token
+        ,token
         ,order_id
         ,url
         ,referrer_url
@@ -46,6 +46,7 @@ events as ( select * from {{ ref('stg_cc__events') }}
               when category = 'PRODUCT' and action = 'CART-UPSELL-QUICK-ADD' then 'UPSELL QUICK ADD FROM CAROUSEL'
               when event_name = 'ORDER_COMPLETE' then 'CHECKOUT COMPLETE'
               when event_name = 'UNSUBSCRIBED' then 'CANCELLED MEMBERSHIP'
+              when event_name = 'SUBSCRIBED' then 'CREATED MEMBERSHIP'
               when category = 'CART' and action = 'VIEW' then 'VIEWED SLIDEOUT CART'
               when category = 'CHECKOUT' and action = 'REACHED-STEP' and label = '1' then 'CLICKED CHECKOUT'
               when event_name = 'PAGE_VIEW' and url like '%/O%/DELIVERY%' then 'VIEWED ADDRESS PAGE'

@@ -44,7 +44,7 @@ models:
         description: "Was user a member during visit"
 
       - name: token
-        description: "Order token"
+        description: "Token"
       
       - name: order_id
         description: "Order ID"
