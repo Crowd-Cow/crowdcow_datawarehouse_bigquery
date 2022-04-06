@@ -49,12 +49,15 @@ events as ( select * from {{ ref('stg_cc__events') }}
               when event_name = 'SUBSCRIBED' then 'CREATED MEMBERSHIP'
               when category = 'CART' and action = 'VIEW' then 'VIEWED SLIDEOUT CART'
               when category = 'CHECKOUT' and action = 'REACHED-STEP' and label = '1' then 'CLICKED CHECKOUT'
+              when category = 'CHECKOUT' and action = 'REACHED-STEP' and label = '2' then 'CLICKED CONTINUE TO PAYMENT'
+              when category = 'CHECKOUT' and action = 'REACHED-STEP' and label = '3' then 'CLICKED PLACE ORDER'
               when event_name = 'PAGE_VIEW' and url like '%/O%/DELIVERY%' then 'VIEWED ADDRESS PAGE'
               when event_name = 'PAGE_VIEW' and url like '%/O%/PAYMENT%' then 'VIEWED PAYMENT PAGE'
               when event_name = 'ORDER_ENTER_PAYMENT' then 'PAYMENT INFO ENTERED'
               when category = 'ERROR' and action = 'ADDRESS-ERROR' then 'ADDRESS ERROR'
               when event_name = 'PRODUCT CARD VIEWED' then 'PDC VIEW'
               when event_name = 'PRODUCT CARD CLICKED' then 'PDC CLICK'
+              when label = 'CLICKED-ADD-TO-CART-PRODUCT-CARD' then 'PDC ADD TO CART' 
               when event_name = 'CHECKOUT_ADD-PAYMENT-INFO' then 'PAYMENT INFO ADDED'
               else null
               end as event_type
