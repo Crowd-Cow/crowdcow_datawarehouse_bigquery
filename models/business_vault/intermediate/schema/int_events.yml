@@ -1,0 +1,83 @@
+version: 2
+
+models:
+  - name: int_events
+    description: "Business logic to classify website events"
+    columns:
+      - name: event_id
+        description: "Event ID"
+        tests:
+          - unique
+          - not_null 
+
+      - name: visit_id
+        description: "Visit ID"
+
+      - name: user_id
+        description: "User ID"
+      
+      - name: occurred_at_utc
+        description: "Timestamp of when the event occurred in UTC"
+
+      - name: updated_at_utc
+        description: "Timestamp of event update"
+      
+      - name: event_sequence_number
+        description: "Sequence within visit when this event occurrred"
+
+      - name: event_name
+        description: "For non-custom events, the name of the event"
+
+      - name: category
+        description: "Category of event"
+
+      - name: action
+        description: "Action of event"
+
+      - name: label
+        description: "Label of event"
+
+      - name: experiments
+        description: "Experiments that visit is included within"
+
+      - name: is_member
+        description: "Was user a member during visit"
+
+      - name: token
+        description: "Token"
+      
+      - name: order_id
+        description: "Order ID"
+
+      - name: url
+        description: "URL on which event occurred"
+
+      - name: referrer_url
+        description: "URL of previous page"
+
+      - name: subscription_id
+        description: "Subscription ID of visitor"
+
+      - name: title
+        description: "Page title"
+
+      - name: old_scheduled_arrival_date
+        description: "Previous scheduled arrival date"
+
+      - name: new_scheduled_arrival_date
+        description: "New scheduled arrival date"
+
+      - name: old_scheduled_fulfillment_date
+        description: "Old Scheduled Fulfillment Date"
+      
+      - name: new_scheduled_fulfillment_date
+        description: "New Scheduled Fulfillment Date"
+
+      - name: reason
+        description: "Reason for reschedule"
+
+      - name: user_making_change
+        description: "User ID of user making change to box"
+
+      - name: event_type
+        description: "Description of event that occurred"
