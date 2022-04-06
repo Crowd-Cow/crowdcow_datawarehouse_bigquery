@@ -49,4 +49,31 @@ sources:
 
           - name: s
             description: A column that was created in error by a bad modification of the Google sheet. ***SHOULD NOT BE USED FOR ANYTHING ****
+
+      - name: inventory_moq
+        description: Inventory MOQ values reference for PLU/Cut. Used in forecasting inventory through Fountain9
+        columns:
+          - name: farm_id
+            description: Farm ID
+
+          - name: farm_name
+            description: Farm name
+
+          - name: plu
+            description: PLU
+
+          - name: cut_id
+            description: Cut ID
+
+          - name: cut_name
+            description: Cut name
+
+          - name: plu_weight
+            description: PLU weight
+
+          - name: case_pack
+            description: Number of units in the case that is ordered
+
+          - name: case_weight
+            description: Allowed weight for a case that is ordered
             

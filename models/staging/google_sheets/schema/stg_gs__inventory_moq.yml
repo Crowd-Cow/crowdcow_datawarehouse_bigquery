@@ -1,0 +1,36 @@
+version: 2
+
+models:
+
+  - name: stg_gs__inventory_moq
+    description: Staging model for inventory MOQ information
+    columns:
+      - name: moq_id
+        description: A surrogate key to provide a uniqueness test. Combines `farm_id` and `cut_id`
+        tests:
+          - unique
+          - not_null
+      
+      - name: farm_id
+        description: Farm ID
+
+      - name: farm_name
+        description: Farm name
+
+      - name: plu
+        description: PLU
+
+      - name: cut_id
+        description: Cut ID
+
+      - name: cut_name
+        description: Cut name
+
+      - name: plu_weight
+        description: PLU weight
+
+      - name: case_pack
+        description: Number of units in the case that is ordered
+
+      - name: case_weight
+        description: Allowed weight for a case that is ordered
