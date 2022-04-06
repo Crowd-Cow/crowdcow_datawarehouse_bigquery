@@ -15,6 +15,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku.sku_vendor_id
         ,{{ dbt_utils.surrogate_key(['farm.category','farm.sub_category','cut.cut_name','sku.sku_name']) }} as ais_id
         ,sku.sku_barcode
+        ,farm.farm_id
         ,farm.farm_name
         ,farm.category
         ,farm.sub_category
@@ -75,6 +76,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku_joins.cut_key
         ,sku_joins.sku_vendor_id
         ,sku_joins.sku_barcode
+        ,sku_joins.farm_id
         ,sku_joins.farm_name
         ,sku_joins.category
         ,sku_joins.sub_category

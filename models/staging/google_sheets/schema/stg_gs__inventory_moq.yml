@@ -8,7 +8,8 @@ models:
       - name: moq_id
         description: A surrogate key to provide a uniqueness test. Combines `farm_id` and `cut_id`
         tests:
-          - unique
+          - unique:
+              severity: warn
           - not_null
       
       - name: farm_id
