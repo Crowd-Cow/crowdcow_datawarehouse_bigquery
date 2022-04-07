@@ -1,37 +1,10 @@
 with
 
-events as ( select * from {{ ref('events') }} )
+event_groupings as ( select * from {{ ref('events') }} )
 
-,viewed_slideout_cart as (
-    select visit_id
-    from events
-    where event_type = 'VIEWED SLIDEOUT CART'
-)
-
-,viewed_address as (
-select visit_id
-    from events
-    where event_type = 'VIEWED ADDRESS PAGE'
-)
-
-,viewed_payment as (
-select distinct visit_id
-    from events
-    where event_type = 'VIEWED PAYMENT PAGE'
-)
-
-,checkout_complete as (
-select visit_id
-    from events
-    where event_type = 'CHECKOUT COMPLETE'
-)
-
-select distinct events.visit_id
-    ,case when viewed_slideout_cart.visit_id is not null and viewed_address.visit_id is not null then 1 else 0 end as SLIDEOUT_AND_ADDRESS_PAGE
-    ,case when viewed_address.visit_id is not null and viewed_payment.visit_id is not null then 1 else 0 end as ADDRESS_PAGE_AND_PAYMENT_PAGE
-    ,case when viewed_payment.visit_id is not null and checkout_complete.visit_id is not null then 1 else 0 end as PAYMENT_AND_CHECKOUT_COMPLETE
-from events
-left join viewed_slideout_cart on events.visit_id = viewed_slideout_cart.visit_id
-left join viewed_address on events.visit_id = viewed_address.visit_id
-left join viewed_payment on events.visit_id = viewed_payment.visit_id
-left join checkout_complete on events.visit_id = checkout_complete.visit_id
+select distinct event_groupings.visit_id
+    ,count_if(event_groupings.event_type = 'VIEWED SLIDEOUT CART') > 0 and count_if(event_groupings.event_type = 'VIEWED ADDRESS PAGE') > 0 as slideout_and_address_page
+    ,count_if(event_groupings.event_type = 'VIEWED ADDRESS PAGE') > 0 and count_if(event_groupings.event_type = 'VIEWED PAYMENT PAGE') > 0 as address_page_and_payment_page
+    ,count_if(event_groupings.event_type = 'VIEWED PAYMENT PAGE') > 0 and count_if(event_groupings.event_type = 'CHECKOUT COMPLETE') > 0 as payment_page_and_checkout_complete
+from event_groupings
+group by 1
