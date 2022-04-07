@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: funnel_events
+    description: "Funnel events data mart analysis looks at visits to see what groupings of events occurred on a visit"
+    columns:
+      - name: visit_id
+        description: "visit_id being reviewed"
+        tests:
+          - unique
+          - not_null
+
+      - name: slideout_and_address_page
+        description: "visit contained both a view of the slideout cart and the address page"
+
+      - name: address_page_and_payment_page
+        description: "visit contained both a view of the address page and the payment page"
+
+      - name: payment_and_checkout_complete
+        description: "visit contained both a view of the payment page and had a completed checkout"
+
