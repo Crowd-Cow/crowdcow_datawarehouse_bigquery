@@ -64,5 +64,17 @@ events as ( select * from {{ ref('stg_cc__events') }}
     from events
 )
 
+,viewed_payment as (
+select distinct visit_id
+    from event_details
+    where event_type = 'VIEWED PAYMENT PAGE'
+)
+
+,checkout_complete as (
+select visit_id
+    from event_details
+    where event_type = 'CHECKOUT COMPLETE'
+)
+
 select *
 from event_details
