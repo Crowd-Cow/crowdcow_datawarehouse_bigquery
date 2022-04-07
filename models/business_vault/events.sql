@@ -58,23 +58,12 @@ events as ( select * from {{ ref('stg_cc__events') }}
               when event_name = 'PRODUCT CARD VIEWED' then 'PDC VIEW'
               when event_name = 'PRODUCT CARD CLICKED' then 'PDC CLICK'
               when label = 'CLICKED-ADD-TO-CART-PRODUCT-CARD' then 'PDC ADD TO CART' 
-              when event_name = 'CHECKOUT_ADD-PAYMENT-INFO' then 'PAYMENT INFO ADDED'
+              when event_name = 'CHECKOUT_ADD-PAYMENT-INFO' then 'PAYMENT INFO SUCCESSFUL'
               else null
               end as event_type
     from events
 )
 
-,viewed_payment as (
-select distinct visit_id
-    from event_details
-    where event_type = 'VIEWED PAYMENT PAGE'
-)
-
-,checkout_complete as (
-select visit_id
-    from event_details
-    where event_type = 'CHECKOUT COMPLETE'
-)
 
 select *
 from event_details
