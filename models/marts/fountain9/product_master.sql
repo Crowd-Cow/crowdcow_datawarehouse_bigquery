@@ -12,6 +12,7 @@ select distinct
 
     ,case
         when sku.is_always_in_stock then 'AIS'
+        when sku.inventory_classification is not null then sku.inventory_classification
         else 'OTHER'
      end as inventory_classification
     

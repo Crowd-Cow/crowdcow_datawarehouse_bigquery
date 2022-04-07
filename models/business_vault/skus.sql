@@ -5,6 +5,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
 ,farm as ( select * from {{ ref('farms') }} )
 ,sku_vendor as ( select * from {{ ref('stg_cc__sku_vendors') }} )
 ,ais as ( select * from {{ ref('stg_gs__always_in_stock') }} )
+,inventory_classification as ( select * from {{ ref('stg_gs__inventory_classification') }} )
 
 ,sku_joins as (
     select 
@@ -14,6 +15,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,cut.cut_key
         ,sku.sku_vendor_id
         ,{{ dbt_utils.surrogate_key(['farm.category','farm.sub_category','cut.cut_name','sku.sku_name']) }} as ais_id
+        ,{{ dbt_utils.surrogate_key(['farm.category','farm.sub_category','cut.cut_name']) }} as inventory_classification_id
         ,sku.sku_barcode
         ,farm.farm_id
         ,farm.farm_name
@@ -105,6 +107,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku_joins.is_edm
         ,sku_joins.is_marketplace
         ,coalesce(ais.is_always_in_stock,FALSE) as is_always_in_stock
+        ,inventory_classification.inventory_classification
         ,sku_joins.sku_vendor_name
         ,sku_joins.vendor_funded_discount_start_at_utc
         ,sku_joins.vendor_funded_discount_end_at_utc
@@ -123,6 +126,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku_joins.adjusted_dbt_valid_to
     from sku_joins
         left join ais on sku_joins.ais_id = ais.ais_id
+        left join inventory_classification on sku_joins.inventory_classification_id = inventory_classification.inventory_classification_id
 )
 
 select * from final

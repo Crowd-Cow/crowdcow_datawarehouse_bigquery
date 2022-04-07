@@ -76,4 +76,28 @@ sources:
 
           - name: case_weight
             description: Allowed weight for a case that is ordered
+      
+      - name: inventory_classification_by_sku_name
+        description: Classifies cuts as discontinued, seasonal, etc
+        columns:
+          - name: _row
+            description: Fivetran added row number
+
+          - name: category
+            description: Category
+
+          - name: inventory_classification_new_ais_seasonal_disco_
+            description: Garbage column **** DO NOT USE FOR ANYTHING **
+
+          - name: sub_category
+            description: Sub category
+
+          - name: cut_name
+            description: Cut name
+
+          - name: _fivetran_synced
+            description: Timestamp for when the record was synced to the warehouse by Fivetran
+
+          - name: inventory_classification
+            description: Inventory classification for the cut (e.g. Discontinued, seasonal, etc.)
             
