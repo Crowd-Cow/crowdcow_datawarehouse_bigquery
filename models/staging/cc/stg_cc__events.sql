@@ -15,7 +15,7 @@ events as (
       ,user_id
       ,occurred_at_utc
       ,updated_at_utc
-      ,row_number() over(partition by visit_id order by occurred_at_utc, event_id) as event_sequence_number
+      ,event_sequence_number
       ,case
           when event_name = 'custom_event' then event_json:category::text || '_' || event_json:action::text
           else event_name
