@@ -1,3 +1,9 @@
+{{
+  config(
+    enabled = false
+    )
+}}
+
 with
 
 ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
