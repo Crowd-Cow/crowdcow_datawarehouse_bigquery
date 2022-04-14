@@ -47,6 +47,7 @@ select
     ,sum(order_item_skus.bid_sku_quantity) as quantity_sold
     ,sum(order_item_skus.sku_gross_product_revenue) as revenue
     ,round(avg(div0(order_item_skus.bid_sku_price,bid_sku_quantity)),2) as avgerage_list_price
+    ,round(div0(sum(order_item_skus.sku_gross_product_revenue),sum(order_item_skus.bid_sku_quantity)),2) as average_effective_price
 from order_item_skus
     inner join order_fc on order_item_skus.order_id = order_fc.order_id
 where cut_id is not null

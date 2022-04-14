@@ -7,8 +7,8 @@ sku as ( select * from {{ ref('skus') }} )
 select distinct
     sku.cut_id
     ,sku.cut_name
-    ,sku.category
-    ,sku.sub_category
+    ,ifnull(sku.category,'NONE') as category
+    ,ifnull(sku.sub_category,'NONE') as sub_category
 
     ,case
         when sku.is_always_in_stock then 'AIS'
