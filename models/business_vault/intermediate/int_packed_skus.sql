@@ -1,7 +1,7 @@
 with
 
 order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
-,sku_reservation as ( select * from {{ ref('stg_cc__sku_reservations') }} )
+,sku_reservation as ( select * from {{ ref('stg_cc__sku_reservations') }} where dbt_valid_to is null )
 ,bid as ( select * from {{ ref('order_items') }} )
 ,bid_item_sku as ( select distinct bid_item_id,is_single_sku_bid_item,adjusted_dbt_valid_from,adjusted_dbt_valid_to from {{ ref('int_bid_item_skus') }} )
 ,sku as ( select * from {{ ref('stg_cc__skus') }} )
@@ -20,16 +20,15 @@ order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
         ,fc.fc_key
         ,order_packed_sku.sku_id
         ,sum(order_packed_sku.sku_quantity) as sku_quantity
-        ,max(order_packed_sku.created_at_utc) as packed_created_at_utc
-        ,max(order_packed_sku.updated_at_utc) as packed_updated_at_utc
+        ,max(order_packed_sku.created_at_utc) as created_at_utc
+        ,max(order_packed_sku.updated_at_utc) as updated_at_utc
     from order_packed_sku
     inner join sku_reservation on order_packed_sku.sku_reservation_id = sku_reservation.sku_reservation_id
-        and order_packed_sku.created_at_utc >= sku_reservation.adjusted_dbt_valid_from
-        and order_packed_sku.created_at_utc < sku_reservation.adjusted_dbt_valid_to
     left join fc on sku_reservation.fc_id = fc.fc_id
         and order_packed_sku.created_at_utc >= fc.adjusted_dbt_valid_from
         and order_packed_sku.created_at_utc < fc.adjusted_dbt_valid_to
     group by 1,2,3,4,5,6,7
+    {# having sum(order_packed_sku.sku_quantity) > 0 #}
 )
 
 ,get_bid_details as (
@@ -47,34 +46,34 @@ order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
     from order_packed_items
         left join bid on order_packed_items.bid_id = bid.bid_id
         left join bid_item_sku on order_packed_items.bid_item_id = bid_item_sku.bid_item_id
-            and order_packed_items.packed_created_at_utc >= bid_item_sku.adjusted_dbt_valid_from
-            and order_packed_items.packed_created_at_utc < bid_item_sku.adjusted_dbt_valid_to
+            and order_packed_items.created_at_utc >= bid_item_sku.adjusted_dbt_valid_from
+            and order_packed_items.created_at_utc < bid_item_sku.adjusted_dbt_valid_to
 )
 
-,get_sku_details as (
+,get_sku_key as (
     select
         get_bid_details.*
         ,sku.sku_key
     from get_bid_details
         left join sku on get_bid_details.sku_id = sku.sku_id
-            and get_bid_details.packed_created_at_utc >= sku.adjusted_dbt_valid_from
-            and get_bid_details.packed_created_at_utc < sku.adjusted_dbt_valid_to
+            and get_bid_details.created_at_utc >= sku.adjusted_dbt_valid_from
+            and get_bid_details.created_at_utc < sku.adjusted_dbt_valid_to
 )
 
 ,get_box_lot_details as (
     select
-        get_sku_details.*
+        get_sku_key.*
         ,sku_box.sku_box_key
         ,coalesce(lot.owner_id,sku_box.owner_id,91) as sku_owner_id
-    from get_sku_details
-        left join sku_box on get_sku_details.sku_box_id = sku_box.sku_box_id
-            and get_sku_details.packed_created_at_utc >= sku_box.adjusted_dbt_valid_from
-            and get_sku_details.packed_created_at_utc < sku_box.adjusted_dbt_valid_to
+    from get_sku_key
+        left join sku_box on get_sku_key.sku_box_id = sku_box.sku_box_id
+            and get_sku_key.created_at_utc >= sku_box.adjusted_dbt_valid_from
+            and get_sku_key.created_at_utc < sku_box.adjusted_dbt_valid_to
         left join lot on sku_box.lot_id = lot.lot_id
 )
 
 select 
-    {{ dbt_utils.surrogate_key(['order_id','bid_id','bid_item_id','sku_id','sku_box_id']) }} as packed_sku_id
+    {{ dbt_utils.surrogate_key(['order_id','bid_id','bid_item_id','sku_id','sku_box_id']) }} as order_item_detail_id
     ,order_id
     ,bid_id
     ,bid_item_id
@@ -94,9 +93,8 @@ select
     ,item_member_discount
     ,item_merch_discount
     ,item_promotion_discount
-    ,0 as packed_sku_cost --remove this line when order_item_details is fixed
     ,is_single_sku_bid_item
-    ,bid_id is null and bid_item_id is null as is_packed_item_only --remove this when order_item_details is fixed
-    ,packed_created_at_utc
-    ,packed_updated_at_utc
+    ,true as is_item_packed
+    ,created_at_utc
+    ,updated_at_utc
 from get_box_lot_details
