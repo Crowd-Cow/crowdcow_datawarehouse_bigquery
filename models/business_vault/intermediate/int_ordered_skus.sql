@@ -80,6 +80,7 @@ select
     ,item_promotion_discount
     ,is_single_sku_bid_item
     ,false as is_item_packed
+    ,false as was_manually_changed
     ,created_at_utc
     ,updated_at_utc
 from get_sku_key

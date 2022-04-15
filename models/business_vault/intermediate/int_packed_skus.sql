@@ -19,6 +19,7 @@ order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
         ,sku_reservation.fc_id
         ,fc.fc_key
         ,order_packed_sku.sku_id
+        ,sku_reservation.manually_changed_at_utc is not null as was_manually_changed
         ,sum(order_packed_sku.sku_quantity) as sku_quantity
         ,max(order_packed_sku.created_at_utc) as created_at_utc
         ,max(order_packed_sku.updated_at_utc) as updated_at_utc
@@ -27,8 +28,7 @@ order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
     left join fc on sku_reservation.fc_id = fc.fc_id
         and order_packed_sku.created_at_utc >= fc.adjusted_dbt_valid_from
         and order_packed_sku.created_at_utc < fc.adjusted_dbt_valid_to
-    group by 1,2,3,4,5,6,7
-    {# having sum(order_packed_sku.sku_quantity) > 0 #}
+    group by 1,2,3,4,5,6,7,8
 )
 
 ,get_bid_details as (
@@ -43,11 +43,12 @@ order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
         ,zeroifnull(bid.item_merch_discount) as item_merch_discount
         ,zeroifnull(bid.item_promotion_discount) as item_promotion_discount
         ,coalesce(bid_item_sku.is_single_sku_bid_item,TRUE) as is_single_sku_bid_item
+        ,coalesce(bid.created_at_utc,order_packed_items.created_at_utc) as item_created_at_utc
     from order_packed_items
         left join bid on order_packed_items.bid_id = bid.bid_id
         left join bid_item_sku on order_packed_items.bid_item_id = bid_item_sku.bid_item_id
-            and order_packed_items.created_at_utc >= bid_item_sku.adjusted_dbt_valid_from
-            and order_packed_items.created_at_utc < bid_item_sku.adjusted_dbt_valid_to
+            and bid.created_at_utc >= bid_item_sku.adjusted_dbt_valid_from
+            and bid.created_at_utc < bid_item_sku.adjusted_dbt_valid_to
 )
 
 ,get_sku_key as (
@@ -56,8 +57,8 @@ order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
         ,sku.sku_key
     from get_bid_details
         left join sku on get_bid_details.sku_id = sku.sku_id
-            and get_bid_details.created_at_utc >= sku.adjusted_dbt_valid_from
-            and get_bid_details.created_at_utc < sku.adjusted_dbt_valid_to
+            and get_bid_details.item_created_at_utc >= sku.adjusted_dbt_valid_from
+            and get_bid_details.item_created_at_utc < sku.adjusted_dbt_valid_to
 )
 
 ,get_box_lot_details as (
@@ -95,6 +96,7 @@ select
     ,item_promotion_discount
     ,is_single_sku_bid_item
     ,true as is_item_packed
+    ,was_manually_changed
     ,created_at_utc
     ,updated_at_utc
 from get_box_lot_details
