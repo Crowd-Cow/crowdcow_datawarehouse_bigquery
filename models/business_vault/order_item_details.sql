@@ -2,171 +2,124 @@ with
 
 ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
 ,packed_items as ( select * from {{ ref('int_packed_skus') }} )
-,packed_not_ordered as ( select * from {{ ref('int_packed_skus') }} where is_packed_item_only )
+,vendor as ( select * from {{ ref('stg_cc__sku_vendors') }} )
+,sku as ( select * from {{ ref('stg_cc__skus') }} )
+,completed_orders as ( select order_id, order_current_state from {{ ref('stg_cc__orders') }} where order_current_state in ('COMPLETE','FULLY_PACKED','FULLY_PACKED_AS_IS','SHIP_AS_IS'))
+,non_gift_orders as ( select order_id,is_gift_card_order from {{ ref('int_order_flags') }} where not is_gift_card_order )
 
-,aggregate_packed_bid_items as (
-    select
-        order_id
-        ,bid_id
-        ,bid_item_id
-        ,sum(packed_sku_quantity) as packed_bid_item_quantity
-        ,sum(packed_sku_cost) as packed_sku_cost
-        ,max(packed_created_at_utc) as packed_created_at_utc
-        ,max(packed_updated_at_utc) as packed_updated_at_utc
+,union_skus as (
+    select packed_items.* 
     from packed_items
-    where not is_packed_item_only
-    group by 1,2,3
+        inner join completed_orders on packed_items.order_id = completed_orders.order_id
+        inner join non_gift_orders on packed_items.order_id = non_gift_orders.order_id
+    
+    union all
+    
+    select ordered_items.* 
+    from ordered_items left join packed_items on ordered_items.order_id = packed_items.order_id 
+        and ordered_items.bid_id = packed_items.bid_id 
+        and ordered_items.bid_item_id = packed_items.bid_item_id 
+        and ordered_items.sku_id 
+        and packed_items.sku_id
+    where packed_items.order_id is null
 )
 
-,join_ordered_packed as (
+,get_owner_details as (
     select
-        ordered_items.order_id
-        ,ordered_items.bid_id
-        ,ordered_items.bid_item_id
-        ,ordered_items.promotion_id
-        ,ordered_items.bid_item_name
-        ,ordered_items.bid_quantity
-        ,ordered_items.bid_list_price_usd
-        ,ordered_items.bid_gross_product_revenue
-        ,ordered_items.item_member_discount * -1 as item_member_discount
-        ,ordered_items.item_merch_discount * -1 as item_merch_discount
-        ,ordered_items.item_promotion_discount * -1 as item_promotion_discount
-        ,ordered_items.bid_created_at_utc
-        ,ordered_items.bid_updated_at_utc
-        ,ordered_items.sku_id
-        ,ordered_items.ordered_sku_key
-        ,ordered_items.bid_sku_price
-        ,coalesce(aggregate_packed_bid_items.packed_sku_cost,ordered_items.bid_sku_cost) as bid_sku_cost
-        ,ordered_items.sku_price_proportion
-        ,ordered_items.sku_quantity_proportion
-        ,ordered_items.is_single_sku_bid_item
-        ,ordered_items.bid_sku_quantity
-        ,aggregate_packed_bid_items.order_id is not null as is_item_packed
-        ,aggregate_packed_bid_items.packed_bid_item_quantity
-        ,aggregate_packed_bid_items.packed_created_at_utc
-        ,aggregate_packed_bid_items.packed_updated_at_utc
-    from ordered_items
-        left join aggregate_packed_bid_items on ordered_items.order_id = aggregate_packed_bid_items.order_id
-            and ordered_items.bid_id = aggregate_packed_bid_items.bid_id
-            and ordered_items.bid_item_id = aggregate_packed_bid_items.bid_item_id
+        skus.*
+        ,vendor.sku_vendor_name as owner_name
+        ,coalesce(vendor.is_marketplace,FALSE) as is_marketplace
+    from union_skus as skus
+        left join vendor on skus.sku_owner_id = vendor.sku_vendor_id
 )
 
-,sku_proportion_calculations as (
+,get_sku_financials as (
     select
-        *
-        ,round(
-            case
-                when is_single_sku_bid_item or sku_id is null then bid_gross_product_revenue
-                else sku_price_proportion * bid_gross_product_revenue
-            end 
+        get_owner_details.*
+        ,iff(sku_price_usd = 0 and bid_list_price_usd > 0 and is_single_sku_bid_item,bid_list_price_usd,sku_price_usd) as sku_price_usd
+        ,iff(get_owner_details.is_marketplace,sku.marketplace_cost_usd,owned_sku_cost_usd) * sku_quantity as sku_cost_usd
+    from get_owner_details
+        left join sku on get_owner_details.sku_key = sku.sku_key
+)
+
+,calculate_sku_price_proportion as (
+    select
+        get_sku_financials.*
+    
+        ,case
+            when div0(sku_price_usd * sku_quantity,bid_gross_product_revenue) > 1
+                or sku_id is null
+                or (was_manually_changed and sku_quantity = 0) then 1
+            when sku_quantity = 0 then 0
+            else div0(sku_price_usd * sku_quantity,bid_gross_product_revenue)
+         end as sku_price_proportion
+    
+    from get_sku_financials
+)
+
+,calculate_sku_revenue as (
+    select *
+    ,round(
+        case
+            when (not is_item_packed and is_single_sku_bid_item) or sku_id is null then bid_gross_product_revenue
+            else sku_price_proportion * bid_gross_product_revenue
+        end 
         ,2) as sku_gross_product_revenue
-
-        ,round(
-            case
-                when is_single_sku_bid_item or sku_id is null then item_member_discount
-                else sku_price_proportion * item_member_discount
-            end
-        ,2) as sku_membership_discount
-
-        ,round(
-            case
-                when is_single_sku_bid_item or sku_id is null then item_merch_discount
-                else sku_price_proportion * item_merch_discount
-            end
-         ,2) as sku_merch_discount
-
-        ,round(
-            case
-                when is_single_sku_bid_item or sku_id is null then item_promotion_discount
-                else sku_price_proportion * item_promotion_discount
-            end
-         ,2) as sku_free_protein_promotion
-
-        ,round(
-            case
-                when is_single_sku_bid_item or sku_id is null then bid_sku_cost
-                else sku_price_proportion * bid_sku_cost
-            end 
-        ,2) as sku_cost
-
-        ,round(
-            case
-                when is_single_sku_bid_item or sku_id is null then packed_bid_item_quantity
-                else sku_quantity_proportion * packed_bid_item_quantity
-            end 
-        ,0) as packed_sku_quantity
-
-    from join_ordered_packed
+    ,round(
+        case
+            when (not is_item_packed and is_single_sku_bid_item) or sku_id is null then item_member_discount
+            else sku_price_proportion * item_member_discount
+        end 
+        ,2) * -1 as sku_member_discount
+    ,round(
+        case
+            when (not is_item_packed and is_single_sku_bid_item) or sku_id is null then item_merch_discount
+            else sku_price_proportion * item_merch_discount
+        end 
+        ,2) * -1 as sku_merch_discount
+    ,round(
+        case
+            when (not is_item_packed and is_single_sku_bid_item) or sku_id is null then item_promotion_discount
+            else sku_price_proportion * item_promotion_discount
+        end 
+        ,2) * -1 as sku_promotion_discount
+    from calculate_sku_price_proportion
 )
 
 ,final as (
     select
-        {{ dbt_utils.surrogate_key( ['order_id','bid_id','bid_item_id','sku_id'] ) }} as order_item_details_id
-        ,order_id
-        ,bid_id
-        ,bid_item_id
-        ,sku_id
-        ,ordered_sku_key as sku_key
-        ,promotion_id
-        ,bid_item_name
-        ,bid_quantity
-        ,bid_sku_quantity
-        ,packed_sku_quantity
-        ,bid_list_price_usd
-        ,bid_sku_price
-        ,bid_sku_cost
-        ,sku_price_proportion
-        ,sku_gross_product_revenue
-        ,sku_membership_discount
-        ,sku_merch_discount
-        ,sku_free_protein_promotion
-        
-        ,sku_gross_product_revenue
-         + sku_membership_discount
-         + sku_merch_discount
-         + sku_free_protein_promotion
-        as sku_net_product_revenue
-
-        ,sku_cost
-        ,is_single_sku_bid_item
-        ,is_item_packed
-        ,bid_created_at_utc
-        ,bid_updated_at_utc
-        ,packed_created_at_utc
-        ,packed_updated_at_utc
-    from sku_proportion_calculations
-
-    union all
-
-    select
-        {{ dbt_utils.surrogate_key( ['order_id','bid_id','bid_item_id','sku_id'] ) }} as order_item_details_id
-        ,order_id
-        ,bid_id
-        ,bid_item_id
-        ,sku_id
-        ,packed_sku_key as sku_key
-        ,null::int promotion_id
-        ,null::text as bid_item_name
-        ,packed_sku_quantity as bid_quantity
-        ,packed_sku_quantity as bid_sku_quantity
-        ,packed_sku_quantity
-        ,packed_sku_price as bid_list_price_usd
-        ,packed_sku_price as bid_sku_price
-        ,packed_sku_cost as bid_sku_cost
-        ,1 as sku_price_proportion
-        ,0 as sku_gross_product_revenue
-        ,0 as sku_membership_discount
-        ,0 as sku_merch_discount
-        ,0 as sku_free_protein_promotion
-        ,0 as sku_net_product_revenue
-        ,packed_sku_cost as sku_cost
-        ,TRUE as is_single_sku_bid_item
-        ,TRUE as is_item_packed
-        ,null::timestamp as bid_created_at_utc
-        ,null::timestamp as bid_updated_at_utc
-        ,packed_created_at_utc
-        ,packed_updated_at_utc
-    from packed_not_ordered
+    order_item_detail_id
+    ,order_id
+    ,bid_id
+    ,bid_item_id
+    ,sku_id
+    ,sku_key
+    ,sku_box_id
+    ,sku_box_key
+    ,sku_owner_id
+    ,fc_id
+    ,fc_key
+    ,promotion_id
+    ,owner_name
+    ,sku_price_usd as sku_price
+    ,sku_cost_usd as sku_cost
+    ,sku_price_proportion
+    ,sku_gross_product_revenue
+    ,sku_member_discount
+    ,sku_merch_discount
+    ,sku_promotion_discount
+    
+    ,sku_gross_product_revenue
+        + sku_member_discount
+        + sku_merch_discount
+        + sku_promotion_discount
+    as sku_net_revenue
+    
+    ,is_marketplace
+    ,is_single_sku_bid_item
+    ,created_at_utc
+    ,updated_at_utc
+from calculate_sku_revenue
 )
 
 select * from final
