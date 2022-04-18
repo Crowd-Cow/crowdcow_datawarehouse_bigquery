@@ -4,6 +4,9 @@ models:
   - name: int_ordered_skus
     description: Intermediate model to combine the items ordered with the SKUs that make up those items
     columns:
+      - name: order_item_detail_id
+        description: Surrogate key to provide uniqueness to packed items. Combines `order_id`, `bid_id`, `bid_item_id`, and `sku_id`
+      
       - name: order_id
         description: Order ID
 
@@ -13,6 +16,27 @@ models:
       - name: bid_item_id
         description: Bid item ID
 
+      - name: sku_id
+        description: SKU ID
+
+      - name: sku_key
+        description: The SKU key that can be used to join to SKUs to get the appropriate historical information for the SKU at the time the item was added to a customer's order
+
+      - name: sku_box_id
+        description: SKU box ID. Always `null` for ordered items since the SKU box is not known until the item is packed
+
+      - name: sku_box_key
+        description: The SKU box key that can be used to join to SKU boxes to get the appropriate historical information for the SKU box at the time the item was packed. Always `null` for ordered items since the SKU box is not known until the item is packed
+
+      - name: sku_owner_id
+        description: SKU ower ID. Based off of the Lot owner or the SKU box owner if Lot information is not available. Always `null` for ordered items since the SKU box is not known until the item is packed
+
+      - name: fc_id
+        description: Fulfillment center ID
+
+      - name: fc_key
+        description: Fulfillment center key that can be used to join to the FCs to get the appropriate historical information for the FC at the time the item was packed
+
       - name: promotion_id
         description: Promotion ID
 
@@ -21,6 +45,9 @@ models:
 
       - name: bid_quantity
         description: The number of a given item added to a customer's order
+
+      - name: sku_quantity
+        description: The number of SKUs that make up the order item
 
       - name: bid_list_price_usd
         description: The list price of the item added to a cusomer's order
@@ -37,36 +64,18 @@ models:
       - name: item_promotion_discount
         description: If a promotion is associated with this item, the discount amount is the `total_order_item_discount`
 
-      - name: bid_created_at_utc
-        description: Timestamp for when the item was added to the customer's order
-      
-      - name: bid_updated_at_utc
-        description: Timestamp for when the item information was updated by the system
-
-      - name: sku_id
-        description: SKU ID
-
-      - name: sku_quantity
-        description: The number of SKUs that make up the order item
-
       - name: is_single_sku_bid_item
         description: Boolean indicating if the item added is only associated with one SKU or multiple SKUs (e.g. bundles)
 
-      - name: bid_sku_quantity
-        description: The total number of SKUs for the item added to a customer's box. Calculated as (`bid_quantity * sku_quantity`)
+      - name: is_item_packed
+        description: Boolean indicating if the item has been packed. Always FALSE for ordered items until they are packed
 
-      - name: ordered_sku_key
-        description: The SKU key that can be used to join to SKUs to get the appropriate historical information for the SKU at the time the item was added to a customer's order
+      - name: was_manually_changed
+        description: Boolean indicating if the item that was ordered was manually changed at time of packing. Always FALSE for ordered items until they are packed
 
-      - name: bid_sku_price
-        description: The total price of SKUs that make up an item in the customer's order. Calculated as (`bid_sku_quantity * sku_price`)
-
-      - name: bid_sku_cost
-        description: The total cost of SKUs that make up an item in the customer's order. Calculated as (`bid_sku_quantity * sku_cost`)
-
-      - name: sku_price_proportion
-        description: The proportion of the order item revenue that can be attributed to the given SKU
-
-      - name: sku_quantity_proportion
-        description: The proportion of the number of SKUs in an item to the total number of SKUs for the item
+      - name: created_at_utc
+        description: Timestamp for when the item was added to the customer's order
+      
+      - name: updated_at_utc
+        description: Timestamp for when the item information was updated by the system
         

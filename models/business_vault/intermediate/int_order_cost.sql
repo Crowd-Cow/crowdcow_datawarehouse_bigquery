@@ -5,7 +5,7 @@ order_item as ( select * from {{ ref('order_item_details') }} )
 ,order_cost_aggregation as (
     select
         order_id
-        ,sum(bid_sku_cost) as product_cost
+        ,sum(sku_cost) as product_cost
     from order_item
     group by 1
 )

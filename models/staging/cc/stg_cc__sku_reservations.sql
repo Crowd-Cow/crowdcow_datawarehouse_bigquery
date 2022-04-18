@@ -25,7 +25,7 @@ renamed as (
         ,{{ cents_to_usd('platform_fee_in_cents') }} as platform_fee_usd
         ,sku_id
         ,original_quantity
-        ,fc_id as fulfilment_center_id
+        ,fc_id
         ,sku_reservation_pool_id
         ,dbt_valid_to
         ,dbt_valid_from
