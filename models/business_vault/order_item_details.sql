@@ -101,6 +101,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
     ,fc_key
     ,promotion_id
     ,owner_name
+    ,bid_quantity
     ,sku_quantity
     ,sku_price_usd as sku_price
     ,sku_cost_usd as sku_cost

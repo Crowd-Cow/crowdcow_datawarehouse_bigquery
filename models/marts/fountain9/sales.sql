@@ -14,11 +14,10 @@ order_item as ( select * from {{ ref('order_item_details') }})
         ,sku.cut_name
         ,sku.sku_id
         ,sku.sku_name
-        ,order_item.bid_sku_quantity
+        ,order_item.sku_quantity
         ,order_item.sku_gross_product_revenue
         ,order_item.sku_net_product_revenue
-        ,order_item.bid_list_price_usd
-        ,order_item.bid_sku_price
+        ,order_item.sku_price
         ,order_item.sku_price_proportion
     from order_item
         left join sku on order_item.sku_key = sku.sku_key
@@ -37,18 +36,27 @@ order_item as ( select * from {{ ref('order_item_details') }})
         and order_detail.order_paid_at_utc >= '2019-01-01'
         and order_detail.fc_id not in (8,10,14) --filter out Poseidon, Nationwide, and Valmeyer FCs
 )
+
+,item_revenue as (
+    select
+        order_fc.order_paid_at_utc::date as order_paid_date
+        ,order_fc.fc_name
+        ,order_item_skus.category
+        ,order_item_skus.sub_category
+        ,order_item_skus.cut_id
+        ,order_item_skus.cut_name
+        ,sum(order_item_skus.sku_quantity) as quantity_sold
+        ,sum(order_item_skus.sku_gross_product_revenue) as gross_revenue
+        ,sum(order_item_skus.sku_net_product_revenue) as net_revenue
+    from order_item_skus
+        inner join order_fc on order_item_skus.order_id = order_fc.order_id
+    where cut_id is not null
+        and category is not null
+    group by 1,2,3,4,5,6
+)
+
 select
-    order_fc.order_paid_at_utc::date as order_paid_date
-    ,order_fc.fc_name
-    ,order_item_skus.category
-    ,order_item_skus.sub_category
-    ,order_item_skus.cut_id
-    ,order_item_skus.cut_name
-    ,sum(order_item_skus.bid_sku_quantity) as quantity_sold
-    ,sum(order_item_skus.sku_gross_product_revenue) as revenue
-    ,round(avg(div0(order_item_skus.bid_sku_price,bid_sku_quantity)),2) as avgerage_list_price
-from order_item_skus
-    inner join order_fc on order_item_skus.order_id = order_fc.order_id
-where cut_id is not null
-    and category is not null
-group by 1,2,3,4,5,6
+    *
+    ,round(div0(gross_revenue,quantity_sold),2) as avgerage_list_price
+    ,round(div0(net_revenue,quantity_sold),2) as average_effective_price
+from item_revenue
