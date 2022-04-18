@@ -4,9 +4,10 @@ order_item_details as ( select * from {{ ref('order_item_details') }} )
 ,sku as ( select * from {{ ref('skus') }} )
 
 ,category_reassignment as ( 
-    select distinct order_id
-        ,bid_id 
-        ,bid_quantity
+    select distinct 
+        order_item_details.order_id
+        ,order_item_details.sku_id 
+        ,order_item_details.sku_quantity
         ,iff(not order_item_details.is_single_sku_bid_item,'BUNDLE',sku.category) as modified_category
     from order_item_details
         left join sku on order_item_details.sku_key = sku.sku_key
@@ -14,24 +15,24 @@ order_item_details as ( select * from {{ ref('order_item_details') }} )
 
 ,units_by_category as ( 
     select order_id
-        ,sum(iff(modified_category = 'BEEF',bid_quantity,0)) as beef_units
-        ,sum(iff(modified_category = 'BISON',bid_quantity,0)) as bison_units
-        ,sum(iff(modified_category = 'CHICKEN',bid_quantity,0)) as chicken_units
-        ,sum(iff(modified_category = 'DESSERTS',bid_quantity,0)) as desserts_units
-        ,sum(iff(modified_category = 'DUCK',bid_quantity,0)) as duck_units
-        ,sum(iff(modified_category = 'GAME MEAT',bid_quantity,0)) as game_meat_units
-        ,sum(iff(modified_category = 'JAPANESE WAGYU',bid_quantity,0)) as japanese_wagyu_units
-        ,sum(iff(modified_category = 'LAMB',bid_quantity,0)) as lamb_units
-        ,sum(iff(modified_category = 'PET FOOD',bid_quantity,0)) as pet_food_units
-        ,sum(iff(modified_category = 'PLANT-BASED PROTEINS',bid_quantity,0)) as plant_based_proteins_units
-        ,sum(iff(modified_category = 'PORK',bid_quantity,0)) as pork_units
-        ,sum(iff(modified_category = 'SALTS & SEASONINGS',bid_quantity,0)) as salts_seasonings_units
-        ,sum(iff(modified_category = 'SEAFOOD',bid_quantity,0)) as seafood_units
-        ,sum(iff(modified_category = 'STARTERS & SIDES',bid_quantity,0)) as starters_sides_units
-        ,sum(iff(modified_category = 'TURKEY',bid_quantity,0)) as turkey_units
-        ,sum(iff(modified_category = 'WAGYU',bid_quantity,0)) as wagyu_units
-        ,sum(iff(modified_category = 'BUNDLE',bid_quantity,0)) as bundle_units
-        ,sum(bid_quantity) as total_units
+        ,sum(iff(modified_category = 'BEEF',sku_quantity,0)) as beef_units
+        ,sum(iff(modified_category = 'BISON',sku_quantity,0)) as bison_units
+        ,sum(iff(modified_category = 'CHICKEN',sku_quantity,0)) as chicken_units
+        ,sum(iff(modified_category = 'DESSERTS',sku_quantity,0)) as desserts_units
+        ,sum(iff(modified_category = 'DUCK',sku_quantity,0)) as duck_units
+        ,sum(iff(modified_category = 'GAME MEAT',sku_quantity,0)) as game_meat_units
+        ,sum(iff(modified_category = 'JAPANESE WAGYU',sku_quantity,0)) as japanese_wagyu_units
+        ,sum(iff(modified_category = 'LAMB',sku_quantity,0)) as lamb_units
+        ,sum(iff(modified_category = 'PET FOOD',sku_quantity,0)) as pet_food_units
+        ,sum(iff(modified_category = 'PLANT-BASED PROTEINS',sku_quantity,0)) as plant_based_proteins_units
+        ,sum(iff(modified_category = 'PORK',sku_quantity,0)) as pork_units
+        ,sum(iff(modified_category = 'SALTS & SEASONINGS',sku_quantity,0)) as salts_seasonings_units
+        ,sum(iff(modified_category = 'SEAFOOD',sku_quantity,0)) as seafood_units
+        ,sum(iff(modified_category = 'STARTERS & SIDES',sku_quantity,0)) as starters_sides_units
+        ,sum(iff(modified_category = 'TURKEY',sku_quantity,0)) as turkey_units
+        ,sum(iff(modified_category = 'WAGYU',sku_quantity,0)) as wagyu_units
+        ,sum(iff(modified_category = 'BUNDLE',sku_quantity,0)) as bundle_units
+        ,sum(sku_quantity) as total_units
     from category_reassignment
     group by 1
 )

@@ -4,12 +4,8 @@ models:
   - name: cargill_order_item_details
     description: "Business logic for Cargill order item details"
     columns:
-      - name: order_item_details_id
+      - name: order_item_detail_id
         description: "Surrogate key for an order item to test for uniqueness. The key is a combination of `order_id`, `bid_id`, `bid_item_id`, and `sku_id`"
-        tests:
-          - unique:
-              severity: warn
-          - not_null
 
       - name: order_id
         description: "Order ID"
