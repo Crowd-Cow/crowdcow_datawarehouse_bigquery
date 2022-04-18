@@ -4,8 +4,8 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
 ,packed_items as ( select * from {{ ref('int_packed_skus') }} )
 ,vendor as ( select * from {{ ref('stg_cc__sku_vendors') }} )
 ,sku as ( select * from {{ ref('stg_cc__skus') }} )
-,completed_orders as ( select order_id, order_current_state from {{ ref('stg_cc__orders') }} where order_current_state in ('COMPLETE','FULLY_PACKED','FULLY_PACKED_AS_IS','SHIP_AS_IS'))
-,non_gift_orders as ( select order_id,is_gift_card_order from {{ ref('int_order_flags') }} where not is_gift_card_order )
+,completed_orders as ( select order_id from {{ ref('stg_cc__orders') }} where order_current_state in ('COMPLETE','FULLY_PACKED','FULLY_PACKED_AS_IS','SHIP_AS_IS'))
+,non_gift_orders as ( select order_id from {{ ref('int_order_flags') }} where not is_gift_card_order )
 
 ,union_skus as (
     select packed_items.* 
@@ -101,6 +101,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
     ,fc_key
     ,promotion_id
     ,owner_name
+    ,sku_quantity
     ,sku_price_usd as sku_price
     ,sku_cost_usd as sku_cost
     ,sku_price_proportion
@@ -113,7 +114,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
         + sku_member_discount
         + sku_merch_discount
         + sku_promotion_discount
-    as sku_net_revenue
+    as sku_net_product_revenue
     
     ,is_marketplace
     ,is_single_sku_bid_item
