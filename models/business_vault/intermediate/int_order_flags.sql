@@ -4,11 +4,13 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,shipping_credit as ( select * from {{ ref('stg_cc__credits') }} )
 ,shipment as ( select * from {{ ref('stg_cc__shipments') }} )
 ,bids as (select * from {{ ref('stg_cc__bids') }} )
+,gift_cards as (select * from {{ ref('stg_cc__gift_cards') }} )
+,gift_infos as ( select * from {{ ref('stg_cc__gift_infos') }} )
 
 ,gift_card as (
     select
         distinct gift_info_id
-    from stg_cc__gift_cards
+    from gift_cards
     where gift_info_id is not null
 )
 
@@ -16,8 +18,8 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
     select distinct
         order_id
         ,gift_card.gift_info_id is not null as is_gift_card
-    from stg_cc__gift_infos
-        left join gift_card on stg_cc__gift_infos.gift_info_id = gift_card.gift_info_id
+    from gift_infos
+        left join gift_card on gift_infos.gift_info_id = gift_card.gift_info_id
 )
 
 ,has_shipping_credit as (
