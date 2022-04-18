@@ -56,7 +56,18 @@ order_item as ( select * from {{ ref('order_item_details') }})
 )
 
 select
-    *
-    ,round(div0(gross_revenue,quantity_sold),2) as avgerage_list_price
-    ,round(div0(net_revenue,quantity_sold),2) as average_effective_price
-from item_revenue
+    order_fc.order_paid_at_utc::date as order_paid_date
+    ,order_fc.fc_name
+    ,order_item_skus.category
+    ,order_item_skus.sub_category
+    ,order_item_skus.cut_id
+    ,order_item_skus.cut_name
+    ,sum(order_item_skus.bid_sku_quantity) as quantity_sold
+    ,sum(order_item_skus.sku_gross_product_revenue) as revenue
+    ,round(avg(div0(order_item_skus.bid_sku_price,bid_sku_quantity)),2) as avgerage_list_price
+    ,round(div0(sum(order_item_skus.sku_gross_product_revenue),sum(order_item_skus.bid_sku_quantity)),2) as average_effective_price
+from order_item_skus
+    inner join order_fc on order_item_skus.order_id = order_fc.order_id
+where cut_id is not null
+    and category is not null
+group by 1,2,3,4,5,6

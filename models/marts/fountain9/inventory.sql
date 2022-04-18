@@ -10,9 +10,9 @@ select
     ,sku.cut_name
     ,fc.fc_id
     ,fc.fc_name
-    ,sku.category
-    ,sku.sub_category
-    ,inventory.quantity
+    ,ifnull(sku.category,'NONE') as category
+    ,ifnull(sku.sub_category,'NONE') as sub_category
+    ,iff(inventory.quantity < 0,0,inventory.quantity) as quantity
 from inventory
     left join sku on inventory.sku_key = sku.sku_key
     left join fc on inventory.fc_key = fc.fc_key
