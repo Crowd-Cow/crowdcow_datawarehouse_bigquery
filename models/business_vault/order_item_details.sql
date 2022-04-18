@@ -18,9 +18,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
     select ordered_items.* 
     from ordered_items left join packed_items on ordered_items.order_id = packed_items.order_id 
         and ordered_items.bid_id = packed_items.bid_id 
-        and ordered_items.bid_item_id = packed_items.bid_item_id 
-        and ordered_items.sku_id 
-        and packed_items.sku_id
+        and ordered_items.bid_item_id = packed_items.bid_item_id
     where packed_items.order_id is null
 )
 
