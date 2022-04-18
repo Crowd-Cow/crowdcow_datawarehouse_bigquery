@@ -6,10 +6,6 @@ models:
     columns:
       - name: order_item_details_id
         description: "Surrogate key for an order item to test for uniqueness. The key is a combination of `order_id`, `bid_id`, `bid_item_id`, and `sku_id`"
-        tests:
-          - unique:
-              severity: warn
-          - not_null
 
       - name: order_id
         description: "Order ID"
@@ -26,26 +22,38 @@ models:
       - name: sku_key
         description: "The SKU key that can be used to join to SKUs to get the appropriate historical information for the SKU at the time the item was either added to a customer's order or when it was packed"
 
-      - name: promotion_id
-        description: "Promotion ID"
+      - name: sku_box_id
+        description: SKU box ID
 
-      - name: bid_item_name
-        description: "Bid item name"
+      - name: sku_box_key
+        description: The SKU box key that can be used to join to SKU boxes to get the appropriate historical information for the SKU box at the time the item was packed
+
+      - name: sku_owner_id
+        description: SKU ower ID. Based off of the Lot owner or the SKU box owner if Lot information is not available
+
+      - name: fc_id
+        description: Fulfillment center ID
+
+      - name: fc_key
+        description: Fulfillment center key that can be used to join to the FCs to get the appropriate historical information for the FC at the time the item was packed
+
+      - name: promotion_id
+        description: Promotion ID associated with the item
+
+      - name: owner_name
+        description: SKU owner name. Based off of Lot owner or SKU box owner if Lot information is not available
 
       - name: bid_quantity
-        description: "The quantity of bids added for this order"
+        description: The total number of bids added to the box for this item
 
-      - name: bid_sku_quantity
+      - name: sku_quantity
         description: "The total number of SKUs for this item. The number of SKUs contained in the bid item times the number of bids added for this order (bid quantity)"
 
-      - name: bid_list_price_usd
-        description: "The list price of the bid that was captured at the time the bid was created"
+      - name: sku_price
+        description: "The price of the SKU at the time the item was added to the cart"
 
-      - name: bid_sku_price
-        description: "The total numbers of SKUS (sku quantity * bid quantity) times the price of the SKU at the time the bid was created"
-
-      - name: bid_sku_cost
-        description: "The total cost of the item added to a customer's cart. Calculated as (`sku_quantity * bid_quantity`)"
+      - name: sku_cost
+        description: "The total cost of the item added to a customer's cart. Calculated as (`sku_quantity * sku_cost`)"
 
       - name: sku_price_proportion
         description: "The proportion of the order item revenue that can be attributed to the given SKU"
@@ -59,7 +67,7 @@ models:
       - name: sku_merch_discount
         description: "If the bid item is a single SKU bid item, the SKU merch discount is the order item merch discount. Otherwise it is the sku price proportion times the order item merch discount to get the amount of discount attributed to that SKU"
 
-      - name: sku_free_protein_promotion
+      - name: sku_promotion_discount
         description: "If the bid item is a single SKU bid item, the SKU free protein promotions is the order item promotion discount. Otherwise it is the sku price proportion times the order item free protein discount to get the amount of discount attributed to that SKU"
 
       - name: sku_net_product_revenue
@@ -68,22 +76,16 @@ models:
           `sku_gross_product_revenue`
           `- sku_membership_discount`
           `- sku_merch_discount`
-          `- sku_free_protein_promotion`
+          `- sku_promotion_discount`
+      
+      - name: is_marketplace
+        description: Boolean indicating if the SKU owner is considered a marketplace vendor
       
       - name: is_single_sku_bid_item
         description: "Boolean field to identify if the bid is a single sku or not. Used to identify bundles"
 
-      - name: is_item_packed
-        description: "Boolean indicating if the item that was ordered has been packed"
+      - name: created_at_utc
+        description: "Timestamp for when the item was added to the box or when the item was packed UTC"
 
-      - name: bid_created_at_utc
-        description: "Timestamp for when the bid was created UTC"
-
-      - name: bid_updated_at_utc
-        description: "Timestamp for when the bid was updated by the system UTC"
-
-      - name: packed_created_at_utc
-        description: "Timestamp for when the item was packed UTC"
-
-      - name: packed_updated_at_utc
-        description: "Timestamp for when the packed item was updated by the system UTC"
+      - name: updated_at_utc
+        description: "Timestamp for when the ordered or packed item was updated by the system UTC"

@@ -57,4 +57,3 @@ models:
 
       - name: owner_id
         description: "SKU vendor ID of the owner of the lot"
-

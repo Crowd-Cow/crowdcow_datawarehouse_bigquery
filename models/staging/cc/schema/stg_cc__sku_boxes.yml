@@ -98,3 +98,4 @@ models:
 
       - name: adjusted_dbt_valid_to
         description: "`dbt_valid_to` date adjusted to '2999-01-01' for the current historical record (`dbt_valid_to is null`). This allows joins to other tables that might have dates that are in the future that need information from the current historical record"
+        
