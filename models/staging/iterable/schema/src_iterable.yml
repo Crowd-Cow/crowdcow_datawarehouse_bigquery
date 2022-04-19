@@ -6,7 +6,7 @@ sources:
     database: raw
     schema: iterable
     tables:
-      - name: events
+      - name: event
         description: Iterable events for things like email sends, clicks, opens, etc
 
         columns:
@@ -55,7 +55,7 @@ sources:
           - name: transactional_data
             description: Transactional data
 
-          - name: Additional properties
+          - name: additional_properties
             description: JSON object storing additional properties associated with the event
 
           - name: _fivetran_synced
