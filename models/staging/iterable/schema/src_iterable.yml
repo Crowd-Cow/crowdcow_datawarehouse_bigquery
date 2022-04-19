@@ -90,13 +90,13 @@ sources:
             description: Iterable user that created the campaign
 
           - name: ended_at
-            description: Timestamp for when the capaign ended
+            description: Timestamp for when the campaign ended
 
           - name: name
             description: Campaign name
 
           - name: send_size
-            description: The number of emails send for the campaign
+            description: The number of emails sent for the campaign
 
           - name: type
             description: The type of campaign (e.g. Blast, Triggered, etc.)

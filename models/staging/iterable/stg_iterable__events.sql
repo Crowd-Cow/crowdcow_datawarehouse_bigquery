@@ -22,7 +22,10 @@ events as ( select * from {{ source('iterable', 'event') }} )
         ,additional_properties
         ,is_custom_event
     from events
-    where not is_custom_event
+    where (not is_custom_event
+        or is_custom_event is null)
+        and event_name <> 'customEvent'
+
 )
 
 select * from renamed

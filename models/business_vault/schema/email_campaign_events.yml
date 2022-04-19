@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: email_campaign_events
+    description: "Business logic to define email campaign events"
+    columns:
+      - name: event_id
+        description: "Surrogate key to provide uniqueness. Combines `user_email`, `campaign_id`, and `ended_at_utc`"
+        tests:
+          - unique
+          - not_null
+
+      - name: user_email
+        description: "User email"
+
+      - name: user_token
+        description: "User token"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: campaign_id
+        description: "Campaign ID"
+
+      - name: campaign_name
+        description: "Campaign name"
+
+      - name: campaign_state
+        description: "System state of the campaign (e.g. Ready, Finished, Draft, etc)"
+
+      - name: event_name
+        description: "Name of the event (e.g. email open, click, etc.)"
+
+      - name: created_by_user_id
+        description: "Iterable user that created the campaign"
+
+      - name: send_size
+        description: "The number of email sent for the campaign"
+
+      - name: campaign_type
+        description: "The type of campaign (e.g. Blast, Triggered, etc.)"
+
+      - name: created_at_utc
+        description: "Timestamp fo when the record was created in Iterable"
+
+      - name: ended_at_utc
+        description: "If the campaign type is `TRIGGERED` the ended_at_utc is the same as the `created_at_utc`. Otherwise it is the `ended_at_utc` value of the campaign"

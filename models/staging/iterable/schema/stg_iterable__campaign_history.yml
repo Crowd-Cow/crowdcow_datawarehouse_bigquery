@@ -1,0 +1,40 @@
+version: 2
+
+models:
+
+  - name: stg_iterable__campaign_history
+    description: Staging model for Iterable campaign history
+    columns:
+      - name: campaign_id
+        description: Campaign ID
+
+      - name: updated_at_utc
+        description: Timestamp for when the campaign record was updated
+
+      - name: template_id
+        description: Template ID
+
+      - name: recurring_campaign_id
+        description: Recurring campaign ID
+
+      - name: campaign_state
+        description: System state of the campaign (e.g. Ready, Finished, Draft, etc)
+
+      - name: created_at_utc
+        description: Timestamp for when the campaign record was created in Iterable
+
+      - name: created_by_user_id
+        description: Iterable user that created the campaign
+
+      - name: ended_at_utc
+        description: Timestamp for when the campaign ended
+
+      - name: campaign_name
+        description: Campaign name
+
+      - name: send_size
+        description: The number of email sent for the campaign
+
+      - name: campaign_type
+        description: The type of campaign (e.g. Blast, Triggered, etc.)
+        
