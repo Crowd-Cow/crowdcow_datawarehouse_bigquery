@@ -65,8 +65,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
             and sku.created_at_utc >= cut.adjusted_dbt_valid_from
             and sku.created_at_utc < cut.adjusted_dbt_valid_to
         left join farm on sku.sku_vendor_id = farm.sku_vendor_id
-            and sku.created_at_utc >= farm.adjusted_dbt_valid_from
-            and sku.created_at_utc < farm.adjusted_dbt_valid_to
+            and farm.dbt_valid_to is null
         left join sku_vendor on sku.sku_vendor_id = sku_vendor.sku_vendor_id
 )
 
