@@ -5,7 +5,7 @@ day_spine as (
     {{
       dbt_utils.date_spine(
           datepart = 'day',
-          start_date = "'2015-01-04'",
+          start_date = "'2015-01-04'::date",
           end_date = "dateadd(week, 53, current_date)"
       )
     }}
