@@ -22,11 +22,12 @@ event as ( select * from {{ ref('stg_iterable__events') }} )
         ,get_user_id.user_id
         ,event.campaign_id
         ,campaign.campaign_name
-        ,event.created_at_utc
         ,event.event_name
         ,campaign.created_by_user_id
-        ,campaign.ended_at_utc
         ,campaign.send_size
+        ,campaign.campaign_type
+        ,event.created_at_utc
+        ,campaign.ended_at_utc
     from event
         left join campaign on event.campaign_id = campaign.campaign_id
         left join get_user_id on event.user_email = get_user_id.user_email
