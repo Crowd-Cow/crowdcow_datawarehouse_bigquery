@@ -1,3 +1,9 @@
+{{
+  config(
+    materialized = 'table'
+)
+}}
+
 with
 
 user_hist as ( select * from {{ source('iterable', 'user_history') }} )
