@@ -5,18 +5,18 @@ day_spine as (
     {{
       dbt_utils.date_spine(
           datepart = 'day',
-          start_date = "'2015-01-04'::date",
+          start_date = "'2015-01-04'",
           end_date = "dateadd(week, 53, current_date)"
       )
     }}
 
-),
+)
 
-date_parts as (
+,date_parts as (
     select
         date_day as calendar_date
         ,date_trunc('week',date_day) as calendar_date_week
-        ,date_trunc(week,date_day+1)-1 as calendar_date_week_sun
+        ,date_trunc(week,date_day::date+1)-1 as calendar_date_week_sun
         ,date_trunc('month',date_day) as calendar_date_month
         ,date_part('month',date_day)::int as calendar_month_of_year
         ,{{ dbt_utils.last_day('date_day', 'month') }} as calendar_month_end_date
@@ -28,19 +28,26 @@ date_parts as (
         ,dayname(date_day) as day_name
         ,date_part('year', date_day)::int as calendar_year_number
         ,min(calendar_date) over(partition by year(calendar_date_week_sun) order by calendar_date) as fiscal_year_start
-        ,max(case when date_part(year,(date_trunc(week,date_day+1)-1)) = date_part('year', date_day)::int  then (date_trunc(week,date_day+1)-1) end) over(partition by date_part('year', date_day)::int ) + 6
-                      as fiscal_year_end
+       
+       ,max(
+            case 
+                when date_part(year,(date_trunc(week,date_day::date + 1) -1)) = date_part('year', date_day)::int  
+                    then (date_trunc(week,date_day::date + 1) - 1) 
+            end
+        ) over(partition by date_part('year', date_day)::int ) + 6 as fiscal_year_end
+       
         ,case
             when date_part(dow,date_day) in (0,6) then true
             else false
-        end as is_weekend
-        ,case when mod(abs((date_part('year',date_day) - 2017)),4) = 0 then true
+         end as is_weekend
+       
+        ,case 
+            when mod(abs((date_part('year',date_day) - 2017)),4) = 0 then true
             else false
-            end as is_53_wk_year
-from day_spine
+         end as is_53_wk_year
+
+    from day_spine
 
 )
-
-
 
 select * from date_parts
