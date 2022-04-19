@@ -132,7 +132,7 @@ sources:
           - name: signup_source
             description: Source of the user signup
 
-          - name: email_list_id
+          - name: email_list_ids
             description: A list of email list IDs a user is part of
 
           - name: phone_number_carrier
