@@ -4,7 +4,8 @@ events as ( select * from {{ source('iterable', 'event') }} )
 
 ,renamed as (
     select
-        {{ clean_strings('email') }} as user_email
+        _fivetran_id as event_id
+        ,{{ clean_strings('email') }} as user_email
         ,campaign_id
         ,message_id
         ,content_id
