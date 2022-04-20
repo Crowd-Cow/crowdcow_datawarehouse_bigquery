@@ -35,7 +35,7 @@ models:
         description: "The financial account the credit should be booked to. Not all credits have a financial account (e.g. gift card redemptions, corp gifts, etc.)"
 
       - name: awarded_cow_cash_entry_type
-        description: "The entry type of the Cow Cash that was awarded. This is used to break down different types of Cow Cash credits since the usage entry for Cow Cahs is always `ORDER`"
+        description: "The entry type of the Cow Cash that was awarded. This is used to break down different types of Cow Cash credits since the usage entry for Cow Cash is always `ORDER`"
 
       - name: awarded_cow_cash_message
         description: "The message of the Cow Cash that was awarded"

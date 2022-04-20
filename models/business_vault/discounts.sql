@@ -12,6 +12,8 @@ credit as ( select * from {{ ref('credits') }} )
         ,order_id
         ,credit_business_group as business_group
         ,credit_financial_account as financial_account
+        ,credit_description
+        ,awarded_cow_cash_message
         ,credit_discount_usd as discount_usd
         ,created_at_utc
         ,updated_at_utc
@@ -42,6 +44,8 @@ credit as ( select * from {{ ref('credits') }} )
             when discounts.index = 2 and promotion_id is not null then '41301 - NEW CUSTOMER SUBSCRIPTIONS'
          end as financial_account
 
+        ,null::text as credit_description
+        ,null::text as awarded_cow_cash_message
         ,round(discounts.value,2) as discount_usd
         ,created_at_utc
         ,updated_at_utc
@@ -59,6 +63,8 @@ credit as ( select * from {{ ref('credits') }} )
         ,union_discounts.order_id
         ,union_discounts.business_group
         ,union_discounts.financial_account
+        ,union_discounts.credit_description
+        ,union_discounts.awarded_cow_cash_message
         ,union_discounts.discount_usd
         ,coalesce(promotion.is_new_member_promotion,FALSE) as is_new_member_promotion
         ,union_discounts.created_at_utc
@@ -97,6 +103,8 @@ select
     ,order_id
     ,business_group
     ,financial_account
+    ,credit_description
+    ,awarded_cow_cash_message
     ,revenue_waterfall_bucket
     ,discount_usd
     ,is_new_member_promotion

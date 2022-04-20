@@ -31,6 +31,12 @@ models:
       - name: financial_account
         description: "The financial account the credit amount should be booked to. Not all discounts are booked to a financial account (e.g. gift card redemptions, corp gift orders, etc.)"
 
+      - name: credit_description
+        description: "Credit description"
+
+      - name: awarded_cow_cash_entry_type
+        description: "The entry type of the Cow Cash that was awarded. This is used to break down different types of Cow Cash credits since the usage entry for Cow Cash is always `ORDER`"
+
       - name: revenue_waterfall_bucket
         description: "The revenue waterfall bucket the discount is associated with"
 
