@@ -4,7 +4,7 @@ models:
   - name: email_campaign_events
     description: "Business logic to define email campaign events"
     columns:
-      - name: event_id
+      - name: email_campaign_id
         description: "Surrogate key to provide uniqueness. Combines `user_email`, `campaign_id`, and `ended_at_utc`"
         tests:
           - unique
