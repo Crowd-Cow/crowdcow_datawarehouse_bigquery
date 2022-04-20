@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: stg_iterable__user_history
+    description: "Staging model for Iterable user history"
+    columns:
+      - name: user_email
+        description: "Email address of the user"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the user history record was updated in Iterable"
+
+      - name: first_name
+        description: "First name of the user"
+
+      - name: last_name
+        description: "Last name of the user"
+
+      - name: phone_number
+        description: "Phone number of the user"
+
+      - name: user_token
+        description: "User token that ties back to the Crowd Cow `user_token`"
+
+      - name: signup_date_utc
+        description: "User signup date"
+
+      - name: signup_source
+        description: "Source of the user signup"
+
+      - name: email_list_ids
+        description: "A list of email list IDs a user is part of"
+
+      - name: phone_number_carrier
+        description: "Phone number carrier of the user"
+
+      - name: phone_number_country_code_iso
+        description: "Phone number ISO country code value"
+
+      - name: phone_number_line_type
+        description: "Phone number line type"
+
+      - name: phone_number_updated_at_utc
+        description: "Timestamp for when the phone number was updated"
+
+      - name: additional_properties
+        description: "JSON object that stores additional properties about the user"
