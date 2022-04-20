@@ -96,7 +96,7 @@ select
     ,completed_gift_card_order_rank
     ,paid_gift_card_order_rank
     ,cancelled_gift_card_order_rank
-    ,beef_units
+    {# ,beef_units
     ,bison_units
     ,chicken_units
     ,desserts_units
@@ -130,7 +130,7 @@ select
     ,pct_starters_sides
     ,pct_turkey
     ,pct_wagyu
-    ,pct_bundle
+    ,pct_bundle #}
     ,order_created_at_utc
     ,order_updated_at_utc
     ,order_checkout_completed_at_utc
