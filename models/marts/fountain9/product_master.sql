@@ -24,9 +24,8 @@ select distinct
     ,moq.case_pack as moq
     ,round(avg(sku.sku_weight),2) as avg_product_weight
 from sku
-    inner join cuts on sku.cut_key = cuts.cut_key
-        and cuts.plu is not null
-        and cuts.dbt_valid_to is not null
+    inner join cuts on sku.cut_id = cuts.cut_id
+        and cuts.dbt_valid_to is null
     left join moq on sku.cut_id = moq.cut_id
         and sku.farm_id = moq.farm_id
 where sku.dbt_valid_to is null
