@@ -59,7 +59,7 @@ events as (
     ,{{ clean_strings('label') }} as label
     ,experiments
     ,is_member
-    ,{{ clean_strings('token') }} as token
+    ,trim(token) as token
     ,{{ clean_strings('order_id') }} as order_id
     ,{{ clean_strings('url') }} as url
     ,{{ clean_strings('referrer_url') }} as referrer_url
