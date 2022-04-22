@@ -6,7 +6,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
 ,fc_location as ( select * from {{ ref('stg_cc__fc_locations') }} )
 ,fc as ( select * from {{ ref('fcs') }} )
 ,sku as ( select * from {{ ref('skus') }} )
-,lot as ( select * from {{ ref('lots') }} )
+,lot as ( select * from {{ ref('lots') }} where dbt_valid_to is null )
 ,sku_vendor as ( select * from {{ ref('stg_cc__sku_vendors') }} )
 
 ,inventory_snapshot as (

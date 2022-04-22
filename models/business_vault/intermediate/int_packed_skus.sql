@@ -44,6 +44,7 @@ order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
         ,zeroifnull(bid.item_promotion_discount) as item_promotion_discount
         ,coalesce(bid_item_sku.is_single_sku_bid_item,TRUE) as is_single_sku_bid_item
         ,coalesce(bid.created_at_utc,order_packed_items.created_at_utc) as item_created_at_utc
+        ,order_packed_items.created_at_utc as packed_created_at_utc
     from order_packed_items
         left join bid on order_packed_items.bid_id = bid.bid_id
         left join bid_item_sku on order_packed_items.bid_item_id = bid_item_sku.bid_item_id
@@ -72,6 +73,8 @@ order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
             and get_sku_key.created_at_utc >= sku_box.adjusted_dbt_valid_from
             and get_sku_key.created_at_utc < sku_box.adjusted_dbt_valid_to
         left join lot on sku_box.lot_id = lot.lot_id
+            and get_sku_key.packed_created_at_utc >= lot.adjusted_dbt_valid_from
+            and get_sku_key.packed_created_at_utc < lot.adjusted_dbt_valid_to
 )
 
 select 
