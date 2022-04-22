@@ -117,6 +117,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
         + sku_promotion_discount
     as sku_net_product_revenue
     
+    ,is_item_packed
     ,is_marketplace
     ,is_single_sku_bid_item
     ,created_at_utc
