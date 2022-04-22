@@ -66,6 +66,7 @@ order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
         get_sku_key.*
         ,sku_box.sku_box_key
         ,coalesce(lot.owner_id,sku_box.owner_id,91) as sku_owner_id
+        ,lot.lot_number
     from get_sku_key
         left join sku_box on get_sku_key.sku_box_id = sku_box.sku_box_id
             and get_sku_key.created_at_utc >= sku_box.adjusted_dbt_valid_from
@@ -83,6 +84,7 @@ select
     ,sku_box_id
     ,sku_box_key
     ,sku_owner_id
+    ,lot_number
     ,fc_id
     ,fc_key
     ,promotion_id

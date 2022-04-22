@@ -95,6 +95,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
     ,sku_box_id
     ,sku_box_key
     ,sku_owner_id
+    ,lot_number
     ,fc_id
     ,fc_key
     ,promotion_id

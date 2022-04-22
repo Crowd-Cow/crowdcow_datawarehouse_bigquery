@@ -62,10 +62,11 @@ select
     ,sku_id
     ,sku_key
 
-    /*** The SKU box and owner information for an order item is not known until the order is packed. ***/
+    /*** The SKU box and lot information for an order item is not known until the order is packed. ***/
     ,null::int as sku_box_id
     ,null::text as sku_box_key
     ,null::int as sku_owner_id
+    ,null::text as lot_number
     
     ,fc_id
     ,fc_key
