@@ -12,6 +12,8 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,order_shipment as (
     select
         order_id
+        ,count(distinct shipment_id) as shipment_count
+        ,max(lost_at_utc) as lost_at_utc
         ,max(shipped_at_utc) as shipped_at_utc
         ,max(delivered_at_utc) as delivered_at_utc
     from shipments
@@ -65,6 +67,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.coolant_weight_in_pounds
         ,orders.order_additional_coolant_weight_in_pounds
         ,orders.order_bids_count
+        ,zeroifnull(order_shipment.shipment_count) as shipment_count
         ,flags.has_free_shipping
         ,flags.is_ala_carte_order
         ,flags.is_membership_order
@@ -77,6 +80,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,flags.is_gift_card_order
         ,flags.has_shipped
         ,flags.has_been_delivered
+        ,flags.has_been_lost
         ,flags.is_fulfillment_risk
         ,ranks.overall_order_rank
         ,ranks.completed_order_rank
@@ -149,6 +153,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.order_scheduled_arrival_date_utc
         ,order_shipment.shipped_at_utc
         ,order_shipment.delivered_at_utc
+        ,order_shipment.lost_at_utc
         
     from orders
         left join order_revenue on orders.order_id = order_revenue.order_id
