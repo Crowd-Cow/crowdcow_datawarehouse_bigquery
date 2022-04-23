@@ -104,4 +104,5 @@ select
     ,was_manually_changed
     ,created_at_utc
     ,updated_at_utc
+    ,packed_created_at_utc
 from get_box_lot_details

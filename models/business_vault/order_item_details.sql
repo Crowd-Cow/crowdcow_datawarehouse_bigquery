@@ -122,6 +122,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
     ,is_single_sku_bid_item
     ,created_at_utc
     ,updated_at_utc
+    ,packed_created_at_utc
 from calculate_sku_revenue
 )
 
