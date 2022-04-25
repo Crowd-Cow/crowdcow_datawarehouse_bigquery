@@ -43,9 +43,9 @@ events as (
       ,event_json:fields:session_key::text as session_key
       ,event_json:fields:"cancel.account.internal_id"::text as user_token
       ,event_json:fields:"cancel.custom.subscription.token"::text as subscription_token
-      ,event_json:survey:display_reason::text as display_reaons
+      ,event_json:survey:display_reason::text as display_reason
       ,event_json:survey:feedback::text as feedback
-      ,event_json:survey:selected_reason::text as selected_reaon
+      ,event_json:survey:selected_reason::text as selected_reason
       ,event_json
   from {{ ref('base_cc__ahoy_events') }}
 
@@ -80,6 +80,14 @@ events as (
     ,new_scheduled_fulfillment_date
     ,{{ clean_strings('reason') }} as reason
     ,user_making_change_id
+    ,brightback_id
+    ,app_id
+    ,session_id
+    ,session_key
+    ,subscription_token
+    ,{{ clean_strings('display_reason') }} as display_reason
+    ,{{ clean_strings('feedback') }} as feedback
+    ,{{ clean_strings('selected_reason') }} as selected_reason
   from events
 )
 
