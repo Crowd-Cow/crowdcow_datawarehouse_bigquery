@@ -84,6 +84,7 @@ events as (
     ,app_id
     ,session_id
     ,session_key
+    ,user_token
     ,subscription_token
     ,{{ clean_strings('display_reason') }} as display_reason
     ,{{ clean_strings('feedback') }} as feedback
