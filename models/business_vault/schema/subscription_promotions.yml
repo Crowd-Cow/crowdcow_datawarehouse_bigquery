@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: subscription_promotions
+    description: "Business logic for subscription promotions"
+    columns:
+      - name: subscription_promotion_id
+        description: "Subscription promotion ID"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated by the system"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created by the system"
+
+      - name: subscription_id
+        description: "Subscription ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: promotion_id
+        description: "Promotion ID for the currently selected promotion for a subscription"
+
+      - name: promotion_selection_id
+        description: "If the promotion ID is a pick your free protein promotion (ID = 35) this is the ID of the specific protein selected by the customer (e.g. ground beef, bacon, etc)"
+
+      - name: selected_promotion_id
+        description: "If the promotion ID is not a pick your free protein promotion (ID = 35) this is the `promotion_id` value. Otherwise it's the `promotion_selected_id` value of the specific protein item"
+
+      - name: promotion_type
+        description: "A description of the currently selected promotion for a subscription"

@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: cancellation_surveys
+    description: "Business logic for cancellation surveys. The cancellation surveys are specific Ahoy Events with survey data"
+    columns:
+      - name: event_id
+        description: "Event ID of the cancellation event"
+
+      - name: visit_id
+        description: "Visit ID associated with the cancellation event"
+
+      - name: user_id
+        description: "User ID associated with the cancellation event"
+
+      - name: user_token
+        description: "User token associated with the cancellation event"
+
+      - name: subscription_token
+        description: "Subscription token of the subscription being cancelled"
+
+      - name: occurred_at_utc
+        description: "Timestamp for when the cancellation event occurred"
+
+      - name: brightback_id
+        description: "Brightback ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: session_id
+        description: "Brightback session ID"
+
+      - name: session_key
+        description: "Brightback session key"
+
+      - name: display_reason
+        description: "Cancellation display reason"
+
+      - name: feedback
+        description: "Free form feedback field for customers to explain why they are cancelling"
+
+      - name: selected_reason
+        description: "The selected cancellation reason"
