@@ -37,6 +37,15 @@ events as (
       ,event_json:new_scheduled_fulfillment_date::timestamp as new_scheduled_fulfillment_date
       ,event_json:reason::text as reason
       ,event_json:user_making_change_id::int as user_making_change_id
+      ,event_json:id::text as brightback_id
+      ,event_json:app_id::text as app_id
+      ,event_json:fields:session_id::text as session_id
+      ,event_json:fields:session_key::text as session_key
+      ,event_json:fields:"cancel.account.internal_id"::text as user_token
+      ,event_json:fields:"cancel.custom.subscription.token"::text as subscription_token
+      ,event_json:survey:display_reason::text as display_reaons
+      ,event_json:survey:feedback::text as feedback
+      ,event_json:survey:selected_reason::text as selected_reaon
       ,event_json
   from {{ ref('base_cc__ahoy_events') }}
 
