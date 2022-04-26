@@ -5361,9 +5361,6 @@ sources:
         columns:
           - name: id
             description: id
-            tests:
-              - not_null
-              - unique
           - name: bid_id
             description: bid_id
           - name: bid_item_id
@@ -6726,9 +6723,6 @@ sources:
         columns:
           - name: id
             description: id
-            tests:
-              - not_null
-              - unique
           - name: purpose
             description: purpose
           - name: key
