@@ -18,19 +18,27 @@ events as (
       ,event_sequence_number
       ,case
           when event_name = 'custom_event' then event_json:category::text || '_' || event_json:action::text
-          else event_name
+          else replace(event_name,' ','_')
       end as event_name
+      ,event_json:context:page:url::text as context_url
+      ,event_json:context:page:path::text as context_path
+      ,event_json:properties:url::text as event_properties_url
       ,event_json:category::text as category
       ,event_json:action::text as action
-      ,event_json:label::text as label
+      ,coalesce(event_json:label::text,event_json:properties:name::text) as label
       ,event_json:experiments as experiments
       ,event_json:member::boolean as is_member
+      ,event_json:properties:id::text as properties_id
+      ,coalesce(event_json:product_id::text,event_json:properties:product_token::text) as product_token
+      ,event_json:bid_item_id::int as bid_item_id
       ,event_json:"$event_id"::text as token
       ,event_json:order_id::text as order_id
       ,event_json:url::text as url
       ,event_json:referrer_url::text as referrer_url
       ,event_json:subscription_id::text as subscription_id
       ,event_json:title::text as title
+      ,try_cast(event_json:price::text as int) as price
+      ,event_json:quantity::int as quantity
       ,event_json:old_scheduled_arrival_date::timestamp as old_scheduled_arrival_date
       ,event_json:new_scheduled_arrival_date::timestamp as new_scheduled_arrival_date
       ,event_json:old_scheduled_fulfillmet_date::timestamp as old_scheduled_fulfillment_date
@@ -63,17 +71,25 @@ events as (
     ,updated_at_utc
     ,event_sequence_number
     ,{{ clean_strings('event_name') }} as event_name
+    ,{{ clean_strings('context_url') }} as context_url
+    ,{{ clean_strings('context_path') }} as context_path
+    ,{{ clean_strings('event_properties_url') }} as event_properties_url
     ,{{ clean_strings('category') }} as category
     ,{{ clean_strings('action') }} as action
     ,{{ clean_strings('label') }} as label
     ,experiments
     ,is_member
+    ,{{ clean_strings('properties_id') }} as properties_id
+    ,{{ clean_strings('product_token') }} as product_token
+    ,bid_item_id
     ,trim(token) as token
     ,{{ clean_strings('order_id') }} as order_id
     ,{{ clean_strings('url') }} as url
     ,{{ clean_strings('referrer_url') }} as referrer_url
     ,{{ clean_strings('subscription_id') }} as subscription_id
     ,{{ clean_strings('title') }} as title
+    ,{{ cents_to_usd('price') }} as price
+    ,quantity
     ,old_scheduled_arrival_date
     ,new_scheduled_arrival_date
     ,old_scheduled_fulfillment_date
