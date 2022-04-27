@@ -1,18 +1,21 @@
 {{
   config(
         materialized = 'incremental',
-        unique_key = 'event_id',
+        unique_key = 'event_id'
     )
 }}
 
 
 with
 
-events as ( select * from {{ ref('stg_cc__events') }}   
+events as ( 
+    select * 
+    from {{ ref('stg_cc__events') }}   
 
     {% if is_incremental() %}
       where occurred_at_utc >= coalesce((select max(occurred_at_utc) from {{ this }}), '1900-01-01')
-    {% endif %})
+    {% endif %}
+)
 
 ,event_details as (
     select event_id
