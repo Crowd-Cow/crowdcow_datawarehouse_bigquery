@@ -20,16 +20,16 @@ events as (
           when event_name = 'custom_event' then event_json:category::text || '_' || event_json:action::text
           else replace(event_name,' ','_')
       end as event_name
-      ,event_json:context:page:url::text as context_url
-      ,event_json:context:page:path::text as context_path
-      ,event_json:properties:url::text as event_properties_url
+      ,event_json:context:page:url::text as on_page_url
+      ,event_json:context:page:path::text as on_page_path
+      ,event_json:properties:url::text as next_page_url
       ,event_json:category::text as category
       ,event_json:action::text as action
       ,coalesce(event_json:label::text,event_json:properties:name::text) as label
       ,event_json:experiments as experiments
       ,event_json:member::boolean as is_member
-      ,event_json:properties:id::text as properties_id
-      ,coalesce(event_json:product_id::text,event_json:properties:product_token::text) as product_token
+      ,event_json:properties:id::text as event_properties_id
+      ,lower(coalesce(event_json:product_id::text,event_json:properties:product_token::text)) as product_token
       ,event_json:bid_item_id::int as bid_item_id
       ,event_json:"$event_id"::text as token
       ,event_json:order_id::text as order_id
@@ -71,15 +71,15 @@ events as (
     ,updated_at_utc
     ,event_sequence_number
     ,{{ clean_strings('event_name') }} as event_name
-    ,{{ clean_strings('context_url') }} as context_url
-    ,{{ clean_strings('context_path') }} as context_path
-    ,{{ clean_strings('event_properties_url') }} as event_properties_url
+    ,{{ clean_strings('on_page_url') }} as on_page_url
+    ,{{ clean_strings('on_page_path') }} as on_page_path
+    ,{{ clean_strings('next_page_url') }} as next_page_url
     ,{{ clean_strings('category') }} as category
     ,{{ clean_strings('action') }} as action
     ,{{ clean_strings('label') }} as label
     ,experiments
     ,is_member
-    ,{{ clean_strings('properties_id') }} as properties_id
+    ,{{ clean_strings('event_properties_id') }} as event_properties_id
     ,{{ clean_strings('product_token') }} as product_token
     ,bid_item_id
     ,trim(token) as token

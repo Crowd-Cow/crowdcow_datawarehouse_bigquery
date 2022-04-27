@@ -1,7 +1,8 @@
 {{
   config(
         materialized = 'incremental',
-        unique_key = 'event_id'
+        unique_key = 'event_id',
+        snowflake_warehouse = 'TRANSFORMING_M'
     )
 }}
 
@@ -25,23 +26,40 @@ events as (
         ,updated_at_utc
         ,event_sequence_number
         ,event_name
+        ,on_page_url
+        ,on_page_path
+        ,next_page_url
         ,category
         ,action
         ,label
         ,experiments
         ,is_member
+        ,event_properties_id
+        ,product_token
+        ,bid_item_id
         ,token
         ,order_id
         ,url
         ,referrer_url
         ,subscription_id
         ,title
+        ,price
+        ,quantity
         ,old_scheduled_arrival_date
         ,new_scheduled_arrival_date
         ,old_scheduled_fulfillment_date
         ,new_scheduled_fulfillment_date
         ,reason
         ,user_making_change_id
+        ,brightback_id
+        ,app_id
+        ,session_id
+        ,session_key
+        ,user_token
+        ,subscription_token
+        ,display_reason
+        ,feedback
+        ,selected_reason
         ,case when event_name = 'VIEWED_PRODUCT' then 'PDP VIEW'
               when category = 'PRODUCT' and action = 'PAGE-INTERACTION' and label = 'CLICKED-ADD-TO-CART' then 'PDP ADD TO CART'
               when category = 'CHECKOUT' and action = 'VIEWED-UPSELL-CAROUSEL-PRODUCT-CARD' then 'VIEWED PDC UPSELL CAROUSEL'
