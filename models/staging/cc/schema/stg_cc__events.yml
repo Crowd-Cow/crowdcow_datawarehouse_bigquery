@@ -25,6 +25,15 @@ models:
       - name: event_name
         description: "Event name. If the event is a custom event, the name is a concatination of the category and action keys in the event JSON (`category_action`)"
 
+      - name: on_page_url
+        description: "The URL of the page the user is on when the event fires"
+
+      - name: on_page_path
+        description: "The URL path of the page the user is on when the event fires"
+
+      - name: next_page_url
+        description: "The URL of the page that the user is taken to if clicking on a link or button"
+
       - name: category
         description: "Category key from the event JSON"
 
@@ -32,13 +41,22 @@ models:
         description: "Action key from the event JSON"
 
       - name: label
-        description: "Label key from the event JSON"
+        description: "Label key from the event JSON or the text of a link/button the user clicks"
 
       - name: experiments
         description: "Experiments key from the event JSON. The data in this field is the JSON object for experiments"
 
       - name: is_member
         description: "Member key from the event JSON"
+
+      - name: event_properties_id
+        description: "The ID value in the properties object of the JSON. Contains values for various IDs like `bid_item_token`"
+
+      - name: product_token
+        description: "Product token"
+
+      - name: bid_item_id
+        description: "Bid item ID"
 
       - name: token
         description: "Token key from the event JSON. Key name in the JSON is `$event_id`"
@@ -58,3 +76,50 @@ models:
       - name: title
         description: "Title key from the event JSON"
 
+      - name: price
+        description: "The price of an item in the event if applicable"
+
+      - name: quantity
+        description: "The quantity of an item in the event if applicable"
+
+      - name: old_scheduled_arrival_date
+        description: "The previously scheduled order arrival date if the event is a reschedule event"
+
+      - name: new_scheduled_arrival_date
+        description: "The updated scheduled arrival date is the event is a reschedule event"
+
+      - name: old_scheduled_fulfillment_date
+        description: "The previously scheduled fulfillment date if the event is a reschedule event"
+
+      - name: new_scheduled_fulfillment_date
+        description: "The updated scheduled fulfillment date if the event is a reschedule event"
+
+      - name: reason
+        description: "Reason values for applicable events"
+
+      - name: user_making_change_id
+        description: "User ID of the user making a change to their order"
+
+      - name: brightback_id
+        description: "Brightback ID of a Brightback event"
+
+      - name: app_id
+        description: "Brightback app ID"
+
+      - name: session_id
+        description: "Brighback session ID"
+
+      - name: session_key
+        description: "Brightback session key"
+
+      - name: subscription_token
+        description: "Subscription token"
+
+      - name: display_reason
+        description: "The user displayed reason for cancelling a membership on the cancellation survey"
+
+      - name: feedback
+        description: "Freeform text field for users to provide feedback for why they are cancelling their membership"
+
+      - name: selected_reason
+        description: "The reason for cancelling a membership that is selected by the user"

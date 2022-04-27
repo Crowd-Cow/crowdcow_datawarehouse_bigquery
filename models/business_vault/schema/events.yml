@@ -28,6 +28,15 @@ models:
       - name: event_name
         description: "For non-custom events, the name of the event"
 
+      - name: on_page_url
+        description: "The URL of the page the user is on when the event fires"
+
+      - name: on_page_path
+        description: "The URL path of the page the user is on when the event fires"
+
+      - name: next_page_url
+        description: "The URL of the page that the user is taken to if clicking on a link or button"
+
       - name: category
         description: "Category of event"
 
@@ -42,6 +51,15 @@ models:
 
       - name: is_member
         description: "Was user a member during visit"
+
+      - name: event_properties_id
+        description: "The ID value in the properties object of the JSON. Contains values for various IDs like `bid_item_token`"
+
+      - name: product_token
+        description: "Product token"
+
+      - name: bid_item_id
+        description: "Bid item ID"
 
       - name: token
         description: "Token"
@@ -76,8 +94,33 @@ models:
       - name: reason
         description: "Reason for reschedule"
 
-      - name: user_making_change
+      - name: user_making_change_id
         description: "User ID of user making change to box"
+
+      - name: brightback_id
+        description: "Brightback ID of a Brightback event"
+
+      - name: app_id
+        description: "Brightback app ID"
+
+      - name: session_id
+        description: "Brighback session ID"
+
+      - name: session_key
+        description: "Brightback session key"
+
+      - name: subscription_token
+        description: "Subscription token"
+
+      - name: display_reason
+        description: "The user displayed reason for cancelling a membership on the cancellation survey"
+
+      - name: feedback
+        description: "Freeform text field for users to provide feedback for why they are cancelling their membership"
+
+      - name: selected_reason
+        description: "The reason for cancelling a membership that is selected by the user"
 
       - name: event_type
         description: "Description of event that occurred"
+        
