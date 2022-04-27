@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: cart_events
+    description: "Mart for site events related to cart activity (e.g. add/remove from cart)"
+    columns:
+      - name: event_id
+        description: "Event ID"
+
+      - name: visit_id
+        description: "Visit ID"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: occurred_at_utc
+        description: "Timestamp for when the event occurred"
+
+      - name: event_name
+        description: "Event name (e.g. `order_add_to_cart`, `order_remove_from_cart`)"
+
+      - name: item_price
+        description: "The price of the item at the time of the event"
+
+      - name: item_quantity
+        description: "The quantity of the item at the time of the event"
+
+      - name: item_amount
+        description: "The amount of the item at the time of the event (`item_price` * `item_quantity`)"
+
+      - name: order_id
+        description: "Order Id"
+
+      - name: bid_item_id
+        description: "Bid item ID"
+
+      - name: bid_item_key
+        description: "The bid item key that can be used to join to `bid_items` to get bid item details (e.g. bid item name, etc) at the time the event occurred"
