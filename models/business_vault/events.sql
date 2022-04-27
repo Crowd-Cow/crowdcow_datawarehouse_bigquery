@@ -55,8 +55,8 @@ events as ( select * from {{ ref('stg_cc__events') }}
               when event_name = 'PAGE_VIEW' and url like '%/O%/PAYMENT%' then 'VIEWED PAYMENT PAGE'
               when event_name = 'ORDER_ENTER_PAYMENT' then 'PAYMENT INFO ENTERED'
               when category = 'ERROR' and action = 'ADDRESS-ERROR' then 'ADDRESS ERROR'
-              when event_name = 'PRODUCT CARD VIEWED' or event_name = 'PRODUCT_CARD_VIEWED' then 'PDC VIEW'
-              when event_name = 'PRODUCT CARD CLICKED' or event_name = 'PRODUCT_CARD_CLICKED' then 'PDC CLICK'
+              when event_name = 'PRODUCT_CARD_VIEWED' then 'PDC VIEW'
+              when event_name = 'PRODUCT_CARD_CLICKED' then 'PDC CLICK'
               when event_name = 'PRODUCT_CARD_QUICK_ADD_TO_CART' then 'PDC QUICK ADD TO CART'
               when event_name = 'CHECKOUT_ADD-PAYMENT-INFO' then 'PAYMENT INFO SUCCESSFUL'
               else null
