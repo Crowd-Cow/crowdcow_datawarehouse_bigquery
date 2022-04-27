@@ -80,7 +80,7 @@ events as (
     ,experiments
     ,is_member
     ,{{ clean_strings('event_properties_id') }} as event_properties_id
-    ,{{ clean_strings('product_token') }} as product_token
+    ,product_token
     ,bid_item_id
     ,trim(token) as token
     ,{{ clean_strings('order_id') }} as order_id
