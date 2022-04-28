@@ -11,7 +11,7 @@ source as ( select * from {{ source('cc', 'shipments') }} where not _fivetran_de
         ,{{ clean_strings('easypost_postage_carrier') }} as easypost_postage_carrier
         ,print_queue_item_id
         ,delivery_window_end as delivery_window_end_at_utc
-        ,{{ cents_to_usd('easypost_postage_rate_cents') }} as easypost_postage_rate_usd
+        ,nullif({{ cents_to_usd('easypost_postage_rate_cents') }},0.01) as easypost_postage_rate_usd
         ,mean_temperature
         ,box_type_id
         ,easypost_shipment_id

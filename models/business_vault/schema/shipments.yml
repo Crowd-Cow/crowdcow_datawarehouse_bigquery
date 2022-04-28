@@ -1,0 +1,107 @@
+version: 2
+
+models:
+  - name: shipments
+    description: "Business logic for shipments"
+    columns:
+      - name: shipment_id
+        description: "Shipment ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: print_queue_item_id
+        description: "Print queue item ID"
+
+      - name: box_type_id
+        description: "Box type ID"
+
+      - name: scanned_box_type_id
+        description: "Scanned box type ID"
+
+      - name: fc_id
+        description: "Fulfillment center ID"
+
+      - name: fc_key
+        description: "Key that can be used to join the FC information at the time the shipment was shipped"
+
+      - name: order_id
+        description: "Order ID"
+
+      - name: fc_location_id
+        description: "Fulfillment center location ID"
+
+      - name: shipment_token
+        description: "Shipment token"
+
+      - name: shipment_tracking_code
+        description: "Shipment tracking code"
+
+      - name: shipment_postage_carrier
+        description: "Shipment postage carrier"
+
+      - name: shipment_postage_rate_usd
+        description: "Shipment cost"
+
+      - name: delivery_method
+        description: "Delivery method"
+
+      - name: item_weight
+        description: "Shipment weight"
+
+      - name: packaging_freight_component_cost_usd
+        description: "Packing freight component cost"
+
+      - name: shipment_delivery_days
+        description: "The number of days to deliver the shipment"
+
+      - name: pickup_at_description
+        description: "Pickup at description"
+
+      - name: shipment_postage_service
+        description: "Shipment postage service"
+
+      - name: packaging_materials_component_cost_usd
+        description: "Packing material component cost"
+
+      - name: does_use_zpl
+        description: "Boolean indicating if the shipment uses ZPL"
+
+      - name: does_receive_tracking_updates
+        description: "Boolean indicating if the shipment receives tracking updates"
+
+      - name: is_delivery_date_guaranteed
+        description: "Boolean indicating if the shipment delivery date is guaranteed"
+
+      - name: shipped_at_utc
+        description: "Timestamp for when the item was shipped"
+
+      - name: delivered_at_utc
+        description: "Timestamp for when the item was delivered"
+
+      - name: original_est_delivery_date_utc
+        description: "Timestamp for the original delivery date given"
+
+      - name: est_delivery_date_utc
+        description: "Timestamp for the estimated delivery date"
+
+      - name: postage_paid_at_utc
+        description: "Timestamp for when postage was paid"
+
+      - name: scheduled_fulfillment_date_utc
+        description: "Timestamp for when the items is scheduled to be fulfilled"
+
+      - name: latest_tracking_details_updated_at_utc
+        description: "Timestamp for when the latest tracking details were updated for the shipment"
+
+      - name: available_for_pickup_at_utc
+        description: "Timestamp for when the shipment is available for pickup"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created in the system"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated in the system"
+
+      - name: lost_at_utc
+        description: "Timestamp for when the shipment was lost if applicable"
