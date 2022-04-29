@@ -1,0 +1,71 @@
+version: 2
+
+models:
+  - name: stg_acumatica__bills
+    description: "Staging model for Acumatica bills"
+    columns:
+      - name: bill_id
+        description: "Acumatica system ID for the bill"
+
+      - name: bill_date_utc
+        description: "Timestamp for the bill"
+
+      - name: notes
+        description: "Free form notes added to the bill record"
+
+      - name: bill_amount
+        description: "Total amount of the bill"
+
+      - name: tax_total
+        description: "Total tax amount"
+
+      - name: custom_fields
+        description: "JSON object containing any custom fields for the bill"
+
+      - name: due_date_utc
+        description: "Timestamp for when the bill is due"
+
+      - name: cash_account
+        description: "Cash account number"
+
+      - name: bill_description
+        description: "Description of what the bill is for"
+
+      - name: bill_type
+        description: "Type of bill (e.g. bill, adjustment, etc.)"
+
+      - name: reference_number
+        description: "Acumatica reference number for the bill"
+
+      - name: location_id
+        description: "Location ID"
+
+      - name: is_on_hold
+        description: "Boolean indication if the bill is on hold"
+
+      - name: balance
+        description: "Outstanding balance of the bill"
+
+      - name: terms
+        description: "Payment terms of the bill (e.g. upon reeipt, net30, etc.)"
+
+      - name: vendor
+        description: "Vendor ID in Acumatica representing who sent the bill to Crowd Cow"
+
+      - name: details
+        description: "JSON object storing expanded deatils about the bill"
+
+      - name: is_approved_for_payment
+        description: "Boolean indicating if the bill is approved for payment"
+
+      - name: vendor_ref
+        description: "External ID provided by the vendor. Usually the invoice ID in their system"
+
+      - name: currency_id
+        description: "Currency of the bill amount"
+
+      - name: post_period
+        description: "Accounting post period"
+
+      - name: bill_status
+        description: "Status of the bill (e.g. open, closed, etc.)"

@@ -1,0 +1,89 @@
+version: 2
+
+sources:
+
+  - name: acumatica
+    database: raw
+    schema: acumatica
+    tables:
+      - name: bills
+        description: Bills and adjustments in Acumatica. Contains invoice information
+
+        columns:
+          - name: id
+            description: Acumatica system ID for the bill
+            tests:
+              - unique
+              - not_null
+
+          - name: date
+            description: Bill date
+
+          - name: note
+            description: Free form notes added to the bill record
+
+          - name: amount
+            description: Total amount of the bill
+
+          - name: tax_total
+            description: Total tax amount
+
+          - name: _fivetran_batch
+            description: Batch number added by the Fivetran sync
+
+          - name: custom
+            description: JSON object containing any custom fields for the bill
+
+          - name: due_date
+            description: Due date of the bill
+
+          - name: cash_account
+            description: Cash account
+
+          - name: description
+            description: Description of the bill
+
+          - name: type
+            description: Type of bill (e.g. bill, adjustment, etc.)
+
+          - name: reference_number
+            description: Acumatica reference number for the bill
+
+          - name: location_id
+            description: Location ID
+
+          - name: hold
+            description: Boolean indicating if the bill is being held
+
+          - name: _fivetran_index
+            description: Index added by the Fivetran sync
+
+          - name: balance
+            description: Outstanding balance of the bill
+
+          - name: terms
+            description: Payment terms of the bill (e.g. Upon receipt, Net30, etc.)
+
+          - name: vendor
+            description: Vendor ID in Acumatica representing who the bill should be paid to
+
+          - name: details
+            description: JSON object storing expanded details about the bill
+
+          - name: approved_for_payment
+            description: Boolean indicating if the bill is approved for payment
+
+          - name: vendor_ref
+            description: External ID provided by the vendor. Usually the Invoice ID in their system
+
+          - name: currency_id
+            description: Currency of the bill amount
+
+          - name: post_period
+            description: Accounting post period
+
+          - name: status
+            description: Status of the bill (e.g. Open, Closed, etc.)
+
+          - name: _fivetran_synced
+            description: Timestamp for when the record was synced by Fivetran
