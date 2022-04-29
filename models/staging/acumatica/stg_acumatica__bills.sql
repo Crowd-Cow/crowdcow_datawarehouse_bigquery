@@ -11,7 +11,7 @@ source as ( select * from {{ source('acumatica', 'bills') }} )
         ,value:Description:value::text as line_item_description
         ,value:ExtendedCost:value::float as line_item_extended_cost
         ,value:Qty:value::int as line_item_quantity
-        ,value:Subaccount:value::text as sub_account
+        ,value:Subaccount:value::int as sub_account
         ,value:TransactionDescription:value::text as transaction_description
         ,value:UnitCost:value::int as unit_cost
         ,value:note::text as line_item_note
