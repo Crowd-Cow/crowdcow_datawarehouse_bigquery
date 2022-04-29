@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: stg_acumatica__bills
-    description: "Staging model for Acumatica bills"
+    description: "Staging model for Acumatica bills. The staging model flattens the extended details of the bill"
     columns:
       - name: bill_id
         description: "Acumatica system ID for the bill"
