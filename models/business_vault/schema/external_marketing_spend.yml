@@ -1,0 +1,95 @@
+version: 2
+
+models:
+  - name: external_marketing_spend
+    description: "Business logic for non-digital marketing spend. Invoices pulled from Acumatica"
+    columns:
+      - name: bill_item_id
+        description: Surrogate key to provide a unique record. Combines `bill_id` and `line_number`
+        tests:
+          - unique
+          - not_null
+      
+      - name: bill_id
+        description: "Acumatica system ID for the bill"
+
+      - name: bill_date_utc
+        description: "Timestamp for the bill"
+
+      - name: notes
+        description: "Free form notes added to the bill record"
+
+      - name: due_date_utc
+        description: "Timestamp for when the bill is due"
+
+      - name: cash_account
+        description: "Cash account number"
+
+      - name: bill_description
+        description: "Description of what the bill is for"
+
+      - name: bill_type
+        description: "Type of bill (e.g. bill, adjustment, etc.)"
+
+      - name: reference_number
+        description: "Acumatica reference number for the bill"
+
+      - name: location_id
+        description: "Location ID"
+
+      - name: is_on_hold
+        description: "Boolean indication if the bill is on hold"
+
+      - name: terms
+        description: "Payment terms of the bill (e.g. upon reeipt, net30, etc.)"
+
+      - name: vendor
+        description: "Vendor ID in Acumatica representing who sent the bill to Crowd Cow"
+
+      - name: is_approved_for_payment
+        description: "Boolean indicating if the bill is approved for payment"
+
+      - name: vendor_ref
+        description: "External ID provided by the vendor. Usually the invoice ID in their system"
+
+      - name: currency_id
+        description: "Currency of the bill amount"
+
+      - name: post_period
+        description: "Accounting post period"
+
+      - name: bill_status
+        description: "Status of the bill (e.g. open, closed, etc.)"
+
+      - name: account_number
+        description: Acumatica financial account number
+
+      - name: line_item_amount
+        description: Amount for each line item in the overall bill
+
+      - name: branch
+        description: Acumatica branch
+
+      - name: line_item_description
+        description: Description of the line item
+
+      - name: line_item_extended_cost
+        description: Line item extended cost
+
+      - name: line_item_quantity
+        description: Quantity for each line item in the overall bill
+
+      - name: sub_account
+        description: Sub account number
+
+      - name: transaction_description
+        description: Description of the line item transaction
+
+      - name: unit_cost
+        description: Unit cost
+
+      - name: line_item_note
+        description: Free form note for the line item
+
+      - name: line_number
+        description: The sequence number for each line item in the bill
