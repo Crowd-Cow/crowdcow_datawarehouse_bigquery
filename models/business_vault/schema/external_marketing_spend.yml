@@ -1,8 +1,8 @@
 version: 2
 
 models:
-  - name: stg_acumatica__bills
-    description: "Staging model for Acumatica bills. The staging model flattens the extended details of the bill"
+  - name: external_marketing_spend
+    description: "Business logic for non-digital marketing spend. Invoices pulled from Acumatica"
     columns:
       - name: bill_item_id
         description: Surrogate key to provide a unique record. Combines `bill_id` and `line_number`
