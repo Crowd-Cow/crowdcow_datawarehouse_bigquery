@@ -28,7 +28,7 @@ receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
         ,receivable.sku_id
         ,sku.cut_id
         ,sku.sku_key
-        ,receivable.quantity
+        ,receivable.quantity_ordered
         ,receivable.marked_destroyed_at_utc is not null as is_destroyed
         ,receivable.marked_destroyed_at_utc
         ,receivable.created_at_utc

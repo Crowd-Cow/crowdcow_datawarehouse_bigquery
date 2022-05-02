@@ -36,7 +36,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,lot_number
         ,farm_out_name as farm_name
         ,fc_scan_proposed_date::date as fc_scan_proposed_date
-        ,sum(quantity) as ordered_quantity
+        ,sum(quantity_ordered) as quantity_ordered
     from receivable
     where not is_destroyed
     group by 1,2,3,4,5
@@ -63,7 +63,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
             over(partition by inventory_aggregation_sku.category,inventory_aggregation_sku.sub_category,inventory_aggregation_sku.cut_id,inventory_aggregation_sku.fc_id,inventory_aggregation_sku.snapshot_date 
                 order by first_available_pipeline_order.fc_scan_proposed_date) as next_pipeline_order_date
 
-        ,first_value(first_available_pipeline_order.ordered_quantity) 
+        ,first_value(first_available_pipeline_order.quantity_ordered) 
             over(partition by inventory_aggregation_sku.category,inventory_aggregation_sku.sub_category,inventory_aggregation_sku.cut_id,inventory_aggregation_sku.fc_id,inventory_aggregation_sku.snapshot_date 
                 order by first_available_pipeline_order.fc_scan_proposed_date) as next_order_quantity
     

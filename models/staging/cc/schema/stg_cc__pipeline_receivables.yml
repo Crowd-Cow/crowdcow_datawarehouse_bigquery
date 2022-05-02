@@ -13,8 +13,8 @@ models:
       - name: sku_id
         description: Business identifier for a given sku
 
-      - name: quantity
-        description: Quantity of given sku in the receivables
+      - name: quantity_ordered
+        description: Quantity ordered of given sku in the receivables
 
       - name: marked_destroyed_at_utc
         description: Marked destroyed at timestamp in UTC

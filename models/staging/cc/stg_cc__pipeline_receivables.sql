@@ -9,7 +9,7 @@ renamed as (
     select
         id as pipeline_receivables_id
         ,sku_id
-        ,quantity
+        ,quantity as quantity_ordered
         ,marked_destroyed_at as marked_destroyed_at_utc
         ,cut_id
         ,weight
