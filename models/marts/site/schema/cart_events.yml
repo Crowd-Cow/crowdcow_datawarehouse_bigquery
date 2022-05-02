@@ -34,5 +34,11 @@ models:
       - name: bid_item_id
         description: "Bid item ID"
 
-      - name: bid_item_key
-        description: "The bid item key that can be used to join to `bid_items` to get bid item details (e.g. bid item name, etc) at the time the event occurred"
+      - name: product_token
+        description: Product token
+
+      - name: product_title
+        description: Product title
+
+      - name: bid_item_name
+        description: Bid item name

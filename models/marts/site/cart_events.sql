@@ -1,7 +1,8 @@
 with
 
-cart_events as ( select * from {{ ref('events') }} where event_name in ('ORDER_ADD_TO_CART','ORDER_REMOVE_FROM_CART') )
+cart_events as ( select * from {{ ref('events') }} where event_name in ('ORDER_ADD_TO_CART','ORDER_REMOVE_FROM_CART','VIEWED_PRODUCT') )
 ,bid_item as ( select * from {{ ref('bid_items') }} )
+,product as ( select * from {{ ref('products') }} )
 
 ,get_fields as (
     select
@@ -15,10 +16,13 @@ cart_events as ( select * from {{ ref('events') }} where event_name in ('ORDER_A
         ,price * quantity as item_amount
         ,order_id
         ,bid_item_id
+        ,product_token
+        ,title as product_title  
+        ,name as bid_item_name
     from cart_events
 )
 
-,get_bid_item_key as (
+,get_product_details as (
     select
         get_fields.event_id
         ,get_fields.visit_id
@@ -30,11 +34,12 @@ cart_events as ( select * from {{ ref('events') }} where event_name in ('ORDER_A
         ,get_fields.item_amount
         ,get_fields.order_id
         ,get_fields.bid_item_id
-        ,bid_item.bid_item_key
+        ,get_fields.product_token
+        ,coalesce(get_fields.product_title,product.product_title,get_fields.bid_item_name) as product_title
+        ,bid_item_name
     from get_fields
-        left join bid_item on get_fields.bid_item_id = bid_item.bid_item_id
-            and get_fields.occurred_at_utc >= adjusted_dbt_valid_from
-            and get_fields.occurred_at_utc < adjusted_dbt_valid_to
+        left join product on get_fields.product_token = product.product_token
+            and product.dbt_valid_to is null
 )
 
-select * from get_bid_item_key
+select * from get_product_details
