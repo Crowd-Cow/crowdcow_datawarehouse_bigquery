@@ -13,6 +13,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
     select
         order_id
         ,count(distinct shipment_id) as shipment_count
+        ,sum(easypost_postage_rate_usd) as shipment_cost
         ,max(lost_at_utc) as lost_at_utc
         ,max(shipped_at_utc) as shipped_at_utc
         ,max(delivered_at_utc) as delivered_at_utc
@@ -64,6 +65,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(order_revenue.other_discount) as other_discount
         ,zeroifnull(order_revenue.net_revenue) as net_revenue
         ,zeroifnull(order_cost.product_cost) as product_cost
+        ,zeroifnull(order_shipment.shipment_cost) as shipment_cost
         ,orders.coolant_weight_in_pounds
         ,orders.order_additional_coolant_weight_in_pounds
         ,orders.order_bids_count
