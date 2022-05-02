@@ -32,6 +32,7 @@ events as (
       ,lower(coalesce(event_json:product_id::text,event_json:properties:product_token::text)) as product_token
       ,event_json:bid_item_id::int as bid_item_id
       ,event_json:"$event_id"::text as token
+      ,event_json:name::text as name
       ,event_json:order_id::text as order_id
       ,event_json:url::text as url
       ,event_json:referrer_url::text as referrer_url
@@ -83,6 +84,7 @@ events as (
     ,product_token
     ,bid_item_id
     ,trim(token) as token
+    ,{{ clean_strings('name') }} as name
     ,{{ clean_strings('order_id') }} as order_id
     ,{{ clean_strings('url') }} as url
     ,{{ clean_strings('referrer_url') }} as referrer_url

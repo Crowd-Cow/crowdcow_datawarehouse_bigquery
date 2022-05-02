@@ -38,6 +38,7 @@ events as (
         ,product_token
         ,bid_item_id
         ,token
+        ,name
         ,order_id
         ,url
         ,referrer_url
