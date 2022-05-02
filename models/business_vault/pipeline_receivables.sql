@@ -77,10 +77,10 @@ receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
     from receivable
         left join pipeline_schedule on receivable.pipeline_order_id = pipeline_schedule.pipeline_order_id
         left join pipeline_order on receivable.pipeline_order_id = pipeline_order.pipeline_order_id
-            and not pipeline_order.is_removed
         left join sku on receivable.sku_id = sku.sku_id
             and receivable.updated_at_utc >= sku.adjusted_dbt_valid_from
             and receivable.updated_at_utc < sku.adjusted_dbt_valid_to
+    where not coalesce(pipeline_order.is_removed,FALSE)
 )
 
 select * from pipeline_receivable
