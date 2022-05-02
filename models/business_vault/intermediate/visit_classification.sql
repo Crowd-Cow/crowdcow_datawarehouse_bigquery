@@ -61,7 +61,7 @@ base_visits as (
         /** Assign a sequential session number to the same IP address if the visits are within 30 minutes of each other **/
         /** For example: the first visit for IP address 127.0.0.1 gets a session number of 0. If the second visit for the same IP address is within 30 minutes, the session number stays 0. **/
         /** If the next visit for the same IP address is more than 30 minutes from the previous visit, the session number increments to 1 **/
-        ,CONDITIONAL_TRUE_EVENT(DATEDIFF(MIN, LAG(started_at_utc) OVER (PARTITION BY visit_ip ORDER BY started_at_utc ASC), started_at_utc) >= 30) OVER (PARTITION BY visit_ip ORDER BY started_at_utc ASC) AS ip_session_number
+        ,conditional_true_event(datediff(min, lag(started_at_utc) over (partition by visit_ip order by started_at_utc), started_at_utc) >= 30) over(partition by visit_ip order by started_at_utc) as ip_session_number
 
         ,visit_device_type
         ,visit_user_agent
