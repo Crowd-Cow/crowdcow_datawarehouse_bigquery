@@ -9,41 +9,57 @@ with
 visits as ( select * from {{ ref('visit_classification') }} )
 ,visit_flags as ( select * from {{ ref('int_visit_flags') }} )
 
+,get_ip_session as (
+    select
+        *
+        
+        /** Assign a sequential session number to the same IP address if the visits are within 30 minutes of each other **/
+        /** For example: the first visit for IP address 127.0.0.1 gets a session number of 0. If the second visit for the same IP address is within 30 minutes, the session number stays 0. **/
+        /** If the next visit for the same IP address is more than 30 minutes from the previous visit, the session number increments to 1 **/
+        ,conditional_true_event(datediff(min, lag(started_at_utc) over (partition by visit_ip order by started_at_utc), started_at_utc) >= 30) over(partition by visit_ip order by started_at_utc) as ip_session_number
+
+    from visits
+)
+
 ,joined_visits as (
 
     select 
-        visits.visit_id
-        ,visits.user_id
-        ,visits.partner_id
-        ,visits.visit_token
-        ,visits.visitor_token
-        ,visits.visit_browser
-        ,visits.visit_city
-        ,visits.visit_region
-        ,visits.visit_country
-        ,visits.visit_ip
-        ,visits.visitor_ip_session
-        ,visits.ip_session_visit_number
-        ,visits.visit_os
-        ,visits.visit_device_type
-        ,visits.visit_user_agent
-        ,visits.visit_referrer
-        ,visits.visit_referring_domain
-        ,visits.visit_search_keyword
-        ,visits.visit_landing_page
-        ,visits.visit_landing_page_path
-        ,visits.utm_content
-        ,visits.utm_campaign
-        ,visits.utm_adset
-        ,visits.utm_term
-        ,visits.utm_medium
-        ,visits.utm_source
-        ,visits.channel
-        ,visits.sub_channel
-        ,visits.visit_attributed_source
-        ,visits.is_wall_displayed
-        ,visits.is_paid_referrer
-        ,visits.is_social_platform_referrer
+        get_ip_session.visit_id
+        ,get_ip_session.user_id
+        ,get_ip_session.partner_id
+        ,get_ip_session.visit_token
+        ,get_ip_session.visitor_token
+        ,get_ip_session.visit_browser
+        ,get_ip_session.visit_city
+        ,get_ip_session.visit_region
+        ,get_ip_session.visit_country
+        ,get_ip_session.visit_ip
+
+        /** Combine the IP address with the sequential session number to create a unique session ID for that IP address **/
+        /** Note: This session ID is not unique per day. For example: On day one, at 11:59 pm, IP address is assigned a session ID of 127.0.0.1-0 **/
+        /** On day two, at 1:45 am more than 30 minutes from the previous visit, the session ID is now 127.0.0.1-1 and does not start over at 127.0.0.1-0 **/
+        ,get_ip_session.visit_ip || '-' || get_ip_session.ip_session_number as visitor_ip_session
+        
+        ,get_ip_session.visit_os
+        ,get_ip_session.visit_device_type
+        ,get_ip_session.visit_user_agent
+        ,get_ip_session.visit_referrer
+        ,get_ip_session.visit_referring_domain
+        ,get_ip_session.visit_search_keyword
+        ,get_ip_session.visit_landing_page
+        ,get_ip_session.visit_landing_page_path
+        ,get_ip_session.utm_content
+        ,get_ip_session.utm_campaign
+        ,get_ip_session.utm_adset
+        ,get_ip_session.utm_term
+        ,get_ip_session.utm_medium
+        ,get_ip_session.utm_source
+        ,get_ip_session.channel
+        ,get_ip_session.sub_channel
+        ,get_ip_session.visit_attributed_source
+        ,get_ip_session.is_wall_displayed
+        ,get_ip_session.is_paid_referrer
+        ,get_ip_session.is_social_platform_referrer
         ,visit_flags.is_bot
         ,visit_flags.is_internal_traffic
         ,visit_flags.is_invalid_visit
@@ -61,14 +77,18 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,visit_flags.pcp_impressions_count
         ,visit_flags.pcp_impression_clicks_count
         ,visit_flags.pdp_product_add_to_cart_count
-        ,visits.started_at_utc
-        ,visits.updated_at_utc
-    from visits
-        left join visit_flags on visits.visit_id = visit_flags.visit_id
+        ,get_ip_session.started_at_utc
+        ,get_ip_session.updated_at_utc
+    from get_ip_session
+        left join visit_flags on get_ip_session.visit_id = visit_flags.visit_id
     where not visit_flags.is_invalid_visit
-        and visits.visit_landing_page <> ''
+        and get_ip_session.visit_landing_page <> ''
         
 
 )
 
-select * from joined_visits
+select 
+    * 
+    /** Adds the row number per visitor_ip_session so that marketing can isolate the first visit for this IP session in order to attribute the source of the visit appropriately **/
+    ,row_number() over(partition by visitor_ip_session order by started_at_utc, visit_id) as ip_session_visit_number
+from joined_visits
