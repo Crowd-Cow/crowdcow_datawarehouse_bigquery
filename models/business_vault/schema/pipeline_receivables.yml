@@ -16,6 +16,9 @@ models:
       - name: sku_id
         description: "SKU ID"
 
+      - name: sku_key
+        description: Key that can be used to join to SKUs to get information about the SKU at the time the receivable was updated
+
       - name: quantity
         description: "Quantity of SKUs received"
 

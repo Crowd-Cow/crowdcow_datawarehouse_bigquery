@@ -27,6 +27,7 @@ receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
         ,pipeline_schedule.fc_scan_fc_id as fc_id
         ,receivable.sku_id
         ,sku.cut_id
+        ,sku.sku_key
         ,receivable.quantity
         ,receivable.marked_destroyed_at_utc is not null as is_destroyed
         ,receivable.marked_destroyed_at_utc
