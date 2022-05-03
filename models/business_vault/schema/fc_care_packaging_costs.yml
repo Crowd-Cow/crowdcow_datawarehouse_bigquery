@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: fc_care_packaging_costs
+    description: "Monthly costs of packaging, FC labor, and Care labor. Maintained by Finance."
+    columns:
+      - name: fc_name
+        description: "Fulfillment center name that costs are associated with"
+
+      - name: fc_id
+        description: "Fulfillment center name that costs are associated with"
+
+      - name: box_type
+        description: "Name of box type used for packaging"
+
+      - name: month_of_costs
+        description: "Month that costs are applied to"
+
+      - name: cost_usd
+        description: "Cost of labor, boxes, coolant in USD"
+
+      - name: cost_type
+        description: "description of cost"
+
+      - name: labor_hours
+        description: "Total FC hours for the month"
+
+      - name: box_id
+        description: "ID of box used for packaging orders"
+
+      - name: box_height_in_inches
+        description: "Height of box used for orders"
+
+      - name: box_width_in_inches
+        description: "Width of box used for orders"
+
