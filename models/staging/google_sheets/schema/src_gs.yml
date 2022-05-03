@@ -100,4 +100,22 @@ sources:
 
           - name: inventory_classification
             description: Inventory classification for the cut (e.g. Discontinued, seasonal, etc.)
+
+      - name: fc_care_packaging_costs
+        description: Monthly costs for care, fc, and packaging
+        columns:
+          - name: fc_name
+            description: name of FC
+      
+          - name: month
+            description: month start date to which costs are applied
+
+          - name: box_type
+            description: name of box
+
+          - name: cost_usd
+            description: cost in usd
+
+          - name: labor_hours
+            description: total FC labor hours for the month
             
