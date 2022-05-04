@@ -14,7 +14,7 @@ models:
         description: "Timestamp for when the record was updated by the system"
 
       - name: sku_lot_cost_usd
-        description: "SKU lost cost"
+        description: "SKU lost cost. This field is no longer populating and has been $0 since 2019"
 
       - name: sku_id
         description: "SKU ID"
