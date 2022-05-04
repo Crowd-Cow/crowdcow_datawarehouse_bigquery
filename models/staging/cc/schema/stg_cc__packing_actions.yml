@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: stg_cc__packing_actions
+    description: "FC Actions during picking and packing process"
+    columns:
+      - name: packing_action_id
+        description: "Unique id of action"
+
+      - name: sku_box_id
+        description: "SKU Box picked from"
+
+      - name: user_id
+        description: "FC employee user id"
+
+      - name: sku_id
+        description: "SKU id of picked/packed item"
+
+      - name: fc_location_id
+        description: "FC where picking or packing is occurring"
+
+      - name: shipment_id
+        description: "Item's associated shipment id"
+
+      - name: barcode
+        description: "Barcode of item picked/packed"
+
+      - name: order_id
+        description: "Order id being picked/packed"
+
+      - name: input_method
+        description: "Manually picked/packed"
+
+      - name: action
+        description: "Description of step in picking/packing process"
+
+      - name: details
+        description: "Item picked/packed"
+
+      - name: created_at_utc
+        description: "Time action occurred"
+
+      - name: updated_at_utc
+        description: "Timestamp of updated action"
+
