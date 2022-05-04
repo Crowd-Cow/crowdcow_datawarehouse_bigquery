@@ -8,11 +8,12 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
 ,visit as ( select * from {{ ref('base_cc__ahoy_visits') }} )
 ,postal_code as ( select * from {{ ref('stg_cc__postal_codes') }} )
 ,identity as ( select * from {{ ref('int_recent_user_identities') }} )
-,contact as ( select * from {{ ref('stg_pb__contacts') }} )
+,contact as ( select * from {{ ref('contacts') }} )
 
 ,user_contacts as (
     select 
         user_token
+        ,owner_name
         ,last_call_at_utc
         ,total_calls
         ,call_result
@@ -61,6 +62,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_contacts.last_call_at_utc
         ,user_contacts.total_calls
         ,user_contacts.call_result
+        ,user_contacts.owner_name
         ,most_recent_membership.most_recent_membership_created_date
         ,most_recent_membership.most_recent_membership_cancelled_date
         ,membership_count.user_id is not null and total_completed_membership_orders > 0 as is_member
@@ -178,6 +180,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,total_california_orders
         ,total_calls as total_phone_burner_calls
         ,call_result as last_phone_burner_call_result
+        ,owner_name as phone_burner_contact_owner
         ,attributed_visit_id
         
         ,nullif(
