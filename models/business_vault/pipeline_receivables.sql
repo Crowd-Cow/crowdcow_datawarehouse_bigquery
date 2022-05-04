@@ -91,4 +91,3 @@ receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
 select * 
 from pipeline_receivable
 where not is_order_removed
-    and not is_destroyed
