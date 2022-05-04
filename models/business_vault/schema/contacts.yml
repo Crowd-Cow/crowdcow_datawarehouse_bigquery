@@ -16,6 +16,9 @@ models:
       - name: owner_id
         description: "Phone Burner owner ID"
 
+      - name: owner_name
+        description: "Crowd Cow user that owns the Phone Burner contact"
+
       - name: latitude
         description: "Latitude associated with a customer"
 
