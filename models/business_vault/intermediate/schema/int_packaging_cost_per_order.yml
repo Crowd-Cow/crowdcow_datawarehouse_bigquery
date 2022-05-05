@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: int_packaging_cost_per_order
+    description: "Joins boxes used to package an order with box costs"
+    columns:
+      - name: order_id
+        description: "Shipped order id"
+
+      - name: order_packaging_cost
+        description: "Total cost for boxes used"
+
