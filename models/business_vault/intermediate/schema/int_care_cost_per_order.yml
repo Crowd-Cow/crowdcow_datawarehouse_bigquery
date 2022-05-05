@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: int_care_cost_per_order
+    description: "Joins monthly costs and the total orders shipped to get an average cost per order"
+    columns:
+      - name: order_id
+        description: "shipped order id"
+
+      - name: order_care_cost
+        description: "avg cost per order based on monthly costs entered by finance"
+

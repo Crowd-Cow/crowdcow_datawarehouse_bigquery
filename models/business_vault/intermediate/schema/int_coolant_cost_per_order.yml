@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: int_coolant_cost_per_order
+    description: "Coolant cost per order based on monthly coolant costs and weight in order"
+    columns:
+      - name: order_id
+        description: "Shipped order id"
+
+      - name: order_coolant_cost
+        description: "Cost of weight used in order"
+
