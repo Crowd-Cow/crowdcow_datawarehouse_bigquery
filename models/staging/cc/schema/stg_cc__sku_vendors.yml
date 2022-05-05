@@ -38,4 +38,4 @@ models:
         description: "Boolean indicating if the vendor sell boxed beef"
 
       - name: is_marketplace
-        description: "Boolean indicating if the vendor is a marketplace vendor. A busniess decision was made to define a "marketplace" SKU as any owner that is NOT Crowd Cow (ID = 91) instead of using the marketplace flag in this table"
+        description: "Boolean indicating if the vendor is a marketplace vendor. A busniess decision was made to define a 'marketplace' SKU as any owner that is NOT Crowd Cow (ID = 91) instead of using the marketplace flag in this table"
