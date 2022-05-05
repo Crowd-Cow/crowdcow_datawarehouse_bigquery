@@ -1,0 +1,99 @@
+version: 2
+
+models:
+  - name: acumatica_invoices
+    description: "Business logic for Acumatica invoices. Called Bills in Acumatica"
+    columns:
+      - name: bill_item_id
+        description: "Surrogate key to provide a unique record for a bill item. Combines `bill_id` and `line_number`"
+
+      - name: invoice_key
+        description: "Surrogate key to provied a unique record to match to invoices for lots. Combines `vendor_ref` and `vendor`"
+
+      - name: bill_id
+        description: "Acumatica system ID for the bill"
+
+      - name: reference_number
+        description: "Acumatica reference number"
+
+      - name: location_id
+        description: "Location ID"
+
+      - name: vendor
+        description: "Acumatica vendor ID"
+
+      - name: vendor_ref
+        description: "Third party reference provided by vendors. Usually the vendor's invoice number"
+
+      - name: account_nbr
+        description: "Acumatica account number"
+
+      - name: sub_account
+        description: "Acumatica sub account number"
+
+      - name: currency_id
+        description: "Currency of the bill amount"
+
+      - name: notes
+        description: "Free form notes to provide information about the bill"
+
+      - name: cash_account
+        description: "Cash account number"
+
+      - name: bill_description
+        description: "Description of the bill"
+
+      - name: bill_type
+        description: "Type of bill (e.g. credit adjustment, debit adjustment, etc)"
+
+      - name: bill_amount
+        description: "Total amount of the bill"
+
+      - name: terms
+        description: "Payment terms of the bill (e.g. upon receipt, net30, etc)"
+
+      - name: post_period
+        description: "Accounting posting period"
+
+      - name: bill_status
+        description: "Status of the bill (e.g. open, closed, etc)"
+
+      - name: line_item_amount
+        description: "Amount of the line item"
+
+      - name: branch
+        description: "Acumatica branch"
+
+      - name: line_item_description
+        description: "Description of the line item"
+
+      - name: line_item_extended_cost
+        description: "Line item extended cost"
+
+      - name: line_item_quantity
+        description: "Quantity of the line item"
+
+      - name: transaction_description
+        description: "Description of the line item transaction"
+
+      - name: unit_cost
+        description: "Unit cost of the line item"
+
+      - name: line_item_note
+        description: "Free form notes to describe the line item"
+
+      - name: line_number
+        description: "Line item number"
+
+      - name: is_on_hold
+        description: "Boolean indicating if the bill is on hold"
+
+      - name: is_approved_for_payment
+        description: "Boolean indicating if the bill has been approved for payment"
+
+      - name: bill_date_utc
+        description: "Timestamp of the bill"
+
+      - name: due_date_utc
+        description: "Timestamp for when the bill is due"
+

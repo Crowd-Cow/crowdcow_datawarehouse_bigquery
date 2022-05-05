@@ -10,6 +10,9 @@ models:
           - unique
           - not_null
 
+      - name: lot_number
+        description: Lot number
+
       - name: farm_out_proposed_date
         description: "The proposed date for when the receivable will leave the farm"
 

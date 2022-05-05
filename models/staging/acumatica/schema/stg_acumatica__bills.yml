@@ -9,6 +9,9 @@ models:
         tests:
           - unique
           - not_null
+
+      - name: invoice_key
+        description: Surrogate key to provide a unique key to join to invoice mapping to lots. Combines `vendor_ref` and `vendor`
       
       - name: bill_id
         description: "Acumatica system ID for the bill"

@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: sku_lots
+    description: "Business logic model for sku lots"
+    ccolumns:
+      - name: sku_lot_id
+        description: "SKU lot ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: sku_id
+        description: "SKU ID"
+
+      - name: sku_key
+        description: Key to join to SKUs at the time the sku lot was created
+
+      - name: lot_id
+        description: "Lot ID"
+
+      - name: lot_key
+        description: Key to join to lots at the time the sku lot was created
+
+      - name: sku_lot_cost_usd
+        description: "SKU lost cost. This field is no longer populating and has been $0 since 2019"
+
+      - name: sku_lot_quantity
+        description: "Quantity of SKUs in the received lot"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created in the system"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated by the system"

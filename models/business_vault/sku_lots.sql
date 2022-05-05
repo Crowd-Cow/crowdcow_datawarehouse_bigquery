@@ -18,4 +18,14 @@ sku_lot as ( select * from {{ ref('stg_cc__sku_lots') }} )
             and sku_lot.created_at_utc < sku.adjusted_dbt_valid_to
 )
 
-select * from get_keys
+select
+    sku_lot_id
+    ,sku_id
+    ,sku_key
+    ,lot_id
+    ,lot_key
+    ,sku_lot_cost_usd
+    ,sku_lot_quantity
+    ,created_at_utc
+    ,updated_at_utc
+from get_keys
