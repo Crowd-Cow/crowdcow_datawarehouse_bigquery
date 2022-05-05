@@ -111,8 +111,9 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
     from get_invoice_details
 )
 
-select
-    lot_number
+select distinct
+    {{ dbt_utils.surrogate_key(['lot_number','sku_id']) }} as order_received_id
+    ,lot_number
     ,sku_id
     ,sku_key
     ,fc_id
