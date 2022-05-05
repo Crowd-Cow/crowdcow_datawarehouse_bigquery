@@ -16,6 +16,9 @@ models:
       - name: fc_id
         description: "Fulfillment center ID"
 
+      - name: pipeline_order_id
+        description: Pipeline order ID
+
       - name: processor_name
         description: "Processor name"
 

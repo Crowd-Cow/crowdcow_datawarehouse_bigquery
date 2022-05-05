@@ -16,6 +16,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,ordered_item.sku_id
         ,current_sku.sku_key
         ,ordered_item.fc_id
+        ,current_lot.pipeline_order_id
         ,current_lot.delivered_at_utc
         ,ordered_item.processor_out_name as processor_name
 
@@ -32,7 +33,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         left join current_lot on ordered_item.lot_number = current_lot.lot_number
         left join current_sku on ordered_item.sku_id = current_sku.sku_id
         left join vendor on current_lot.owner_id = vendor.sku_vendor_id
-    group by 1,2,3,4,5,6,7,8
+    group by 1,2,3,4,5,6,7,8,9
 )
 
 ,get_received_detail as (
@@ -41,6 +42,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,received_item.sku_id
         ,current_sku.sku_key
         ,received_item.sku_lot_quantity as quantity_received
+        ,current_lot.pipeline_order_id
         ,current_lot.fc_id
         ,current_lot.delivered_at_utc
         ,pipeline_schedule.processor_out_name as processor_name
@@ -57,6 +59,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
 ,get_ordered_received as (
     select
         coalesce(get_ordered_detail.lot_number,get_received_detail.lot_number) as lot_number
+        ,coalesce(get_ordered_detail.pipeline_order_id,get_received_detail.pipeline_order_id) as pipeline_order_id
         ,coalesce(get_ordered_detail.sku_id,get_received_detail.sku_id) as sku_id
         ,coalesce(get_ordered_detail.sku_key,get_received_detail.sku_key) as sku_key
         ,coalesce(get_ordered_detail.fc_id,get_received_detail.fc_id) as fc_id
@@ -117,6 +120,7 @@ select distinct
     ,sku_id
     ,sku_key
     ,fc_id
+    ,pipeline_order_id
     ,processor_name
     ,cost_per_unit_usd
     ,quantity_ordered
