@@ -7,6 +7,12 @@ models:
       - name: pipeline_order_id
         description: "Pipeline order ID"
 
+      - name: lot_number
+        description: Lot number
+
+      - name: lot_key
+        description: Key that can be used to join to lots to get information about the lot at the time the receivable was updated
+
       - name: receivable_status
         description: "Pipeline receivable status (e.g. In transit processor, In transit to FC, Arrived at FC, etc.)"
 

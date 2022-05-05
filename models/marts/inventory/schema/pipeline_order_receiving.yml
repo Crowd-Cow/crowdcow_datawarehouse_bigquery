@@ -1,0 +1,62 @@
+version: 2
+
+models:
+  - name: pipeline_order_receiving
+    description: "Combines inventory that was ordered with inventory that was received/invoiced"
+    columns:
+      - name: lot_number
+        description: "Lot number"
+
+      - name: sku_id
+        description: "SKU ID"
+
+      - name: sku_key
+        description: "Key to join to SKUs using the current SKU snapshot value"
+
+      - name: fc_id
+        description: "Fulfillment center ID"
+
+      - name: processor_name
+        description: "Processor name"
+
+      - name: cost_per_unit_usd
+        description: "SKU cost per unit"
+
+      - name: quantity_ordered
+        description: "The amount of the SKU ordered"
+
+      - name: sku_weight_ordered
+        description: "The total weight of the SKUs ordered"
+
+      - name: total_sku_cost_ordered
+        description: "The total cost of the SKUs ordered"
+
+      - name: total_lot_cost_ordered
+        description: "The total cost of all the SKUs ordered in the lot"
+
+      - name: quantity_received
+        description: "The amount of SKUs received"
+
+      - name: sku_weight_received
+        description: "The total weight of SKUs received"
+
+      - name: total_sku_cost_received
+        description: "The total cost of SKUs received"
+
+      - name: total_lot_cost_received
+        description: "The total cost of all the SKUs received in the lot"
+
+      - name: total_sku_cost_invoiced
+        description: "The total invoiced cost of SKUs received for the lot"
+
+      - name: total_invoice_usd
+        description: "Total invoice amount for the lot"
+
+      - name: pct_of_cost_received
+        description: "The percent of cost of the SKUs received to the total cost for SKUs received for the lot"
+
+      - name: is_marketplace
+        description: "Boolean indicating if the owner of these SKUs is considered a marketplace onwer"
+
+      - name: delivered_at_utc
+        description: "Timestamp for when the lot was delivered"

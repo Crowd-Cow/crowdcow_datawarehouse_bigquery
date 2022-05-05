@@ -3,12 +3,14 @@ with
 receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
 ,pipeline_schedule as ( select * from {{ ref('pipeline_schedules') }} )
 ,pipeline_order as ( select * from {{ ref('stg_cc__pipeline_orders') }} )
+,lot as ( select * from {{ ref('stg_cc__lots') }} )
 ,sku as ( select * from {{ ref('skus') }} )
 
 ,pipeline_receivable as (
     select
         receivable.pipeline_order_id
         ,pipeline_order.lot_number
+        ,lot.lot_key
     
         ,case
             when pipeline_schedule.fc_scan_actual_date is not null then 'COMPLETED'
@@ -30,10 +32,11 @@ receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
         ,sku.sku_key
         ,receivable.quantity_ordered
         ,receivable.marked_destroyed_at_utc is not null as is_destroyed
+        ,coalesce(pipeline_order.is_removed,FALSE) as is_order_removed
         ,receivable.marked_destroyed_at_utc
         ,receivable.created_at_utc
         ,receivable.updated_at_utc
-        ,receivable.cost_per_unit_usd
+        ,nullif(receivable.cost_per_unit_usd,0) as cost_per_unit_usd
         ,pipeline_schedule.farm_out_proposed_date
         ,pipeline_schedule.farm_out_actual_date
         ,pipeline_schedule.farm_out_status
@@ -80,7 +83,11 @@ receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
         left join sku on receivable.sku_id = sku.sku_id
             and receivable.updated_at_utc >= sku.adjusted_dbt_valid_from
             and receivable.updated_at_utc < sku.adjusted_dbt_valid_to
-    where not coalesce(pipeline_order.is_removed,FALSE)
+        left join lot on pipeline_order.lot_number = lot.lot_number
+            and receivable.updated_at_utc >= lot.adjusted_dbt_valid_from
+            and receivable.updated_at_utc < lot.adjusted_dbt_valid_to
 )
 
-select * from pipeline_receivable
+select * 
+from pipeline_receivable
+where not is_order_removed

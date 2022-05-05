@@ -3,6 +3,7 @@ with
 pipeline_schedule as ( select * from {{ ref('stg_cc__pipeline_schedules') }} )
 ,actor as ( select * from {{ ref('stg_cc__pipeline_actors') }} )
 ,storage as ( select * from {{ ref('stg_cc__offsite_storages') }} )
+,pipeline_order as ( select * from {{ ref('stg_cc__pipeline_orders') }} ) 
 
 ,most_recent_schedule_values as (
     select
@@ -25,14 +26,17 @@ pipeline_schedule as ( select * from {{ ref('stg_cc__pipeline_schedules') }} )
         ,actor.actor_id
         ,actor.pipeline_actor_name
         ,storage.offsite_storage_name
+        ,pipeline_order.lot_number
     from most_recent_schedule_values
         left join actor on most_recent_schedule_values.last_pipeline_actor_id = actor.pipeline_actor_id
         left join storage on most_recent_schedule_values.last_offsite_storage_id = storage.offsite_storage_id
+        left join pipeline_order on most_recent_schedule_values.pipeline_order_id = pipeline_order.pipeline_order_id
 )
 
 ,pivot_schedule_types as (
     select 
         pipeline_order_id
+        ,lot_number
         ,max(case when schedule_type = 'FARM_OUT' then last_proposed_date end) as farm_out_proposed_date
         ,max(case when schedule_type = 'FARM_OUT' then last_actual_date end) as farm_out_actual_date
         ,max(case when schedule_type = 'FARM_OUT' then actor_id end) as farm_id
@@ -75,7 +79,7 @@ pipeline_schedule as ( select * from {{ ref('stg_cc__pipeline_schedules') }} )
         ,max(case when schedule_type = 'FC_SCAN' then pipeline_actor_name end) as fc_scan_name
         ,max(case when schedule_type = 'FC_SCAN' then last_pipeline_status end) as fc_scan_status
     from schedule_joins
-    group by 1
+    group by 1,2
 )
 
 select * from pivot_schedule_types

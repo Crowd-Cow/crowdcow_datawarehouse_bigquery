@@ -23,6 +23,7 @@ source as ( select * from {{ source('acumatica', 'bills') }} )
 ,renamed as (
     select
         {{ dbt_utils.surrogate_key(['id','line_number']) }} as bill_item_id
+        ,{{ dbt_utils.surrogate_key( ['vendor_ref','vendor'] ) }} as invoice_key
         ,id as bill_id
         ,date as bill_date_utc
         ,{{ clean_strings('note') }} as notes
@@ -30,6 +31,7 @@ source as ( select * from {{ source('acumatica', 'bills') }} )
         ,cash_account
         ,{{ clean_strings('description') }} as bill_description
         ,{{ clean_strings('type') }} as bill_type
+        ,amount as bill_amount
         ,reference_number
         ,location_id
         ,hold as is_on_hold

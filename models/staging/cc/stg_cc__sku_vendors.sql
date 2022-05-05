@@ -17,7 +17,10 @@ renamed as (
         ,sku_plan_id
         ,preferred_fc_id
         ,boxed_beef as is_boxed_beef
-        ,marketplace as is_marketplace
+        
+        /*** Busniess decision made to define a "marketplace" SKU as any owner that is NOT Crowd Cow (ID = 91) instead of using the marketplace flag in this table ***/
+        --,marketplace as is_marketplace
+        ,id <> 91 as is_marketplace
 
     from source
 
