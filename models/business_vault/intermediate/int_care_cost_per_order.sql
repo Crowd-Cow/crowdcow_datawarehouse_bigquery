@@ -1,11 +1,11 @@
-with care_costs as (select * from stg_gs__fc_care_packaging_costs where cost_type = 'CS_LABOR_COST')
+with care_costs as (select * from {{ ref ( 'stg_gs__fc_care_packaging_costs' ) }} where cost_type = 'CS_LABOR_COST')
     ,orders as (select * from {{ ref('orders') }} )
 
 ,month_to_cost_timing as 
     (select month_of_costs
         ,cost_usd
         , cost_type
-        , lead(month_of_costs,1) over (order by month_of_costs) as leading_month
+        , ifnull(lead(month_of_costs,1) over(order by month_of_costs),'2999-01-01') as leading_month
     from care_costs
     order by month_of_costs
      )
@@ -18,8 +18,7 @@ with care_costs as (select * from stg_gs__fc_care_packaging_costs where cost_typ
          ,round(month_to_cost_timing.cost_usd/count(distinct orders.order_id),2) as care_cost_per_order
     from orders
         join month_to_cost_timing on orders.shipped_at_utc >= month_to_cost_timing.month_of_costs
-                                  and (orders.shipped_at_utc < month_to_cost_timing.leading_month
-                                       or month_to_cost_timing.leading_month is null)
+                                  and orders.shipped_at_utc < month_to_cost_timing.leading_month
     group by 1, 3
 )
 
