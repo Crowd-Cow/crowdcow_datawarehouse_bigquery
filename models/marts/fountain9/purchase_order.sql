@@ -32,4 +32,7 @@ purchase_order as ( select * from {{ ref('pipeline_order_receiving') }} )
     group by 1,2,3,4,5,6,7,8,9,10,11,12
 )
 
-select * from join_data where fc_id not in (8,10,14) --filter out Poseidon, Nationwide, and Valmeyer FCs
+select * 
+from join_data 
+where fc_id not in (8,10,14) --filter out Poseidon, Nationwide, and Valmeyer FCs
+    and po_date >= '2021-01-01'
