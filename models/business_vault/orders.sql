@@ -66,6 +66,9 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(order_revenue.net_revenue) as net_revenue
         ,zeroifnull(order_cost.product_cost) as product_cost
         ,zeroifnull(order_shipment.shipment_cost) as shipment_cost
+        ,zeroifnull(order_cost.order_coolant_cost) as coolant_cost
+        ,zeroifnull(order_cost.order_packaging_cost) as packaging_cost
+        ,zeroifnull(order_cost.order_care_cost) as care_cost
         ,orders.coolant_weight_in_pounds
         ,orders.order_additional_coolant_weight_in_pounds
         ,orders.order_bids_count
