@@ -1,0 +1,12 @@
+version: 2
+
+model:
+  - name: stg_gs__standard_sku_cost
+    description: Staging model for standard SKU cost reference data
+    columns:
+      - name: sku_id
+        description: SKU ID
+
+      - name: standard_sku_cost_usd
+        description: Standard SKU cost value created by finance
+        

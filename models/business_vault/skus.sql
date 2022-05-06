@@ -6,6 +6,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
 ,sku_vendor as ( select * from {{ ref('stg_cc__sku_vendors') }} )
 ,ais as ( select * from {{ ref('stg_gs__always_in_stock') }} )
 ,inventory_classification as ( select * from {{ ref('stg_gs__inventory_classification') }} )
+,standard_sku_cost as ( select * from {{ ref('stg_gs__standard_sku_cost') }} )
 
 ,sku_joins as (
     select 
@@ -26,6 +27,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku.sku_weight
         ,sku.owned_sku_cost_usd
         ,sku.marketplace_cost_usd
+        ,standard_sku_cost.standard_sku_cost_usd
         ,sku.platform_fee_usd
         ,sku.fulfillment_fee_usd
         ,sku.payment_processing_fee_usd
@@ -67,6 +69,8 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         left join farm on sku.sku_vendor_id = farm.sku_vendor_id
             and farm.dbt_valid_to is null
         left join sku_vendor on sku.sku_vendor_id = sku_vendor.sku_vendor_id
+        left Join standard_sku_cost on sku.sku_id = standard_sku_cost.sku_id
+            and sku.dbt_valid_to is null
 )
 
 ,final as (
@@ -86,6 +90,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku_joins.sku_weight
         ,sku_joins.owned_sku_cost_usd
         ,sku_joins.marketplace_cost_usd
+        ,sku_joins.standard_sku_cost_usd
         ,iff(sku_joins.is_marketplace,sku_joins.marketplace_cost_usd,sku_joins.owned_sku_cost_usd) as sku_cost_usd
         ,sku_joins.platform_fee_usd
         ,sku_joins.fulfillment_fee_usd
