@@ -16,7 +16,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,ordered_item.sku_id
         ,current_sku.sku_key
         ,ordered_item.fc_id
-        ,current_lot.pipeline_order_id
+        ,ordered_item.pipeline_order_id
         ,current_lot.delivered_at_utc
         ,ordered_item.processor_out_name as processor_name
 
