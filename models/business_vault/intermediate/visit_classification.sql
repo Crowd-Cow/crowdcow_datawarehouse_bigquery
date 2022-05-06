@@ -57,12 +57,6 @@ base_visits as (
         ,visit_search_keyword
         ,visit_browser
         ,visit_ip
-
-        /** Assign a sequential session number to the same IP address if the visits are within 30 minutes of each other **/
-        /** For example: the first visit for IP address 127.0.0.1 gets a session number of 0. If the second visit for the same IP address is within 30 minutes, the session number stays 0. **/
-        /** If the next visit for the same IP address is more than 30 minutes from the previous visit, the session number increments to 1 **/
-        ,CONDITIONAL_TRUE_EVENT(DATEDIFF(MIN, LAG(started_at_utc) OVER (PARTITION BY visit_ip ORDER BY started_at_utc ASC), started_at_utc) >= 30) OVER (PARTITION BY visit_ip ORDER BY started_at_utc ASC) AS ip_session_number
-
         ,visit_device_type
         ,visit_user_agent
         ,visit_os
@@ -94,11 +88,6 @@ base_visits as (
         ,visits.visit_search_keyword
         ,visits.visit_browser
         ,visits.visit_ip
-
-        /** Combine the IP address with the sequential session number to create a unique session ID for that IP address **/
-        /** Note: This session ID is not unique per day. For example: On day one, at 11:59 pm, IP address is assigned a session ID of 127.0.0.1-0 **/
-        /** On day two, at 1:45 am more than 30 minutes from the previous visit, the session ID is now 127.0.0.1-1 and does not start over at 127.0.0.1-0 **/
-        ,visits.visit_ip || '-' || visits.ip_session_number as visitor_ip_session
         ,visits.visit_device_type
         ,visits.visit_user_agent
         ,visits.visit_os
@@ -146,11 +135,6 @@ base_visits as (
         ,coalesce(visit_search_keyword,'') as visit_search_keyword
         ,visit_browser
         ,visit_ip
-        ,visitor_ip_session
-
-        /** Adds the row number per visitor_ip_session so that marketing can isolate the first visit for this IP session in order to attribute the source of the visit appropriately **/
-        ,row_number() over(partition by visitor_ip_session order by started_at_utc, visit_id) as ip_session_visit_number
-
         ,visit_device_type
         ,visit_user_agent
         ,visit_os
@@ -235,8 +219,6 @@ base_visits as (
         ,visit_search_keyword
         ,visit_browser
         ,visit_ip
-        ,visitor_ip_session
-        ,ip_session_visit_number
         ,visit_device_type
         ,visit_user_agent
         ,visit_os
