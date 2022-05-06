@@ -12,6 +12,7 @@ purchase_order as ( select * from {{ ref('pipeline_order_receiving') }} )
         ,sku.cut_name
         ,sku.category
         ,sku.sub_category
+        ,purchase_order.fc_id
         ,current_fc.fc_name
         ,purchase_order.pipeline_order_id
         ,purchase_order.lot_number
@@ -28,7 +29,7 @@ purchase_order as ( select * from {{ ref('pipeline_order_receiving') }} )
         left join current_fc on purchase_order.fc_id = current_fc.fc_id
         left join pipeline_order on purchase_order.pipeline_order_id = pipeline_order.pipeline_order_id
         left join pipeline_schedule on purchase_order.pipeline_order_id = pipeline_schedule.pipeline_order_id
-    group by 1,2,3,4,5,6,7,8,9,10,11
+    group by 1,2,3,4,5,6,7,8,9,10,11,12
 )
 
-select * from join_data where fc_name not in (8,10,14) --filter out Poseidon, Nationwide, and Valmeyer FCs
+select * from join_data where fc_id not in (8,10,14) --filter out Poseidon, Nationwide, and Valmeyer FCs
