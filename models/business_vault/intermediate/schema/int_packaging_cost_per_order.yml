@@ -6,6 +6,9 @@ models:
     columns:
       - name: order_id
         description: "Shipped order id"
+        tests:
+          - unique
+          - not_null
 
       - name: order_packaging_cost
         description: "Total cost for boxes used"
