@@ -6,7 +6,9 @@ models:
     columns:
       - name: order_id
         description: "shipped order id"
+        tests:
+          - unique
+          - not_null
 
       - name: order_care_cost
         description: "avg cost per order based on monthly costs entered by finance"
-

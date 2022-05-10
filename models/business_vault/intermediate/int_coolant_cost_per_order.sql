@@ -2,42 +2,48 @@ with
 
 coolant_costs as (select * from {{ ref('stg_gs__fc_care_packaging_costs')}} where cost_type = 'COOLANT_COST')
 ,orders as (select * from {{ ref('stg_cc__orders') }})
-,shipments as (select order_id, max(shipped_at_utc) as shipped_at_utc from {{ ref('stg_cc__shipments') }} group by 1)
+,shipments as (select order_id, max(shipped_at_utc) as shipped_at_utc from {{ ref('stg_cc__shipments') }} where shipped_at_utc is not null group by 1)
 
-,order_details as (
-    select 
-        orders.*
+,get_coolant_used as (
+    select
+        orders.order_id
+        ,orders.fc_id
+        ,orders.coolant_weight_in_pounds
         ,shipments.shipped_at_utc
+        ,date_trunc(month,shipments.shipped_at_utc) as shipped_month
     from orders
-    left join shipments on orders.order_id = shipments.order_id
+        left join shipments on orders.order_id = shipments.order_id
 )
 
-,month_to_cost_timing as (
-    select 
-        month_of_costs
+,get_monthly_coolant_usage as (
+    select
+        shipped_month
         ,fc_id
-        ,cost_usd
-        ,ifnull(lead(month_of_costs,1) over(partition by fc_id order by month_of_costs),'2999-01-01') as leading_month
-    from coolant_costs
+        ,sum(coolant_weight_in_pounds) as total_monthly_coolant_pounds
+        ,count(order_id) as order_count
+    from get_coolant_used
+    group by 1,2
 )
 
-,coolant_cost_per_pound as (
-    select 
-        date_trunc('month', order_details.shipped_at_utc) as month_of_shipment
-         ,order_details.fc_id
-         ,month_to_cost_timing.cost_usd
-         ,sum(order_details.coolant_weight_in_pounds) as total_coolant_pounds
-         ,round(month_to_cost_timing.cost_usd/sum(order_details.coolant_weight_in_pounds),2) as cost_per_pound_coolant
-    from order_details
-        join month_to_cost_timing on date_trunc('month', order_details.shipped_at_utc) >= month_to_cost_timing.month_of_costs
-            and date_trunc('month', order_details.shipped_at_utc) < month_to_cost_timing.leading_month
-            and order_details.fc_id = month_to_cost_timing.fc_id
-    group by 1, 2, 3
+,calc_cost_per_pound as (
+    select
+        get_monthly_coolant_usage.*
+        ,coolant_costs.cost_usd
+        ,ifnull(lead(coolant_costs.month_of_costs,1) over(partition by coolant_costs.fc_id order by coolant_costs.month_of_costs),'2999-01-01') as adjusted_date
+        ,div0(cost_usd,total_monthly_coolant_pounds) as coolant_cost_per_pound
+    from get_monthly_coolant_usage
+        inner join coolant_costs on get_monthly_coolant_usage.shipped_month = coolant_costs.month_of_costs
+            and get_monthly_coolant_usage.fc_id = coolant_costs.fc_id
 )
 
-select 
-    order_details.order_id
-    ,order_details.coolant_weight_in_pounds*coolant_cost_per_pound.cost_per_pound_coolant as order_coolant_cost
-from order_details
-    join coolant_cost_per_pound on date_trunc('month', order_details.shipped_at_utc) = coolant_cost_per_pound.month_of_shipment
-        and order_details.fc_id = coolant_cost_per_pound.fc_id
+select
+    get_coolant_used.order_id
+    
+    ,round(
+        get_coolant_used.coolant_weight_in_pounds*calc_cost_per_pound.coolant_cost_per_pound
+    ,2) as order_coolant_cost
+
+from get_coolant_used
+    left join calc_cost_per_pound on get_coolant_used.shipped_month >= calc_cost_per_pound.shipped_month
+        and get_coolant_used.shipped_month < calc_cost_per_pound.adjusted_date
+        and get_coolant_used.fc_id = calc_cost_per_pound.fc_id

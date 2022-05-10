@@ -6,7 +6,9 @@ models:
     columns:
       - name: order_id
         description: "Shipped order id"
+        tests:
+          - unique
+          - not_null
 
       - name: order_coolant_cost
         description: "Cost of weight used in order"
-
