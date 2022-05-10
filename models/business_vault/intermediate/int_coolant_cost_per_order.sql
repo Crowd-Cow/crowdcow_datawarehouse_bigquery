@@ -20,7 +20,7 @@ coolant_costs as (select * from {{ ref('stg_gs__fc_care_packaging_costs')}} wher
         shipped_month
         ,fc_id
         ,sum(coolant_weight_in_pounds) as total_monthly_coolant_pounds
-        ,count(order_id) as order_count
+        ,count(distinct order_id) as order_count
     from get_coolant_used
     group by 1,2
 )
