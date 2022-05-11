@@ -2,7 +2,7 @@ version: 2
 
 models:
 
-  - name: diigtal_ads_campaign_performance
+  - name: digital_ads_campaign_performance
     description: Business logic to combine all digital ads platforms together to measure campaign performance
     columns:
       - name: campaign_performance_id
