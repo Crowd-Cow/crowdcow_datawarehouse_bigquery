@@ -9,7 +9,7 @@ FROM python:3.9.5
 # RUN SNOWSQL_DEST=~/bin SNOWSQL_LOGIN_SHELL=~/.profile bash snowsql-1.2.17-linux_x86_64.bash
 
 RUN pip install pip --upgrade
-RUN pip install "dbt==0.20.0"
+RUN pip install dbt-snowflake
 
 WORKDIR /usr/src/app
 RUN cd /usr/src/app

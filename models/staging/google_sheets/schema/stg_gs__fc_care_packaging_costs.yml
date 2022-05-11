@@ -2,7 +2,7 @@ version: 2
 
 models:
 
-  - name: stg_gs__fc_care_costs
+  - name: stg_gs__fc_care_packaging_costs
     description: Staging model for monthly packaging, care, and fc costs
     columns:
       - name: fc_name
