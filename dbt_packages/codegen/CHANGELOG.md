@@ -1,3 +1,24 @@
+# dbt-codegen v0.6.0
+
+This release creates breaking changes to the `generate_source.sql` macro.
+
+## Features
+- add optional `table_pattern` argument to `generate_source.sql` macro. Default value is '%' to pull all tables in the raw data schema to preserve existing behavior if the `table_pattern` argument is not specified by the user.
+
+# dbt-codegen v0.5.0
+
+This release supports any version (minor and patch) of v1, which means far less need for compatibility releases in the future.
+
+## Under the hood
+- Change `require-dbt-version` to `[">=1.0.0", "<2.0.0"]`
+- Bump dbt-utils dependency
+- Replace `source-paths` and `data-paths` with `model-paths` and `seed-paths` respectively
+- Rename `data` and `analysis` directories to `seeds` and `analyses` respectively
+- Replace `dbt_modules` with `dbt_packages` in `clean-targets`
+
+# dbt-codegen v0.4.1
+🚨 This is a compatibility release in preparation for `dbt-core` v1.0.0 (🎉). Projects using this version with `dbt-core` v1.0.x can expect to see a deprecation warning. This will be resolved in the next minor release.
+
 # dbt-codegen v0.4.0
 
 ## Breaking changes
