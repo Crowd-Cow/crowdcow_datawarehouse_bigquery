@@ -37,6 +37,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
             and is_paid_order
             and (billing_state = 'CA' or order_delivery_state = 'CA')
          ) as total_california_orders
+        ,avg(iff(is_paid_order and not is_cancelled_order,net_revenue,null)) as user_average_order_value
     from order_info
     group by 1
 )
@@ -98,6 +99,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,zeroifnull(user_percentiles.twelve_month_net_revenue_percentile) as twelve_month_net_revenue_percentile
         ,zeroifnull(user_percentiles.lifetime_net_revenue_percentile) as lifetime_net_revenue_percentile
         ,zeroifnull(user_percentiles.total_california_orders) as total_california_orders
+        ,zeroifnull(user_percentiles.user_average_order_value) as user_average_order_value
         ,average_order_days.average_order_frequency_days
         ,average_order_days.average_membership_order_frequency_days
         ,average_order_days.average_ala_carte_order_frequency_days

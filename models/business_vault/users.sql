@@ -112,6 +112,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,zeroifnull(user_order_activity.twelve_month_net_revenue_percentile) as twelve_month_net_revenue_percentile
         ,zeroifnull(user_order_activity.lifetime_net_revenue_percentile) as lifetime_net_revenue_percentile
         ,zeroifnull(user_order_activity.total_california_orders) as total_california_orders
+        ,zeroifnull(user_order_activity.user_average_order_value) as user_average_order_value
 
     from users
         left join membership_count on users.user_id = membership_count.user_id
@@ -178,6 +179,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,twelve_month_net_revenue_percentile
         ,lifetime_net_revenue_percentile
         ,total_california_orders
+        ,user_average_order_value
         ,total_calls as total_phone_burner_calls
         ,call_result as last_phone_burner_call_result
         ,owner_name as phone_burner_contact_owner

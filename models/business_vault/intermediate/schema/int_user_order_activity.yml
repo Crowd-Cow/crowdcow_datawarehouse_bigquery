@@ -64,6 +64,12 @@ models:
       - name: lifetime_net_revenue_percentile
         description: "The percentile rank of a user based on total net revenue amount over the lifetime of a user"
 
+      - name: total_california_orders
+        description: The total number of orders coming from a CA billing address or being shipped to a CA destination address
+
+      - name: user_average_order_value
+        description: The average net revenue of paid, uncancelled orders
+
       - name: average_order_frequency_days
         description: "The average number of days between paid, uncancelled orders for a user"
 
