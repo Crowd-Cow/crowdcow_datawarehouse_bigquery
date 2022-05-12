@@ -111,41 +111,41 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,ranks.completed_gift_card_order_rank
         ,ranks.paid_gift_card_order_rank
         ,ranks.cancelled_gift_card_order_rank
-        ,units.beef_units
-        ,units.bison_units
-        ,units.chicken_units
-        ,units.desserts_units
-        ,units.duck_units
-        ,units.game_meat_units
-        ,units.japanese_wagyu_units
-        ,units.lamb_units
-        ,units.pet_food_units
-        ,units.plant_based_proteins_units
-        ,units.pork_units
-        ,units.salts_seasonings_units
-        ,units.seafood_units
-        ,units.starters_sides_units
-        ,units.turkey_units
-        ,units.wagyu_units
-        ,units.bundle_units
-        ,units.total_units
-        ,units.pct_beef
-        ,units.pct_bison
-        ,units.pct_chicken
-        ,units.pct_desserts
-        ,units.pct_duck
-        ,units.pct_game_meat
-        ,units.pct_japanese_wagyu
-        ,units.pct_lamb
-        ,units.pct_pet_food
-        ,units.pct_plant_based_proteins
-        ,units.pct_pork
-        ,units.pct_salts_seasonings
-        ,units.pct_seafood
-        ,units.pct_starters_sides
-        ,units.pct_turkey
-        ,units.pct_wagyu
-        ,units.pct_bundle
+        ,zeroifnull(units.beef_units) as beef_units
+        ,zeroifnull(units.bison_units) as bison_units
+        ,zeroifnull(units.chicken_units) as chicken_units
+        ,zeroifnull(units.desserts_units) as desserts_units 
+        ,zeroifnull(units.duck_units) as duck_units
+        ,zeroifnull(units.game_meat_units) as game_meat_units
+        ,zeroifnull(units.japanese_wagyu_units) as japanese_wagyu_units
+        ,zeroifnull(units.lamb_units) as lamb_units
+        ,zeroifnull(units.pet_food_units) as pet_food_units
+        ,zeroifnull(units.plant_based_proteins_units) as plant_based_proteins_units
+        ,zeroifnull(units.pork_units) as pork_units
+        ,zeroifnull(units.salts_seasonings_units) as salts_seasonings_units
+        ,zeroifnull(units.seafood_units) as seafood_units
+        ,zeroifnull(units.starters_sides_units) as starters_sides_units
+        ,zeroifnull(units.turkey_units) as turkey_units
+        ,zeroifnull(units.wagyu_units) as wagyu_units
+        ,zeroifnull(units.bundle_units) as bundle_units
+        ,zeroifnull(units.total_units) as total_units
+        ,zeroifnull(units.pct_beef) as pct_beef
+        ,zeroifnull(units.pct_bison) as pct_bison
+        ,zeroifnull(units.pct_chicken) as pct_chicken
+        ,zeroifnull(units.pct_desserts) as pct_desserts
+        ,zeroifnull(units.pct_duck) as pct_duck
+        ,zeroifnull(units.pct_game_meat) as pct_game_meat
+        ,zeroifnull(units.pct_japanese_wagyu) as pct_japanese_wagyu
+        ,zeroifnull(units.pct_lamb) as pct_lamb
+        ,zeroifnull(units.pct_pet_food) as pct_pet_food
+        ,zeroifnull(units.pct_plant_based_proteins) as pct_plant_based_proteins
+        ,zeroifnull(units.pct_pork) as pct_pork
+        ,zeroifnull(units.pct_salts_seasonings) as pct_salts_seasonings 
+        ,zeroifnull(units.pct_seafood) as pct_seafood
+        ,zeroifnull(units.pct_starters_sides) as pct_starters_sides
+        ,zeroifnull(units.pct_turkey) as pct_turkey
+        ,zeroifnull(units.pct_wagyu) as pct_wagyu
+        ,zeroifnull(units.pct_bundle) as pct_bundle
         ,orders.order_created_at_utc
         ,orders.order_updated_at_utc
         ,orders.order_checkout_completed_at_utc
