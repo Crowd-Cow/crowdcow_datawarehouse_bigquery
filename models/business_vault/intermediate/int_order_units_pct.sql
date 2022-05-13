@@ -8,6 +8,7 @@ order_item_details as ( select * from {{ ref('order_item_details') }} )
         order_item_details.order_id
         ,order_item_details.sku_id 
         ,order_item_details.sku_quantity
+        ,order_item_details.sku_net_product_revenue
         ,iff(not order_item_details.is_single_sku_bid_item,'BUNDLE',sku.category) as modified_category
     from order_item_details
         left join sku on order_item_details.sku_key = sku.sku_key
@@ -33,6 +34,24 @@ order_item_details as ( select * from {{ ref('order_item_details') }} )
         ,sum(iff(modified_category = 'WAGYU',sku_quantity,0)) as wagyu_units
         ,sum(iff(modified_category = 'BUNDLE',sku_quantity,0)) as bundle_units
         ,sum(sku_quantity) as total_units
+        
+        ,sum(iff(modified_category = 'BEEF',sku_net_product_revenue,0)) as beef_revenue
+        ,sum(iff(modified_category = 'BISON',sku_net_product_revenue,0)) as bison_revenue
+        ,sum(iff(modified_category = 'CHICKEN',sku_net_product_revenue,0)) as chicken_revenue
+        ,sum(iff(modified_category = 'DESSERTS',sku_net_product_revenue,0)) as desserts_revenue
+        ,sum(iff(modified_category = 'DUCK',sku_net_product_revenue,0)) as duck_revenue
+        ,sum(iff(modified_category = 'GAME MEAT',sku_net_product_revenue,0)) as game_meat_revenue
+        ,sum(iff(modified_category = 'JAPANESE WAGYU',sku_net_product_revenue,0)) as japanese_wagyu_revenue
+        ,sum(iff(modified_category = 'LAMB',sku_net_product_revenue,0)) as lamb_revenue
+        ,sum(iff(modified_category = 'PET FOOD',sku_net_product_revenue,0)) as pet_food_revenue
+        ,sum(iff(modified_category = 'PLANT-BASED PROTEINS',sku_net_product_revenue,0)) as plant_based_proteins_revenue
+        ,sum(iff(modified_category = 'PORK',sku_net_product_revenue,0)) as pork_revenue
+        ,sum(iff(modified_category = 'SALTS & SEASONINGS',sku_net_product_revenue,0)) as salts_seasonings_revenue
+        ,sum(iff(modified_category = 'SEAFOOD',sku_net_product_revenue,0)) as seafood_revenue
+        ,sum(iff(modified_category = 'STARTERS & SIDES',sku_net_product_revenue,0)) as starters_sides_revenue
+        ,sum(iff(modified_category = 'TURKEY',sku_net_product_revenue,0)) as turkey_revenue
+        ,sum(iff(modified_category = 'WAGYU',sku_net_product_revenue,0)) as wagyu_revenue
+        ,sum(iff(modified_category = 'BUNDLE',sku_net_product_revenue,0)) as bundle_revenue
     from category_reassignment
     group by 1
 )
