@@ -10,14 +10,46 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
 ,pipeline_order as ( select * from {{ ref('stg_cc__pipeline_orders') }} )
 
 ,union_skus as (
-    select packed_items.* 
+    select 
+        packed_items.*
     from packed_items
         inner join completed_orders on packed_items.order_id = completed_orders.order_id
         inner join non_gift_orders on packed_items.order_id = non_gift_orders.order_id
     
     union all
     
-    select ordered_items.* 
+    select 
+        ordered_items.order_item_detail_id
+        ,ordered_items.order_id
+        ,ordered_items.bid_id
+        ,ordered_items.bid_item_id
+        ,ordered_items.sku_id
+        ,ordered_items.sku_key
+
+        /*** The SKU box and lot information for an order item is not known until the order is packed. ***/
+        ,null::int as sku_box_id
+        ,null::text as sku_box_key
+        ,null::int as sku_owner_id
+        ,null::text as lot_number
+
+        ,ordered_items.fc_id
+        ,ordered_items.fc_key
+        ,ordered_items.promotion_id
+        ,ordered_items.bid_item_name
+        ,ordered_items.bid_quantity
+        ,ordered_items.sku_quantity
+        ,ordered_items.bid_list_price_usd
+        ,ordered_items.bid_gross_product_revenue
+        ,ordered_items.item_member_discount
+        ,ordered_items.item_merch_discount
+        ,ordered_items.item_promotion_discount
+        ,ordered_items.is_single_sku_bid_item
+        ,false as is_item_packed
+        ,false as was_manually_changed
+        ,ordered_items.created_at_utc
+        ,ordered_items.updated_at_utc
+        ,null::timestamp as packed_created_at_utc      
+
     from ordered_items left join packed_items on ordered_items.order_id = packed_items.order_id 
         and ordered_items.bid_id = packed_items.bid_id 
         and ordered_items.bid_item_id = packed_items.bid_item_id

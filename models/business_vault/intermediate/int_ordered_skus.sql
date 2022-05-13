@@ -61,13 +61,6 @@ select
     ,bid_item_id
     ,sku_id
     ,sku_key
-
-    /*** The SKU box and lot information for an order item is not known until the order is packed. ***/
-    ,null::int as sku_box_id
-    ,null::text as sku_box_key
-    ,null::int as sku_owner_id
-    ,null::text as lot_number
-    
     ,fc_id
     ,fc_key
     ,promotion_id
@@ -80,9 +73,6 @@ select
     ,item_merch_discount
     ,item_promotion_discount
     ,is_single_sku_bid_item
-    ,false as is_item_packed
-    ,false as was_manually_changed
     ,created_at_utc
     ,updated_at_utc
-    ,null::timestamp as packed_created_at_utc
 from get_sku_key
