@@ -2,6 +2,7 @@ with
 
 user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
 ,order_info as ( select * from {{ ref('orders') }} )
+,order_item_units as ( select * from {{ ref('int_order_units_pct') }} )
 
 
 ,user_order_activity as (
@@ -76,6 +77,15 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
     group by 1
 )
 
+,user_order_item_activity as (
+    select
+        order_info.user_id
+        ,sum(iff(order_info.is_paid_order and not order_info.is_cancelled_order,order_item_units.japanese_wagyu_revenue,0)) as lifetime_japanese_wagyu_revenue
+    from order_item_units
+        inner join order_info on order_item_units.order_id = order_info.order_id
+    group by 1
+)
+
 ,user_activity_joins as (
     select
         user.user_id
@@ -100,6 +110,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,zeroifnull(user_percentiles.lifetime_net_revenue_percentile) as lifetime_net_revenue_percentile
         ,zeroifnull(user_percentiles.total_california_orders) as total_california_orders
         ,zeroifnull(user_percentiles.user_average_order_value) as user_average_order_value
+        ,zeroifnull(user_order_item_activity.lifetime_japanese_wagyu_revenue) as lifetime_japanese_wagyu_revenue
         ,average_order_days.average_order_frequency_days
         ,average_order_days.average_membership_order_frequency_days
         ,average_order_days.average_ala_carte_order_frequency_days
@@ -112,6 +123,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
     from user
         left join user_percentiles on user.user_id = user_percentiles.user_id
         left join average_order_days on user.user_id = average_order_days.user_id
+        left join user_order_item_activity on user.user_id = user_order_item_activity.user_id
 )
 
 select * from user_activity_joins
