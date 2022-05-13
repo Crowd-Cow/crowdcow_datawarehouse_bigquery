@@ -70,6 +70,9 @@ models:
       - name: user_average_order_value
         description: The average net revenue of paid, uncancelled orders
 
+      - name: lifetime_japanese_wagyu_revenue
+        description: The lifetime net product revenue of Japanese Wagyu for a user
+
       - name: average_order_frequency_days
         description: "The average number of days between paid, uncancelled orders for a user"
 

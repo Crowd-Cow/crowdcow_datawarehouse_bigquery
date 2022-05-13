@@ -120,6 +120,21 @@ employee as (
     where user_type in ('CUSTOMER','EMPLOYEE') and total_california_orders > 0
 )
 
+,jp_wagyu_bronze as (
+    {{ generate_tag('users','user_id','jp_wagyu_bronze','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE') and lifetime_japanese_wagyu_revenue between 100 and 499.99
+)
+
+,jp_wagyu_silver as (
+    {{ generate_tag('users','user_id','jp_wagyu_silver','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE') and lifetime_japanese_wagyu_revenue between 500 and 999.99
+)
+
+,jp_wagyu_gold as (
+    {{ generate_tag('users','user_id','jp_wagyu_gold','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE') and lifetime_japanese_wagyu_revenue >= 1000
+)
+
 select * from employee
 union all
 select * from recent_delivery
@@ -159,3 +174,9 @@ union all
 select * from gift_giver
 union all
 select * from california_customer
+union all
+select * from jp_wagyu_bronze
+union all
+select * from jp_wagyu_silver
+union all
+select * from jp_wagyu_gold
