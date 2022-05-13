@@ -133,6 +133,9 @@ models:
       - name: user_average_order_value
         description: The average net revenue of paid, uncancelled orders
 
+      - name: lifetime_japanese_wagyu_revenue
+        description: The lifetime net product revenue of Japanese Wagyu for a user
+
       - name: total_phone_burner_call
         description: "The total number of Phone Burner calls made to this customer"
 

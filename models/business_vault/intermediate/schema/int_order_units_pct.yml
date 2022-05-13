@@ -64,6 +64,57 @@ models:
       - name: total_units
         description: "Total units in an order"
 
+      - name: beef_revenue
+        description: "revenue assigned to the category beef"
+
+      - name: bison_revenue
+        description: "revenue assigned to the category bison"
+
+      - name: chicken_revenue
+        description: "revenue assigned to the category chicken"
+
+      - name: desserts_revenue
+        description: "revenue assigned to the category dessert"
+
+      - name: duck_revenue
+        description: "revenue assigned to the category duck"
+
+      - name: game_meat_revenue
+        description: "revenue assigned to the category game meat"
+
+      - name: japanese_wagyu_revenue
+        description: "revenue assigned to the category japanese wagyu"
+
+      - name: lamb_revenue
+        description: "revenue assigned to the category lamb"
+
+      - name: pet_food_revenue
+        description: "revenue assigned to the category pet food"
+
+      - name: plant_based_proteins_revenue
+        description: "revenue assigned to the category plant based proteins"
+
+      - name: pork_revenue
+        description: "revenue assigned to the category pork"
+
+      - name: salts_seasonings_revenue
+        description: "revenue assigned to the category salts and seasonings"
+
+      - name: seafood_revenue
+        description: "revenue assigned to the category seafood"
+
+      - name: starters_sides_revenue
+        description: "revenue assigned to the category starters and sides"
+
+      - name: turkey_revenue
+        description: "revenue assigned to the category turkey"
+
+      - name: wagyu_revenue
+        description: "revenue assigned to the category wagyu"
+
+      - name: bundle_revenue
+        description: "revenue assigned to the category bundle"
+
       - name: pct_beef
         description: "Pct of units that from the beef category"
 
