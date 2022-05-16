@@ -61,28 +61,6 @@ events as (
         ,display_reason
         ,feedback
         ,selected_reason
-        ,case when event_name = 'VIEWED_PRODUCT' then 'PDP VIEW'
-              when category = 'PRODUCT' and action = 'PAGE-INTERACTION' and label = 'CLICKED-ADD-TO-CART' then 'PDP ADD TO CART'
-              when category = 'CHECKOUT' and action = 'VIEWED-UPSELL-CAROUSEL-PRODUCT-CARD' then 'VIEWED PDC UPSELL CAROUSEL'
-              when category = 'CHECKOUT' and action = 'PAGE-INTERACTION' and label = 'VIEWED-UPSELL-CAROUSEL' then 'VIEWED CHECKOUT UPSELL CAROUSEL'
-              when category = 'PRODUCT' and action = 'CART-UPSELL-QUICK-ADD' then 'UPSELL QUICK ADD FROM CAROUSEL'
-              when event_name = 'ORDER_COMPLETE' then 'CHECKOUT COMPLETE'
-              when event_name = 'UNSUBSCRIBED' then 'CANCELLED MEMBERSHIP'
-              when event_name = 'SUBSCRIBED' then 'CREATED MEMBERSHIP'
-              when category = 'CART' and action = 'VIEW' then 'VIEWED SLIDEOUT CART'
-              when category = 'CHECKOUT' and action = 'REACHED-STEP' and label = '1' then 'CLICKED CHECKOUT'
-              when category = 'CHECKOUT' and action = 'REACHED-STEP' and label = '2' then 'CLICKED CONTINUE TO PAYMENT'
-              when category = 'CHECKOUT' and action = 'REACHED-STEP' and label = '3' then 'CLICKED PLACE ORDER'
-              when event_name = 'PAGE_VIEW' and url like '%/O%/DELIVERY%' then 'VIEWED ADDRESS PAGE'
-              when event_name = 'PAGE_VIEW' and url like '%/O%/PAYMENT%' then 'VIEWED PAYMENT PAGE'
-              when event_name = 'ORDER_ENTER_PAYMENT' then 'PAYMENT INFO ENTERED'
-              when category = 'ERROR' and action = 'ADDRESS-ERROR' then 'ADDRESS ERROR'
-              when event_name = 'PRODUCT_CARD_VIEWED' then 'PDC VIEW'
-              when event_name = 'PRODUCT_CARD_CLICKED' then 'PDC CLICK'
-              when event_name = 'PRODUCT_CARD_QUICK_ADD_TO_CART' then 'PDC QUICK ADD TO CART'
-              when event_name = 'CHECKOUT_ADD-PAYMENT-INFO' then 'PAYMENT INFO SUCCESSFUL'
-              else null
-              end as event_type
     from events
 )
 
