@@ -58,8 +58,8 @@ order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
         ,sku.sku_key
     from get_bid_details
         left join sku on get_bid_details.sku_id = sku.sku_id
-            and get_bid_details.item_created_at_utc >= sku.adjusted_dbt_valid_from
-            and get_bid_details.item_created_at_utc < sku.adjusted_dbt_valid_to
+            and get_bid_details.packed_created_at_utc >= sku.adjusted_dbt_valid_from
+            and get_bid_details.packed_created_at_utc < sku.adjusted_dbt_valid_to
 )
 
 ,get_box_lot_details as (
