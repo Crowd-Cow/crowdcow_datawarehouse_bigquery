@@ -3,7 +3,7 @@ with
 ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
 ,packed_items as ( select * from {{ ref('int_packed_skus') }} )
 ,vendor as ( select * from {{ ref('stg_cc__sku_vendors') }} )
-,sku as ( select * from {{ ref('stg_cc__skus') }} )
+,sku as ( select * from {{ ref('skus') }} )
 ,completed_orders as ( select order_id from {{ ref('stg_cc__orders') }} where order_current_state in ('COMPLETE','FULLY_PACKED','FULLY_PACKED_AS_IS','SHIP_AS_IS'))
 ,non_gift_orders as ( select order_id from {{ ref('int_order_flags') }} where not is_gift_card_order )
 ,receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
@@ -82,8 +82,8 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
         ,iff(sku_price_usd = 0 and bid_list_price_usd > 0 and is_single_sku_bid_item,bid_list_price_usd,sku_price_usd) as sku_price_usd
 
         ,case
-            when get_owner_details.is_marketplace and get_lot_cost_per_unit.cost_per_unit_usd is null then coalesce(nullif(sku.marketplace_cost_usd,0),sku.owned_sku_cost_usd)
-            when not get_owner_details.is_marketplace and get_lot_cost_per_unit.cost_per_unit_usd is null then sku.owned_sku_cost_usd
+            when get_owner_details.is_marketplace and nullif(get_lot_cost_per_unit.cost_per_unit_usd,0) is null then coalesce(nullif(sku.marketplace_cost_usd,0),sku.owned_sku_cost_usd)
+            when not get_owner_details.is_marketplace and nullif(get_lot_cost_per_unit.cost_per_unit_usd,0) is null then sku.owned_sku_cost_usd
             else get_lot_cost_per_unit.cost_per_unit_usd
          end as sku_cost_usd
 

@@ -88,7 +88,14 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku_joins.cut_name
         ,sku_joins.sku_name
         ,sku_joins.sku_weight
-        ,sku_joins.owned_sku_cost_usd
+        --,sku_joins.owned_sku_cost_usd
+        
+        /** Accounts for $0 cost SKUs by taking the average cost for all snapshots of a sku if the cost was entered as $0 in Inventory Finances **/
+        ,zeroifnull(case
+            when sku_joins.owned_sku_cost_usd = 0 then avg(nullif(sku_joins.owned_sku_cost_usd,0)) over(partition by sku_joins.sku_id) 
+            else sku_joins.owned_sku_cost_usd
+         end) as owned_sku_cost_usd
+
         ,sku_joins.marketplace_cost_usd
         ,sku_joins.standard_sku_cost_usd
         ,iff(sku_joins.is_marketplace,sku_joins.marketplace_cost_usd,sku_joins.owned_sku_cost_usd) as sku_cost_usd
