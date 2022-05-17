@@ -82,7 +82,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
         ,iff(sku_price_usd = 0 and bid_list_price_usd > 0 and is_single_sku_bid_item,bid_list_price_usd,sku_price_usd) as sku_price_usd
 
         ,case
-            when get_owner_details.is_marketplace and get_lot_cost_per_unit.cost_per_unit_usd is null then sku.marketplace_cost_usd
+            when get_owner_details.is_marketplace and get_lot_cost_per_unit.cost_per_unit_usd is null then coalesce(nullif(sku.marketplace_cost_usd,0),sku.owned_sku_cost_usd)
             when not get_owner_details.is_marketplace and get_lot_cost_per_unit.cost_per_unit_usd is null then sku.owned_sku_cost_usd
             else get_lot_cost_per_unit.cost_per_unit_usd
          end as sku_cost_usd
