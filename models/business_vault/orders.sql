@@ -2,7 +2,7 @@ with
 
 orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,order_revenue as ( select * from {{ ref('int_order_revenue') }} )
-,order_cost as ( select * from {{ ref('int_order_cost') }} )
+,order_cost as ( select * from {{ ref('int_order_costs') }} )
 ,flags as ( select * from {{ ref('int_order_flags') }} )
 ,ranks as ( select * from {{ ref('int_order_ranks') }} )
 ,units as ( select * from {{ ref('int_order_units_pct') }} )

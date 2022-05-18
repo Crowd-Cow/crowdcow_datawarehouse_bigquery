@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: int_order_costs
+    description: Intermediate model to calculate various order level costs
+    columns:
+      - name: order_id
+        description: Order ID
+        tests:
+          - unique
+          - not_null
+
+      - name: order_coolant_cost
+        description: The total order cost of coolant used to ship the order
+
+      - name: order_packaging_cost
+        description: The total order cost of all the packing materials used to ship the order
+
+      - name: order_care_cost
+        description: The total order cost of customer support for processing the order
+
+      - name: product_cost
+        description: The total order cost for all product added to an order
+
+      - name: poseidon_fulfillment_cost
+        description: The total order cost for fulfilling an order out of the Poseidon fulfillment center
+        
