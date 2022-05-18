@@ -69,6 +69,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(order_cost.order_coolant_cost) as coolant_cost
         ,zeroifnull(order_cost.order_packaging_cost) as packaging_cost
         ,zeroifnull(order_cost.order_care_cost) as care_cost
+        ,zeroifnull(order_cost.poseidon_fulfillment_cost) as poseidon_fulfillment_cost
         ,orders.coolant_weight_in_pounds
         ,orders.order_additional_coolant_weight_in_pounds
         ,orders.order_bids_count

@@ -136,6 +136,27 @@ models:
            `- refund_amount`
            `- other_discount`
 
+      - name: product_cost
+        description: Total product cost for all items in an order
+
+      - name: shipment_cost
+        description: Total cost to ship an order
+
+      - name: coolant_cost
+        description: Total cost of all coolant used for an order
+
+      - name: packaging_cost
+        description: Total cost of all packaging used to ship an order
+
+      - name: care_cost
+        description: Total cost to provide customer care for an order
+
+      - name: poseidon_fulfillment_cost
+        description: Total cost to fulfill an order if it comes from the Poseidon fulfillment center
+
+      - name: coolant_weight_in_pounds
+        description: Total weight of coolant in pounds used to ship an order
+
       - name: bids_count
         description: "Bid count"
 
