@@ -9,17 +9,17 @@ order_item as ( select * from {{ ref('order_item_details') }} )
 ,item_detail_costs as (
     select
         order_id
-        ,sum(sku_cost) as product_cost
         
         /** Poseidon only has two SKU items (A5 WAGYU STRIPLOIN STEAK TRIO, A5 WAGYU RIBEYE STEAK TRIO) that cost $50 per order. The rest are $40 per order. **/
         /** If there are ever additional SKU items, this may need to be updated. **/
-        ,sum(
-            case
-                when sku_id in (159054,137123,137122) and fc_id = 10 then 50
-                when sku_id not in (159054,137123,137122) and fc_id = 10 then 40
-                else 0
-            end
-        ) as poseidon_fulfillment_cost
+        ,max(case
+            when sku_id in (159054,137123,137122) and fc_id = 10 then 50
+            when sku_id not in (159054,137123,137122) and fc_id = 10 then 40
+            else 0
+        end) as poseidon_fulfillment_cost
+
+        ,sum(sku_cost) as product_cost
+        
     from order_item
     group by 1
 )
