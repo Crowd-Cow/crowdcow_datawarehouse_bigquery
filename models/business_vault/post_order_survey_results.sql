@@ -27,10 +27,10 @@ select
     ,nps_score_normalized
     
     ,case
+        when nps_score is null then null
         when nps_score < 7 then 'DETRACTOR'
         when nps_score < 9 then 'NEUTRAL'
-        when nps_score <= 10 then 'PROMOTER'
-        else
+        else 'PROMOTER'
      end as nps_score_category
     
     ,flavor_score
