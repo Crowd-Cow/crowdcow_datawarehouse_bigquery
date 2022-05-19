@@ -1,0 +1,98 @@
+version: 2
+
+models:
+  - name: post_order_survey_results
+    description: "Business logic for post order survey results"
+    columns:
+      - name: post_order_survey_id
+        description: "Post order survey ID"
+
+      - name: order_id
+        description: "Order ID"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: survey_monkey_response_id
+        description: "Survey Monkey response ID"
+
+      - name: age
+        description: "User age group"
+
+      - name: gender
+        description: "User gender"
+
+      - name: income
+        description: "User income group"
+
+      - name: butcher_name
+        description: "Butcher name"
+
+      - name: farm_name
+        description: "Farm name"
+
+      - name: how_first_heard
+        description: "How the customer first heard about Crowd Cow"
+
+      - name: does_well
+        description: "Feedback on what Crowd Cow does well"
+
+      - name: does_well_tags
+        description: "Tag grouping of what Crowd Cow does well"
+
+      - name: needs_improvement
+        description: "Feedback on what Crowd Cow can do better"
+
+      - name: needs_improvement_tags
+        description: "Tag grouping of what Crowd Cow can do better"
+
+      - name: rank_of_diet
+        description: "Rank of diet"
+
+      - name: rank_of_producers
+        description: "Rank of producers"
+
+      - name: rank_of_convenience
+        description: "Rank of convenience"
+
+      - name: rank_of_meds
+        description: "Rank of meds"
+
+      - name: rank_of_quality
+        description: "Rank of quality"
+
+      - name: rank_of_welfare
+        description: "Rank of welfare"
+
+      - name: nps_score
+        description: "NPS score"
+
+      - name: nps_score_normalized
+        description: "NPS score normalized"
+
+      - name: nps_score_category
+        description: "Category of the NPS score (Detractor, Neutral, Promoter)"
+
+      - name: flavor_score
+        description: "Flavor score"
+
+      - name: tender_score
+        description: "Tender score"
+
+      - name: did_leak
+        description: "Boolean indicating if the product leaked in transit"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created"
+
+      - name: updated_at_utc
+        description: "Timestmap for when the record was updated"
+
+      - name: added_as_testimonial_at_utc
+        description: "Timestamp for when the tesimonial was added"
+
+      - name: solicited_google_review_at_utc
+        description: "Timestamp for when the user was asked to provide a Google review"
+
+      - name: zendesk_notified_at_utc
+        description: "Timestamp for when Zendesk is notified"
