@@ -1,0 +1,98 @@
+version: 2
+
+models:
+  - name: stg_cc__post_order_survey_results
+    description: "Staging modle for post order survey results"
+    columns:
+      - name: post_order_survey_id
+        description: "Post order survey ID"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created"
+
+      - name: flavor_score
+        description: "Flavor score"
+
+      - name: age
+        description: "User age range"
+
+      - name: order_id
+        description: "Order ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: added_as_testimonial_at_utc
+        description: "Timestamp for when the testimonial was added"
+
+      - name: does_well
+        description: "Feedback for what Crowd Cow does well"
+
+      - name: rank_of_diet
+        description: "Rank of diet"
+
+      - name: needs_improvement_tags
+        description: "Tag grouping for what Crowd Cow can do better"
+
+      - name: rank_of_producers
+        description: "Rank of producers"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated"
+
+      - name: solicited_google_review_at_utc
+        description: "Timestamp for when the customer was asked to leave a Google review"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: does_well_tags
+        description: "Tag grouping for what Crowd Cow does well"
+
+      - name: nps_score_normalized
+        description: "Normalized NPS score"
+
+      - name: gender
+        description: "User gender"
+
+      - name: rank_of_convenience
+        description: "Rank of convenience"
+
+      - name: survey_monkey_response_id
+        description: "Survey Monkey response ID"
+
+      - name: zendesk_notified_at_utc
+        description: "Timestamp for when Zendesk was notified"
+
+      - name: tender_score
+        description: "Tender score"
+
+      - name: rank_of_meds
+        description: "Rank of meds"
+
+      - name: rank_of_quality
+        description: "Rank of quality"
+
+      - name: nps_score
+        description: "User NPS score"
+
+      - name: butcher_name
+        description: "Butcher name"
+
+      - name: farm_name
+        description: "Farm name"
+
+      - name: needs_improvement
+        description: "Feedback for what Crowd Cow can do better"
+
+      - name: how_first_heard
+        description: "How the customer first heard about Crowd Cow (e.g. friends, Google, etc)"
+
+      - name: rank_of_welfare
+        description: "Rank of welfare"
+
+      - name: income
+        description: "User income range"
+
+      - name: did_leak
+        description: "Boolean indicating a product that was ordered leaked during transit"
