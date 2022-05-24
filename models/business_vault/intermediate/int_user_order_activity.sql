@@ -80,7 +80,30 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
 ,user_order_item_activity as (
     select
         order_info.user_id
-        ,sum(iff(order_info.is_paid_order and not order_info.is_cancelled_order,order_item_units.japanese_wagyu_revenue,0)) as lifetime_japanese_wagyu_revenue
+        
+        ,sum(
+            iff(
+                order_info.is_paid_order 
+                and not order_info.is_cancelled_order
+                ,order_item_units.japanese_wagyu_revenue
+                ,0
+            )
+        ) as lifetime_japanese_wagyu_revenue
+        
+        /*** Marketing requested to start the Japanese Wagyu buyers club eligibility with any JW purchase made in 2020 - 2022 ***/
+        /*** After 2022, the Japanese Wagyu buyers club eligibility will be based on the amount of JW purchases made in a given calendar year ***/
+        /*** Each calendar year the eligible purchases reset to $0 and the user will have to earn the JW buyers club eligibility again ***/
+        ,sum(
+            iff(
+                order_info.is_paid_order 
+                and not order_info.is_cancelled_order 
+                and (year(order_info.order_paid_at_utc) in (2020,2021,2022)
+                    or year(order_info.order_paid_at_utc) = year(sysdate()))
+                ,order_item_units.japanese_wagyu_revenue
+                ,0
+            )
+        ) as japanese_buyers_club_revenue
+
     from order_item_units
         inner join order_info on order_item_units.order_id = order_info.order_id
     group by 1
@@ -111,6 +134,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,zeroifnull(user_percentiles.total_california_orders) as total_california_orders
         ,zeroifnull(user_percentiles.user_average_order_value) as user_average_order_value
         ,zeroifnull(user_order_item_activity.lifetime_japanese_wagyu_revenue) as lifetime_japanese_wagyu_revenue
+        ,zeroifnull(user_order_item_activity.japanese_buyers_club_revenue) as japanese_buyers_club_revenue
         ,average_order_days.average_order_frequency_days
         ,average_order_days.average_membership_order_frequency_days
         ,average_order_days.average_ala_carte_order_frequency_days

@@ -122,17 +122,17 @@ employee as (
 
 ,jp_wagyu_bronze as (
     {{ generate_tag('users','user_id','jp_wagyu_bronze','user_segment') }}
-    where user_type in ('CUSTOMER','EMPLOYEE') and lifetime_japanese_wagyu_revenue between 100 and 499.99
+    where user_type in ('CUSTOMER','EMPLOYEE') and japanese_buyers_club_revenue between 200 and 499.99
 )
 
 ,jp_wagyu_silver as (
     {{ generate_tag('users','user_id','jp_wagyu_silver','user_segment') }}
-    where user_type in ('CUSTOMER','EMPLOYEE') and lifetime_japanese_wagyu_revenue between 500 and 999.99
+    where user_type in ('CUSTOMER','EMPLOYEE') and japanese_buyers_club_revenue between 500 and 999.99
 )
 
 ,jp_wagyu_gold as (
     {{ generate_tag('users','user_id','jp_wagyu_gold','user_segment') }}
-    where user_type in ('CUSTOMER','EMPLOYEE') and lifetime_japanese_wagyu_revenue >= 1000
+    where user_type in ('CUSTOMER','EMPLOYEE') and japanese_buyers_club_revenue >= 1000
 )
 
 select * from employee

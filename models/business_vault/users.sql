@@ -114,6 +114,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,zeroifnull(user_order_activity.total_california_orders) as total_california_orders
         ,zeroifnull(user_order_activity.user_average_order_value) as user_average_order_value
         ,zeroifnull(user_order_activity.lifetime_japanese_wagyu_revenue) as lifetime_japanese_wagyu_revenue
+        ,zeroifnull(user_order_activity.japanese_buyers_club_revenue) as japanese_buyers_club_revenue
 
     from users
         left join membership_count on users.user_id = membership_count.user_id
@@ -182,6 +183,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,total_california_orders
         ,user_average_order_value
         ,lifetime_japanese_wagyu_revenue
+        ,japanese_buyers_club_revenue
         ,total_calls as total_phone_burner_calls
         ,call_result as last_phone_burner_call_result
         ,owner_name as phone_burner_contact_owner
