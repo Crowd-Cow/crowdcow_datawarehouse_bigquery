@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: stg_google_ads__ad_stats
+    description: details about ad performance daily
+    columns:
+      - name: ad_id
+        description: unique ID for the ad
+
+      - name: customer_id
+        description: Google Customer ID
+
+      - name: campaign_id
+        description: Campaign ID
+
+      - name: ad_group_id
+        description: Ad group ID
+
+      - name: date_utc
+        description: date that event occurred
+
+      - name: conversions_value
+        description: conversion revenue received
+
+      - name: conversions
+        description: number of conversions that occurred
+
+      - name: interactions
+        description: number of interactions with ad
+
+      - name: ad_network_type
+        description: Google network that ad uses
+
+      - name: interaction_event_types
+        description: types of events that occurred
+
+      - name: impressions
+        description: number of impressions
+
+      - name: active_view_viewability
+        description: The percentage of impressions that were viewable out of all measurable impressions.
+
+      - name: device
+        description: device type
+
+      - name: view_through_conversions
+        description: View-through conversions occur after an ad impression, if the user doesn’t interact with the ad, then later converts.
+
+      - name: active_view_impressions
+        description: Number of impressions that meet active view requirements
+
+      - name: clicks
+        description: number of clicks on the ad
+
+      - name: active_view_measurable_impressions
+        description: The number of times the ad appeared in locations on websites or apps that could be measured by Active View technology
+
+      - name: cost_usd
+        description: Cost in USD
+

@@ -1,0 +1,46 @@
+
+version: 2
+
+models:
+  - name: stg_google_ads__ad_group_history
+    description: History of ad group changes
+    columns:
+      - name: ad_group_id
+        description: unique ID for an ad group
+
+      - name: updated_at_utc
+        description: date of update to ad group
+
+      - name: campaign_id
+        description: campaign ID that ad group is in
+
+      - name: base_ad_group_id
+        description: historical ID of ad group
+
+      - name: ad_rotation_mode
+        description: specification of how the ads in the ad group are served relative to one another
+
+      - name: campaign_name
+        description: name of campaign that ad group is in
+
+      - name: display_custom_bid_dimension
+        description: custom definition of how much an impression is worth
+
+      - name: explorer_auto_optimizer_setting_opt_in
+        description: description of whether Google Ads Auto Optimizer is on
+
+      - name: final_url_suffix
+        description: URL that ad group is directing to
+
+      - name: ad_group_name
+        description: Name of ad group
+
+      - name: ad_group_status
+        description: status of ad group within Google
+
+      - name: tracking_url_template
+        description: tracking template url
+
+      - name: ad_group_type
+        description: ad group type within Google Ads
+

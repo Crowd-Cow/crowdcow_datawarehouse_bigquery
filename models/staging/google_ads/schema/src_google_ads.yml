@@ -146,3 +146,144 @@ sources:
 
         - name: _fivetran_synced
           description: Timestamp for when the record was synced by Fivetran to the `raw` database in Snowflake
+
+    - name: ad_group_history
+      description: Google Ads ad group change history
+      columns:
+        - name: ad_group_id
+          description: unique ID for an ad group
+
+        - name: updated_at_utc
+          description: date of update to ad group
+
+        - name: campaign_id
+          description: campaign ID that ad group is in
+
+        - name: base_ad_group_id
+          description: historical ID of ad group
+
+        - name: ad_rotation_mode
+          description: specification of how the ads in the ad group are served relative to one another
+
+        - name: campaign_name
+          description: name of campaign that ad group is in
+
+        - name: display_custom_bid_dimension
+          description: custom definition of how much an impression is worth
+
+        - name: explorer_auto_optimizer_setting_opt_in
+          description: description of whether Google Ads Auto Optimizer is on
+
+        - name: final_url_suffix
+          description: URL that ad group is directing to
+
+        - name: ad_group_name
+          description: Name of ad group
+
+        - name: ad_group_status
+          description: status of ad group within Google
+
+        - name: tracking_url_template
+          description: tracking template url
+
+        - name: ad_group_type
+          description: ad group type within Google Ads
+    - name: ad_stats
+      description: details about ad performance daily
+      columns:
+        - name: ad_id
+          description: unique ID for the ad
+
+        - name: customer_id
+          description: Google Customer ID
+
+        - name: campaign_id
+          description: Campaign ID
+
+        - name: ad_group_id
+          description: Ad group ID
+
+        - name: date_utc
+          description: date that event occurred
+
+        - name: conversions_value
+          description: conversion revenue received
+
+        - name: conversions
+          description: number of conversions that occurred
+
+        - name: interactions
+          description: number of interactions with ad
+
+        - name: ad_network_type
+          description: Google network that ad uses
+
+        - name: interaction_event_types
+          description: types of events that occurred
+
+        - name: impressions
+          description: number of impressions
+
+        - name: active_view_viewability
+          description: The percentage of impressions that were viewable out of all measurable impressions.
+
+        - name: device
+          description: device type
+
+        - name: view_through_conversions
+          description: View-through conversions occur after an ad impression, if the user doesn’t interact with the ad, then later converts.
+
+        - name: active_view_impressions
+          description: Number of impressions that meet active view requirements
+
+        - name: clicks
+          description: number of clicks on the ad
+
+        - name: active_view_measurable_impressions
+          description: The number of times the ad appeared in locations on websites or apps that could be measured by Active View technology
+
+        - name: cost_usd
+          description: Cost in USD
+    - name: ad_history
+      description: details about ads historically
+      columns:
+        - name: ad_id
+          description: unique ID for an ad
+
+        - name: ad_group_id
+          description: ad group which contains the ad
+
+        - name: updated_at_utc
+          description: timestamp when changes were made
+
+        - name: action_items
+          description: action that Google recommends would be valuable to the ad performance
+
+        - name: ad_strength
+          description: strength of ad as determined by Google
+
+        - name: device_preference
+          description: preferred device for ad
+
+        - name: final_urls
+          description: url that ad routes to
+
+        - name: ad_name
+          description: name of ad
+
+        - name: policy_summary_approval_status
+          description: description of ad approval status by Google
+
+        - name: policy_summary_review_status
+          description: description of stage in Google review process
+
+        - name: ad_status
+          description: status of ad
+
+        - name: system_managed_resource_source
+          description: source of ad content
+
+        - name: ad_type
+          description: type of ad, such as video, image, text, responsive, etc.
+
+
