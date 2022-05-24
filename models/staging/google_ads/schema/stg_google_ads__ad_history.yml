@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: stg_google_ads__ad_history
+    description: details about ad structure historically
+    columns:
+      - name: ad_id
+        description: unique ID for an ad
+
+      - name: ad_group_id
+        description: ad group which contains the ad
+
+      - name: updated_at_utc
+        description: timestamp when changes were made
+
+      - name: action_items
+        description: action that Google recommends would be valuable to the ad performance
+
+      - name: ad_strength
+        description: strength of ad as determined by Google
+
+      - name: device_preference
+        description: preferred device for ad
+
+      - name: final_urls
+        description: url that ad routes to
+
+      - name: ad_name
+        description: name of ad
+
+      - name: policy_summary_approval_status
+        description: description of ad approval status by Google
+
+      - name: policy_summary_review_status
+        description: description of stage in Google review process
+
+      - name: ad_status
+        description: status of ad
+
+      - name: system_managed_resource_source
+        description: source of ad content
+
+      - name: ad_type
+        description: type of ad, such as video, image, text, responsive, etc.
+
