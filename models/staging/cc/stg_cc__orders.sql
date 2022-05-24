@@ -112,7 +112,7 @@ renamed as (
     ,earliest_to_charge_at as order_earliest_to_charge_at_utc
     ,stripe_card_id -- Not converting to uppercase because the difference between upper and lower is significant in this ID (ex. card_0GO8Q074pVzbTfjzcrzaQJhY)
     ,{{ clean_strings('stripe_card_country') }} as stripe_card_country
-    ,stripe_charge_id -- Not converting to uppercase because the difference between upper and lower is significant in this ID (ex. ch_0IvyC774pVzbTfjziW0s9lUS)
+    ,nullif(stripe_charge_id,'n/a') as stripe_charge_id -- Not converting to uppercase because the difference between upper and lower is significant in this ID (ex. ch_0IvyC774pVzbTfjziW0s9lUS)
     ,{{ clean_strings('stripe_failure_message') }} as stripe_failure_message
     ,stripe_card_exp_year
     ,stripe_charge_attempted_at as stripe_charge_attempted_at_utc
