@@ -12,6 +12,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,order_shipment as (
     select
         order_id
+        ,any_value(easypost_postage_carrier) as shipment_postage_carrier
         ,count(distinct shipment_id) as shipment_count
         ,sum(easypost_postage_rate_usd) as shipment_cost
         ,max(lost_at_utc) as lost_at_utc
@@ -51,6 +52,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.billing_city
         ,coalesce(postal_code.state_code,orders.billing_state) as billing_state
         ,orders.billing_postal_code
+        ,order_shipment.shipment_postage_carrier
         ,zeroifnull(order_revenue.gross_product_revenue) as gross_product_revenue
         ,zeroifnull(order_revenue.membership_discount) as membership_discount
         ,zeroifnull(order_revenue.merch_discount) as merch_discount
