@@ -121,17 +121,17 @@ employee as (
 )
 
 ,jp_wagyu_bronze as (
-    {{ generate_tag('users','user_id','jp_wagyu_bronze','user_segment') }}
+    {{ generate_tag('users','user_id','jp_wagyu_bronze','user_segment','japanese_buyers_club_revenue') }}
     where user_type in ('CUSTOMER','EMPLOYEE') and japanese_buyers_club_revenue between 200 and 499.99
 )
 
 ,jp_wagyu_silver as (
-    {{ generate_tag('users','user_id','jp_wagyu_silver','user_segment') }}
+    {{ generate_tag('users','user_id','jp_wagyu_silver','user_segment','japanese_buyers_club_revenue') }}
     where user_type in ('CUSTOMER','EMPLOYEE') and japanese_buyers_club_revenue between 500 and 999.99
 )
 
 ,jp_wagyu_gold as (
-    {{ generate_tag('users','user_id','jp_wagyu_gold','user_segment') }}
+    {{ generate_tag('users','user_id','jp_wagyu_gold','user_segment','japanese_buyers_club_revenue') }}
     where user_type in ('CUSTOMER','EMPLOYEE') and japanese_buyers_club_revenue >= 1000
 )
 

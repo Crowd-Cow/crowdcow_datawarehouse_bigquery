@@ -1,4 +1,4 @@
-{%- macro generate_tag(ref, id_field, tag_key, tag_purpose) -%}
+{%- macro generate_tag(ref, id_field, tag_key, tag_purpose, tag_value='null') -%}
 
 {%- set table_ref = builtins.ref(ref).include(database=false) -%}
 
@@ -7,6 +7,7 @@
         ,'{{ table_ref }}' as tag_source_table
         ,{{ id_field }}
         ,'{{ tag_key }}' as tag_key
+        ,{{ tag_value }} as tag_value
         ,'{{ tag_purpose }}' as tag_purpose
         ,sysdate() as created_at_utc
         ,sysdate() as updated_at_utc
