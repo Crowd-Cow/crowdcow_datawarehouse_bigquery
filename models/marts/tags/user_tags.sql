@@ -122,7 +122,7 @@ employee as (
 
 ,jp_wagyu_prospect as (
     {{ generate_tag('users','user_id','jp_wagyu_prospect','user_segment','japanese_buyers_club_revenue') }}
-    where user_type in ('CUSTOMER','EMPLOYEE') and japanese_buyers_club_revenue < 200
+    where user_type in ('CUSTOMER','EMPLOYEE') and japanese_buyers_club_revenue > 0 and japanese_buyers_club_revenue < 200
 )
 
 ,jp_wagyu_bronze as (
