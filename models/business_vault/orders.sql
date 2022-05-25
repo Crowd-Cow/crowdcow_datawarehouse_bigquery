@@ -67,7 +67,15 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(order_revenue.other_discount) as other_discount
         ,zeroifnull(order_revenue.net_revenue) as net_revenue
         ,zeroifnull(order_cost.product_cost) as product_cost
-        ,zeroifnull(order_shipment.shipment_cost) as shipment_cost
+        
+        ,zeroifnull(
+            case 
+                when order_shipment.shipment_cost is null 
+                    then avg(order_shipment.shipment_cost) over(partition by orders.fc_id,date_trunc(month,order_shipment.shipped_at_utc), order_shipment.shipment_postage_carrier)
+                else order_shipment.shipment_cost
+            end
+        ) as shipment_cost
+        
         ,zeroifnull(order_cost.order_coolant_cost) as coolant_cost
         ,zeroifnull(order_cost.order_packaging_cost) as packaging_cost
         ,zeroifnull(order_cost.order_care_cost) as care_cost
