@@ -58,3 +58,11 @@ macros:
       - name: tag_purpose
         type: string
         description: The purpose of the tag (e.g. `user_segment`, etc.)
+
+      - name: tag_value
+        type: string
+        description: >
+          This is an optional argument that can be used to pass in a specific value related to the tag. 
+          For example, if the tag is generated once a user hits a certain revenue threshold, you can use 
+          the `tag_value` to pass in the revenue amount for the user that put them in their segment. 
+          This defaults to `null` if not provided
