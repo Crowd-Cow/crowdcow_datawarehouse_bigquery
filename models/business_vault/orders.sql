@@ -68,6 +68,9 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(order_revenue.net_revenue) as net_revenue
         ,zeroifnull(order_cost.product_cost) as product_cost
         
+        /** Axlehire shipping cost is SFTPed to us on a weekly basis. ***/
+        /*** To get a default value for the shipping fee, we're taking the average of the shipping cost for the FC/Shipping Month/Carrier combo ***/
+        /*** Once the actual shipping cost is available for the carrier, we'll use that instead ***/
         ,zeroifnull(
             case 
                 when order_shipment.shipment_cost is null 
