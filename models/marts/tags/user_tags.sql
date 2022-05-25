@@ -120,6 +120,11 @@ employee as (
     where user_type in ('CUSTOMER','EMPLOYEE') and total_california_orders > 0
 )
 
+,jp_wagyu_prospect as (
+    {{ generate_tag('users','user_id','jp_wagyu_prospect','user_segment','japanese_buyers_club_revenue') }}
+    where user_type in ('CUSTOMER','EMPLOYEE') and japanese_buyers_club_revenue < 200
+)
+
 ,jp_wagyu_bronze as (
     {{ generate_tag('users','user_id','jp_wagyu_bronze','user_segment','japanese_buyers_club_revenue') }}
     where user_type in ('CUSTOMER','EMPLOYEE') and japanese_buyers_club_revenue between 200 and 499.99
@@ -174,6 +179,8 @@ union all
 select * from gift_giver
 union all
 select * from california_customer
+union all
+select * from jp_wagyu_prospect
 union all
 select * from jp_wagyu_bronze
 union all
