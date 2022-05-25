@@ -23,7 +23,7 @@ pipeline {
             outputs:
               qa:
                 type: snowflake
-                threads: 15
+                threads: 16
                 account: lna65058.us-east-1
                 user: $SNOWFLAKE_DATAWAREHOUSE_USER
                 password: $SNOWFLAKE_DATAWAREHOUSE_PASSWORD
