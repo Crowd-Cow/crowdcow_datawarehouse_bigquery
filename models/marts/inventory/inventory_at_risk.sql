@@ -16,6 +16,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,sku.sku_id
         ,sku.cut_id
         ,sku.cut_name
+        ,sku.inventory_classification
         ,coalesce(sku.is_always_in_stock,FALSE) as is_always_in_stock
         ,{{ dbt_utils.surrogate_key(['inventory.snapshot_date','sku.category','sku.sub_category','sku.cut_id','inventory.fc_id']) }} as join_key
         ,sum(inventory.quantity) as quantity
@@ -26,7 +27,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         left join sku on inventory.sku_key = sku.sku_key
         left join fc on inventory.fc_key = fc.fc_key
     where not inventory.is_destroyed
-    group by 1,2,3,4,5,6,7,8,9
+    group by 1,2,3,4,5,6,7,8,9,10
 )
 
 ,first_available_pipeline_order as (
@@ -52,6 +53,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,inventory_aggregation_sku.sku_id
         ,inventory_aggregation_sku.cut_id
         ,inventory_aggregation_sku.cut_name
+        ,inventory_aggregation_sku.inventory_classification
         ,inventory_aggregation_sku.is_always_in_stock
         ,inventory_aggregation_sku.join_key
         ,inventory_aggregation_sku.quantity
@@ -89,6 +91,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,category
         ,sub_category
         ,cut_name
+        ,inventory_classification
         ,is_always_in_stock
         ,join_key
         ,next_pipeline_order_date
@@ -100,7 +103,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,sum(quantity_reserved) as quantity_reserved
         ,sum(quantity_sellable) as quantity_sellable
     from add_next_order 
-    group by 1,2,3,4,5,6,7,8,9,10,11
+    group by 1,2,3,4,5,6,7,8,9,10,11,12
 )
 
 ,inventory_forecast as (
@@ -125,6 +128,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,inventory_aggregation_cut.category
         ,inventory_aggregation_cut.sub_category
         ,inventory_aggregation_cut.cut_name
+        ,inventory_aggregation_cut.inventory_classification
         ,inventory_aggregation_cut.is_always_in_stock
         ,inventory_aggregation_cut.next_pipeline_order_date
         ,inventory_aggregation_cut.next_order_quantity
