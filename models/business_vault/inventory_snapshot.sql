@@ -1,3 +1,9 @@
+{{
+    config(
+        snowflake_warehouse = 'TRANSFORMING_M'
+    )
+}}
+
 with
 
 /*** Only starting with dates after 2021-10-28 since that is when we started fully snapshotting the `sku_boxes` data in the new model ***/
