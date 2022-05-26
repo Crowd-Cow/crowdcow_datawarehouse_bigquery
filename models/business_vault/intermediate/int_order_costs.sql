@@ -18,7 +18,7 @@ order_item as ( select * from {{ ref('order_item_details') }} )
             else 0
         end) as poseidon_fulfillment_cost
 
-        ,sum(sku_cost) as product_cost
+        ,sum(sku_cost * sku_quantity) as product_cost
         
     from order_item
     group by 1
