@@ -14,6 +14,8 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
 ,sku as ( select * from {{ ref('skus') }} )
 ,lot as ( select * from {{ ref('lots') }} where dbt_valid_to is null )
 ,sku_vendor as ( select * from {{ ref('stg_cc__sku_vendors') }} )
+,receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
+,pipeline_order as ( select * from {{ ref('stg_cc__pipeline_orders') }} )
 
 ,inventory_snapshot as (
     select
@@ -92,6 +94,17 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         left join fc_location on daily_sku_boxes.fc_location_id = fc_location.fc_location_id
 )
 
+,get_lot_cost_per_unit as (
+    select distinct
+        receivable.sku_id
+        ,pipeline_order.lot_number
+        ,receivable.pipeline_order_id
+        ,receivable.cost_per_unit_usd
+    from receivable
+        inner join pipeline_order on receivable.pipeline_order_id = pipeline_order.pipeline_order_id
+    where receivable.marked_destroyed_at_utc is null
+)
+
 ,inventory_joins as (
     select 
         {{ dbt_utils.surrogate_key(['snapshot_date','sku_box_key'] ) }} as inventory_snapshot_id
@@ -101,12 +114,20 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,lot.lot_number
         ,sku_vendor.sku_vendor_name as sku_box_owner_name
         ,sku.sku_price_usd
-        ,sku.sku_cost_usd
-        ,sku.marketplace_cost_usd
+        --,sku.sku_cost_usd
+
+        ,case
+            when sku_vendor.is_marketplace and nullif(get_lot_cost_per_unit.cost_per_unit_usd,0) is null then coalesce(nullif(sku.marketplace_cost_usd,0),sku.owned_sku_cost_usd)
+            when not sku_vendor.is_marketplace and nullif(get_lot_cost_per_unit.cost_per_unit_usd,0) is null then sku.owned_sku_cost_usd
+            else get_lot_cost_per_unit.cost_per_unit_usd
+         end as sku_cost_usd
+
         ,sku_vendor.is_marketplace
     from sku_box_locations
         left join sku_vendor on sku_box_locations.owner_id = sku_vendor.sku_vendor_id
         left join lot on sku_box_locations.lot_id = lot.lot_id
+        left join get_lot_cost_per_unit on lot.lot_number = get_lot_cost_per_unit.lot_number
+            and get_lot_cost_per_unit.sku_id = sku_box_locations.sku_id
 
         /*** Get various join keys to be able to grab information at the time of snapshot date ****/
         left join fc on sku_box_locations.fc_id = fc.fc_id
