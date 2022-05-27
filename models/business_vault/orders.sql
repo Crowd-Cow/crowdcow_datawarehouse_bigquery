@@ -163,6 +163,68 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(units.pct_turkey) as pct_turkey
         ,zeroifnull(units.pct_wagyu) as pct_wagyu
         ,zeroifnull(units.pct_bundle) as pct_bundle
+        
+        ,iff(
+            units.beef_units > 0
+            ,conditional_true_event(units.beef_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as beef_item_rank
+        ,iff(
+            units.bison_units > 0
+            ,conditional_true_event(units.bison_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as bison_item_rank
+        ,iff(
+            units.chicken_units > 0
+            ,conditional_true_event(units.chicken_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as chicken_item_rank
+        ,iff(
+            units.desserts_units > 0
+            ,conditional_true_event(units.desserts_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as desserts_item_rank
+        ,iff(
+            units.japanese_wagyu_units > 0
+            ,conditional_true_event(units.japanese_wagyu_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as japanese_wagyu_item_rank
+        ,iff(
+            units.lamb_units > 0
+            ,conditional_true_event(units.lamb_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as lamb_item_rank
+        ,iff(
+            units.pork_units > 0
+            ,conditional_true_event(units.pork_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as pork_item_rank
+        ,iff(
+            units.seafood_units > 0
+            ,conditional_true_event(units.seafood_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as seafood_item_rank
+        ,iff(
+            units.starters_sides_units > 0
+            ,conditional_true_event(units.starters_sides_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as starters_sides_item_rank
+        ,iff(
+            units.turkey_units > 0
+            ,conditional_true_event(units.turkey_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as turkey_item_rank
+        ,iff(
+            units.wagyu_units > 0
+            ,conditional_true_event(units.wagyu_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as wagyu_item_rank
+        ,iff(
+            units.bundle_units > 0
+            ,conditional_true_event(units.bundle_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as bundle_item_rank
+
         ,orders.order_created_at_utc
         ,orders.order_updated_at_utc
         ,orders.order_checkout_completed_at_utc

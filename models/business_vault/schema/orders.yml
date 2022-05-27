@@ -382,6 +382,42 @@ models:
       - name: pct_bundle
         description: "Pct of units that from the bundle category"
 
+      - name: beef_item_rank
+        description: The rank of the order where the order contained beef. For example, a rank of 1 means this is the user's first order that contained beef
+
+      - name: bison_item_rank
+        description: The rank of the order where the order contained bison. For example, a rank of 1 means this is the user's first order that contained bison
+
+      - name: chicken_item_rank
+        description: The rank of the order where the order contained chicken. For example, a rank of 1 means this is the user's first order that contained chicken
+
+      - name: desserts_item_rank
+        description: The rank of the order where the order contained desserts. For example, a rank of 1 means this is the user's first order that contained desserts
+
+      - name: japanese_wagyu_item_rank
+        description: The rank of the order where the order contained Japanese Wagyu. For example, a rank of 1 means this is the user's first order that contained Japanese Wagyu
+
+      - name: lamb_item_rank
+        description: The rank of the order where the order contained lamb. For example, a rank of 1 means this is the user's first order that contained lamb
+
+      - name: pork_item_rank
+        description: The rank of the order where the order contained pork. For example, a rank of 1 means this is the user's first order that contained pork
+
+      - name: seafood_item_rank
+        description: The rank of the order where the order contained seafood. For example, a rank of 1 means this is the user's first order that contained seafood
+
+      - name: starters_sides_item_rank
+        description: The rank of the order where the order contained starters and sides. For example, a rank of 1 means this is the user's first order that contained starters and sides
+
+      - name: turkey_item_rank
+        description: The rank of the order where the order contained turkey. For example, a rank of 1 means this is the user's first order that contained turkey
+
+      - name: wagyu_item_rank
+        description: The rank of the order where the order contained wagyu. For example, a rank of 1 means this is the user's first order that contained wagyu
+
+      - name: bundle_item_rank
+        description: The rank of the order where the order contained a bundle. For example, a rank of 1 means this is the user's first order that contained a bundle
+
       - name: order_created_at_utc
         description: "Timestamp of when the order was created by the system in UTC"
 
