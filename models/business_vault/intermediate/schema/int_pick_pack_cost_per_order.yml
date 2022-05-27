@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: int_pick_pack_cost_per_order
+    description: Intermediate model to calculate pick/pack cost per order
+    columns:
+      - name: order_id
+        description: Order ID
+        tests:
+          - unique
+          - not_null
+
+      - name: picking_cost
+        description: Total picking cost for an order. Calculated as number of picking minutes times the cost per minute for labor for the month the order was picked
+
+      - name: packing_cost
+        description: Total packing cost for an order. Calculated as number of packing minutes times the cost per minute for labor for the month the order was picked

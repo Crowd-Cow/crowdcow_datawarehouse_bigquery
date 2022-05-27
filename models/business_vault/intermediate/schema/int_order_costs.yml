@@ -24,4 +24,10 @@ models:
 
       - name: poseidon_fulfillment_cost
         description: The total order cost for fulfilling an order out of the Poseidon fulfillment center
+
+      - name: picking_cost
+        description: Total picking cost for an order. Calculated as number of picking minutes times the cost per minute for labor for the month the order was picked
+
+      - name: packing_cost
+        description: Total packing cost for an order. Calculated as number of packing minutes times the cost per minute for labor for the month the order was picked
         

@@ -151,6 +151,12 @@ models:
       - name: care_cost
         description: Total cost to provide customer care for an order
 
+      - name: picking_cost
+        description: Total picking cost for an order. Calculated as number of picking minutes times the cost per minute for labor for the month the order was picked
+
+      - name: packing_cost
+        description: Total packing cost for an order. Calculated as number of packing minutes times the cost per minute for labor for the month the order was picked
+
       - name: poseidon_fulfillment_cost
         description: Total cost to fulfill an order if it comes from the Poseidon fulfillment center
 
