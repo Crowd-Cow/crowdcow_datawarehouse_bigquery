@@ -2,7 +2,7 @@ with
 
 users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
 ,user_order_activity as ( select * from {{ ref('int_user_order_activity') }} )
-,memberships as (select * from {{ ref('stg_cc__subscriptions') }})
+,user_membership as ( select * from {{ ref('int_user_memberships') }} )
 ,phone_number as ( select * from {{ ref('stg_cc__phone_numbers') }} )
 ,ccpa_users as ( select distinct  user_token from {{ ref('ccpa_requests') }} )
 ,visit as ( select * from {{ ref('base_cc__ahoy_visits') }} )
@@ -22,16 +22,6 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
     qualify row_number() over(partition by user_token order by date_modified_at_utc desc) = 1
 )
 
-,most_recent_membership as (
-    select
-        user_id
-        ,subscription_id
-        ,subscription_created_at_utc as most_recent_membership_created_date
-        ,subscription_cancelled_at_utc as most_recent_membership_cancelled_date
-    from memberships
-    qualify row_number() over(partition by user_id order by subscription_created_at_utc desc) = 1
-)
-
 ,user_visits as (
     select
         user_id
@@ -39,16 +29,6 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
     from visit
     where user_id is not null
     qualify row_number() over(partition by user_id order by started_at_utc, visit_id) = 1
-)
-
-,membership_count as (
-    select
-        user_id
-        ,count(subscription_id) as total_membership_count
-        ,count_if(not is_uncancelled_membership) as total_cancelled_membership_count
-        ,count(subscription_id) - count_if(not is_uncancelled_membership) as total_uncancelled_memberships
-    from memberships
-    group by 1
 )
 
 ,user_joins as (
@@ -63,17 +43,17 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_contacts.total_calls
         ,user_contacts.call_result
         ,user_contacts.owner_name
-        ,most_recent_membership.most_recent_membership_created_date
-        ,most_recent_membership.most_recent_membership_cancelled_date
-        ,membership_count.user_id is not null and total_completed_membership_orders > 0 as is_member
-        ,membership_count.user_id is not null and membership_count.total_uncancelled_memberships = 0 as is_cancelled_member
+        ,user_membership.most_recent_membership_created_date
+        ,user_membership.most_recent_membership_cancelled_date
+        ,user_membership.user_id is not null and user_order_activity.total_completed_membership_orders > 0 as is_member
+        ,user_membership.user_id is not null and user_membership.total_uncancelled_memberships = 0 as is_cancelled_member
         ,user_order_activity.order_user_id is null as is_lead
-        ,user_order_activity.user_id is not null and user_order_activity.total_paid_ala_carte_order_count > 0 and zeroifnull(membership_count.total_membership_count) = 0 as is_purchasing_customer
+        ,user_order_activity.user_id is not null and user_order_activity.total_paid_ala_carte_order_count > 0 and zeroifnull(user_membership.total_membership_count) = 0 as is_purchasing_customer
         ,user_order_activity.user_id is not null and user_order_activity.total_paid_membership_order_count > 0 as is_purchasing_member
         ,user_order_activity.user_id is not null and user_order_activity.last_90_days_paid_membership_order_count > 0 as is_active_member_90_day
         
         ,case
-            when user_order_activity.customer_cohort_date < user_order_activity.membership_cohort_date then membership_cohort_date - customer_cohort_date
+            when user_order_activity.customer_cohort_date < user_order_activity.membership_cohort_date then user_order_activity.membership_cohort_date - user_order_activity.customer_cohort_date
          end as days_from_ala_carte_to_membership
 
         ,user_order_activity.average_order_frequency_days
@@ -117,7 +97,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,zeroifnull(user_order_activity.japanese_buyers_club_revenue) as japanese_buyers_club_revenue
 
     from users
-        left join membership_count on users.user_id = membership_count.user_id
+        left join user_membership on users.user_id = user_membership.user_id
         left join user_order_activity on users.user_id = user_order_activity.user_id
         left join phone_number on users.phone_number_id = phone_number.phone_number_id
         left join ccpa_users on users.user_token = ccpa_users.user_token
@@ -125,7 +105,6 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         left join postal_code on users.user_zip = postal_code.postal_code
         left join identity on users.user_id = identity.user_id
         left join user_contacts on users.user_token = user_contacts.user_token
-        left join most_recent_membership on users.user_id = most_recent_membership.user_id 
 )
 
 ,final as (
