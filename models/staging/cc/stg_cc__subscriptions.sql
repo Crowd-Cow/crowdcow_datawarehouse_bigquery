@@ -21,7 +21,7 @@ renamed as (
         ,user_id
         ,token as subscription_token
         ,{{ cents_to_usd('price_in_cents') }} as subscription_price_usd
-        ,cancelled_reason as subscription_cancelled_reason
+        ,{{ clean_strings('cancelled_reason') }} as subscription_cancelled_reason
         ,{{ clean_strings('signup_state') }} as subscription_signup_status
         ,updated_at as updated_at_utc
         ,{{ clean_strings('farm_category') }} as farm_category
