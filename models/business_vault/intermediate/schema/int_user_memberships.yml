@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: int_user_memberships
+    description: "Intermediate model to consolidate member information for a user and add membership promotion information"
+    columns:
+      - name: user_id
+        description: "User ID"
+        tests:
+           - unique
+           - not_null
+
+      - name: first_membership_id
+        description: "The membership ID of the first membership created for a user"
+
+      - name: current_membership_id
+        description: "The membership ID of the current membership for a user"
+
+      - name: first_promotion_id
+        description: "The ID of the first promotion selected for a user's first membership"
+
+      - name: current_promotion_id
+        description: "The promotion currently selected for a user's current membership"
+
+      - name: first_promotion_type
+        description: "The type of promotion first selected by a user for their first membership"
+
+      - name: current_promotion_type
+        description: "The type of promotion currently selected for a user's current membership"
+
+      - name: current_renew_period
+        description: "The renewal period for the user's current membership"
+
+      - name: total_membership_count
+        description: "Total number of membership created by a user"
+
+      - name: total_cancelled_membership_count
+        description: "Total number of memberships cancelled by a user"
+
+      - name: total_uncancelled_memberships
+        description: "Total number of memberships created minus the total number of memberships cancelled"
+
+      - name: membership_tenure_months
+        description: "The tenure in months between the date of the first membership created and the last membership cancelled for a user. If the membership is uncancelled, tenure uses current date to calculate tenure"
+
+      - name: first_membership_created_date
+        description: "Timestamp of the first membership created for a user"
+
+      - name: most_recent_membership_created_date
+        description: "Timestamp of the most recent membership created for a user"
+
+      - name: most_recent_membership_cancelled_date
+        description: "Timestamp of the most recent membership cancelled for a user. Value is `null` if membership is not cancelled"
