@@ -67,6 +67,24 @@ models:
       - name: membership_cohort_date
         description: "Assigns the user to a membership cohort that starts on the date of their first paid/uncancelled membership order. The user stays in this cohort even if they cancel this membership and sign up for a new one later."
 
+      - name: first_promotion_type
+        description: The type of promotion first selected by a user for their first membership
+
+      - name: current_promotion_type
+        description: The type of promotion currently selected for a user's current membership
+
+      - name: current_renew_period
+        description: The renewal period for the user's current membership
+
+      - name: total_membership_count
+        description: Total number of membership created by a user
+
+      - name: total_uncancelled_memberships
+        description: Total number of memberships created minus the total number of memberships cancelled
+
+      - name: membership_tenure_months
+        description: The tenure in months between the date of the first membership created and the last membership cancelled for a user. If the membership is uncancelled, tenure uses current date to calculate tenure
+
       - name: average_order_frequency_days
         description: "The average number of days between paid orders for a user"
 
@@ -189,6 +207,9 @@ models:
 
       - name: last_call_at_utc
         description: "Timestamp of the most recent call made to a user through Phone Burner"
+
+      - name: first_membership_created_date
+        description: Timestamp of the first membership created for a user
 
       - name: most_recent_membership_created_date
         description: "Timestamp of the most recently created membership for a user"

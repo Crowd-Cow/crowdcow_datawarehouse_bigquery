@@ -43,6 +43,13 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_contacts.total_calls
         ,user_contacts.call_result
         ,user_contacts.owner_name
+        ,user_membership.first_promotion_type
+        ,user_membership.current_promotion_type
+        ,user_membership.current_renew_period
+        ,user_membership.total_membership_count
+        ,user_membership.total_uncancelled_memberships
+        ,user_membership.membership_tenure_months
+        ,user_membership.first_membership_created_date
         ,user_membership.most_recent_membership_created_date
         ,user_membership.most_recent_membership_cancelled_date
         ,user_membership.user_id is not null and user_order_activity.total_completed_membership_orders > 0 as is_member
@@ -138,6 +145,12 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_support_status
         ,customer_cohort_date
         ,membership_cohort_date
+        ,first_promotion_type
+        ,current_promotion_type
+        ,current_renew_period
+        ,total_membership_count
+        ,total_uncancelled_memberships
+        ,membership_tenure_months
         ,average_order_frequency_days
         ,average_membership_order_frequency_days
         ,average_ala_carte_order_frequency_days
@@ -216,6 +229,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,most_recent_membership_created_date::date >= last_call_at_utc::date as did_create_membership_after_call
         ,last_sign_in_at_utc
         ,last_call_at_utc
+        ,first_membership_created_date
         ,most_recent_membership_created_date
         ,most_recent_membership_cancelled_date
         ,created_at_utc
