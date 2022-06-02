@@ -61,6 +61,7 @@ events as (
         ,display_reason
         ,feedback
         ,selected_reason
+        ,scroll_depth
     from events
 )
 

@@ -123,3 +123,6 @@ models:
 
       - name: selected_reason
         description: "The reason for cancelling a membership that is selected by the user"
+
+      - name: scroll_depth
+        description: Page scroll depth. number represent a percent of the page scrolled (e.g. 10 = 10%)

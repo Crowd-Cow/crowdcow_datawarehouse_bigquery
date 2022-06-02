@@ -123,4 +123,7 @@ models:
 
       - name: event_type
         description: "Description of event that occurred"
+
+      - name: scroll_depth
+        description: Page scroll depth. number represent a percent of the page scrolled (e.g. 10 = 10%)
         

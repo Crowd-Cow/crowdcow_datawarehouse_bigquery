@@ -55,6 +55,7 @@ events as (
       ,event_json:survey:display_reason::text as display_reason
       ,event_json:survey:feedback::text as feedback
       ,event_json:survey:selected_reason::text as selected_reason
+      ,event_json:properties:depth::int as scroll_depth
       ,event_json
   from {{ ref('base_cc__ahoy_events') }}
 
@@ -107,6 +108,7 @@ events as (
     ,{{ clean_strings('display_reason') }} as display_reason
     ,{{ clean_strings('feedback') }} as feedback
     ,{{ clean_strings('selected_reason') }} as selected_reason
+    ,scroll_depth
   from events
 )
 
