@@ -1,0 +1,68 @@
+version: 2
+
+models:
+  - name: stg_cc__postal_code_lookups
+    description: "Staging model for postal code lookups"
+    columns:
+      - name: postal_code_lookup_id
+        description: "Postal code lookup ID"
+
+      - name: postal_code
+        description: "Postal code"
+        tests:
+          - unique
+          - not_null
+
+      - name: city_name
+        description: "City name"
+
+      - name: county_name
+        description: "County name"
+
+      - name: state_code
+        description: "State code"
+
+      - name: time_zone_name
+        description: "Time zone name"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated"
+
+      - name: latitude
+        description: "Zip latitude"
+
+      - name: longitude
+        description: "Zip longitude"
+
+      - name: median_income
+        description: "Median income"
+
+      - name: population
+        description: "Population"
+
+      - name: median_income_clean
+        description: "Median income clean"
+
+      - name: population_clean
+        description: "Population clean"
+
+      - name: median_income_bucket
+        description: "Median income bucket"
+
+      - name: designation
+        description: "Zip designation"
+
+      - name: dma_id
+        description: "DMA ID"
+
+      - name: po_name
+        description: "PO name"
+
+      - name: dma_name
+        description: "DMA name"
+
+      - name: dma_state
+        description: "DMA state"

@@ -4584,6 +4584,54 @@ sources:
           - name: dma_name
             description: dma_name
 
+      - name: postal_code_lookup
+        description: postal_code_lookup
+
+        columns:
+          - name: id
+            description: id
+            tests:
+              - unique
+              - not_null 
+          - name: postal_code
+            description: postal_code
+          - name: city_name
+            description: city_name
+          - name: county_name
+            description: county_name
+          - name: state_code
+            description: state_code
+          - name: time_zone_name
+            description: time_zone_name
+          - name: created_at
+            description: created_at
+          - name: updated_at
+            description: updated_at
+          - name: latitude
+            description: latitude
+          - name: longitude
+            description: longitude
+          - name: median_income
+            description: median_income
+          - name: population
+            description: population
+          - name: median_income_clean
+            description: median_income_clean
+          - name: population_clean
+            description: population_clean
+          - name: median_income_bucket
+            description: median_income_bucket
+          - name: designation
+            description: designation
+          - name: dma_id
+            description: dma_id
+          - name: po_name
+            descriptioN: po_name
+          - name: dma_name
+            description: dma_name
+          - name: dma_state
+            description: dma_state
+
       - name: postcard_logs
         description: postcard_logs
 
