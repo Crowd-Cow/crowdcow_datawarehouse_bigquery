@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: sku_plans
+    description: Business logic model for SKU plans
+    columns:
+      - name: sku_plan_cut_id
+        description: Surrogate key to provide uniqueness to a record. Combines `sku_plan_id` and `cut_id`
+        tests:
+          - unique
+          - not_null
+
+      - name: sku_plan_id
+        description: SKU plan ID
+
+      - name: sku_plan_type
+        description: SKU plan type
+
+      - name: sku_plan_name
+        description: SKU plan name
+
+      - name: created_at_utc
+        description: Timestamp for when the record was created
+
+      - name: updated_at_utc
+        description: Timestamp for when the record was updated
+
+      - name: cut_id
+        description: Cut ID
+
+      - name: cut_key
+        description: Key to join to cuts to get information on the cut at the time the SKU plan was created
