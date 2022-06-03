@@ -1,0 +1,59 @@
+version: 2
+
+models:
+  - name: stg_cc__postal_codes
+    description: "Staging model for postal codes"
+    columns:
+      - name: postal_code_id
+        description: "Postal code ID"
+
+      - name: area_name
+        description: "Area name"
+
+      - name: population
+        description: "Population"
+
+      - name: state_name
+        description: "State name"
+
+      - name: dma_id
+        description: "DMA ID"
+
+      - name: latitude
+        description: "Postal code latitude"
+
+      - name: longitude
+        description: "Postal code longitude"
+
+      - name: dma_name
+        description: "DMA name"
+
+      - name: postal_code
+        description: "Postal code"
+        tests:
+          - unique
+          - not_null
+
+      - name: city_name
+        description: "City name"
+
+      - name: time_zone_name
+        description: "Timezone name"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated"
+
+      - name: state_code
+        description: "State code"
+
+      - name: median_income
+        description: "Median income"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created"
+
+      - name: mean_income
+        description: "Mean income"
+
+      - name: po_name
+        description: "PO name"
