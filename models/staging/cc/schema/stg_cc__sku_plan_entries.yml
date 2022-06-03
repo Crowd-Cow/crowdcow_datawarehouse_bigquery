@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: stg_cc__sku_plan_entries
+    description: "Staging model for SKU plan entries"
+    columns:
+      - name: sku_plan_entry_id
+        description: "SKU plan entry ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: price_per_pound
+        description: "SKU price per pound"
+
+      - name: sku_weight
+        description: "SKU weight"
+
+      - name: sku_plan_id
+        description: "SKU plan ID"
+
+      - name: cut_id
+        description: "Cut ID"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated"
+
+      - name: is_receivable
+        description: "Boolean indicating if the SKU is receivable"

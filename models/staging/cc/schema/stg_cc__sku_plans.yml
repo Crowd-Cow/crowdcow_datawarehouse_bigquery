@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: stg_cc__sku_plans
+    description: "Staging model for SKU plans"
+    columns:
+      - name: sku_plan_id
+        description: "SKU plan ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated"
+
+      - name: sku_plan_type
+        description: "SKU plan type"
+
+      - name: sku_plan_name
+        description: "SKU plan name"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created"
