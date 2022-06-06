@@ -20,6 +20,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku.sku_barcode
         ,farm.farm_id
         ,farm.farm_name
+        ,farm.is_active as is_active_farm
         ,farm.category
         ,farm.sub_category
         ,cut.cut_name
@@ -83,6 +84,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku_joins.sku_barcode
         ,sku_joins.farm_id
         ,sku_joins.farm_name
+        ,sku_joins.is_active_farm
         ,sku_joins.category
         ,sku_joins.sub_category
         ,sku_joins.cut_name
