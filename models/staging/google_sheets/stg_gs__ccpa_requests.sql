@@ -1,20 +1,6 @@
-
-{% set column_names = [
-     "first_name"
-    ,"last_name"
-    ,"email_address"
-    ,"admin_link"
-    ,"date_received"
-  ] 
-%}
-
 with
 
-format_columns as (
-  select
-    {{ google_sheets_stg_strings(column_names)}}
-  from {{ source('google_sheets', 'ccpa_requests') }}
-)
+request as ( select * from {{ source('google_sheets', 'ccpa_requests') }} )
 
 ,final as (
   select
@@ -23,7 +9,8 @@ format_columns as (
     ,{{ clean_strings('email_address')}} as email
     ,{{ clean_strings('admin_link') }} as admin_link
     ,to_date(date_received,'mm/dd/yyyy') as date_received
-  from format_columns
+  from request
+  qualify row_number() over(partition by email_address, admin_link order by _row desc) = 1
 )
 
 select * from final
