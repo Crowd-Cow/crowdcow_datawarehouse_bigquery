@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: box_types
+    description: "Business logic model for box types"
+    columns:
+      - name: box_id
+        description: "Unique identifier for specific box at each FC"
+
+      - name: fc_id
+        description: "fulfillment center ID"
+
+      - name: height_in_inches
+        description: "height of box in inches"
+
+      - name: width_in_inches
+        description: "width of box in inches"
+
+      - name: box_name
+        description: "box type"
