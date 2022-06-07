@@ -81,7 +81,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,suspicious_ips.visit_ip is not null
             or visit_clean_urls.visit_user_agent like any ('%BOT%','%CRAWL%','%LIBRATO%','%TWILIOPROXY%','%YAHOOMAILPROXY%','%SCOUTURLMONITOR%','%FULLCONTACT%','%IMGIX%','%BUCK%')
             or (visit_clean_urls.visit_ip is null and visit_clean_urls.visit_user_agent is null) as is_bot
-        ,visit_clean_urls.visit_ip in ('66.171.181.219', '127.0.0.1') or (user_account.user_id is not null and user_account.user_type = 'EMPLOYEE') as is_internal_traffic
+        ,visit_clean_urls.visit_ip in ('66.171.181.219', '127.0.0.1') or (user_account.user_id is not null and user_account.user_type in ('EMPLOYEE','INTERNAL')) as is_internal_traffic
         ,user_order_firsts.user_id is not null and user_order_firsts.first_paid_order_date < visit_clean_urls.started_at_utc as has_previous_order
         ,user_order_firsts.user_id is not null and user_order_firsts.first_completed_order_date < visit_clean_urls.started_at_utc as has_previous_completed_order
         ,user_first_subscription.user_id is not null and user_first_subscription.first_subscription_date < visit_clean_urls.started_at_utc as has_previous_subscription
