@@ -157,6 +157,15 @@ models:
       - name: packing_cost
         description: Total packing cost for an order. Calculated as number of packing minutes times the cost per minute for labor for the month the order was picked
 
+      - name: box_making_cost
+        description: Total cost for making boxes at a fulfillment center attributed to an order
+
+      - name: fc_other_cost
+        description: Total cost for other fulfillment center activites attributed to an order (e.g. sanitation, special projects, etc)
+
+      - name: fc_labor_cost
+        description: Total fulfillment center cost for an order. Calculated as the sum of `order_picking_cost` + `order_packing_cost` + `order_box_making_cost` + `order_fc_other_cost`
+
       - name: poseidon_fulfillment_cost
         description: Total cost to fulfill an order if it comes from the Poseidon fulfillment center
 
