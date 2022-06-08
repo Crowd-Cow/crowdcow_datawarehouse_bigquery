@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: fc_labor_hours
+    description: "Business logic model for Fulfillment Center labor hours"
+    columns:
+      - name: fc_labor_hours_id
+        description: "Surrogate key to provide uniqueness. Combines `labor_month` and `task_description`"
+      
+      - name: labor_month
+        description: "The month the labor hours were accrued"
+
+      - name: task_description
+        description: "Description of the task performed"
+
+      - name: gross_pay
+        description: "Monthly gross pay accrued by task"
+
+      - name: base_pay_hours
+        description: "Monthly base pay hours accrued by task"
+
+      - name: overtime_hours
+        description: "Monthly Overtime hours accrued by task"
+
+      - name: total_hours_worked
+        description: "Monthly total hours worked by task. Calculated as `base_pay_hours` + `overtime_hours`"
+
+      - name: pto_hours
+        description: "Monthly PTO hours accrued by task"
+
+      - name: holiday_hours
+        description: "Holiday hours accrued by task"
+
+      - name: employee_count
+        description: "Monthly employee count by task"
+
+      - name: task_description_short
+        description: A shorter version of the task description. Used to categorize tasks
+
+      - name: fc_name
+        description: Fulfillment center name
+
+      - name: hours_category
+        description: Category the task falls into (i.e. Picking, Packing, Box Making, All Other)
