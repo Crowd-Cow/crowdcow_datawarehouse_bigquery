@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: int_pick_pack_durations
+    description: Intermediate model to calculate pick/pack durations for an order
+    columns:
+      - name: user_id
+        description: User ID of the person picking/packing
+
+      - name: order_id
+        description: Order ID being picked/packed
+
+      - name: action
+        description: Action type (i.e. ADD_TO_BOX, REMOVED_FROM_BOX, PACKED_ITEM)
+
+      - name: action_date
+        description: The date the picking/packing action took place
+
+      - name: action_started_at_utc
+        descrtiption: Timestamp for when the picking/packing action started
+
+      - name: action_ended_at_utc
+        description: Timestamp for when the picking/packing action ended
+
+      - name: item_count
+        description: Number of items picked/packed
+
+      - name: hour_duration
+        description: The amount of time picking/packing in hours
+
+      - name: minute_duration
+        description: The amount of time picking/packing in minutes
+
+      - name: second_duration
+        description: The amount of time picking/packing in seconds

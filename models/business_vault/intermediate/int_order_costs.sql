@@ -5,7 +5,7 @@ order_item as ( select * from {{ ref('order_item_details') }} )
 ,coolant_cost as (select * from {{ ref('int_coolant_cost_per_order')}} )
 ,packaging_cost as (select * from {{ ref('int_packaging_cost_per_order')}} )
 ,care_cost as (select * from {{ ref('int_care_cost_per_order') }} )
-,pick_pack_cost as ( select * from {{ ref('int_pick_pack_cost_per_order') }} )
+,fc_labor_cost as ( select * from {{ ref('int_fc_labor_cost_per_order') }} )
 
 ,item_detail_costs as (
     select
@@ -33,14 +33,17 @@ order_item as ( select * from {{ ref('order_item_details') }} )
         ,order_care_cost
         ,item_detail_costs.product_cost
         ,item_detail_costs.poseidon_fulfillment_cost
-        ,pick_pack_cost.picking_cost
-        ,pick_pack_cost.packing_cost
+        ,fc_labor_cost.order_picking_cost
+        ,fc_labor_cost.order_packing_cost
+        ,fc_labor_cost.order_box_making_cost
+        ,fc_labor_cost.order_fc_other_cost
+        ,fc_labor_cost.order_fc_labor_cost
     from orders
         left join item_detail_costs on orders.order_id = item_detail_costs.order_id
         left join coolant_cost on orders.order_id = coolant_cost.order_id
         left join packaging_cost on orders.order_id = packaging_cost.order_id
         left join care_cost on orders.order_id = care_cost.order_id
-        left join pick_pack_cost on orders.order_id = pick_pack_cost.order_id
+        left join fc_labor_cost on orders.order_id = fc_labor_cost.order_id
 )
 
 
