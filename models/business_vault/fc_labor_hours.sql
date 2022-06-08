@@ -25,4 +25,4 @@ fc_labor_hour as ( select * from {{ ref('stg_s3__fc_labor_hours') }} )
     from parse_tasks
 )
 
-select * from parse_tasks
+select * from categorize_tasks
