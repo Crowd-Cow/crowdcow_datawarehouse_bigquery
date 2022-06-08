@@ -7,8 +7,8 @@ models:
       - name: fc_labor_hours_id
         description: "Surrogate key to provide uniqueness. Combines `labor_month` and `task_description`"
       
-      - name: labor_month
-        description: "The month the labor hours were accrued"
+      - name: labor_fiscal_month
+        description: "The fiscal month the labor hours were accrued"
 
       - name: task_description
         description: "Description of the task performed"

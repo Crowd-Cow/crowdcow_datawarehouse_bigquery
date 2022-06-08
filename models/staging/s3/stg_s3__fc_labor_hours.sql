@@ -2,7 +2,7 @@ with source as ( select * from {{ source('s3', 'fc_labor_hours') }} )
 
 ,renamed as (
     select
-        to_date(regexp_substr(_file,'[0-9]{8}'),'yyyymmdd') as labor_month
+        to_date(regexp_substr(_file,'[0-9]{8}'),'yyyymmdd') as labor_fiscal_month
         ,_modified as modified_at_utc
         ,{{ clean_strings('tasks_by_departmental_function_and_sub_department') }} as task_description
         ,gross_pay
@@ -17,8 +17,8 @@ with source as ( select * from {{ source('s3', 'fc_labor_hours') }} )
 
 ,clean_values as (
     select
-        {{ dbt_utils.surrogate_key(['labor_month', 'task_description']) }} as fc_labor_hours_id
-        ,labor_month
+        {{ dbt_utils.surrogate_key(['labor_fiscal_month', 'task_description']) }} as fc_labor_hours_id
+        ,labor_fiscal_month
         ,task_description
         ,regexp_replace(gross_pay,'[$,]*') as gross_pay
         ,regexp_replace(base_pay_hours,'[$,]*') as base_pay_hours
