@@ -143,6 +143,11 @@ employee as (
     where user_type in ('CUSTOMER','EMPLOYEE') and japanese_buyers_club_revenue >= 1000
 )
 
+,churned_customer as (
+    {{ generate_tag('users','user_id','churned_customer','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE') and lifetime_paid_order_count > 0 and last_90_days_paid_order_count = 0
+)
+
 select * from employee
 union all
 select * from recent_delivery
@@ -190,3 +195,5 @@ union all
 select * from jp_wagyu_silver
 union all
 select * from jp_wagyu_gold
+union all
+select * from churned_customer
