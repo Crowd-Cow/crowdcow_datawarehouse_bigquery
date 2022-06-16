@@ -95,7 +95,6 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,zeroifnull(visit_activity.pcp_impression_clicks) as pcp_impression_clicks_count
         ,zeroifnull(visit_activity.pdp_add_to_carts) as pdp_product_add_to_cart_count
         ,zeroifnull(visit_activity.viewed_pdps) as pdp_views_count
-
     from visit_clean_urls
         left join suspicious_ips on visit_clean_urls.visit_ip = suspicious_ips.visit_ip
         left join user_order_firsts on visit_clean_urls.user_id = user_order_firsts.user_id

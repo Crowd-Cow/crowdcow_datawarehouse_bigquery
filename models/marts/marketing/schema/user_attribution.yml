@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: user_attribution
+    description: "visit details for 10 day look back user attribution."
+    columns:
+      - name: visit_id
+        description: "visit id of attributed visit"
+
+      - name: user_id
+        description: "user id"
+
+      - name: utm_source
+        description: "utm source of attributed visit"
+
+      - name: utm_medium
+        description: "utm medium of attributed visit"
+
+      - name: utm_campaign
+        description: "utm campaign of attributed visit"
+
+      - name: utm_content
+        description: "utm content of attributed visit"
+
+      - name: utm_term
+        description: "utm term of attributed visit"
+
+      - name: channel
+        description: "channel of attributed visit"
+
+      - name: sub_channel
+        description: "subchannel of attributed visit"
+
