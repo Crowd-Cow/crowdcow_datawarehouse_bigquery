@@ -3,6 +3,7 @@ with visits as ( select * from {{ ref('visits') }} )
 
 ,attribution_details as (
     select visits.visit_id
+        ,visits.started_at_utc
         ,users.user_id
         ,visits.utm_source
         ,visits.utm_medium
