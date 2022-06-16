@@ -1,4 +1,4 @@
-with visits as ( select * from {{ ref('visit_classification') }} )
+with visits as ( select * from {{ ref('visits') }} )
 ,users as ( select user_id, attributed_visit_id from {{ ref('users') }} )
 
 ,attribution_details as (
