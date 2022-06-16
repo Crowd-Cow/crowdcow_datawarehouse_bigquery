@@ -63,10 +63,6 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,visits.visit_landing_page_host = 'WWW.CROWDCOW.COM' 
             and visits.visit_landing_page_path in ('/','/L') as is_homepage_landing
 
-        ,visit_landing_page_path like any ('%.JS%','%.ICO%','%.PNG%','%.CSS%','%.PHP%','%.TXT%','%GRAPHQL%'
-                                       ,'%.XML%','%.SQL%','%.ICS%','%WELL-KNOWN%','%/e/%','%.ENV%','%/WP-%','/CROWDCOW.COM%'
-                                       ,'%/WWW.CROWDCOW.COM%.%','%/ADMIN%','%/INGREDIENT-LIST%','%.','%PHPINFO%','%.YML%'
-                                       ,'%.HTML%','%.ASP','%XXXSS%','%.RAR','%.AXD%','%.AWS%','%;VAR%') as is_invalid_visit
         ,visit_ip
         ,visit_user_agent
         ,started_at_utc
@@ -76,7 +72,6 @@ visits as ( select * from {{ ref('visit_classification') }} )
 ,add_flags as (
     select
         visit_clean_urls.visit_id
-        ,visit_clean_urls.is_invalid_visit
         ,visit_clean_urls.is_homepage_landing
         ,suspicious_ips.visit_ip is not null
             or visit_clean_urls.visit_user_agent like any ('%BOT%','%CRAWL%','%LIBRATO%','%TWILIOPROXY%','%YAHOOMAILPROXY%','%SCOUTURLMONITOR%','%FULLCONTACT%','%IMGIX%','%BUCK%')

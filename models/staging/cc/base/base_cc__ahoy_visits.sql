@@ -41,5 +41,59 @@ renamed as (
 
 )
 
-select * from renamed
+,clean_landing_page as (
+  select 
+    visit_id
+    ,visit_browser
+    ,updated_at_utc
+    ,visit_city
+    ,utm_content
+    ,visit_token
+    ,visit_ip
+    ,utm_campaign
+    
+    /** Modify landing page to get the URL with the most information **/
+    ,case
+      when visit_landing_page not like '%UTM_%' 
+          and visit_referrer like '%CROWDCOW.COM%'
+          and  visit_referrer like '%UTM_%' then coalesce(trim(visit_referrer),'')
+      else coalesce(trim(visit_landing_page),'')
+     end as visit_landing_page
 
+    ,visit_os
+    ,utm_term
+    ,utm_medium
+    ,started_at_utc
+    ,visit_referrer
+    ,user_id
+    ,visit_country
+    ,visit_search_keyword
+    ,utm_source
+    ,visitor_token
+    ,visit_device_type
+    ,visit_referring_domain
+    ,visit_region
+    ,visit_user_agent
+    ,is_wall_displayed
+  from renamed
+)
+
+,parse_landing_page as (
+  select 
+    *
+    ,parse_url(visit_landing_page):host::text as visit_landing_page_host
+    ,replace(replace('/' || parse_url(visit_landing_page):path::text,'//','/'),'/ROBOTS.TXT','') as visit_landing_page_path
+  from clean_landing_page
+)
+
+,identify_bad_urls as (
+  select
+    *
+    ,visit_landing_page_path like any ('%.JS%','%.ICO%','%.PNG%','%.CSS%','%.PHP%','%.TXT%','%GRAPHQL%'
+                                       ,'%.XML%','%.SQL%','%.ICS%','%WELL-KNOWN%','%/e/%','%.ENV%','%/WP-%','/CROWDCOW.COM%'
+                                       ,'%/WWW.CROWDCOW.COM%.%','%/ADMIN%','%/INGREDIENT-LIST%','%.','%PHPINFO%','%.YML%'
+                                       ,'%.HTML%','%.ASP','%XXXSS%','%.RAR','%.AXD%','%.AWS%','%;VAR%') as is_invalid_visit
+  from parse_landing_page
+)
+
+select * from identify_bad_urls where not is_invalid_visit and visit_landing_page <> ''

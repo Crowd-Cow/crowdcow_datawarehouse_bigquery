@@ -43,15 +43,9 @@ base_visits as (
         ,user_id
         ,visitor_token
         ,visit_token
-        
-        /** Modify landing page to get the URL with the most information **/
-        ,case
-            when visit_landing_page not like '%UTM_%' 
-                and visit_referrer like '%CROWDCOW.COM%'
-                and  visit_referrer like '%UTM_%' then coalesce(trim(visit_referrer),'')
-            else coalesce(trim(visit_landing_page),'')
-        end as visit_landing_page
-        
+        ,visit_landing_page
+        ,visit_landing_page_path
+        ,visit_landing_page_host
         ,visit_referring_domain
         ,visit_referrer
         ,visit_search_keyword
@@ -81,8 +75,8 @@ base_visits as (
         ,visits.visitor_token
         ,visits.visit_token
         ,visits.visit_landing_page
-        ,parse_url(visits.visit_landing_page):host::text as visit_landing_page_host
-        ,replace(replace('/' || parse_url(visits.visit_landing_page):path::text,'//','/'),'/ROBOTS.TXT','') as visit_landing_page_path
+        ,visits.visit_landing_page_host
+        ,visits.visit_landing_page_path
         ,visits.visit_referring_domain
         ,visits.visit_referrer
         ,visits.visit_search_keyword

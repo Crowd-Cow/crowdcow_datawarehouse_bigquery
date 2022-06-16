@@ -62,7 +62,6 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,get_ip_session.is_social_platform_referrer
         ,visit_flags.is_bot
         ,visit_flags.is_internal_traffic
-        ,visit_flags.is_invalid_visit
         ,visit_flags.is_homepage_landing
         ,visit_flags.has_previous_order
         ,visit_flags.has_previous_completed_order
@@ -81,8 +80,6 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,get_ip_session.updated_at_utc
     from get_ip_session
         left join visit_flags on get_ip_session.visit_id = visit_flags.visit_id
-    where not visit_flags.is_invalid_visit
-        and get_ip_session.visit_landing_page <> ''
         
 
 )
