@@ -66,6 +66,8 @@ select
     ,total_cancelled_membership_count
     ,total_membership_count - total_cancelled_membership_count as total_uncancelled_memberships
     ,membership_tenure_months
+    ,first_promotion_type like '%LIFETIME%' as is_first_promotion_ffl
+    ,current_promotion_type like '%LIFETIME%' as is_current_promotion_ffl 
     ,first_membership_created_date
     ,most_recent_membership_created_date
     ,most_recent_membership_cancelled_date

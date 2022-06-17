@@ -202,6 +202,12 @@ models:
       - name: did_create_membership_after_call
         description: "Boolean indicating if the user created a membership after a Phone Burner call was made to the user"
 
+      - name: is_first_promotion_ffl
+        description: Boolean indicating if the first memberships promotion selected for a user was a Free For Life promotion
+
+      - name: is_current_promotion_ffl
+        description: Boolean indicating if the current membership promotion selected for a user is a Free For Life promotion
+
       - name: last_sign_in_at_utc
         description: "User last signed in timestamp in UTC"
 

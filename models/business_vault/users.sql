@@ -54,6 +54,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_membership.most_recent_membership_cancelled_date
         ,user_membership.user_id is not null and user_order_activity.total_completed_membership_orders > 0 as is_member
         ,user_membership.user_id is not null and user_membership.total_uncancelled_memberships = 0 as is_cancelled_member
+        ,ifnull(user_membership.is_current_promotion_ffl,False) as is_current_promotion_ffl
+        ,ifnull(user_membership.is_first_promotion_ffl,False) as is_first_promotion_ffl
         ,user_order_activity.order_user_id is null as is_lead
         ,user_order_activity.user_id is not null and user_order_activity.total_paid_ala_carte_order_count > 0 and zeroifnull(user_membership.total_membership_count) = 0 as is_purchasing_customer
         ,user_order_activity.user_id is not null and user_order_activity.total_paid_membership_order_count > 0 as is_purchasing_member
@@ -223,6 +225,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,is_purchasing_member
         ,is_active_member_90_day
         ,is_banned
+        ,is_current_promotion_ffl
+        ,is_first_promotion_ffl
         ,does_allow_sms
         ,has_opted_in_to_emails
         ,last_call_at_utc is not null as has_phone_burner_contact

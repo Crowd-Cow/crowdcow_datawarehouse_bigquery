@@ -43,6 +43,12 @@ models:
       - name: membership_tenure_months
         description: "The tenure in months between the date of the first membership created and the last membership cancelled for a user. If the membership is uncancelled, tenure uses current date to calculate tenure"
 
+      - name: is_first_promotion_ffl
+        description: Boolean indicating if the first memberships promotion selected for a user was a Free For Life promotion
+
+      - name: is_current_promotion_ffl
+        description: Boolean indicating if the current membership promotion selected for a user is a Free For Life promotion
+
       - name: first_membership_created_date
         description: "Timestamp of the first membership created for a user"
 
