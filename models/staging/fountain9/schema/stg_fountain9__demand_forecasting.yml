@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: stg_fountain9__demand_forecasting
+    description: Daily forecasts at the FC, farm category, farm sub category, and cut level. Forecasts are produced by Fountain9
+    columns:
+      - name: forecast_id
+        description: A surrogate key to provide uniqueness. Combines `date',`fc_id`,`category`,`sub_category`,`cut_id`
+        tests:
+          - unique
+          - not_null
+
+      - name: forecast_date
+        description: Date of the forecasted demand for the item
+
+      - name: fc_id
+        description: Fulfillment center ID
+
+      - name: fc_name
+        description: Fulfillment center name
+
+      - name: category
+        description: The farm category of the item
+
+      - name: sub_category
+        description: The farm sub category of the item
+
+      - name: cut_id
+        description: Cut ID
+
+      - name: cut_name
+        description: Cut name
+
+      - name: inventory_classification
+        description: Inventory classification (e.g. Always in stock, seasonal, etc.)
+
+      - name: forecasted_sales
+        description: The forecasted demand of that item for that day
