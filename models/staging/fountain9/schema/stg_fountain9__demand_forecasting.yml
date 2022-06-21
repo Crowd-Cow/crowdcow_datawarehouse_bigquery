@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_fountain9__demand_forecasting
+  - name: stg_fountain9__demand_forecasts
     description: Daily forecasts at the FC, farm category, farm sub category, and cut level. Forecasts are produced by Fountain9
     columns:
       - name: forecast_id

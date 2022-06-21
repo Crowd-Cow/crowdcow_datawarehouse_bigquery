@@ -2,8 +2,8 @@ with
 
 /**** AWS generated forecasts prior to 2022-06-14 and those forecast values are kept for historical reporting purposes ***/
 /**** Fountain9 generates forecasts from 2022-06-14 going forward ***/
-aws as ( select * from staging.stg_forecasting__cat_subcat_daily where forecast_date < '2022-06-14' )
-,f9 as ( select * from staging.stg_fountain9__demand_forecasts )
+aws as ( select * from {{ ref('stg_forecasting__cat_subcat_daily') }} where forecast_date < '2022-06-14' )
+,f9 as ( select * from {{ ref('stg_fountain9__demand_forecasts') }} )
 
 ,union_forecasts as (
     select
