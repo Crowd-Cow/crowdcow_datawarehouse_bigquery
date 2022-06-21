@@ -1,7 +1,7 @@
 with
 
 inventory as ( select * from {{ ref('inventory_snapshot') }} )
-,forecast as ( select * from {{ ref('stg_forecasting__cat_subcat_daily') }} )
+,forecast as ( select * from {{ ref('demand_forecast') }} )
 ,sku as ( select * from {{ ref('skus') }} )
 ,fc as ( select * from {{ ref('fcs') }} )
 ,receivable as ( select * from {{ ref('pipeline_receivables') }} )
@@ -114,8 +114,8 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,cut_id
         ,fc_id
         ,{{ dbt_utils.surrogate_key(['forecast_date','category','sub_category','cut_id','fc_id']) }} as join_key
-        ,p50 as forecasted_sales
-        ,sum(case when p50 < 0 then 0 else p50 end) 
+        ,forecasted_sales
+        ,sum(case when forecasted_sales < 0 then 0 else forecasted_sales end) 
             over(partition by category,sub_category,cut_id,fc_id 
                 order by forecast_date rows between unbounded preceding and unbounded following)/12 as avg_forecasted_weekly_units
     from forecast
