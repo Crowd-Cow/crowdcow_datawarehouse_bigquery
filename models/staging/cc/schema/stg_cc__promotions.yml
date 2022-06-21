@@ -27,6 +27,21 @@ models:
       - name: promotion_must_be_assigned_to_order
         description: Does the Promotion have to be assigned to a Order
 
+      - name: claimable_window_in_days
+        description: The number of days in which the user can claim a promotion
+
+      - name: must_be_claimed
+        description: Boolean indicating if the user must actively claim the promotion
+
+      - name: must_be_applied_by_user
+        description: Boolean indicating if the user must actively apply the promotion to their order
+
+      - name: starts_at_utc
+        description: Timestamp for when the promotion starts
+
+      - name: ends_at_utc
+        description: Timestamp for when the promotion ends
+
       - name: created_at_utc
         description: Timestamp for when a record was added to the source database
 

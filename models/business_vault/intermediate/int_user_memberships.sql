@@ -2,7 +2,7 @@ with
 
 membership as ( select * from {{ ref('stg_cc__subscriptions') }} where user_id is not null )
 ,membership_promo as ( select * from {{ ref('stg_cc__subscription_promotions') }} )
-,promotion as ( select * from {{ ref('stg_cc__promotions') }} where dbt_valid_to is null )
+,promotion as ( select * from {{ ref('stg_cc__promotions') }} where dbt_valid_to is null and promotion_source = 'PROMOTION' )
 
 ,get_membership_history as (
     select distinct

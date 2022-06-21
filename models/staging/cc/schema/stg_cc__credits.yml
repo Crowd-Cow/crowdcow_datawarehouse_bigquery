@@ -19,6 +19,9 @@ models:
       - name: cow_cash_entry_source_id
         description: "Cow Cash entry source ID"
 
+      - name: promotion_source
+        description: The source table that contains information about the promotion. This must be used in conjunction with the promotion_id to find a unique promotion record
+
       - name: credit_discount_usd
         description: "Credit discount in USD"
 

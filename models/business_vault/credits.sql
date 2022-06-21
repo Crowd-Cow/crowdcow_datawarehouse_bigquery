@@ -18,6 +18,7 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
         ,awarded_cow_cash.cow_cash_message as awarded_cow_cash_message
         ,credit.credit_discount_usd
         ,credit.discount_percent
+        ,credit.promotion_source
         ,credit.is_hidden_from_user
         ,credit.is_controlled_by_promotion
         ,credit.created_at_utc
@@ -47,6 +48,7 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
         ,add_cow_cash_information.updated_at_utc
     from add_cow_cash_information
         left join promotion on add_cow_cash_information.promotion_id = promotion.promotion_id
+            and add_cow_cash_information.promotion_source = promotion.promotion_source
 )
 
 ,add_order_type as (
