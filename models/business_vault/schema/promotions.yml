@@ -10,6 +10,9 @@ models:
       - name: promotion_type
         description: "Promotion Type"
 
+      - name: promotion_source
+        description: There are two tables of record for promotion information. The source shows which source table corresponds to the promotion record
+
       - name: is_new_member_promotion
         description: "Boolean indicating if this is considered a new member promotion"
 
