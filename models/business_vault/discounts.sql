@@ -9,6 +9,7 @@ credit as ( select * from {{ ref('credits') }} )
         'CREDITS' as discount_source
         ,credit_id as discount_id
         ,promotion_id
+        ,promotion_source
         ,order_id
         ,credit_business_group as business_group
         ,credit_financial_account as financial_account
@@ -28,6 +29,8 @@ credit as ( select * from {{ ref('credits') }} )
         ,case
             when discounts.index = 2 then promotion_id else null
          end as promotion_id
+
+        ,'PROMOTION' as promotion_source --default to old promotions source until something changes with item level promotions
     
         ,order_id
 
@@ -71,6 +74,7 @@ credit as ( select * from {{ ref('credits') }} )
         ,union_discounts.updated_at_utc
     from union_discounts
         left join promotion on union_discounts.promotion_id = promotion.promotion_id
+            and union_discounts.promotion_source = promotion.promotion_source
     where business_group is not null
 )
 
