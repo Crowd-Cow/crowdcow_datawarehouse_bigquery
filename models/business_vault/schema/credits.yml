@@ -28,6 +28,9 @@ models:
       - name: credit_description
         description: "Credit description"
 
+      - name: promotion_source
+        description: There are two tables of record for promotion information. The source shows which source table corresponds to the promotion record
+
       - name: credit_business_group
         description: "A business group classification for the credit (e.g. CARE credit, Acquisition Marketing, etc)"
 
