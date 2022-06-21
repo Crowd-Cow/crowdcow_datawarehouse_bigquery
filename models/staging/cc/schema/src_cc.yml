@@ -5301,6 +5301,36 @@ sources:
           - name: always_available
             description: always_available
 
+      - name: promotions_promotions
+        description: New promotions table
+
+        columns:
+          - name: id
+            description: id
+            tests:
+              - unique
+              - not_null
+          - name: updated_at
+            description: updated_at
+          - name: starts_at
+            description: starts_at
+          - name: claimable_window_in_days
+            description: claimable_window_in_days
+          - name: must_be_claimed
+            description: must_be_claimed
+          - name: ends_at
+            description: ends_at
+          - name: created_at
+            description: created_at
+          - name: name
+            description: name
+          - name: _fivetran_deleted
+            description: _fivetran_deleted
+          - name: _fivetran_synced
+            description: _fivetran_synced
+          - name: must_be_applied_by_user
+            description: must_be_applied_by_user
+
       - name: reclaimed_bids
         description: reclaimed_bids
 
