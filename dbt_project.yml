@@ -37,7 +37,10 @@ models:
         +materialized: table
     business_vault:
       +materialized: table
-      +schema: business_vault
+      cc:
+        +schema: business_vault
+      rastellis:
+        +schema: rastellis
     marts:
       +materialized: table
       +schema: datawarehouse
