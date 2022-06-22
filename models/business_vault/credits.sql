@@ -93,6 +93,7 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
             when credit_type in ('GIFT_CODE_DOLLAR_AMOUNT','PERCENT_DISCOUNT') and promotion_id = 7 and promotion_source = 'PROMOTION' then 'ACQUISITION MARKETING - GIFT'
             when credit_type = 'GIFT_CODE_DOLLAR_AMOUNT' and promotion_id = 10 and promotion_source = 'PROMOTION' then 'ACQUISITION MARKETING - MEMBER REFERRAL'
             when credit_type = 'GIFT_CODE_DOLLAR_AMOUNT' and promotion_id = 8 and promotion_source = 'PROMOTION' then 'ACQUISITION MARKETING - INFLUENCER'
+            when credit_type = 'DOLLAR_AMOUNT' and promotion_id = 2 and promotion_source = 'PROMOTIONS::PROMOTION' then 'MERCHANDISING DISCOUNT'
             else 'OTHER - UNKNOWN'
         end as credit_business_group
 
