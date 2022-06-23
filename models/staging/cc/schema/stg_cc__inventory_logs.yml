@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: stg_cc__inventory_logs
+    description: "Staging model for inventory logs"
+    columns:
+      - name: inventory_log_id
+        description: "Inventory log ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: sku_vendor_id
+        description: "SKU vendor ID"
+
+      - name: reason
+        description: "Inventory reason (e.g. picking, count, sad cow, etc.)"
+
+      - name: sku_id
+        description: "SKU ID"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated"
+
+      - name: sku_box_id
+        description: "SKU box ID"
+
+      - name: fc_id
+        description: "Fulfillment center ID"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created"
+
+      - name: sad_cow_bin_entry_id
+        description: "Sad cow bin entry ID"
+
+      - name: inventory_owner_id
+        description: "Inventory owner ID"
+
+      - name: sku_quantity
+        description: "Quantity of inventory involved in the action"
+
+      - name: order_id
+        description: "Order ID"
