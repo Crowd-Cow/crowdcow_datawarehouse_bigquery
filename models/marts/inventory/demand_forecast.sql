@@ -23,7 +23,15 @@ aws as ( select * from {{ ref('stg_forecasting__cat_subcat_daily') }} where fore
         ,forecast_date
         ,fc_id
         ,category
-        ,nullif(sub_category,'NOT SPECIFIED') as sub_category
+        
+        /*** String cleaning is required since F9 changes the values of the data we send to them ***/
+        /*** this was causing a misatch when trying to join on sub_category since we use this as a part of our "key" ***/
+        ,case
+            when sub_category = 'ORGANIC 100% GRASS FED' then 'ORGANIC, 100% GRASS FED'
+            when sub_category = 'NOT SPECIFIED' then null
+            else sub_category
+        end as sub_category
+        
         ,cut_id
         ,forecasted_sales
     from f9
