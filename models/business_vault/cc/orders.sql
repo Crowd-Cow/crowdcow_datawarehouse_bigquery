@@ -12,9 +12,9 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,order_shipment as (
     select
         order_id
-        ,any_value(easypost_postage_carrier) as shipment_postage_carrier
+        ,any_value(shipment_postage_carrier) as shipment_postage_carrier
         ,count(distinct shipment_id) as shipment_count
-        ,sum(easypost_postage_rate_usd) as shipment_cost
+        ,sum(shipment_postage_rate_usd) as shipment_cost
         ,max(lost_at_utc) as lost_at_utc
         ,max(shipped_at_utc) as shipped_at_utc
         ,max(delivered_at_utc) as delivered_at_utc
