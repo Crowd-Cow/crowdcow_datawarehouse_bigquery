@@ -25,6 +25,7 @@ select
     ,subscription_token
     ,subscription_renew_period_type
     ,subscription_cancelled_reason
+    ,datediff(day,subscription_created_at_utc,coalesce(subscription_cancelled_at_utc,sysdate())) as membership_tenure
     ,is_uncancelled_membership
     ,is_active_membership
     ,subscription_created_at_utc
