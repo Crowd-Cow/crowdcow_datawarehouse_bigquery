@@ -14,7 +14,6 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         order_id
         ,any_value(shipment_postage_carrier) as shipment_postage_carrier
         ,count(distinct shipment_id) as shipment_count
-        ,sum(shipment_postage_rate_usd) as shipment_cost
         ,max(lost_at_utc) as lost_at_utc
         ,max(shipped_at_utc) as shipped_at_utc
         ,max(delivered_at_utc) as delivered_at_utc
@@ -68,18 +67,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(order_revenue.other_discount) as other_discount
         ,zeroifnull(order_revenue.net_revenue) as net_revenue
         ,zeroifnull(order_cost.product_cost) as product_cost
-        
-        /** Axlehire shipping cost is SFTPed to us on a weekly basis. ***/
-        /*** To get a default value for the shipping fee, we're taking the average of the shipping cost for the FC/Shipping Month/Carrier combo ***/
-        /*** Once the actual shipping cost is available for the carrier, we'll use that instead ***/
-        ,zeroifnull(
-            case 
-                when order_shipment.shipment_cost is null 
-                    then avg(order_shipment.shipment_cost) over(partition by orders.fc_id,date_trunc(month,order_shipment.shipped_at_utc), order_shipment.shipment_postage_carrier)
-                else order_shipment.shipment_cost
-            end
-        ) as shipment_cost
-        
+        ,zeroifnull(order_cost.shipment_cost) as shipment_cost
         ,zeroifnull(order_cost.order_coolant_cost) as coolant_cost
         ,zeroifnull(order_cost.order_packaging_cost) as packaging_cost
         ,zeroifnull(order_cost.order_care_cost) as care_cost
