@@ -1,3 +1,9 @@
+{{
+  config(
+    enabled = false
+  )
+}}
+
 with
 
 google as ( select * from {{ ref('int_google_ads_campaign_performance') }} )
