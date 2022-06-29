@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: int_order_shipments
+    description: Intermediate model to determine shipment information at the order level
+    columns:
+      - name: order_id
+        description: Order ID
+        tests:
+          - unique
+          - not_null
+
+      - name: shipment_postage_carrier
+        description: Carrier that delivered the shipment
+
+      - name: shipment_count
+        description: Number of shipments in the order
+
+      - name: lost_at_utc
+        description: Timestamp for when the order was lost
+
+      - name: shipped_at_utc
+        description: Timestamp for when the order shipped
+
+      - name: delivered_at_utc
+        description: Timestamp for when the order was delivered

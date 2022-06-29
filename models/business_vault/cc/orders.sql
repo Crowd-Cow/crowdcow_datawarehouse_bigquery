@@ -6,20 +6,8 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,flags as ( select * from {{ ref('int_order_flags') }} )
 ,ranks as ( select * from {{ ref('int_order_ranks') }} )
 ,units as ( select * from {{ ref('int_order_units_pct') }} )
-,shipments as ( select * from {{ ref('stg_cc__shipments') }} )
+,order_shipment as ( select * from {{ ref('int_order_shipments') }} )
 ,postal_code as ( select * from {{ ref('postal_codes') }} )
-
-,order_shipment as (
-    select
-        order_id
-        ,any_value(shipment_postage_carrier) as shipment_postage_carrier
-        ,count(distinct shipment_id) as shipment_count
-        ,max(lost_at_utc) as lost_at_utc
-        ,max(shipped_at_utc) as shipped_at_utc
-        ,max(delivered_at_utc) as delivered_at_utc
-    from shipments
-    group by 1
-)
 
 ,order_joins as (
     select
