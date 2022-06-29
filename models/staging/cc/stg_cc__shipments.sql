@@ -11,7 +11,7 @@ source as ( select * from {{ source('cc', 'shipments') }} where not _fivetran_de
         ,{{ clean_strings('easypost_postage_carrier') }} as shipment_postage_carrier
         ,print_queue_item_id
         ,delivery_window_end as delivery_window_end_at_utc
-        ,nullif({{ cents_to_usd('easypost_postage_rate_cents') }},0.01) as shipment_postage_rate_usd
+        ,{{ cents_to_usd('easypost_postage_rate_cents') }}as shipment_postage_rate_usd
         ,mean_temperature
         ,box_type_id
         ,easypost_shipment_id
@@ -57,5 +57,65 @@ source as ( select * from {{ source('cc', 'shipments') }} where not _fivetran_de
 
 )
 
-select * from renamed
+,clean_axlehire_costs as (
+    select
+        shipment_id
+        ,latest_temperature_icon
+        ,ready_for_pickup_at_utc
+        ,shipment_tracking_code
+        ,shipment_postage_carrier
+        ,print_queue_item_id
+        ,delivery_window_end_at_utc
+        
+        ,iff(
+           (shipment_postage_carrier = 'AXLEHIREV3' and shipment_postage_rate_usd = 0.01) or
+           (shipment_postage_carrier = 'AXLEHIREV3' and shipped_at_utc < '2021-12-01')
+           ,null
+           ,shipment_postage_rate_usd
+        ) as shipment_postage_rate_usd
+        
+        ,mean_temperature
+        ,box_type_id
+        ,easypost_shipment_id
+        ,delivery_window_start_at_utc
+        ,easypost_shipping_label_url
+        ,shipped_at_utc
+        ,delivered_at_utc
+        ,delivery_method
+        ,original_est_delivery_date_utc
+        ,easypost_postage_rate_id
+        ,marked_not_shipped_at_utc
+        ,fc_id
+        ,maximum_temperature
+        ,temperature_last_updated_at_utc
+        ,shipment_postage_label_id
+        ,postage_paid_at_utc
+        ,item_weight
+        ,scanned_box_type_id
+        ,est_delivery_date_utc
+        ,packaging_freight_component_cost_usd
+        ,minimum_temperature
+        ,scheduled_fulfillment_date_utc
+        ,order_id
+        ,latest_tracking_details_updated_at_utc
+        ,available_for_pickup_at_utc
+        ,created_at_utc
+        ,shipment_delivery_days
+        ,lost_at_utc
+        ,pickup_at_description
+        ,updated_at_utc
+        ,shipment_postage_service
+        ,packaging_materials_component_cost_usd
+        ,shipment_token
+        ,shipment_notes
+        ,latest_temperature
+        ,does_use_zpl
+        ,does_receive_tracking_updates
+        ,is_delivery_date_guaranteed
+        ,fc_locations_id
+        ,fc_location_id
+    from renamed
+)
+
+select * from clean_axlehire_costs
 
