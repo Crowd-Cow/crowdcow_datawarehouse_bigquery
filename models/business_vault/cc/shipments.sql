@@ -2,6 +2,7 @@ with
 
 shipment as ( select * from {{ ref('stg_cc__shipments') }} )
 ,fc as ( select * from {{ ref('stg_cc__fcs') }} )
+,order_delivery as ( select order_id,order_delivery_postal_code from {{ ref('stg_cc__orders') }} )
 
 ,get_fc_key as (
     select
@@ -13,38 +14,63 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
             and shipment.shipped_at_utc < fc.adjusted_dbt_valid_to
 )
 
-select
-    shipment_id
-    ,print_queue_item_id
-    ,box_type_id
-    ,scanned_box_type_id
-    ,fc_id
-    ,fc_key
-    ,order_id
-    ,fc_location_id
-    ,shipment_token
-    ,shipment_tracking_code
-    ,shipment_postage_carrier
-    ,shipment_postage_rate_usd
-    ,delivery_method
-    ,item_weight
-    ,packaging_freight_component_cost_usd
-    ,shipment_delivery_days
-    ,pickup_at_description
-    ,shipment_postage_service
-    ,packaging_materials_component_cost_usd
-    ,does_use_zpl
-    ,does_receive_tracking_updates
-    ,is_delivery_date_guaranteed
-    ,shipped_at_utc
-    ,delivered_at_utc
-    ,original_est_delivery_date_utc
-    ,est_delivery_date_utc
-    ,postage_paid_at_utc
-    ,scheduled_fulfillment_date_utc
-    ,latest_tracking_details_updated_at_utc
-    ,available_for_pickup_at_utc
-    ,created_at_utc
-    ,updated_at_utc
-    ,lost_at_utc
-from get_fc_key
+,get_order_delivery_address as (
+    select
+        get_fc_key.*
+        ,order_delivery.order_delivery_postal_code
+    from get_fc_key
+        left join order_delivery on get_fc_key.order_id = order_delivery.order_id
+)
+
+,calc_axlehire_default as (
+    select
+        shipment_postage_carrier
+        ,order_delivery_postal_code
+        ,avg(shipment_postage_rate_usd) as axlehire_default_postage_rate_usd
+    from get_order_delivery_address
+    where shipment_postage_carrier = 'AXLEHIREV3'
+        and datediff(month,shipped_at_utc,sysdate()) in (1,2)
+    group by 1,2
+)
+
+,add_default_cost as (
+    select
+        get_order_delivery_address.shipment_id
+        ,get_order_delivery_address.print_queue_item_id
+        ,get_order_delivery_address.box_type_id
+        ,get_order_delivery_address.scanned_box_type_id
+        ,get_order_delivery_address.fc_id
+        ,get_order_delivery_address.fc_key
+        ,get_order_delivery_address.order_id
+        ,get_order_delivery_address.fc_location_id
+        ,get_order_delivery_address.shipment_token
+        ,get_order_delivery_address.shipment_tracking_code
+        ,get_order_delivery_address.shipment_postage_carrier
+        ,coalesce(get_order_delivery_address.shipment_postage_rate_usd,calc_axlehire_default.axlehire_default_postage_rate_usd) as shipment_postage_rate_usd
+        ,get_order_delivery_address.delivery_method
+        ,get_order_delivery_address.item_weight
+        ,get_order_delivery_address.packaging_freight_component_cost_usd
+        ,get_order_delivery_address.shipment_delivery_days
+        ,get_order_delivery_address.pickup_at_description
+        ,get_order_delivery_address.shipment_postage_service
+        ,get_order_delivery_address.packaging_materials_component_cost_usd
+        ,get_order_delivery_address.does_use_zpl
+        ,get_order_delivery_address.does_receive_tracking_updates
+        ,get_order_delivery_address.is_delivery_date_guaranteed
+        ,get_order_delivery_address.shipped_at_utc
+        ,get_order_delivery_address.delivered_at_utc
+        ,get_order_delivery_address.original_est_delivery_date_utc
+        ,get_order_delivery_address.est_delivery_date_utc
+        ,get_order_delivery_address.postage_paid_at_utc
+        ,get_order_delivery_address.scheduled_fulfillment_date_utc
+        ,get_order_delivery_address.latest_tracking_details_updated_at_utc
+        ,get_order_delivery_address.available_for_pickup_at_utc
+        ,get_order_delivery_address.created_at_utc
+        ,get_order_delivery_address.updated_at_utc
+        ,get_order_delivery_address.lost_at_utc
+    from get_order_delivery_address
+        left join calc_axlehire_default on get_order_delivery_address.shipment_postage_carrier = calc_axlehire_default.shipment_postage_carrier
+            and get_order_delivery_address.order_delivery_postal_code = calc_axlehire_default.order_delivery_postal_code
+)
+
+select * from add_default_cost
