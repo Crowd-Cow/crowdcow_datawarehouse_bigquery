@@ -6,6 +6,7 @@ order_item as ( select * from {{ ref('order_item_details') }} )
 ,packaging_cost as (select * from {{ ref('int_packaging_cost_per_order')}} )
 ,care_cost as (select * from {{ ref('int_care_cost_per_order') }} )
 ,fc_labor_cost as ( select * from {{ ref('int_fc_labor_cost_per_order') }} )
+,shipment as ( select * from {{ ref('shipments') }} )
 
 ,item_detail_costs as (
     select
@@ -25,6 +26,14 @@ order_item as ( select * from {{ ref('order_item_details') }} )
     group by 1
 )
 
+,shipment_costs as (
+    select
+        order_id
+        ,sum(shipment_postage_rate_usd) as shipment_cost
+    from shipment
+    group by 1
+)
+
 ,combined_costs as (
     select 
         orders.order_id
@@ -38,12 +47,14 @@ order_item as ( select * from {{ ref('order_item_details') }} )
         ,fc_labor_cost.order_box_making_cost
         ,fc_labor_cost.order_fc_other_cost
         ,fc_labor_cost.order_fc_labor_cost
+        ,shipment_costs.shipment_cost
     from orders
         left join item_detail_costs on orders.order_id = item_detail_costs.order_id
         left join coolant_cost on orders.order_id = coolant_cost.order_id
         left join packaging_cost on orders.order_id = packaging_cost.order_id
         left join care_cost on orders.order_id = care_cost.order_id
         left join fc_labor_cost on orders.order_id = fc_labor_cost.order_id
+        left join shipment_costs on orders.order_id = shipment_costs.order_id
 )
 
 
