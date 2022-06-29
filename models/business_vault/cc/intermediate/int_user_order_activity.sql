@@ -24,10 +24,10 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,count_if(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('day',-90,sysdate())) as last_90_days_paid_order_count
         ,count_if(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('day',-180,sysdate())) as last_180_days_paid_order_count
         ,count_if(has_been_delivered and delivered_at_utc >= dateadd('day',-7,sysdate())) as recent_delivered_order_count
-        ,min(iff(is_paid_order,order_paid_at_utc::date,null)) as customer_cohort_date
-        ,min(iff(is_paid_order and is_membership_order,order_paid_at_utc::date,null)) as membership_cohort_date
-        ,max(iff(is_paid_order and is_membership_order,order_paid_at_utc::date,null)) as last_paid_membership_order_date
-        ,max(iff(is_paid_order and is_ala_carte_order,order_paid_at_utc::date,null)) as last_paid_ala_carte_order_date
+        ,min(iff(is_paid_order and not is_cancelled_order,order_paid_at_utc::date,null)) as customer_cohort_date
+        ,min(iff(is_paid_order and not is_cancelled_order and is_membership_order,order_paid_at_utc::date,null)) as membership_cohort_date
+        ,max(iff(is_paid_order and not is_cancelled_order and is_membership_order,order_paid_at_utc::date,null)) as last_paid_membership_order_date
+        ,max(iff(is_paid_order and not is_cancelled_order and is_ala_carte_order,order_paid_at_utc::date,null)) as last_paid_ala_carte_order_date
         ,max(iff(completed_order_rank = 1,order_checkout_completed_at_utc,null)) as first_completed_order_date
         ,max(iff(completed_order_rank = 1,visit_id,null)) as first_completed_order_visit_id
         ,count_if(
