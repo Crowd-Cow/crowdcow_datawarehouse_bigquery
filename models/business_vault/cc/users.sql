@@ -146,7 +146,9 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_cow_cash_balance_usd
         ,user_support_status
         ,customer_cohort_date
+        ,datediff(month,customer_cohort_date,sysdate()) as customer_cohort_tenure_months
         ,membership_cohort_date
+        ,datediff(month,membership_cohort_date,sysdate()) as membership_cohort_tenure_months
         ,first_promotion_type
         ,current_promotion_type
         ,current_renew_period

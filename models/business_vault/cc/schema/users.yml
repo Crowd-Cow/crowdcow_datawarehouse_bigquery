@@ -64,8 +64,14 @@ models:
       - name: customer_cohort_date
         description: "Assigns the user to a customer cohort that starts on the date of their first paid/uncancelled order"
 
+      - name: customer_cohort_tenure_months
+        description: The number of months since the customer's first paid/uncancelled order of any kind
+
       - name: membership_cohort_date
         description: "Assigns the user to a membership cohort that starts on the date of their first paid/uncancelled membership order. The user stays in this cohort even if they cancel this membership and sign up for a new one later."
+
+      - name: membership_cohort_tenure_months
+        description: The number of months since the member's first paid/uncancelled membership order
 
       - name: first_promotion_type
         description: The type of promotion first selected by a user for their first membership
