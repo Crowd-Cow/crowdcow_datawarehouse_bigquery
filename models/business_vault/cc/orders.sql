@@ -32,7 +32,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.fc_id
         ,orders.visit_id
         ,orders.stripe_charge_id
-        ,{{ get_join_key('fcs','fc_key','fc_id','orders','fc_id','order_updated_at_utc') }} as fc_key
+        ,{{ get_join_key('stg_cc__fcs','fc_key','fc_id','orders','fc_id','order_updated_at_utc') }} as fc_key
         ,orders.order_identifier
         ,orders.order_current_state
 
