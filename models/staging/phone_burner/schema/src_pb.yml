@@ -11,9 +11,6 @@ sources:
       columns:
         - name: user_id
           description: Unique Phone Burner user ID
-          tests:
-            - unique
-            - not_null
 
         - name: notes
           description: JSON object containing information on any notes created during customer outreach

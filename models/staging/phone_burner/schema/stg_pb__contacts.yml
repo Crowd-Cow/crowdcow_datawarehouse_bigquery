@@ -6,6 +6,9 @@ models:
     columns:
       - name: phone_burner_user_id
         description: "The user ID in the Phone Burner system"
+        tests:
+            - unique
+            - not_null
 
       - name: notes
         description: "Notes associated with the customer contact"

@@ -160,9 +160,6 @@ sources:
 
           - name: cost
             description: Standard SKU cost
-            tests:
-              - dbt_utils.expression_is_true:
-                  expression: "> 0"
 
           - name: cut_id
             description: Cut ID
@@ -172,9 +169,6 @@ sources:
 
           - name: sku_id
             description: SKU ID
-            tests:
-              - unique
-              - not_null
 
           - name: category
             description: SKU category

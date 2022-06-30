@@ -1,0 +1,210 @@
+version: 2
+
+models:
+  - name: stg_stripe__charges
+    description: "Staging table for Stripe charges"
+    columns:
+      - name: stripe_charge_id
+        description: "Stripe charge ID"
+        tests:
+            - unique
+            - not_null
+
+      - name: connected_account_id
+        description: ""
+
+      - name: charge_amount
+        description: ""
+
+      - name: amount_refunded
+        description: ""
+
+      - name: charge_application
+        description: ""
+
+      - name: billing_detail_address_city
+        description: ""
+
+      - name: billing_detail_address_country
+        description: ""
+
+      - name: billing_detail_address_line_1
+        description: ""
+
+      - name: billing_detail_address_line_2
+        description: ""
+
+      - name: billing_detail_address_postal_code
+        description: ""
+
+      - name: billing_detail_address_state
+        description: ""
+
+      - name: billing_detail_email
+        description: ""
+
+      - name: billing_detail_name
+        description: ""
+
+      - name: billing_detail_phone
+        description: ""
+
+      - name: application_fee_amount
+        description: ""
+
+      - name: calculated_statement_descriptor
+        description: ""
+
+      - name: is_captured
+        description: ""
+
+      - name: created_at_utc
+        description: ""
+
+      - name: currency
+        description: ""
+
+      - name: charge_description
+        description: ""
+
+      - name: destination
+        description: ""
+
+      - name: failure_code
+        description: ""
+
+      - name: failure_message
+        description: ""
+
+      - name: fraud_details_user_report
+        description: ""
+
+      - name: fraud_details_stripe_report
+        description: ""
+
+      - name: is_livemode
+        description: ""
+
+      - name: metadata
+        description: ""
+
+      - name: on_behalf_of
+        description: ""
+
+      - name: outcome_network_status
+        description: ""
+
+      - name: outcome_reason
+        description: ""
+
+      - name: outcome_risk_level
+        description: ""
+
+      - name: outcome_risk_score
+        description: ""
+
+      - name: outcome_seller_message
+        description: ""
+
+      - name: outcome_type
+        description: ""
+
+      - name: is_paid
+        description: ""
+
+      - name: receipt_email
+        description: ""
+
+      - name: receipt_number
+        description: ""
+
+      - name: receipt_url
+        description: ""
+
+      - name: is_refunded
+        description: ""
+
+      - name: shipping_address_city
+        description: ""
+
+      - name: shipping_address_country
+        description: ""
+
+      - name: shipping_address_line_1
+        description: ""
+
+      - name: shipping_address_line_2
+        description: ""
+
+      - name: shipping_address_postal_code
+        description: ""
+
+      - name: shipping_address_state
+        description: ""
+
+      - name: shipping_carrier
+        description: ""
+
+      - name: shipping_name
+        description: ""
+
+      - name: shipping_phone
+        description: ""
+
+      - name: shipping_tracking_number
+        description: ""
+
+      - name: card_id
+        description: ""
+
+      - name: bank_account_id
+        description: ""
+
+      - name: source_id
+        description: ""
+
+      - name: source_transfer
+        description: ""
+
+      - name: statement_descriptor
+        description: ""
+
+      - name: charge_status
+        description: ""
+
+      - name: transfer_data_destination
+        description: ""
+
+      - name: transfer_group
+        description: ""
+
+      - name: balance_transaction_id
+        description: ""
+
+      - name: customer_id
+        description: ""
+
+      - name: invoice_id
+        description: ""
+
+      - name: payment_intent_id
+        description: ""
+
+      - name: payment_method_id
+        description: ""
+
+      - name: transfer_id
+        description: ""
+
+      - name: rule_rule
+        description: ""
+
+      - name: rule_id
+        description: ""
+
+      - name: rule_action
+        description: ""
+
+      - name: rule_predicate
+        description: ""
+        

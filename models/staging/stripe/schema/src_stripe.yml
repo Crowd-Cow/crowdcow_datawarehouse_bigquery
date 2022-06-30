@@ -11,9 +11,6 @@ sources:
         columns:
           - name: id
             description: Unique ID for the Stripe refund transaction
-            tests:
-              - unique
-              - not_null
 
           - name: amount
             description: Refund amount in cents
@@ -65,9 +62,6 @@ sources:
         columns:
           - name: id
             description: Charge ID
-            tests:
-              - unique
-              - not_null`
 
           - name: connected_account_id
             description: Connected account ID
