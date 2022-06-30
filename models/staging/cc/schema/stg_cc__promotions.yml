@@ -6,8 +6,6 @@ models:
     columns:
       - name: promotion_id
         description: Promotion ID
-        tests:
-            - not_null
 
       - name: promotion_source
         description: There are two tables of record for promotion information. The source shows which source table corresponds to the promotion record

@@ -6,6 +6,9 @@ models:
     columns:
       - name: box_id
         description: "Unique identifier for specific box at each FC"
+        tests:
+          - unique
+          - not_null
 
       - name: fc_id
         description: "fulfillment center ID"

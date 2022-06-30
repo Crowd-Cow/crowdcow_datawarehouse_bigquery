@@ -6,6 +6,9 @@ models:
     columns:
       - name: packing_action_id
         description: "Unique id of action"
+        tests:
+          - unique
+          - not_null
 
       - name: sku_box_id
         description: "SKU Box picked from"
