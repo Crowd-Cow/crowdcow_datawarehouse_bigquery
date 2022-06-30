@@ -21,6 +21,8 @@ select
     ,calc_margin.order_id
     ,datediff(month,customer_cohort_date,order_paid_at_utc) as customer_cohort_months
     ,datediff(day,customer_cohort_date,order_paid_at_utc) as customer_cohort_days
+    ,datediff(month,customer_cohort_date,sysdate()) as customer_cohort_tenure_months
+    ,datediff(month,membership_cohort_date,sysdate()) as membership_cohort_tenure_months
     ,iff(order_paid_at_utc >= membership_cohort_date,datediff(month,membership_cohort_date,order_paid_at_utc),null) as membership_cohort_months
     ,iff(order_paid_at_utc >= membership_cohort_date,datediff(day,membership_cohort_date,order_paid_at_utc),null) as membership_cohort_days
     ,calc_margin.product_profit
