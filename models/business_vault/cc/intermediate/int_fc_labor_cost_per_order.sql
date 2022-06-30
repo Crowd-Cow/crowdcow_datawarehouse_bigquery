@@ -20,6 +20,7 @@ order_info as (select * from {{ ref('stg_cc__orders') }} )
         left join shipments on order_info.order_id = shipments.order_id
         left join fiscal_calendar on order_info.order_packed_at_utc::date = fiscal_calendar.calendar_date
     where order_info.order_packed_at_utc is not null
+        and order_info.fc_id <> 10 -- FC labor costs should not be applied to Poseidon drop ship orders
     group by 1,2,3
 )
 
