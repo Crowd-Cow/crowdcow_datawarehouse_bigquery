@@ -12,9 +12,6 @@ sources:
         columns:
           - name: id
             description: Acumatica system ID for the bill
-            tests:
-              - unique
-              - not_null
 
           - name: date
             description: Bill date
