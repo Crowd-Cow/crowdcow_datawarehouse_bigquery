@@ -9,11 +9,6 @@ sources:
   tables:
     - name: campaign_history
       description: Google Ads campaign history
-      tests:
-        - dbt_utils.unique_combination_of_columns:
-            combination_of_columns:
-              - id
-              - updated_at
       columns:
         - name: id
           description: Campaign ID
@@ -285,5 +280,3 @@ sources:
 
         - name: ad_type
           description: type of ad, such as video, image, text, responsive, etc.
-
-

@@ -3,6 +3,12 @@ version: 2
 models:
   - name: stg_google_ads__campaign_history
     description: Staging model for Google Ads campaign history
+    tests:
+        - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - campaign_id
+              - updated_at_utc
+
     columns:
       - name: campaign_id
         description: Campaign ID
