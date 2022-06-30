@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: user_ltv
+    description: Mart model to provide an easy to use dataset to analyze customer LTV
+    columns:
+      - name: user_id
+        description: User ID
+
+      - name: order_id
+        description: Order ID
+        tests:
+          - unique
+          - not_null
+
+      - name: customer_cohort_months
+        description: The number of months from the customer's first paid/uncancelled order to the current paid/uncancelled order
+
+      - name: customer_cohort_days
+        description: The number of days from the customer's first paid/uncancelled order to the current paid/uncancelled order
+
+      - name: membership_cohort_months
+        description: The number of months from the customer's first paid/uncancelled membership order to the current paid/uncancelled order
+
+      - name: membership_cohort_days
+        description: The number of days from the customer's first paid/uncancelled membership order to the current paid/uncancelled order
+      
+      - name: product_profit
+        description: Total order product profit. (Net product revenue - product cost)
+
+      - name: product_margin
+        description: Total order product margin. (Net Product Revenue - Product Cost)/Gross Product Revenue
+
+      - name: gross_profit
+        description: Total order gross profit. (Net Revenue - Order Costs)
+
+      - name: gross_margin
+        description: Total order gross margin. (Gross profit/Net revenue)
