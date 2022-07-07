@@ -58,6 +58,9 @@ models:
       - name: sku_owner_name
         description: "SKU owner name"
 
+      - name: is_marketplace
+        description: Boolean indicating if the SKU owner is marketplace
+
       - name: fc_key
         description: "Key to join to fulfillment center information at the time the inventory log event was created"
 
