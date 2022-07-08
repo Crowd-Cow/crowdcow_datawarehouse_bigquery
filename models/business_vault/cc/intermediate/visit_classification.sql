@@ -167,20 +167,19 @@ base_visits as (
             when utm_medium = 'FIELD-MARKETING' then 'FIELD-MARKETING'
             when utm_source like '%GEIST%' then 'GEIST'
             when visit_landing_page like '%/L_U%' and visit_landing_page_user_token <> '' then 'USER REFERRAL'
-            when utm_medium like '%PARTNER%' then 'PARTNER'
+            when utm_medium  like '%PARTNER%' or utm_source  like '%PARTNER%' then 'PARTNER'
             when utm_medium like '%AFFILIATE%' or utm_source like '%SHAREASALE%' or visit_landing_page like any ('%/AFFILIATE-GIVEAWAY%','%/FREE-PRODUCT%') then 'AFFILIATE'
             when utm_medium like '%AMBASSADOR%' or visit_landing_page like '%/AMBASSADOR-GIVEAWAY%' or ambassador_path <> '' then 'AMBASSADOR'
-            when utm_medium like '%INFLUENCER%' or visit_referring_domain like '%INFLUENCER%' then 'INFLUENCER'
+            when utm_medium like '%INFLUENCER%' or utm_source like '%INFLUENCER%' or visit_referring_domain like '%INFLUENCER%' then 'INFLUENCER'
             when utm_medium like '%SMS%' and utm_source not like '%ATTENTIVE%' then 'SMS -TRANSACTIONAL'
             when utm_medium like '%SMS%' or utm_source like '%ATTENTIVE%' then 'SMS - MARKETING'
             when utm_source like '%TXN%' then 'EMAIL MARKETING - TRANSACTIONAL'
-            when (utm_medium like '%EMAIL%' or utm_source like '%ITERABLE%') and utm_source <> 'TXN' and utm_medium <> 'SMS' and utm_campaign like '%_202%' then 'EMAIL MARKETING - MANUAL'
-            when (utm_medium like '%EMAIL%' or utm_source like '%ITERABLE%') and utm_source <> 'TXN' and utm_medium <> 'SMS' and utm_campaign not like '%_202%' then 'EMAIL MARKETING - AUTOMATED'
-            when (visit_referring_domain like '%GOOGLE.%' or utm_source = 'GOOGLE') then 'GOOGLE'
-            when (visit_referring_domain like '%BING.%' or utm_source = 'BING') then 'BING'
-            when visit_referring_domain like any ('%YAHOO.%','%DUCKDUCKGO.%') then 'SEO'
+            when (utm_medium like '%EMAIL%' or utm_source like '%ITERABLE%') and utm_source <> 'TXN' and utm_medium <> 'SMS' then 'EMAIL MARKETING - CAMPAIGNS'
+            when (visit_referring_domain like '%GOOGLE.%' or utm_source = 'GOOGLE' or visit_referrer like '%GOOGLE%') then 'GOOGLE'
+            when (visit_referring_domain like '%BING.%' or utm_source = 'BING' or visit_referrer like '%BING%') then 'BING'
+            when visit_referring_domain like any ('%YAHOO.%','%DUCKDUCKGO.%') or visit_referrer like any ('%YAHOO%','%DUCKDUCKGO%') then 'OTHER SEARCH'
             when visit_referring_domain <> '' and visit_referring_domain not like '%CROWDCOW.%' then 'NON-USER REFERRAL'
-            when utm_campaign = '' and visit_referring_domain = '' then 'DIRECT'
+            when utm_campaign = '' and utm_medium = '' and utm_source = '' and visit_referring_domain = '' then 'DIRECT'
             else 'OTHER'
          end as sub_channel
     from combine_elements_extract_user_token
@@ -193,7 +192,7 @@ base_visits as (
             or utm_source = 'PINTEREST' 
             or utm_source like 'PAID%'
             or utm_medium like 'PAID%'
-            or sub_channel in ('FIELD-MARKETING','GEIST','GOOGLE','BING','USER REFERRAL','NON-USER REFERRAL','PARTNER','AFFILIATE','AMBASSADOR','INFLUENCER') as is_paid_referrer 
+            or sub_channel in ('FIELD-MARKETING','GEIST','USER REFERRAL','NON-USER REFERRAL','PARTNER','AFFILIATE','AMBASSADOR','INFLUENCER') as is_paid_referrer 
         ,sub_channel in ('INSTAGRAM','FACEBOOK-GROUP','FACEBOOK','LINKTREE','YOUTUBE','REDDIT','LINKEDIN','TWITTER','TIKTOK','PINTEREST','PODCAST') as is_social_platform_referrer
     from assign_sub_channel
 )
@@ -226,6 +225,7 @@ base_visits as (
         ,case
             when is_paid_referrer and is_social_platform_referrer then 'SOCIAL'
             when is_paid_referrer and sub_channel in ('GOOGLE','BING') then 'SEM'
+            when not is_paid_referrer and sub_channel in ('GOOGLE','BING','OTHER SEARCH') then 'SEO'
             when is_paid_referrer and sub_channel in ('USER REFERRAL','NON-USER REFERRAL') then 'REFERRAL'
             when is_paid_referrer and sub_channel in ('AMBASSADOR','INFLUENCER') then 'INFLUENCER'
             when is_paid_referrer and sub_channel = 'GEIST' then 'CONTENT'
