@@ -1,4 +1,6 @@
-with visits as ( select * from {{ ref('visits') }} )
+with 
+
+visits as ( select * from {{ ref('visits') }} )
 ,users as ( select user_id, attributed_visit_id from {{ ref('users') }} )
 
 ,attribution_details as (
@@ -12,8 +14,10 @@ with visits as ( select * from {{ ref('visits') }} )
         ,visits.utm_term
         ,visits.channel
         ,visits.sub_channel
+        ,visits.visit_landing_page
+        ,visits.visit_landing_page_path
     from visits
-    join users on users.attributed_visit_id = visits.visit_id
+        join users on users.attributed_visit_id = visits.visit_id
 )
 
 select * from attribution_details

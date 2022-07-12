@@ -31,3 +31,8 @@ models:
       - name: sub_channel
         description: "subchannel of attributed visit"
 
+      - name: visit_landing_page
+        description: "Landing page of attributed visit"
+
+      - name: visit_landing_page_path
+        description: "Landing page path of attributed visit"
