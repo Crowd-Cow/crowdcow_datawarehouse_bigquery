@@ -1,0 +1,114 @@
+version: 2
+
+sources:
+
+- name: adwords
+  database: raw
+  schema: adwords_old
+
+  tables:
+
+    - name: campaign_history
+      description: Googld Ads campaign history
+      columns:
+        - name: id
+
+        - name: updated_at
+
+        - name: customer_id
+
+        - name: ad_serving_optimization_status
+
+        - name: advertising_channel_subtype
+
+        - name: advertising_channel_type
+
+        - name: base_campaign_id
+
+        - name: bidding_strategy_scheme_type
+
+        - name: bidding_strategy_bid_ceiling
+
+        - name: bidding_strategy_bid_changes_for_raises_only
+
+        - name: bidding_strategy_bid_floor
+
+        - name: bidding_strategy_bid_modifier
+
+        - name: bidding_strategy_competitor_domain
+
+        - name: bidding_strategy_enhanced_cpc_enabled
+
+        - name: bidding_strategy_id
+
+        - name: bidding_strategy_max_cpc_bid_ceiling
+
+        - name: bidding_strategy_max_cpc_bid_floor
+
+        - name: bidding_strategy_name
+
+        - name: bidding_strategy_raise_bid_when_budget_constrained
+
+        - name: bidding_strategy_raise_bid_when_low_quality_score
+
+        - name: bidding_strategy_source
+
+        - name: bidding_strategy_spend_target
+
+        - name: bidding_strategy_strategy_goal
+
+        - name: bidding_strategy_target_cpa
+
+        - name: bidding_strategy_target_outrank_share
+
+        - name: bidding_strategy_target_roas
+
+        - name: bidding_strategy_target_roas_override
+
+        - name: bidding_strategy_type
+
+        - name: bidding_strategy_viewable_cpm_enabled
+
+        - name: bidding_strategy_cpa_bid_amount
+
+        - name: bidding_strategy_cpc_bid_amount
+
+        - name: bidding_strategy_cpm_bid_amount
+
+        - name: campaign_group_id
+
+        - name: campaign_trial_type
+
+        - name: end_date
+
+        - name: final_url_suffix
+
+        - name: frequency_cap_impressions
+
+        - name: frequency_cap_level
+
+        - name: frequency_cap_time_unit
+
+        - name: name
+
+        - name: network_setting_target_content_network
+
+        - name: network_setting_target_google_search
+
+        - name: network_setting_target_partner_search_network
+
+        - name: network_setting_target_search_network
+
+        - name: serving_status
+
+        - name: start_date
+
+        - name: status
+
+        - name: tracking_url_template
+
+        - name: vanity_pharma_display_url_mode
+
+        - name: vanity_pharma_text
+
+        - name: _fivetran_synced
