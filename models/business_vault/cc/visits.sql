@@ -62,6 +62,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,get_ip_session.is_social_platform_referrer
         ,visit_flags.is_bot
         ,visit_flags.is_internal_traffic
+        ,visit_flags.is_server
         ,visit_flags.is_homepage_landing
         ,visit_flags.has_previous_order
         ,visit_flags.has_previous_completed_order
