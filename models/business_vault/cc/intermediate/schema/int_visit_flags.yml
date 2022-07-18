@@ -60,4 +60,7 @@ models:
 
       - name: pdp_views_count
         description: "Number of events where a product display page viewed during this user's visit"
+
+      - name: is_prospect
+        desciption: Boolean indicating if the visit is from a prospect customer
         

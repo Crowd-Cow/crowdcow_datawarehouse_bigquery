@@ -64,6 +64,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,visit_flags.is_internal_traffic
         ,visit_flags.is_server
         ,visit_flags.is_homepage_landing
+        ,visit_flags.is_prospect
         ,visit_flags.has_previous_order
         ,visit_flags.has_previous_completed_order
         ,visit_flags.has_previous_subscription

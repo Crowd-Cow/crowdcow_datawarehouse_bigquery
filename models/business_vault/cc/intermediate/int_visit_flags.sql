@@ -34,8 +34,9 @@ visits as ( select * from {{ ref('visit_classification') }} )
     select
         visit_id
         ,user_id
-        ,visits.visit_landing_page_host = 'WWW.CROWDCOW.COM' 
-            and visits.visit_landing_page_path in ('/','/L') as is_homepage_landing
+        ,visit_referrer
+        ,visit_landing_page_host = 'WWW.CROWDCOW.COM' 
+            and visit_landing_page_path in ('/','/L') as is_homepage_landing
 
         ,visit_ip
         ,visit_user_agent
@@ -46,12 +47,14 @@ visits as ( select * from {{ ref('visit_classification') }} )
 ,add_flags as (
     select
         visit_clean_urls.visit_id
+        ,visit_clean_urls.user_id
+        ,visit_clean_urls.visit_referrer
         ,visit_clean_urls.is_homepage_landing
         ,suspicious_ips.visit_ip is not null
             or visit_clean_urls.visit_user_agent like any ('%BOT%','%CRAWL%','%LIBRATO%','%TWILIOPROXY%','%YAHOOMAILPROXY%','%SCOUTURLMONITOR%','%FULLCONTACT%','%IMGIX%','%BUCK%')
             or (visit_clean_urls.visit_ip is null and visit_clean_urls.visit_user_agent is null) as is_bot
         ,visit_clean_urls.visit_ip in ('66.171.181.219', '127.0.0.1') or (user_orders.user_id is not null and user_orders.user_type in ('EMPLOYEE','INTERNAL')) as is_internal_traffic
-        ,ip_detail.is_server
+        ,iff(ip_detail.is_server and user_orders.first_completed_order_date is null,TRUE,FALSE) as is_server        
         ,user_orders.user_id is not null and user_orders.customer_cohort_date < visit_clean_urls.started_at_utc as has_previous_order
         ,user_orders.user_id is not null and user_orders.first_completed_order_date < visit_clean_urls.started_at_utc as has_previous_completed_order
         ,user_membership.user_id is not null and user_membership.first_membership_created_date < visit_clean_urls.started_at_utc as has_previous_subscription
@@ -73,4 +76,16 @@ visits as ( select * from {{ ref('visit_classification') }} )
         left join ip_detail on visit_clean_urls.visit_ip = ip_detail.ip_address
 )
 
-select * from add_flags
+,define_prospects as (
+    select
+        *
+        ,(not has_previous_completed_order or has_previous_completed_order is null)
+            and not is_bot
+            and not is_internal_traffic
+            and (not has_previous_subscription or user_id is null)
+            and (not(visit_referrer like any ('%ZENDESK%','%ADMIN%','%TRACKING-INFO','%SHIPMENT-IN-TRANSIT')) 
+                    or visit_referrer is null) as is_prospect
+    from add_flags
+)
+
+select * from define_prospects

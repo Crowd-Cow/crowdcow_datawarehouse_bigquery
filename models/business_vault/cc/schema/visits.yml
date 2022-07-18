@@ -118,6 +118,9 @@ models:
       - name: is_homepage_landing
         description: "Boolean indicating if this visit landed on the homepage"
 
+      - name: is_prospect
+        desciption: Boolean indicating if the visit is from a prospect customer
+
       - name: has_previous_order
         description: "Boolean indicating if the user associated with this visit has had an order previous to this visit"
 
