@@ -112,6 +112,8 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
 ,user_activity_joins as (
     select
         user.user_id
+        ,user.user_type
+        ,user.created_at_utc
         ,user_percentiles.user_id as order_user_id
         ,zeroifnull(user_percentiles.total_completed_membership_orders) as total_completed_membership_orders
         ,zeroifnull(user_percentiles.total_paid_ala_carte_order_count) as total_paid_ala_carte_order_count
