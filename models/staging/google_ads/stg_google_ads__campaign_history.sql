@@ -36,7 +36,7 @@ source as ( select * from {{ source('google_ads', 'campaign_history') }} )
 
     select
         id
-        ,updated_at_utc
+        ,updated_at as updated_at_utc
         ,customer_id
         ,base_campaign_id
         ,{{ clean_strings('ad_serving_optimization_status') }} as ad_serving_optimization_status
