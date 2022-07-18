@@ -1,0 +1,70 @@
+version: 2
+
+sources:
+
+- name: reference_data
+  database: raw
+  schema: reference_data
+  tables:
+    - name: ip_lookup
+      description: Detailed IP information used to enhance Visits analysis
+      columns:
+        - name: query
+          description: IP address that was used to lookup information
+
+        - name: zip
+          description: Zip code of the IP
+
+        - name: country
+          description: Country of the IP
+
+        - name: _fivetran_batch
+          description: Fivetran batch
+
+        - name: city
+          description: City of the IP
+
+        - name: org
+          description: Organization that owns the IP
+
+        - name: hosting
+          description: Boolean indicating if this IP is part of hosted servers (e.g. AWS, Azure, GCP)
+
+        - name: timezone
+          description: Timezone of the IP
+
+        - name: isp
+          description: Internet service provider that allocated the IP
+
+        - name: region_name
+          description: Region name of the IP
+
+        - name: mobile
+          description: Boolean indicating if the IP is coming from a mobile device
+
+        - name: lon
+          description: Longitude of the IP
+
+        - name: as
+          description: AS of the IP
+
+        - name: _fivetran_index
+          description: Fivetran index
+
+        - name: country_code
+          description: Country code of the IP
+
+        - name: region
+          description: Region of the IP
+
+        - name: lat
+          description: Latitude of the IP
+
+        - name: status
+          description: Status of the IP lookup (e.g. success, failure, etc)
+
+        - name: _fivetran_synced
+          description: Timestamp for when the record was synced by Fivetran
+
+        - name: message
+          description: Error message provided if the IP lookup wasn't successful

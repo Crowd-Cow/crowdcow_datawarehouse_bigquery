@@ -1,0 +1,59 @@
+version: 2
+
+models:
+  - name: stg_reference__ip_lookup
+    description: "Staging model for IP lookup reference data"
+    columns:
+      - name: ip_address
+        description: "IP Address"
+        tests:
+          - unique
+          - not_null
+
+      - name: postal_code
+        description: "IP postal code"
+
+      - name: country
+        description: "IP country"
+
+      - name: city
+        description: "IP city"
+
+      - name: org
+        description: "IP organization"
+
+      - name: is_server
+        description: "Boolean indicating if the IP address is coming from a server"
+
+      - name: timezone
+        description: "IP timezone"
+
+      - name: isp
+        description: "Internet service provider allocating the IP"
+
+      - name: region_name
+        description: "IP region name"
+
+      - name: is_mobile
+        description: "Boolean indicating if the IP is coming from a mobile device"
+
+      - name: longitude
+        description: "IP latitude"
+
+      - name: latitude
+        description: "IP longitude"
+
+      - name: autonomous_system
+        description: "IP autonomous system value"
+
+      - name: country_code
+        description: "IP country code"
+
+      - name: region
+        description: "IP region"
+
+      - name: status
+        description: "Status of the IP lookup (e.g. success, failure, etc)"
+
+      - name: message
+        description: "Error message shown if the IP lookup was not successful"
