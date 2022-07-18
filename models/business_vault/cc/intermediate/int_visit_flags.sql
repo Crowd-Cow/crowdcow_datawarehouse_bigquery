@@ -82,6 +82,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,(not has_previous_completed_order or has_previous_completed_order is null)
             and not is_bot
             and not is_internal_traffic
+            and not is_server
             and (not has_previous_subscription or user_id is null)
             and (not(visit_referrer like any ('%ZENDESK%','%ADMIN%','%TRACKING-INFO','%SHIPMENT-IN-TRANSIT')) 
                     or visit_referrer is null) as is_prospect
