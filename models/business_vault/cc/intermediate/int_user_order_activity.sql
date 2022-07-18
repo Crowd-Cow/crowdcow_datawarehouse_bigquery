@@ -96,7 +96,8 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,sum(
             iff(
                 order_info.is_paid_order 
-                and not order_info.is_cancelled_order 
+                and not order_info.is_cancelled_order
+                and order_info.has_shipped
                 and (year(order_info.order_paid_at_utc) in (2020,2021,2022)
                     or year(order_info.order_paid_at_utc) = year(sysdate()))
                 ,order_item_units.japanese_wagyu_revenue
