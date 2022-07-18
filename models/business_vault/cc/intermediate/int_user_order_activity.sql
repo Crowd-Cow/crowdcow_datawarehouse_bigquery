@@ -28,8 +28,8 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,min(iff(is_paid_order and not is_cancelled_order and is_membership_order,order_paid_at_utc::date,null)) as membership_cohort_date
         ,max(iff(is_paid_order and not is_cancelled_order and is_membership_order,order_paid_at_utc::date,null)) as last_paid_membership_order_date
         ,max(iff(is_paid_order and not is_cancelled_order and is_ala_carte_order,order_paid_at_utc::date,null)) as last_paid_ala_carte_order_date
-        ,max(iff(completed_order_rank = 1,order_checkout_completed_at_utc,null)) as first_completed_order_date
-        ,max(iff(completed_order_rank = 1,visit_id,null)) as first_completed_order_visit_id
+        ,min(iff(completed_order_rank = 1,order_checkout_completed_at_utc,null)) as first_completed_order_date
+        ,min(iff(completed_order_rank = 1,visit_id,null)) as first_completed_order_visit_id
         ,count_if(
             not is_gift_order
             and not is_gift_card_order
