@@ -109,6 +109,9 @@ models:
       - name: is_internal_traffic
         description: "Boolean indicating if the visit is coming from a internal traffic"
 
+      - name: is_server
+        description: "Boolean indicating if the visit is coming from a hosting server"
+
       - name: is_invalid_visit
         description: "Boolean indicating if this visit is considered an invalid visit. It could be considered invalid for a variety of reasons (e.g. internal dev traffic, invalid URLS, etc"
 
