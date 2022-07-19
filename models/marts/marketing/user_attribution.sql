@@ -11,7 +11,7 @@ visits as ( select * from {{ ref('visits') }} )
         ,visits.utm_source
         ,visits.utm_medium
         ,visits.utm_campaign
-        ,case when visits.utm_campaign like '%SHOPPING%' then 'SHOPPING' else visits.utm_campaign as campaign_grouping
+        ,case when visits.utm_campaign like '%SHOPPING%' then 'SHOPPING' else visits.utm_campaign end as campaign_grouping
         ,visits.utm_content
         ,visits.utm_term
         ,visits.channel
