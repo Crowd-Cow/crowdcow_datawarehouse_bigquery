@@ -1,10 +1,9 @@
-with source as (
+with 
 
-  select * from {{ source('cc', 'orders') }} where not _fivetran_deleted
+source as ( select * from {{ source('cc', 'orders') }} where not _fivetran_deleted)
+,postal_code as ( select * from {{ ref('stg_cc__postal_codes') }} )
 
-),
-
-renamed as (
+,renamed as (
 
   select
      id as order_id
@@ -69,7 +68,7 @@ renamed as (
     ,customer_viewed_at as order_customer_viewed_at_utc
     ,created_at as order_created_at_utc
     ,{{ clean_strings('current_state') }} as order_current_state
-    ,delivery_postal_code as order_delivery_postal_code
+    ,left(delivery_postal_code,5) as order_delivery_postal_code
     ,{{ clean_strings('notes') }} as order_notes
     ,delivery_latitude as order_delivery_latitude
     ,print_handwritten_note_last_attempted_at as order_print_handwritten_note_last_attempted_at_utc
@@ -94,7 +93,11 @@ renamed as (
     ,bids_count as order_bids_count
     ,{{ clean_strings('postage_label_note') }} as order_postage_label_note
     ,packed_at as order_packed_at_utc
-    ,{{ clean_strings('delivery_state') }} as order_delivery_state
+    ,coalesce(
+      postal_code.state_code
+      ,{{ clean_strings('delivery_state') }}
+     ) as order_delivery_state
+    ,postal_code.county_name as order_delivery_county_name
     ,total_weight_in_pounds as order_total_weight_in_pounds
     ,delivery_longitude as order_delivery_longitude
     ,updated_payment_info_at as order_updated_payment_info_at_utc
@@ -119,7 +122,10 @@ renamed as (
     ,{{ clean_strings('stripe_card_address_1') }} as billing_address_1
     ,{{ clean_strings('stripe_card_address_2') }} as billing_address_2
     ,{{ clean_strings('stripe_card_city') }} as billing_city
-    ,{{ clean_strings('stripe_card_state') }} as billing_state
+    ,coalesce(
+      billing_postal_code.state_code
+      ,{{ clean_strings('stripe_card_state') }}
+     ) as billing_state
     ,left({{ clean_strings('stripe_card_zip') }},5) as billing_postal_code
     ,{{ clean_strings('stripe_card_brand') }} as stripe_card_brand
     ,stripe_card_exp_month
@@ -130,6 +136,8 @@ renamed as (
     ,stripe_card_last4::int as stripe_card_last4
 
   from source
+    left join postal_code on left(source.delivery_postal_code,5) = postal_code.postal_code
+    left join postal_code as billing_postal_code on left(source.stripe_card_zip,5) = billing_postal_code.postal_code
 
 )
 

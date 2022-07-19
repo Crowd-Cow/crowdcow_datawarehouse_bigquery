@@ -7,7 +7,6 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,ranks as ( select * from {{ ref('int_order_ranks') }} )
 ,units as ( select * from {{ ref('int_order_units_pct') }} )
 ,order_shipment as ( select * from {{ ref('int_order_shipments') }} )
-,postal_code as ( select * from {{ ref('postal_codes') }} )
 
 ,order_joins as (
     select
@@ -34,11 +33,11 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.order_delivery_city
         ,orders.order_delivery_state
         ,orders.order_delivery_postal_code
-        ,delivery_postal_code.county_name as order_delivery_county_name
+        ,orders.order_delivery_county_name
         ,orders.billing_address_1
         ,orders.billing_address_2
         ,orders.billing_city
-        ,coalesce(postal_code.state_code,orders.billing_state) as billing_state
+        ,orders.billing_state
         ,orders.billing_postal_code
         ,order_shipment.shipment_postage_carrier
         ,zeroifnull(order_revenue.gross_product_revenue) as gross_product_revenue
@@ -226,8 +225,6 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         left join ranks on orders.order_id = ranks.order_id
         left join units on orders.order_id = units.order_id
         left join order_shipment on orders.order_id = order_shipment.order_id
-        left join postal_code on orders.billing_postal_code = postal_code.postal_code
-        left join postal_code as delivery_postal_code on orders.order_delivery_postal_code = delivery_postal_code.postal_code
     
     /**** Removing these order types because they are just shell orders that provide no data value ****/
     /**** Children orders contain all the necessary information for revenue, addresses, dates, etc for the order ****/
