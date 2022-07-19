@@ -23,14 +23,14 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
 )
 
 ,calc_axlehire_default as (
-    select
+    select distinct
         shipment_postage_carrier
         ,order_delivery_postal_code
-        ,avg(shipment_postage_rate_usd) as axlehire_default_postage_rate_usd
+        ,avg(shipment_postage_rate_usd) over() as axlehire_default_rate_month
+        ,avg(shipment_postage_rate_usd) over(partition by order_delivery_postal_code) as axlehire_default_rate_postal_code
     from get_order_delivery_address
     where shipment_postage_carrier = 'AXLEHIREV3'
-        and datediff(month,shipped_at_utc,sysdate()) in (1,2)
-    group by 1,2
+        and datediff(month,shipped_at_utc,sysdate()) <= 2
 )
 
 ,add_default_cost as (
@@ -46,7 +46,13 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
         ,get_order_delivery_address.shipment_token
         ,get_order_delivery_address.shipment_tracking_code
         ,get_order_delivery_address.shipment_postage_carrier
-        ,coalesce(get_order_delivery_address.shipment_postage_rate_usd,calc_axlehire_default.axlehire_default_postage_rate_usd) as shipment_postage_rate_usd
+        
+        ,coalesce(
+            get_order_delivery_address.shipment_postage_rate_usd
+            ,calc_axlehire_default.axlehire_default_rate_postal_code
+            ,calc_axlehire_default.axlehire_default_rate_month
+        ) as shipment_postage_rate_usd
+
         ,get_order_delivery_address.delivery_method
         ,get_order_delivery_address.item_weight
         ,get_order_delivery_address.packaging_freight_component_cost_usd
@@ -54,6 +60,7 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
         ,get_order_delivery_address.pickup_at_description
         ,get_order_delivery_address.shipment_postage_service
         ,get_order_delivery_address.packaging_materials_component_cost_usd
+        ,get_order_delivery_address.order_delivery_postal_code
         ,get_order_delivery_address.does_use_zpl
         ,get_order_delivery_address.does_receive_tracking_updates
         ,get_order_delivery_address.is_delivery_date_guaranteed
