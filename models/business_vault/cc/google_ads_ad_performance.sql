@@ -28,6 +28,7 @@ with ad_stats as (select * from {{ ref('stg_google_ads__ad_stats')}})
 ,campaign_info as (
     select campaign_id
         ,campaign_name
+        ,case when campaign_name like '%SHOPPING%' then 'SHOPPING' else campaign_name end as campaign_grouping
         ,updated_at_utc::date as campaign_valid_from_date
         ,ifnull(lead(updated_at_utc::date,1) over(partition by campaign_id order by updated_at_utc),'2999-01-01') as campaign_valid_to_date
     from campaign_history
@@ -53,6 +54,7 @@ from ad_group_history
         ,ad_url.final_url
         ,campaign_info.campaign_name
         ,ad_group_details.ad_group_name
+        ,{{ dbt_utils.surrogate_key( ['ad_clicks_cost.date_utc','campaign_grouping'] ) }} as campaign_key
     from ad_clicks_cost
          left join ad_url on ad_clicks_cost.ad_id = ad_url.ad_id
                           and ad_clicks_cost.date_utc >= ad_url.ad_url_valid_from_date
