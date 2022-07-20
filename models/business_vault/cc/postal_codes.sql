@@ -1,3 +1,9 @@
+{{
+  config(
+    enabled = false
+    )
+}}
+
 with
 
 postal_code as ( select * from {{ ref('stg_cc__postal_codes') }} )
