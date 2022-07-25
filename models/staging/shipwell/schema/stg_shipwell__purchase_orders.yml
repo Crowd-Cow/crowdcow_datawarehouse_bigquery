@@ -1,0 +1,27 @@
+version: 2
+
+models:
+
+  - name: stg_shipwell__purchase_orders
+    description: Staging model for Shipwell purchase orders (PO). Corresponds to CC lot data
+    columns:
+      - name: purchase_order_id
+        description: Shipwell purchase order ID
+        tests:
+          - unique
+          - not_null
+
+      - name: purchase_order_number
+        description: Purchase order number. Corresponds to CC `lot_number`
+
+      - name: shipment_id
+        description: Shipwell shipment ID
+
+      - name: overall_status
+        description: Overall PO status
+
+      - name: created_at_utc
+        description: Timestamp for when the PO was created
+
+      - name: updated_at_utc
+        description: Timestamp for when the PO was updated

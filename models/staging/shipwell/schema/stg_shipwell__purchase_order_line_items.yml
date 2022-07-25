@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: stg_shipwell__purchase_order_line_items
+    description: Staging model for purchase order (PO) line items
+    columns:
+      - name: purchase_order_id
+        description: Shipwell PO ID
+
+      - name: line_item_id
+        description: PO line item ID
+        tests:
+          - unique
+          - not_null
+
+      - name: item_package_weight
+        description: Weight of a single package of the item
+
+      - name: item_total_packages
+        description: Total number of packages in the item
+
+      - name: item_total_weight
+        description: Total weight of all packages in the item (package weight * total packages)
+
+      - name: item_created_at_utc
+        description: Timestamp of when the line item was created
+
+      - name: item_updated_at_utc
+        description: Timestamp of when the line item was updated
