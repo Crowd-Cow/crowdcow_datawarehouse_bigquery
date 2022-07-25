@@ -9,7 +9,7 @@ source as ( select * from {{ source('shipwell', 'purchase_orders') }} )
         ,regexp_substr(
             trim(regexp_replace(purchase_order_number,'\s*-*[A-Za-z]*',''))
             ,'^[0-9]{4}$'
-        ) as purchase_order_number
+        ) as lot_number
 
         ,shipment_id
         ,{{ clean_strings('overall_status') }} as overall_status
