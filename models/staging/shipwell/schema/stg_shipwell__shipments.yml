@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: stg_shipwell__shipments
+    description: Staging model for Shipwell shipments
+    columns:
+      - name: shipment_id
+        description: Shipment ID
+        tests:
+          - unique
+          - not_null
+      
+      - name: reference_id
+        description: Shipwell reference ID
+
+      - name: current_carrier_name
+        description: Shipment carrier name
+
+      - name: shipment_status
+        description: Shipment status
+
+      - name: total_miles
+        description: Total miles traveled for this shipment
+
+      - name: created_at_utc
+        description: Timestamp for when the shipment was created
+
+      - name: updated_at_utc
+        description: Timestamp fro when the record was updated

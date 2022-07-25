@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: stg_shipwell__shipment_financials
+    description: Staging model for Shipwell shipment financials
+    columns:
+      - name: shipment_id
+        description: Shipwell shipment ID
+
+      - name: shipment_financial_id
+        description: Shipment financial line item ID
+        tests:
+          - unique
+          - not_null
+
+      - name: shipment_amount
+        description: Amount charged for the shipment
+
+      - name: shipment_category
+        description: Shipment category
+
+      - name: shipment_category_name
+        description: Shipment category name
+
+      - name: created_at_utc
+        description: Timestamp for when the record was created
+
+      - name: updated_at_utc
+        description: Timestamp for when the record was updated
