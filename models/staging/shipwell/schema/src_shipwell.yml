@@ -1,0 +1,285 @@
+version: 2
+
+sources:
+
+  - name: shipwell
+    database: raw
+    schema: shipwell
+    tables:
+      - name: shipments
+        description: Inbound shipments to fulfillment centers. Data comes from the Shipwell system
+        columns:
+          - name: id
+            description: Shipment ID
+
+          - name: relationship_to_vendor
+            description: JSON object with vendor relationship data
+
+          - name: created_by_source
+            description: Created by source
+
+          - name: metadata
+            description: JSON object with shipment metadata
+
+          - name: reference_id
+            description: Shipment reference ID
+
+          - name: workflow_execution_info
+            description: JSON object with workflow execution info
+
+          - name: timeline_last_updated_at
+            description: Timestamp for when the shipping timeline was last updated
+
+          - name: pickup_number
+            description: Pickup number notes
+
+          - name: delayed
+            description: Boolean indicating if the shipment is delayed
+
+          - name: temperature_lower_limit
+            description: Temperature lower limit
+
+          - name: line_items
+            description: JSON object with shipment line item detail
+
+          - name: equipment_type
+            description: JSON object with equipment type detail
+
+          - name: preferred_currency
+            description: Preferred currency
+
+          - name: is_watched
+            description: Boolean indicating if the shipment is on a watchlist
+
+          - name: purchase_order_number
+            description: Purchase order number. Corresponds with lot_number in CC data
+
+          - name: state
+            description: Shipment state (e.g. quoting, tendered, in_transit, etc)
+
+          - name: total_weight_override
+            description: JSON object with total weight override detail
+
+          - name: additional_bol_recipients
+            description: JSON object with additional BOL recipients detail
+
+          - name: pro_number
+            description: Pro number
+
+          - name: current_carrier
+            description: JSON object with current carrier detail
+
+          - name: _fivetran_batch
+            description: Fivetran batch number
+
+          - name: markup
+            description: Markup
+
+          - name: service_level
+            description: JSON object with service level detail
+
+          - name: version
+            description: Version number
+
+          - name: next_planned_stop_id
+            description: Next planned stop ID
+
+          - name: current_address
+            description: JSON object with current address detail
+
+          - name: _fivetran_index
+            description: Fivetran generated index number
+
+          - name: customer_reference_number
+            description: Customer reference number
+
+          - name: external_tracking_link
+            description: External tracking link
+
+          - name: notes_count
+            description: Notes count
+
+          - name: name
+            description: Shipment name
+
+          - name: stops
+            description: JSON object containing stop detail
+
+          - name: custom_data
+            description: JSON object containing custom data detail
+
+          - name: temperature_upper_limit
+            description: Temperature upper limit
+
+          - name: reps
+            description: JSON object containing reps detail
+
+          - name: created_at
+            description: Timestamp for when the record was created in Shipwell
+
+          - name: created_by_user
+            description: JSON object containing created by user detail
+
+          - name: messages_count
+            description: Messages count
+
+          - name: updated_at
+            description: Timestamp for when the record was updated
+
+          - name: bol_number
+            description: BOL number
+
+          - name: relationship_to_customer
+            description: JSON object containing customer relationship detail
+
+          - name: is_watchable
+            description: Boolean indicating if the shipment is watchable
+
+          - name: auction_stats
+            description: JSON object containing auction stat detail
+
+          - name: accessorials
+            description: JSON object containing accessorials detail
+
+          - name: documnets_count
+            description: Documents count
+
+          - name: customer
+            description: JSON object containing customer detail
+
+          - name: total_miles
+            description: Total miles the shipment traveled
+
+          - name: _fivetran_synced
+            description: Timestamp for when the record was synced by Fivetran
+
+      - name: purchase_orders
+        description: Inbound shipment purchase orders (PO). Data comes from the Shipwell system and corresponds with Lot information from CC
+        columns:
+          - name: id
+            description: Shipwell purchase order ID
+
+          - name: customer_external_id
+            description: Customer external ID
+
+          - name: tax_amount_currency
+            description: Tax amount currency
+
+          - name: line_items
+            description: JSON object containing PO line item detail
+
+          - name: source
+            description: PO source
+
+          - name: planned_pickup_end_datetime
+            description: Timestamp for the planned pickup end
+
+          - name: puchase_order_number
+            description: PO number, corresponds with CC lot_number
+
+          - name: transit_status
+            description: Transit status
+
+          - name: destination_stop_alerts
+            description: JSON object containing destination stop detail
+
+          - name: shipment
+            description: JSON object containing shipment detail
+
+          - name: _fivetran_batch
+            description: Fivetran batch number
+
+          - name: origin_stop_alerts
+            description: JSON object containing origin stop alert detail
+
+          - name: origin_address_book_entry
+            description: Origin address book entry
+
+          - name: shipment_id
+            description: Shipwell shipment ID
+
+          - name: _fivetran_index
+            description: Fivetran generated index number
+
+          - name: name
+            description: PO name
+
+          - name: custom_data
+            description: JSON object containing custom data detail
+
+          - name: status
+            description: Status of the PO
+
+          - name: planned_pickup_start_datetime
+            description: Timestamp for the planned pickup start
+
+          - name: destination_address_book_entry
+            description: Destination address book entry
+
+          - name: order_number
+            description: Order number
+
+          - name: planned_delivery_start_datetime
+            description: Timestamp for the planned delivery start
+
+          - name: overall_status
+            description: PO overall status
+
+          - name: planned_delivery_end_datetime
+            description: Timestamp for the planned delivery end
+
+          - name: origin_address
+            description: JSON object containing origin address detail
+
+          - name: created_at
+            description: Timestamp for when the record was created
+
+          - name: description
+            description: PO description
+
+          - name: destination_stop
+            description: Destination stop
+
+          - name: created_by_user
+            description: JSON object containing created by user detail
+
+          - name: archived
+            description: Boolean indicating if a PO has been archived
+
+          - name: updated_at
+            description: Timestamp fro when the record was updated
+
+          - name: transit_status_reason_code
+            description: Transit status reason code
+
+          - name: supplier_external_id
+            description: Supplier external ID
+
+          - name: company
+            description: Company ID
+
+          - name: supplier_name
+            description: Supplier name
+
+          - name: destination_address
+            description: JSON object containing destination address detail
+
+          - name: origin_stop
+            description: Origin stop
+
+          - name: origin_stop_id
+            description: Origin stop ID
+
+          - name: destination_stop_id
+            description: Destination stop ID
+
+          - name: customer_name
+            description: Customer name
+
+          - name: subtotal_amount_currency
+            description: Subtotal amount currency
+
+          - name: _fivetran_synced
+            description: Timestamp for when Fivetran synced the record
+
+          
