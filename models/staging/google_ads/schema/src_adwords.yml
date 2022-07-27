@@ -112,3 +112,25 @@ sources:
         - name: vanity_pharma_text
 
         - name: _fivetran_synced
+
+    - name: ad_history
+      description: Google Ads ad history
+      columns:
+        - name: ad_group_id
+        - name: id
+        - name: updated_at
+        - name: ad_type
+        - name: automated
+        - name: base_adgroup_id
+        - name: base_campaign_id
+        - name: device_preference
+        - name: display_url
+        - name: final_url_suffix
+        - name: policy_summary_combined_approval_status
+        - name: policy_summary_review_state
+        - name: status
+        - name: system_managed_entity_source
+        - name: tracking_url_template
+        - name: url
+        - name: _fivetran_synced
+        

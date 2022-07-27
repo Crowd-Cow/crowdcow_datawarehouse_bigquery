@@ -24,8 +24,8 @@ ad_stats as (select * from {{ ref('stg_google_ads__ad_stats')}})
     select 
         ad_id
         ,trim(trim(final_urls,']'),'[') as final_url
-        ,updated_at_utc::date as ad_url_valid_from_date
-        ,ifnull(lead(updated_at_utc::date,1) over(partition by ad_id order by updated_at_utc),'2999-01-01') as ad_url_valid_to_date
+        ,ad_valid_from_date as ad_url_valid_from_date
+        ,ad_valid_to_date as ad_url_valid_to_date
     from ad_history
 )
 
