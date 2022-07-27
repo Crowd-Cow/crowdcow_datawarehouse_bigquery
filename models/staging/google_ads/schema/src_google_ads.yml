@@ -280,3 +280,13 @@ sources:
 
         - name: ad_type
           description: type of ad, such as video, image, text, responsive, etc.
+    - name: keyword_stats
+      description: details about keyword performance
+      columns:
+        - name: occurred_at_date
+          description: date that the stats are representing
+    - name: ad_group_criterion_history
+      description: details about keyword performance
+      columns:
+        - name: ad_group_id
+          description: ad group identifier
