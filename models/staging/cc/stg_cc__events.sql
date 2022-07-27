@@ -42,7 +42,7 @@ events as (
       ,event_json:quantity::int as quantity
       ,event_json:old_scheduled_arrival_date::timestamp as old_scheduled_arrival_date
       ,event_json:new_scheduled_arrival_date::timestamp as new_scheduled_arrival_date
-      ,event_json:old_scheduled_fulfillmet_date::timestamp as old_scheduled_fulfillment_date
+      ,event_json:old_scheduled_fulfillment_date::timestamp as old_scheduled_fulfillment_date
       ,event_json:new_scheduled_fulfillment_date::timestamp as new_scheduled_fulfillment_date
       ,event_json:reason::text as reason
       ,event_json:user_making_change_id::int as user_making_change_id
