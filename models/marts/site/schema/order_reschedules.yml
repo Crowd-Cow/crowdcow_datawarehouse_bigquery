@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: order_reschedules
+    description: Mart for order reschedule events
+    columns:
+      - name: event_id
+        description: Event ID
+
+      - name: visit_id
+        description: Visit ID
+
+      - name: user_id
+        description: User ID
+
+      - name: order_id
+        description: Order ID
+
+      - name: user_making_change_id
+        description: User ID of the person making the reschedule change. Can be the customer or a CC user
+
+      - name: reason
+        description: Reason for the reschedule
+
+      - name: is_pushed_order
+        description: Boolean indicating if the reschedule change was pushing the order out or pulling the order in
+
+      - name: is_customer_reschedule
+        description: Boolean indicating if the reschedule change was done by the customer or CC
+
+      - name: old_scheduled_arrival_date
+        description: Timestamp of the previously scheduled arrival date
+
+      - name: new_scheduled_arrival_date
+        description: Timestamp of the new scheduled arrival date
+
+      - name: old_scheduled_fulfillment_date
+        description: Timestamp of the previously scheduled fulfillment date
+
+      - name: new_scheduled_fulfillment_date
+        description: Timestamp of the new scheduled_fulfillment_date
