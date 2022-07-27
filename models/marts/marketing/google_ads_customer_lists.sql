@@ -14,6 +14,8 @@ user as ( select * from {{ ref('users') }} )
         ,user.is_lead as is_customer_lead
         ,true as is_lead_and_registered_user
         ,user.last_90_days_paid_order_count > 0 as is_standard_customer
+        ,user.last_90_days_paid_order_count > 0 and user.is_purchasing_customer as is_active_non_member_90_day
+        ,user.is_active_member_90_day and not is_cancelled_member as is_active_member_90_day
         ,vip.user_id is not null as is_vip_customer
     from user
         left join vip on user.user_id = vip.user_id
@@ -32,6 +34,8 @@ user as ( select * from {{ ref('users') }} )
         ,is_lead_and_registered_user
         ,is_standard_customer
         ,is_vip_customer
+        ,is_active_non_member_90_day
+        ,is_active_member_90_day
     from user_list
 )
 
@@ -47,6 +51,8 @@ user as ( select * from {{ ref('users') }} )
         ,is_lead_and_registered_user
         ,is_standard_customer
         ,is_vip_customer
+        ,is_active_non_member_90_day
+        ,is_active_member_90_day
     from prep_user_fields
 )
 
