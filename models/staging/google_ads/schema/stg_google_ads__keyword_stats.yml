@@ -1,0 +1,57 @@
+version: 2
+
+models:
+  - name: stg_google_ads__keyword_stats
+    description: "daily stats on keywords"
+    columns:
+      - name: occurred_at_date
+        description: "date that the stats occurred"
+
+      - name: ad_network_type
+        description: ""
+
+      - name: campaign_id
+        description: "campaign that keyword is in"
+
+      - name: ad_group_id
+        description: "ad group that keyword is in"
+
+      - name: ad_group_criterion_criterion_id
+        description: ""
+
+      - name: impressions
+        description: "total times keyword triggered ad was shown"
+
+      - name: clicks
+        description: "total times the keyword triggered ad was clicked on"
+
+      - name: cost_usd
+        description: "cost to Crowd Cow for clicks"
+
+      - name: device
+        description: "device that user was on when searching keyword"
+
+      - name: active_view_measurable_impressions
+        description: ""
+
+      - name: active_view_measurable_cost_micros
+        description: ""
+
+      - name: active_view_measurability
+        description: ""
+
+      - name: active_view_impressions
+        description: ""
+
+      - name: conversions_value
+        description: ""
+
+      - name: conversions
+        description: ""
+
+      - name: interactions
+        description: ""
+
+      - name: view_through_conversions
+        description: ""
+

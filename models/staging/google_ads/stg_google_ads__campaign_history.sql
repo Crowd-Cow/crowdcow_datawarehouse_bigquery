@@ -10,6 +10,8 @@ source as ( select * from {{ source('google_ads', 'campaign_history') }} )
     select
         id as campaign_id
         ,updated_at as updated_at_utc
+        ,updated_at::date as campaign_valid_from_date
+        ,ifnull(lead(updated_at::date,1) over(partition by campaign_id order by updated_at),'2999-01-01') as campaign_valid_to_date
         ,customer_id
         ,base_campaign_id
         ,{{ clean_strings('ad_serving_optimization_status') }} as ad_serving_optimization_status
@@ -37,6 +39,8 @@ source as ( select * from {{ source('google_ads', 'campaign_history') }} )
     select
         id
         ,updated_at as updated_at_utc
+        ,updated_at::date as campaign_valid_from_date
+        ,ifnull(lead(updated_at::date,1) over(partition by id order by updated_at),'2999-01-01') as campaign_valid_to_date
         ,customer_id
         ,base_campaign_id
         ,{{ clean_strings('ad_serving_optimization_status') }} as ad_serving_optimization_status

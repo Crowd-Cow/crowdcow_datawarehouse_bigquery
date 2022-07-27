@@ -1,0 +1,72 @@
+version: 2
+
+models:
+  - name: stg_google_ads__ad_group_criterion_history
+    description: "history of keyword level stats"
+    columns:
+      - name: ad_group_id
+        description: ""
+
+      - name: ad_group_criterion_id
+        description: ""
+
+      - name: uptdated_at_utc
+        description: ""
+
+      - name: ad_group_criterion_valid_from_date
+        description: ""
+
+      - name: ad_group_criterion_valid_to_date
+        description: ""
+
+      - name: ad_group_criterion_approval_status
+        description: ""
+
+      - name: bid_modifier
+        description: ""
+
+      - name: display_name
+        description: ""
+
+      - name: final_urls
+        description: ""
+
+      - name: first_page_cpc_usd
+        description: ""
+
+      - name: first_position_cpc_usd
+        description: ""
+
+      - name: gender_type
+        description: ""
+
+      - name: income_range_type
+        description: ""
+
+      - name: keyword_match_type
+        description: ""
+
+      - name: keyword_text
+        description: ""
+
+      - name: is_negative
+        description: ""
+
+      - name: quality_info_score
+        description: ""
+
+      - name: quality_info_creative_score
+        description: ""
+
+      - name: quality_info_search_predicted_ctr
+        description: ""
+
+      - name: status
+        description: ""
+
+      - name: system_serving_status
+        description: ""
+
+      - name: cpc_bid_usd
+        description: ""
+
