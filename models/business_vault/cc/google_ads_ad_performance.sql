@@ -23,6 +23,7 @@ ad_stats as (select * from {{ ref('stg_google_ads__ad_stats')}})
 ,ad_url as (
     select 
         ad_id
+        ,ad_group_id
         ,trim(trim(final_urls,']'),'[') as final_url
         ,ad_valid_from_date as ad_url_valid_from_date
         ,ad_valid_to_date as ad_url_valid_to_date
@@ -69,6 +70,7 @@ select distinct
     ,{{ dbt_utils.surrogate_key( ['ad_clicks_cost.date_utc','campaign_grouping'] ) }} as campaign_key
 from ad_clicks_cost
     left join ad_url on ad_clicks_cost.ad_id = ad_url.ad_id
+        and ad_clicks_cost.ad_group_id = ad_url.ad_group_id
         and ad_clicks_cost.date_utc >= ad_url.ad_url_valid_from_date
         and ad_clicks_cost.date_utc < ad_url.ad_url_valid_to_date
     left join campaign_info on ad_clicks_cost.campaign_id = campaign_info.campaign_id
