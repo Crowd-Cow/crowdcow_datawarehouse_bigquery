@@ -10,7 +10,6 @@ source as ( select * from {{ source('google_ads', 'ad_history') }} )
         ,ad_group_id
         ,updated_at as updated_at_utc
         ,updated_at::date as updated_at_date
-        {# ,ifnull(lead(updated_at::date,1) over(partition by id, ad_group_id order by updated_at),'2999-01-01') as ad_valid_to_date #}
         ,{{ clean_strings('action_items') }} as action_items
         ,{{ clean_strings('action_items') }} as ad_strength
         ,{{ clean_strings('device_preference') }} as device_preference
