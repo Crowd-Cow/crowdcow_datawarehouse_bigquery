@@ -1,0 +1,36 @@
+version: 2
+
+models:
+
+  - name: int_inbound_shipping_costs
+    description: Intermediate model to calculate inbound shipping cost per lot unit
+    columns:
+      - name: lot_number
+        description: Lot number
+        tests:
+          - unique
+          - not_null
+
+      - name: quantity_ordered
+        description: The quantity of SKUs ordered for the lot
+
+      - name: shipment_id
+        description: Shipwell shipment ID
+
+      - name: total_lot_weight
+        description: Total weight of the lot
+
+      - name: shipment_amount
+        description: Total amount of the shipment
+
+      - name: total_shipment_weight
+        description: Total weight of all lots in the shipment
+
+      - name: pct_lot_weight
+        description: The total lot weight divided by the total weight of the shipment
+
+      - name: lot_cost
+        description: The portion of the total shipment cost the individual lot represents (`total_shipment_cos` * `pct_lot_weight`)
+
+      - name: lot_cost_per_unit
+        description: The cost for each unit in the lot  (`lot_cost` / `quantity_ordered`)
