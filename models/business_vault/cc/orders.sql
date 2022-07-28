@@ -7,6 +7,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,ranks as ( select * from {{ ref('int_order_ranks') }} )
 ,units as ( select * from {{ ref('int_order_units_pct') }} )
 ,order_shipment as ( select * from {{ ref('int_order_shipments') }} )
+,order_reschedule as ( select * from {{ ref('int_order_reschedules') }} )
 
 ,order_joins as (
     select
@@ -21,6 +22,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,{{ get_join_key('stg_cc__fcs','fc_key','fc_id','orders','fc_id','order_updated_at_utc') }} as fc_key
         ,orders.order_identifier
         ,orders.order_current_state
+        ,order_reschedule.reschedule_reason
 
         ,case
             when orders.parent_order_id is not null then 'CORP GIFT'
@@ -70,6 +72,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.order_additional_coolant_weight_in_pounds
         ,orders.order_bids_count
         ,zeroifnull(order_shipment.shipment_count) as shipment_count
+        ,zeroifnull(order_reschedule.reschedule_count) as reschedule_count
         ,flags.has_free_shipping
         ,flags.is_ala_carte_order
         ,flags.is_membership_order
@@ -84,6 +87,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,flags.has_been_delivered
         ,flags.has_been_lost
         ,flags.is_fulfillment_risk
+        ,flags.is_rescheduled
         ,ranks.overall_order_rank
         ,ranks.completed_order_rank
         ,ranks.paid_order_rank
@@ -218,6 +222,9 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,order_shipment.shipped_at_utc
         ,order_shipment.delivered_at_utc
         ,order_shipment.lost_at_utc
+        ,order_reschedule.occurred_at_utc as order_reschedule_occurred_at_utc
+        ,order_reschedule.old_scheduled_fulfillment_date
+        ,order_reschedule.new_scheduled_fulfillment_date
         
     from orders
         left join order_revenue on orders.order_id = order_revenue.order_id
@@ -226,6 +233,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         left join ranks on orders.order_id = ranks.order_id
         left join units on orders.order_id = units.order_id
         left join order_shipment on orders.order_id = order_shipment.order_id
+        left join order_reschedule on orders.order_id = order_reschedule.order_id
     
     /**** Removing these order types because they are just shell orders that provide no data value ****/
     /**** Children orders contain all the necessary information for revenue, addresses, dates, etc for the order ****/

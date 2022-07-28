@@ -55,3 +55,11 @@ models:
       - name: has_been_delivered
         description: "Boolean indicating if the order has been delivered"
 
+      - name: has_been_lost
+        description: Boolean indicating if the order shipment has been lost
+
+      - name: is_fulfillment_risk
+        description: Boolean indicating if the order is a fulfillment risk
+
+      - name: is_rescheduled
+        description: Boolean indicating if the order has been rescheduled at least once

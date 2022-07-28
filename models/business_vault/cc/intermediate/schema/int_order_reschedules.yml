@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: int_order_reschedules
+    description: Intermediate model for most recent order reschedule information
+    columns:
+      - name: order_id
+        description: Order ID
+        tests:
+          - unique
+          - not_null
+
+      - name: occurred_at_utc
+        description: Timestamp for when the most recent order reschedule happened
+
+      - name: reschedule_reason
+        description: Reason why the order was rescheduled
+
+      - name: old_scheduled_fulfillment_date
+        description: Timestamp for the previous scheduled fulfillment date
+
+      - name: new_scheduled_fulfillment_date
+        description: Timestamp for the new scheduled fulfillment date
+
+      - name: reschedule_count
+        description: Total number of times the order has been rescheduled
+      

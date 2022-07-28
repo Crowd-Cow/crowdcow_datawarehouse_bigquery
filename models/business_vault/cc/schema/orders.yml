@@ -40,6 +40,9 @@ models:
       - name: current_state
         description: "Current state of order"
 
+      - name: reschedule_reason
+        description: Reason why the order was rescheduled
+
       - name: order_type
         description: "Order type"
 
@@ -178,6 +181,12 @@ models:
       - name: bids_count
         description: "Bid count"
 
+      - name: shipment_count
+        description: Total number of shipments in the order
+
+      - name: reschedule_count
+        description: Total number of times the order has been rescheduled
+
       - name: has_free_shipping
         description: "Boolean indicating if the order had a free shipping discount applied"
 
@@ -216,6 +225,9 @@ models:
         
       - name: is_fulfillment_at_risk
         description: "Fulfillment at risk"
+
+      - name: is_rescheduled
+        description: Boolean indicating if the order has been rescheduled at least once
 
       - name: overall_order_rank
         description: "Overall order rank for a user regardless of order type or status"
@@ -463,6 +475,15 @@ models:
       - name: customer_viewed_at_utc
         description: "Timestamp for when a customer viewed the order"
 
+      - name: order_reschedule_occurred_at_utc
+        description: Timestamp for when the most recent order reschedule happened
+
       - name: next_box_notified_at_utc
         description: "Timestamp for when customer was notified of next order"
+
+      - name: old_scheduled_fulfillment_date
+        description: Timestamp for the previous scheduled fulfillment date
+
+      - name: new_scheduled_fulfillment_date
+        description: Timestamp for the new scheduled fulfillment date
 

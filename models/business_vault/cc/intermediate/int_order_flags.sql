@@ -6,6 +6,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,bids as (select * from {{ ref('stg_cc__bids') }} )
 ,gift_cards as (select * from {{ ref('stg_cc__gift_cards') }} )
 ,gift_infos as ( select * from {{ ref('stg_cc__gift_infos') }} )
+,order_reschedule as ( select distinct order_id from {{ ref('stg_cc__events') }} where event_name = 'ORDER_RESCHEDULED' )
 
 ,gift_card as (
     select
@@ -68,11 +69,13 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,shipping_flags.delivered_at_utc is not null as has_been_delivered
         ,shipping_flags.lost_at_utc is not null as has_been_lost
         ,coalesce(fulfillment_risk.is_fulfillment_risk,FALSE) as is_fulfillment_risk
+        ,order_reschedule.order_id is not null as is_rescheduled
     from orders
         left join gift_info on orders.order_id = gift_info.order_id 
         left join has_shipping_credit on orders.order_id = has_shipping_credit.order_id
         left join shipping_flags on orders.order_id = shipping_flags.order_id
         left join fulfillment_risk on orders.order_id = fulfillment_risk.order_id
+        left join order_reschedule on orders.order_id = order_reschedule.order_id
 )
 
 select *
