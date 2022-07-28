@@ -169,6 +169,9 @@ models:
       - name: poseidon_fulfillment_cost
         description: Total cost to fulfill an order if it comes from the Poseidon fulfillment center
 
+      - name: inbound_shipping_cost
+        description: The total cost of inbound shipping attributed to an order
+
       - name: coolant_weight_in_pounds
         description: Total weight of coolant in pounds used to ship an order
 

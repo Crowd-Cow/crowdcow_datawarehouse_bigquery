@@ -25,6 +25,9 @@ models:
       - name: poseidon_fulfillment_cost
         description: The total order cost for fulfilling an order out of the Poseidon fulfillment center
 
+      - name: inbound_shipping_cost
+        description: The total cost of inbound shipping attributed to an order
+
       - name: order_picking_cost
         description: Total picking cost for an order
 
