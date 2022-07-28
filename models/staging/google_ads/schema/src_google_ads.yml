@@ -295,3 +295,8 @@ sources:
       columns:
         - name: ad_group_id
           description: ad group identifier
+    - name: ad_group_custom_parameter_history
+      description: historical tracking of custom parameters within ad groups
+      columns:
+        - name: ad_group_id
+          description: ad group identifier

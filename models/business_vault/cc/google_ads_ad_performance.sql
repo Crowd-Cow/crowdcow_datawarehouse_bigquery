@@ -5,6 +5,7 @@ ad_stats as (select * from {{ ref('stg_google_ads__ad_stats')}})
 ,campaign_history as (select * from {{ ref('stg_google_ads__campaign_history')}} )
 ,ad_group_history as (select * from {{ ref('stg_google_ads__ad_group_history')}})
 ,ad_custom_parameter_history as (select * from {{ ref('stg_google_ads__ad_custom_parameter_history')}})
+,ad_group_custom_parameter_history as (select * from {{ ref('stg_google_ads__ad_group_custom_parameter_history')}})
 
 ,ad_clicks_cost as (
     select 
@@ -58,16 +59,21 @@ ad_stats as (select * from {{ ref('stg_google_ads__ad_stats')}})
 
 ,ad_group_details as (
     select 
-        ad_group_id
-        ,ad_group_name
-        ,updated_at_utc::date as ad_group_valid_from_date
-        ,ifnull(lead(updated_at_utc::date,1) over(partition by ad_group_id order by updated_at_utc),'2999-01-01') as ad_group_valid_to_date
+        ad_group_history.ad_group_id
+        ,ad_group_history.ad_group_name
+        ,ad_group_custom_parameter_history.ad_group_parameter_name
+        ,ad_group_custom_parameter_history.ad_group_parameter_id
+        ,ad_group_valid_from_date
+        ,ad_group_valid_to_date
     from ad_group_history
+        left join ad_group_custom_parameter_history on ad_group_history.ad_group_id = ad_group_custom_parameter_history.ad_group_id
+                                                    and ad_group_history.updated_at_utc = ad_group_custom_parameter_history.updated_at_utc
 )
 
 select distinct 
     ad_clicks_cost.ad_id
     ,ad_clicks_cost.ad_group_id
+    ,ad_group_parameter_id
     ,ad_clicks_cost.campaign_id
     ,ad_clicks_cost.date_utc
     ,ad_clicks_cost.total_clicks
@@ -78,6 +84,7 @@ select distinct
     ,ad_url.final_url
     ,campaign_info.campaign_name
     ,ad_group_details.ad_group_name
+    ,ad_group_parameter_name
     ,ad_custom_parameters.value
     ,{{ dbt_utils.surrogate_key( ['ad_clicks_cost.date_utc','campaign_grouping'] ) }} as campaign_key
 from ad_clicks_cost
