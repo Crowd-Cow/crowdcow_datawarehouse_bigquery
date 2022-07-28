@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: stg_google_ads__ad_custom_parameter_history
+    description: details about ad custom parameters daily
+    columns:
+      - name: ad_id
+        description: unique ID for the ad
+
+      - name: ad_group_id
+        description: Ad group ID

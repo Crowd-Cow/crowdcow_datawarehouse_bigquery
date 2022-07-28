@@ -4,6 +4,7 @@ ad_stats as (select * from {{ ref('stg_google_ads__ad_stats')}})
 ,ad_history as (select * from {{ ref('stg_google_ads__ad_history')}})
 ,campaign_history as (select * from {{ ref('stg_google_ads__campaign_history')}} )
 ,ad_group_history as (select * from {{ ref('stg_google_ads__ad_group_history')}})
+,ad_custom_parameter_history as (select * from {{ ref('stg_google_ads__ad_custom_parameter_history')}})
 
 ,ad_clicks_cost as (
     select 
@@ -30,11 +31,21 @@ ad_stats as (select * from {{ ref('stg_google_ads__ad_stats')}})
     from ad_history
 )
 
+,ad_custom_parameters as (
+    select 
+        ad_group_id
+        ,ad_id
+        ,value
+        ,parameter_valid_from_date
+        ,parameter_valid_to_date
+    from ad_custom_parameter_history
+)
+
 ,campaign_info as (
     select 
         campaign_id
         ,campaign_name
-        
+
         ,case 
             when campaign_name like '%SHOPPING%' then 'SHOPPING' 
             else campaign_name 
@@ -67,6 +78,7 @@ select distinct
     ,ad_url.final_url
     ,campaign_info.campaign_name
     ,ad_group_details.ad_group_name
+    ,ad_custom_parameters.value
     ,{{ dbt_utils.surrogate_key( ['ad_clicks_cost.date_utc','campaign_grouping'] ) }} as campaign_key
 from ad_clicks_cost
     left join ad_url on ad_clicks_cost.ad_id = ad_url.ad_id
@@ -79,3 +91,7 @@ from ad_clicks_cost
     left join ad_group_details on ad_clicks_cost.ad_group_id = ad_group_details.ad_group_id
         and ad_clicks_cost.date_utc >= ad_group_details.ad_group_valid_from_date
         and ad_clicks_cost.date_utc < ad_group_details.ad_group_valid_to_date
+    left join ad_custom_parameters on ad_clicks_cost.ad_id = ad_custom_parameters.ad_id
+        and ad_clicks_cost.ad_group_id = ad_custom_parameters.ad_group_id
+        and ad_clicks_cost.date_utc >= ad_custom_parameters.parameter_valid_from_date
+        and ad_clicks_cost.date_utc < ad_custom_parameters.parameter_valid_to_date
