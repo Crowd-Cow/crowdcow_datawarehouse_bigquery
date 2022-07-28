@@ -7,6 +7,7 @@ order_item as ( select * from {{ ref('order_item_details') }} )
 ,care_cost as (select * from {{ ref('int_care_cost_per_order') }} )
 ,fc_labor_cost as ( select * from {{ ref('int_fc_labor_cost_per_order') }} )
 ,shipment as ( select * from {{ ref('shipments') }} )
+,inbound_shipment as ( select * from {{ ref('int_inbound_shipping_costs') }} )
 
 ,item_detail_costs as (
     select
@@ -21,8 +22,10 @@ order_item as ( select * from {{ ref('order_item_details') }} )
         end) as poseidon_fulfillment_cost
 
         ,sum(sku_cost * sku_quantity) as product_cost
+        ,sum(total_sku_weight * inbound_shipment.lot_cost_per_pound) as inbound_shipping_cost
         
     from order_item
+        left join inbound_shipment on order_item.lot_number = inbound_shipment.lot_number
     group by 1
 )
 
@@ -42,6 +45,7 @@ order_item as ( select * from {{ ref('order_item_details') }} )
         ,order_care_cost
         ,item_detail_costs.product_cost
         ,item_detail_costs.poseidon_fulfillment_cost
+        ,item_detail_costs.inbound_shipping_cost
         ,fc_labor_cost.order_picking_cost
         ,fc_labor_cost.order_packing_cost
         ,fc_labor_cost.order_box_making_cost

@@ -87,6 +87,8 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
             else get_lot_cost_per_unit.cost_per_unit_usd
          end as sku_cost_usd
 
+        ,sku_quantity * sku_weight as total_sku_weight
+
     from get_owner_details
         left join sku on get_owner_details.sku_key = sku.sku_key
         left join get_lot_cost_per_unit on get_owner_details.sku_id = get_lot_cost_per_unit.sku_id
@@ -109,7 +111,9 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
 )
 
 ,calculate_sku_revenue as (
-    select *
+    select 
+    *
+    
     ,round(
         case
             when (not is_item_packed and is_single_sku_bid_item) or sku_id is null then bid_gross_product_revenue
@@ -156,6 +160,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
     ,bid_item_name
     ,bid_quantity
     ,sku_quantity
+    ,total_sku_weight
     ,sku_price_usd as sku_price
     ,sku_cost_usd as sku_cost
     ,sku_price_proportion

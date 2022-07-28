@@ -64,6 +64,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(order_cost.order_fc_other_cost) as fc_other_cost
         ,zeroifnull(order_cost.order_fc_labor_cost) as fc_labor_cost
         ,zeroifnull(order_cost.poseidon_fulfillment_cost) as poseidon_fulfillment_cost
+        ,zeroifnull(order_cost.inbound_shipping_cost) as inbound_shipping_cost
         ,iff(orders.stripe_charge_id is not null,order_revenue.net_revenue * 0.0274,0) as payment_processing_cost
         ,orders.coolant_weight_in_pounds
         ,orders.order_additional_coolant_weight_in_pounds
