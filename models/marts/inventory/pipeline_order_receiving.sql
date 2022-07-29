@@ -21,8 +21,8 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,ordered_item.processor_out_name as processor_name
 
         ,case
-            when vendor.is_marketplace and ordered_item.cost_per_unit_usd is null then current_sku.marketplace_cost_usd
-            when not vendor.is_marketplace and ordered_item.cost_per_unit_usd is null then current_sku.owned_sku_cost_usd
+            when vendor.is_marketplace and ordered_item.cost_per_unit_usd is null and current_sku.marketplace_cost_usd > 0 then current_sku.marketplace_cost_usd
+            when (not vendor.is_marketplace or (vendor.is_marketplace and current_sku.marketplace_cost_usd = 0)) and ordered_item.cost_per_unit_usd is null then current_sku.owned_sku_cost_usd
             else ordered_item.cost_per_unit_usd
          end as cost_per_unit_usd
 
@@ -47,7 +47,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,current_lot.delivered_at_utc
         ,pipeline_schedule.processor_out_name as processor_name
         ,nullif(current_sku.sku_weight,0) * received_item.sku_lot_quantity as sku_weight_received
-        ,iff(vendor.is_marketplace, current_sku.marketplace_cost_usd,current_sku.owned_sku_cost_usd) as finance_cost
+        ,iff(vendor.is_marketplace and current_sku.marketplace_cost_usd > 0, current_sku.marketplace_cost_usd,current_sku.owned_sku_cost_usd) as finance_cost
         ,vendor.is_marketplace
     from received_item
         left join current_lot on received_item.lot_id = current_lot.lot_id
