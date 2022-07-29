@@ -9,12 +9,17 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
 ,receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
 ,pipeline_order as ( select * from {{ ref('stg_cc__pipeline_orders') }} )
 
-,union_skus as (
-    select 
+,get_packed_orders as (
+    select
         packed_items.*
     from packed_items
         inner join completed_orders on packed_items.order_id = completed_orders.order_id
         inner join non_gift_orders on packed_items.order_id = non_gift_orders.order_id
+)
+
+,union_skus as (
+    select *
+    from get_packed_orders
     
     union all
     
@@ -50,10 +55,10 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
         ,ordered_items.updated_at_utc
         ,null::timestamp as packed_created_at_utc      
 
-    from ordered_items left join packed_items on ordered_items.order_id = packed_items.order_id 
-        and ordered_items.bid_id = packed_items.bid_id 
-        and ordered_items.bid_item_id = packed_items.bid_item_id
-    where packed_items.order_id is null
+    from ordered_items left join get_packed_orders on ordered_items.order_id = get_packed_orders.order_id 
+        and ordered_items.bid_id = get_packed_orders.bid_id 
+        and ordered_items.bid_item_id = get_packed_orders.bid_item_id
+    where get_packed_orders.order_id is null
 )
 
 ,get_owner_details as (
