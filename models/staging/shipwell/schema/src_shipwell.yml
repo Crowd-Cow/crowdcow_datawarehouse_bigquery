@@ -282,4 +282,27 @@ sources:
           - name: _fivetran_synced
             description: Timestamp for when Fivetran synced the record
 
-          
+      - name: shipment_tags
+        description: Shipwell shipment tags
+        columns:
+          - name: id
+            description: Shipment tag ID
+
+          - name: _fivetran_batch
+            description: Fivetran generated batch number
+
+          - name: _fivetran_index
+            description: Fivetran generated index number
+
+          - name: color
+            description: Tag color value
+
+          - name: name
+            description: Tag name
+
+          - name: company
+            description: Company ID
+
+          - name: _fivetran_synced
+            description: Timestamp for when the record was synced by Fivetran
+     

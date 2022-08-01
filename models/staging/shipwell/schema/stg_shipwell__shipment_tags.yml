@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: stg_shipwell__shipment_tags
+    description: Staging model for Shipwell shipment tags
+    columns:
+      - name: shipment_tag_id
+        description: Shipwell shipment tag ID
+        tests:
+          - unique
+          - not_null
+
+      - name: tag_color
+        description: Tag color
+
+      - name:  tag_name
+        description: Tag name
+
+      - name: company_id
+        description: Company  ID
