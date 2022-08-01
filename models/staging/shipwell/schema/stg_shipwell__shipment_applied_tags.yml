@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: stg_shipwell__shipment_applied_tags
+    description: Bridge table to join shipments with tags applied to the shipments
+    columns:
+      - name: shipment_id
+        description: Shipwell shipment ID
+
+      - name: tag_id
+        description: Tag ID of the tag applied to the shipment
