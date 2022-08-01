@@ -1,0 +1,74 @@
+version: 2
+
+models:
+  - name: stg_cc__failure_cases
+    description: Staging model for failure cases
+    columns:
+      - name: failure_case_id
+        description: Failure case ID
+        tests:
+          - unique
+          - not_null
+
+      - name: reported_by_user_id
+        description: Reported by User ID
+
+      - name: entered_by_user_id
+        description: Entered by User ID
+
+      - name: charge_back_amount
+        description: Charge back amount
+
+      - name: category
+        description: Failure case category
+
+      - name: specifics
+        description: Failure case specifics
+
+      - name: archived_at_utc
+        description: Timestamp for when the failure case was archived
+
+      - name: order_id
+        description: Order ID
+
+      - name: butcher_name
+        description: Butcher name
+
+      - name: scheduled_fulfillment_date_utc
+        description: Timestampf for when the order was scheduled to be fulfilled
+
+      - name: reported_via
+        description: The method the failure case was reported (e.g. automated, etc)
+
+      - name: user_id
+        description: User ID
+
+      - name: reported_at_utc
+        description: Timestamp the failure case was reported
+
+      - name: link_to_zendesk_ticket
+        description: Link to Zendesk ticket
+
+      - name: refund_amount
+        description: Refund amount
+
+      - name: failure_occurred_at_utc
+        description: Timestamp of when the failure occurred
+
+      - name: created_at_utc
+        description: Timestamp for when the record was created
+
+      - name: shipped_at_utc
+        description: Timestamp of when the order was shipped
+
+      - name: notes
+        description: Notes about the failure case
+
+      - name: credit_amount
+        description: Credit amount
+
+      - name: updated_at_utc
+        description: Timestamp for when the record was updated
+
+      - name: farm_name
+        description: Farm name
