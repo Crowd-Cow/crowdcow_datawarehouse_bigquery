@@ -25,9 +25,6 @@ models:
       - name: fc_key
         description: "Key that can be used to join the FC information at the time the shipment was shipped"
 
-      - name: fc_type
-        description: Type of Fulfillment center for the shipment (i.e. CC, Dropship, Other)
-
       - name: order_id
         description: "Order ID"
 
