@@ -94,6 +94,9 @@ models:
       - name: is_delivery_late
         description: Boolean indicating if the shipment was considered delivered on time
 
+      - name: delivery_days_late
+        description: The number of days a shipment was late
+
       - name: est_delivery_date_utc
         description: "Timestamp for the estimated delivery date"
 
