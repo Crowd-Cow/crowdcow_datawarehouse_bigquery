@@ -25,6 +25,9 @@ models:
       - name: fc_key
         description: "Key that can be used to join the FC information at the time the shipment was shipped"
 
+      - name: fc_type
+        description: Type of Fulfillment center for the shipment (i.e. CC, Dropship, Other)
+
       - name: order_id
         description: "Order ID"
 
@@ -84,6 +87,12 @@ models:
 
       - name: original_est_delivery_date_utc
         description: "Timestamp for the original delivery date given"
+
+      - name: delivery_cutoff_at_utc
+        description: Timestamp for the cutoff time considered an "on time" delivery
+
+      - name: is_delivery_late
+        description: Boolean indicating if the shipment was considered delivered on time
 
       - name: est_delivery_date_utc
         description: "Timestamp for the estimated delivery date"

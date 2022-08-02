@@ -45,6 +45,13 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
         ,get_order_delivery_address.scanned_box_type_id
         ,get_order_delivery_address.fc_id
         ,get_order_delivery_address.fc_key
+
+        ,case
+            when get_order_delivery_address.fc_id in (4.5) then 'CROWD COW FC'
+            when get_order_delivery_address.fc_id = 10 then 'DROP SHIP'
+            else 'OTHER'
+         end as fc_type
+
         ,get_order_delivery_address.order_id
         ,get_order_delivery_address.fc_location_id
         ,get_order_delivery_address.shipment_token
@@ -77,6 +84,8 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
         ,get_order_delivery_address.shipped_at_utc
         ,get_order_delivery_address.delivered_at_utc
         ,get_order_delivery_address.original_est_delivery_date_utc
+        ,get_order_delivery_address.original_est_delivery_date_utc + interval '20 hours' as delivery_cutoff_at_utc
+        ,get_order_delivery_address.delivered_at_utc <= delivery_cutoff_at_utc as is_delivery_late
         ,get_order_delivery_address.est_delivery_date_utc
         ,get_order_delivery_address.postage_paid_at_utc
         ,get_order_delivery_address.scheduled_fulfillment_date_utc
