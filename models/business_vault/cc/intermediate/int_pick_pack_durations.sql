@@ -31,6 +31,7 @@ packing_action as (select * from {{ ref('stg_cc__packing_actions') }} )
         ,min(created_at_utc) as action_started_at_utc
         ,max(created_at_utc) as action_ended_at_utc
         ,count(*) as item_count
+        ,count(distinct sku_id) as sku_count
         ,datediff(minute,action_started_at_utc,action_ended_at_utc)/60 as hour_duration
         ,datediff(minute,action_started_at_utc,action_ended_at_utc) as minute_duration
         ,datediff(second,action_started_at_utc,action_ended_at_utc) as second_duration
