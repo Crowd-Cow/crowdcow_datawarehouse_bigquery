@@ -58,6 +58,9 @@ models:
       - name: shipment_delivery_days
         description: "The number of days to deliver the shipment"
 
+      - name: actual_transit_days
+        description: The number of days the shipment took to be delivered
+
       - name: pickup_at_description
         description: "Pickup at description"
 

@@ -67,6 +67,10 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
         ,get_order_delivery_address.item_weight
         ,get_order_delivery_address.packaging_freight_component_cost_usd
         ,get_order_delivery_address.shipment_delivery_days
+        
+        ,get_order_delivery_address.delivered_at_utc::date 
+            - coalesce(shipped_at_utc,scheduled_fulfillment_date_utc)::date as actual_transit_days
+        
         ,get_order_delivery_address.pickup_at_description
         ,get_order_delivery_address.shipment_postage_service
         ,get_order_delivery_address.packaging_materials_component_cost_usd
