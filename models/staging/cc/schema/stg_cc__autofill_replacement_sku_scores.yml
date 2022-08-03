@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: stg_cc__autofill_replacement_sku_scores
+    description: Staging model for autofill replacement SKU scores
+    columns:
+      - name: updated_at_utc
+        description: Timestamp for when the record was updated
+      
+      - name: replacement_score
+        description: Replacement score for the replacement SKU. Used to detemine best replacement autofill SKU
+
+      - name: replacement_sku_id
+        description: SKU ID of the SKU that could be replaceed with the target SKU
+
+      - name: sku_id
+        description: SKU ID of the SKU being scored
+
+      - name: created_at_utc
+        description: Timestamp for when the record was created
+
+      - name: autofill_replacement_score_id
+        description: Unique ID for the replacement score record
+
+      - name: autofill_replacement_score_key
+        description: Key added by dbt snapshot process to uniquely identify the historical snapshot record
+        tests:
+          - unique
+          - not_null
+
+      - name: dbt_valid_from
+        description: dbt valid from timestamps
+
+      - name: dbt_valid_to
+        description: dbt valid to timestamps
+
+      - name: adjusted_dbt_valid_from
+        description: "`dbt_valid_from` date adjusted to '1970-01-01' for the first historical record in order to allow for joins to other tables that have records that are older than the first historical record captured"
+
+      - name: adjusted_dbt_valid_to
+        description: "`dbt_valid_to` date adjusted to '2999-01-01' for the current historical record (`dbt_valid_to is null`). This allows joins to other tables that might have dates that are in the future that need information from the current historical record"

@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: autofill_replacement_sku_scores
+    description: Business logic model for autofill replacement SKU scores
+    columns:
+      - name: autofill_replacement_score_id
+        description: Unique ID for the replacement score record
+
+      - name: autofill_replacement_score_key
+        description: Key added by dbt snapshot process to uniquely identify the historical snapshot record
+
+      - name: sku_id
+        description: SKU ID of the SKU being scored
+
+      - name: replacement_sku_id
+        description: SKU ID of the SKU that could be replaceed with the target SKU
+      
+      - name: replacement_score
+        description: Replacement score for the replacement SKU. Used to detemine best replacement autofill SKU
+      
+      - name: created_at_utc
+        description: Timestamp for when the record was created
+
+      - name: updated_at_utc
+        description: Timestamp for when the record was updated
