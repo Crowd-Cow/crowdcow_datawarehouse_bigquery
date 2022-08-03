@@ -1,0 +1,122 @@
+version: 2
+
+models:
+  - name: zendesk_tickets
+    description: "Business logic model for Zendesk tickets"
+    columns:
+      - name: zendesk_id
+        description: "Zendesk ID"
+
+      - name: agent_wait_time_in_minutes
+        description: "Agent wait time in minutes"
+
+      - name: zd_updated_at_utc
+        description: "Timestamp for when Zendesk was updated"
+
+      - name: update_at_utc
+        description: "Timestamp for when the record was updated"
+
+      - name: zendesk_status
+        description: "Zendesk status"
+
+      - name: ticket_id
+        description: "Zendesk ticket ID"
+
+      - name: assignee_id
+        description: "Assignee ID"
+
+      - name: ticket_description
+        description: "Ticket description"
+
+      - name: priority
+        description: "Ticket priority"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created"
+
+      - name: via
+        description: "Method ticket was submitted"
+
+      - name: comments
+        description: "Ticket comments"
+
+      - name: assignee_user_id
+        description: "Assignee User Id"
+
+      - name: first_resolution_time_in_minutes
+        description: "First resolution time in minutes"
+
+      - name: reply_time_in_minutes
+        description: "Reply time in minutes"
+
+      - name: requester_id
+        description: "Requester ID"
+
+      - name: ticket_subject
+        description: "Ticket subject"
+
+      - name: zd_solved_at_utc
+        description: "Timestamp for when the ticket was solved"
+
+      - name: requester_wait_time_in_minutes
+        description: "Requester wait time in minutes"
+
+      - name: first_few_messages_flat
+        description: "First few customer messages"
+
+      - name: ai_category
+        description: "AI assigned ticket category"
+
+      - name: replies
+        description: "Ticket replies"
+
+      - name: reopens
+        description: "Ticket reopens"
+
+      - name: tags
+        description: "Ticket tags"
+
+      - name: zd_created_at_utc
+        description: "Timestamp for when the record was created in Zendesk"
+
+      - name: full_resolution_time_in_minutes
+        description: "Full resolution time in minutes"
+
+      - name: user_id
+        description: "User Id"
+
+      - name: is_public
+        description: "Boolean indicating if the ticket is public"
+
+      - name: zd_agent_id
+        description: Zendesk agent ID
+
+      - name: cstat_score
+        description: CStat score
+
+      - name: cstat_received_at_utc
+        description: Time the CStat score was received
+
+      - name: is_agent_active
+        description: Boolean indicating if the agent is active
+
+      - name: agent_alias
+        description: Agent alias
+
+      - name: agent_name
+        description: Agent name
+
+      - name: agent_email
+        description: Agent email
+
+      - name: is_requester_active
+        description: Boolean indicating if the requester is active
+
+      - name: requester_created_at_utc
+        description: Timestamp for when the requester was created
+
+      - name: requester_name
+        description: Requester name
+
+      - name: requester_email
+        description: Requester email
