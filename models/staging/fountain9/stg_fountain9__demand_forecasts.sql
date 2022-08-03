@@ -17,4 +17,39 @@ source as ( select * from {{ ref('demand_forecast_ss') }} where dbt_valid_to is 
     from source
 )
 
-select * from renamed
+,clean_sub_category as (
+    select
+        forecast_id 
+        ,forecast_date
+        ,fc_id
+        ,fc_name
+        ,category
+
+        /*** String cleaning is required since F9 changes the values of the data we send to them ***/
+        /*** this was causing a misatch when trying to join on sub_category since we use this as a part of our "key" ***/
+        ,case
+            when sub_category = 'ORGANIC 100% GRASS FED' then 'ORGANIC, 100% GRASS FED'
+            when sub_category = 'NOT SPECIFIED' then null
+            else sub_category
+         end as sub_category
+
+        ,cut_id
+        ,cut_name
+        ,inventory_classification
+        ,forecasted_sales
+    from renamed
+)
+
+select
+     {{ dbt_utils.surrogate_key(['forecast_date','fc_id','category','sub_category','cut_id']) }} as forecast_id
+    ,forecast_date
+    ,fc_id
+    ,fc_name
+    ,category
+    ,sub_category
+    ,cut_id
+    ,cut_name
+    ,inventory_classification
+    ,sum(forecasted_sales) as forecasted_sales
+from clean_sub_category
+group by 1,2,3,4,5,6,7,8,9

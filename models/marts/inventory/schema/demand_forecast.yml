@@ -6,6 +6,9 @@ models:
     columns:
       - name: forecast_combined_id
         description: A surrogate key created to provide a uniqueness test for both forecasting systems combined. Combines `forecast_date`, `fc_id`, `category`, `sub_category`, `cut_id`
+        tests:
+          - unique
+          - not_null
 
       - name: forecast_id
         description: "Surrogage combining different elements depending on system producing the forecasts"
