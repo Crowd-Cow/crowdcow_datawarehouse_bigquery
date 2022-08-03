@@ -26,8 +26,8 @@ models:
       - name: ticket_id
         description: Ticket ID
 
-      - name: score
-        description: Score
+      - name: csat_score
+        description: CStat Score
 
       - name: created_at_utc
         description: Timestamp for when the record was created

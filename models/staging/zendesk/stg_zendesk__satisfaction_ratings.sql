@@ -10,7 +10,7 @@ source as ( select * from {{ source('zendesk', 'satisfaction_rating') }} )
         ,group_id
         ,requester_id
         ,ticket_id
-        ,{{ clean_strings('score') }} as score
+        ,{{ clean_strings('score') }} as csat_score
         ,created_at as created_at_utc
         ,updated_at as updated_at_utc
         ,{{ clean_strings('comment') }} as comment
