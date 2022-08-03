@@ -1,0 +1,42 @@
+version: 2
+
+models:
+
+  - name: stg_zendesk__satisfaction_ratings
+    description: Staging model for Zendesk satisfaction ratings
+    columns:
+      - name: zendesk_satisfaction_rating_id
+        descripition: Zendesk satisfaction rating ID
+        tests:
+          - unique
+          - not_null
+
+      - name: zendesk_url
+        description: Zendesk URL
+
+      - name: assignee_id
+        description: Assignee ID
+
+      - name: group_id
+        description: Group ID
+
+      - name: requester_id
+        description: Requester ID
+
+      - name: ticket_id
+        description: Ticket ID
+
+      - name: score
+        description: Score
+
+      - name: created_at_utc
+        description: Timestamp for when the record was created
+      
+      - name: updated_at_utc
+        description: Timestamp for when the record was updated
+
+      - name: comment
+        description: Comment
+
+      - name: reason
+        description: Reason

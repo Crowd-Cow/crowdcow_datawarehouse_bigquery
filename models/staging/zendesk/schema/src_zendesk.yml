@@ -1,0 +1,123 @@
+version: 2
+
+sources:
+
+  - name: zendesk
+    database: raw
+    schema: zendesk
+    tables:
+      - name: satisfaction_rating
+        description: Zendesk satisfaction rating
+        columns:
+          - name: id
+            description: id
+          - name: url
+            description: url
+          - name: assignee_id
+            description: assignee_id
+          - name: group_id
+            description: group_id
+          - name: requester_id
+            description: requester_id
+          - name: ticket_id
+            description: ticket_id
+          - name: score
+            description: score
+          - name: created_at
+            description: created_at
+          - name: updated_at
+            description: updated_at
+          - name: comment
+            description: comment
+          - name: reason
+            description: reason
+          - name: _fivetran_synced
+            description: _fivetran_synced
+      
+      - name: user
+        description: Zendesk user
+        columns:
+        - name: id
+          description: id
+        - name: url
+          description: url
+        - name: name
+          description: name
+        - name: email
+          description: email
+        - name: created_at
+          description: created_at
+        - name: updated_at
+          description: updated_at
+        - name: time_zone
+          description: time_zone
+        - name: phone
+          description: phone
+        - name: locale_id
+          description: locale_id
+        - name: locale
+          description: locale
+        - name: organization_id
+          description: organization_id
+        - name: role
+          description: role
+        - name: verified
+          description: verified
+        - name: authenticity_token
+          description: authenticity_token
+        - name: external_id
+          description: external_id
+        - name: alias
+          description: alias
+        - name: active
+          description: active
+        - name: shared
+          description: shared
+        - name: shared_agent
+          description: shared_agent
+        - name: last_login_at
+          description: last_login_at
+        - name: two_factor_auth_enabled
+          description: two_factor_auth_enabled
+        - name: signature
+          description: signature
+        - name: details
+          description: details
+        - name: notes    
+          description: notes
+        - name: custom_role_id
+          description: custom_role_id
+        - name: moderator
+          description: moderator
+        - name: ticket_restriction
+          description: ticket_restriction
+        - name: only_private_comments
+          description: only_private_comments
+        - name: restricted_agent
+          description: restricted_agent
+        - name: suspended
+          description: suspended
+        - name: chat_only
+          description: chat_only
+        - name: remote_photo_url
+          description: remote_photo_url
+        - name: custom_playlist_manager_
+          description: custom_playlist_manager_
+        - name: custom_playlist_autoplay_
+          description: custom_playlist_autoplay_
+        - name: _fivetran_synced
+          description: _fivetran_synced
+        - name: iana_time_zone
+          description: iana_time_zone
+        - name: report_csv
+          description: report_csv
+        - name: default_group_id
+          description: default_group_id
+        - name: custom_txt_embeddable_zendesk_user_fields_system_embeddable_last_seen_title
+          description: custom_txt_embeddable_zendesk_user_fields_system_embeddable_last_seen_title
+        - name: custom_account_verified
+          description: custom_account_verified
+        - name: custom_followers_count
+          description: custom_followers_count
+        - name: custom_instagram_account
+          description: custom_instagram_account

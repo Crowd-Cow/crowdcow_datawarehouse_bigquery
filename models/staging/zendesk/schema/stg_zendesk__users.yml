@@ -1,0 +1,24 @@
+version: 2
+
+models:
+
+  - name: stg_zendesk__users
+    description: Zendesk users
+    columns:
+      - name: user_id
+        description: Zendesk user ID
+        tests:
+          - unique
+          - not_null
+
+      - name: user_name
+        description: User name
+
+      - name: user_email
+        description: User email
+
+      - name: is_active
+        description: Boolean indicating if the user is active or not
+
+      - name: created_at_utc
+        description: Timestamp for when the user was created
