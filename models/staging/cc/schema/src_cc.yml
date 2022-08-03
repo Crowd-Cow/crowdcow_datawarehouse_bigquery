@@ -329,6 +329,27 @@ sources:
           - name: autofill_type
             description: autofill_type
 
+      - name: autofill_replacement_sku_scores
+        description: autofill_replacement_sku_scores
+
+        columns:
+          - name: updated_at
+            description: updated_at
+          - name: score
+            description: score
+          - name: replacement_sku_id
+            descripiton: replacement_sku_id
+          - name: sku_id
+            description: sku_id
+          - name: created_at
+            description: created_at
+          - name: id
+            description: id
+          - name: _fivetran_deleted
+            description: _fivetran_deleted
+          - name: _fivetran_synced
+            description: _fivetran_synced
+      
       - name: bid_item_collection_assignments
         description: bid_item_collection_assignments
 
