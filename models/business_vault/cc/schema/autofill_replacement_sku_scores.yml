@@ -6,6 +6,9 @@ models:
     columns:
       - name: autofill_replacement_score_id
         description: Unique ID for the replacement score record
+        tests:
+          - unique
+          - not_null
 
       - name: autofill_replacement_score_key
         description: Key added by dbt snapshot process to uniquely identify the historical snapshot record
