@@ -130,7 +130,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(units.wagyu_units) as wagyu_units
         ,zeroifnull(units.bundle_units) as bundle_units
         ,zeroifnull(units.total_units) as total_units
-        ,zeroifnull(units.total_order_weight) as total_order_weight
+        ,zeroifnull(units.total_product_weight) as total_product_weight
         ,zeroifnull(units.pct_beef) as pct_beef
         ,zeroifnull(units.pct_bison) as pct_bison
         ,zeroifnull(units.pct_chicken) as pct_chicken

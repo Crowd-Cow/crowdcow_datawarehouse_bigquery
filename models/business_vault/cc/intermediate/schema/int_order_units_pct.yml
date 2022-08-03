@@ -64,7 +64,7 @@ models:
       - name: total_units
         description: "Total units in an order"
 
-      - name: total_sku_weight
+      - name: total_product_weight
         desription: "Total weight of all items in an order"
 
       - name: beef_revenue

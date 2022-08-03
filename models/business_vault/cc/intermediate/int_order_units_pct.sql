@@ -35,7 +35,7 @@ order_item_details as ( select * from {{ ref('order_item_details') }} )
         ,sum(iff(modified_category = 'WAGYU',sku_quantity,0)) as wagyu_units
         ,sum(iff(modified_category = 'BUNDLE',sku_quantity,0)) as bundle_units
         ,sum(sku_quantity) as total_units
-        ,sum(total_sku_weight) as total_order_weight
+        ,sum(total_sku_weight) as total_product_weight
         
         ,sum(iff(modified_category = 'BEEF',sku_net_product_revenue,0)) as beef_revenue
         ,sum(iff(modified_category = 'BISON',sku_net_product_revenue,0)) as bison_revenue

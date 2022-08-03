@@ -355,7 +355,7 @@ models:
       - name: total_units
         description: "Total units (bundles are considered 1 unit)"
 
-      - name: total_order_weight
+      - name: total_product_weight
         description: Total weight of all items in an order
 
       - name: pct_beef
