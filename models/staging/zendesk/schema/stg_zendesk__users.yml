@@ -16,6 +16,9 @@ models:
 
       - name: user_email
         description: User email
+      
+      - name: user_alias
+        description: User alias
 
       - name: is_active
         description: Boolean indicating if the user is active or not
