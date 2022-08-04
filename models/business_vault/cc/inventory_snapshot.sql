@@ -41,7 +41,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,delivered_at_utc
         ,moved_to_picking_at_utc
         ,dbt_valid_from::date as dbt_valid_from
-        ,coalesce(dbt_valid_to,sysdate())::date + 1 as dbt_valid_to
+        ,coalesce(dbt_valid_to::date,sysdate()::date + 1) as dbt_valid_to
         ,row_number() over(partition by sku_box_id, dbt_valid_from::date order by dbt_valid_from desc) as rn
     from sku_box
     qualify rn = 1
