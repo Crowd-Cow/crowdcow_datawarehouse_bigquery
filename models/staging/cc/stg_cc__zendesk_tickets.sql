@@ -7,7 +7,7 @@ source as ( select * from {{ source('cc', 'zendesk_tickets') }} where not _fivet
         id as zendesk_id
         ,zeroifnull(agent_wait_time_in_minutes) as agent_wait_time_in_minutes
         ,zd_updated_at as zd_updated_at_utc
-        ,updated_at as update_at_utc
+        ,updated_at as updated_at_utc
         ,{{ clean_strings('status') }} as zendesk_status
         ,ticket_id
         ,assignee_id

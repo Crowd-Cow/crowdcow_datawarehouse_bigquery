@@ -16,7 +16,7 @@ models:
       - name: zd_updated_at_utc
         description: "Timestamp for when Zendesk was updated"
 
-      - name: update_at_utc
+      - name: updated_at_utc
         description: "Timestamp for when the record was updated"
 
       - name: zendesk_status
