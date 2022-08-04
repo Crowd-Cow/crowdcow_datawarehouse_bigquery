@@ -7,7 +7,7 @@
 with
 
 /*** Only starting with dates after 2021-10-28 since that is when we started fully snapshotting the `sku_boxes` data in the new model ***/
-dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} where calendar_date >= '2021-10-28' and calendar_date < sysdate()::date )
+dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} where calendar_date >= '2021-10-28' and calendar_date < sysdate()::date + 1 )
 ,sku_box as ( select * from {{ ref('stg_cc__sku_boxes') }} )
 ,fc_location as ( select * from {{ ref('stg_cc__fc_locations') }} )
 ,fc as ( select * from {{ ref('fcs') }} )
