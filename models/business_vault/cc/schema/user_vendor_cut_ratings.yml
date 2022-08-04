@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: user_vendor_cut_ratings
+    description: Business logic model for user vendor cut ratings
+    columns:
+      - name: user_vendor_cut_rating_id
+        description: User vendor cut rating ID
+
+      - name: sku_vendor_id
+        description: SKU vendor ID
+
+      - name: created_at_utc
+        description: Timestamp for when the record was created
+
+      - name: notes
+        description: Customer rating comments
+
+      - name: rating
+        description: 1-5 star rating value
+
+      - name: updated_at_utc
+        description: Timestamp for when the record was updated
+
+      - name: cut_id
+        description: Cut ID
+
+      - name: user_id
+        description: User ID
+
+      - name: ai_processed_at_utc
+        description: Timestamp for when AI processed the rating
+
+      - name: ai_notes
+        description: AI generated notes
+
+      - name: ai_sort_order
+        description: AI sort order
+
+      - name: cut_key
+        description: Key that can be used to join to cut information at the time the rating was created
+
+      - name: sku_vendor_name
+        description: SKU vendor name
