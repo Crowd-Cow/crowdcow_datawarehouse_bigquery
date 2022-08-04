@@ -8,6 +8,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,units as ( select * from {{ ref('int_order_units_pct') }} )
 ,order_shipment as ( select * from {{ ref('int_order_shipments') }} )
 ,order_reschedule as ( select * from {{ ref('int_order_reschedules') }} )
+,order_promo_redeemed as ( select * from {{ ref('int_partner_promo_redemptions') }} )
 
 ,order_joins as (
     select
@@ -19,6 +20,8 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.fc_id
         ,orders.visit_id
         ,orders.stripe_charge_id
+        ,order_promo_redeemed.partner_id
+        ,order_promo_redeemed.partner_key
         ,{{ get_join_key('stg_cc__fcs','fc_key','fc_id','orders','fc_id','order_updated_at_utc') }} as fc_key
         ,orders.order_identifier
         ,orders.order_current_state
@@ -226,6 +229,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,order_reschedule.occurred_at_utc as order_reschedule_occurred_at_utc
         ,order_reschedule.old_scheduled_fulfillment_date
         ,order_reschedule.new_scheduled_fulfillment_date
+        ,order_promo_redeemed.redeemed_at_utc as promo_redeemed_at_utc
         
     from orders
         left join order_revenue on orders.order_id = order_revenue.order_id
@@ -235,6 +239,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         left join units on orders.order_id = units.order_id
         left join order_shipment on orders.order_id = order_shipment.order_id
         left join order_reschedule on orders.order_id = order_reschedule.order_id
+        left join order_promo_redeemed on orders.order_id = order_promo_redeemed.order_id
     
     /**** Removing these order types because they are just shell orders that provide no data value ****/
     /**** Children orders contain all the necessary information for revenue, addresses, dates, etc for the order ****/

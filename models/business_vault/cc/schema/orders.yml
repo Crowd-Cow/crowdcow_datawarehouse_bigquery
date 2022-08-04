@@ -31,6 +31,12 @@ models:
       - name: stripe_charge_id
         description: "Stripe charge ID that can be used to link back to the `stripe.charges` table"
 
+      - name: partner_id
+        description: Partner ID
+
+      - name: partner_key
+        description: Key used to join partner information to orders at the time the promo code was redeemed
+
       - name: fc_key
         description: The FC key that can be used to join to FCs to get the appropriate historical information for the FC at the time the order was created
 
@@ -489,4 +495,7 @@ models:
 
       - name: new_scheduled_fulfillment_date
         description: Timestamp for the new scheduled fulfillment date
+
+      - name: promo_redeemed_at_utc
+        description: Timestamp for when the promo code was redeemed
 

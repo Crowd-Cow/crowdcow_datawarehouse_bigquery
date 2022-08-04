@@ -1,0 +1,20 @@
+version: 2
+
+models: 
+  - name: int_partner_promo_redemptions
+    descriptioN: Intermediate model to get the most recent redeemed promo for an order
+    columns:
+      - name: order_id
+        description: Order ID
+        tests:
+          - unique
+          - not_null
+
+      - name: partner_id
+        description: Partner ID
+      
+      - name: created_at_utc
+        description: Timestamp for when the record was created
+
+      - name: redeemed_at_utc
+        description: Timestamp for when the promo was redeemed
