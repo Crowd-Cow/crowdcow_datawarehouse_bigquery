@@ -15,4 +15,7 @@ model:
         tests:
           - dbt_utils.expression_is_true:
               expression: "> 0"
+
+      - name: standard_cost_added_date
+        description: Date the standard SKU cost was added to the spreadsheet
         

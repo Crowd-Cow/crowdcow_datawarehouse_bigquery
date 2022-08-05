@@ -187,4 +187,7 @@ sources:
 
           - name: date_added
             description: Defaults to `today()` in the spreadsheet
+
+          - name: sku_vendor_id
+            description: SKU vendor ID
             

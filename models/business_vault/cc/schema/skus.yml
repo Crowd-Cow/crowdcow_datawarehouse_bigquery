@@ -46,6 +46,9 @@ models:
       - name: market_place_cost_usd
         description: "The marketplace cost of a SKU "
 
+      - name: standard_sku_cost_usd
+        description: Static standard cost maintained on a spreadsheet by finance. Defaults to `owned_sku_cost_usd` if standard cost doesn't exist
+
       - name: sku_cost_usd
         description: "Either the owned SKU cost or the marketplace SKU cost depending on the value of the `is_marketplace` field"
 
@@ -153,3 +156,6 @@ models:
 
       - name: adjusted_dbt_valid_to
         description: "`dbt_valid_to` date adjusted to '2999-01-01' for the current historical record (`dbt_valid_to is null`). This allows joins to other tables that might have dates that are in the future that need information from the current historical record"
+
+      - name: standard_cost_added_date
+        description: Date the static standard cost was added to the tracking spreadsheet. Defaults to `dbt_valid_from` if it doesn't exist

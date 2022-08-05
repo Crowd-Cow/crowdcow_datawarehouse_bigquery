@@ -28,7 +28,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku.sku_weight
         ,sku.owned_sku_cost_usd
         ,sku.marketplace_cost_usd
-        ,standard_sku_cost.standard_sku_cost_usd
+        ,coalesce(standard_sku_cost.standard_sku_cost_usd,sku.owned_sku_cost_usd) as standard_sku_cost_usd
         ,sku.platform_fee_usd
         ,sku.fulfillment_fee_usd
         ,sku.payment_processing_fee_usd
@@ -63,6 +63,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku.dbt_valid_to
         ,sku.adjusted_dbt_valid_from
         ,sku.adjusted_dbt_valid_to
+        ,coalesce(standard_sku_cost.standard_cost_added_date,sku.dbt_valid_from::date) as standard_cost_added_date
     from sku
         left join cut on sku.cut_id = cut.cut_id
             and sku.created_at_utc >= cut.adjusted_dbt_valid_from
@@ -143,6 +144,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku_joins.dbt_valid_to
         ,sku_joins.adjusted_dbt_valid_from
         ,sku_joins.adjusted_dbt_valid_to
+        ,sku_joins.standard_cost_added_date
     from sku_joins
         left join ais on sku_joins.ais_id = ais.ais_id
         left join inventory_classification on sku_joins.inventory_classification_id = inventory_classification.inventory_classification_id
