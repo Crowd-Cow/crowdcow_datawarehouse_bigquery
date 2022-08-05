@@ -30,6 +30,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
         ,ordered_items.bid_item_id
         ,ordered_items.sku_id
         ,ordered_items.sku_key
+        ,ordered_items.sku_key as bid_sku_key
 
         /*** The SKU box and lot information for an order item is not known until the order is packed. ***/
         ,null::int as sku_box_id
@@ -155,6 +156,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
     ,bid_item_id
     ,sku_id
     ,sku_key
+    ,bid_sku_key
     ,sku_box_id
     ,sku_box_key
     ,sku_owner_id
