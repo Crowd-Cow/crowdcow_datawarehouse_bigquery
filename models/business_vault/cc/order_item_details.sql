@@ -52,6 +52,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
         ,false as is_item_packed
         ,false as was_manually_changed
         ,ordered_items.created_at_utc
+        ,ordered_items.bid_created_at_utc
         ,ordered_items.updated_at_utc
         ,null::timestamp as packed_created_at_utc      
 
@@ -184,6 +185,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
     ,is_marketplace
     ,is_single_sku_bid_item
     ,created_at_utc
+    ,bid_created_at_utc
     ,updated_at_utc
     ,packed_created_at_utc
 from calculate_sku_revenue

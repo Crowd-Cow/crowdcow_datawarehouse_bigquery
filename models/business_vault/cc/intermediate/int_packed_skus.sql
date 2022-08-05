@@ -37,6 +37,7 @@ order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
         ,bid.bid_quantity
         ,bid.promotion_id
         ,bid.bid_item_name
+        ,bid.created_at_utc as bid_created_at_utc
         ,zeroifnull(bid.bid_list_price_usd) as bid_list_price_usd
         ,zeroifnull(bid.bid_gross_product_revenue) as bid_gross_product_revenue
         ,zeroifnull(bid.item_member_discount) as item_member_discount
@@ -103,6 +104,7 @@ select
     ,true as is_item_packed
     ,was_manually_changed
     ,created_at_utc
+    ,bid_created_at_utc
     ,updated_at_utc
     ,packed_created_at_utc
 from get_box_lot_details
