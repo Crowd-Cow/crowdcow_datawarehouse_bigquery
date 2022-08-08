@@ -108,7 +108,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
 ,sad_cow_received_sku as (
     select
         lot_number
-        ,sad_cow_receiving.sku_key
+        ,sad_cow_receiving.sku_id
         ,sum(sku_quantity) as sad_cow_received_quantity
     from sad_cow_receiving
         left join current_lot on sad_cow_receiving.lot_id = current_lot.lot_id
@@ -122,7 +122,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,sad_cow_received_sku.sad_cow_received_quantity
     from get_invoice_details
         left join sad_cow_received_sku on get_invoice_details.lot_number = sad_cow_received_sku.lot_number
-                                    and get_invoice_details.sku_key = sad_cow_received_sku.sku_key
+                                    and get_invoice_details.sku_id = sad_cow_received_sku.sku_id
 )
 
 ,final_calcs as (
@@ -175,7 +175,7 @@ from final_calcs
 union all
 
 select distinct
-        md5(cast(coalesce(cast(sad_cow_no_sku.lot_number as varchar), '') || '-' || coalesce(cast(null as varchar), '') as varchar)) as order_received_id
+        {{ dbt_utils.surrogate_key(['lot_number',null]) }} as order_received_id as order_received_id
         ,sad_cow_no_sku.lot_number
         ,null as sku_id
         ,null as sku_key
@@ -199,7 +199,6 @@ select distinct
         ,current_lot.delivered_at_utc
 from sad_cow_no_sku
         left join ordered_item on sad_cow_no_sku.lot_number = ordered_item.lot_number
-        left join current_lot on sad_cow_no_sku.lot_number = current_lot.lot_number
         left join vendor on current_lot.owner_id = vendor.sku_vendor_id
 
 )
