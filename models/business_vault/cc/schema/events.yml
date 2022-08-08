@@ -126,4 +126,10 @@ models:
 
       - name: scroll_depth
         description: Page scroll depth. number represent a percent of the page scrolled (e.g. 10 = 10%)
+
+      - name: from_filter
+        description: JSON object containing initial filter value used for the event
+
+      - name: to_filter
+        description: JSON object containing the changes filters/filter values for the event
         
