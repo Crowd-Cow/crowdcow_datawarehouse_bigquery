@@ -9,6 +9,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
 ,invoice as ( select distinct invoice_key,bill_amount,bill_description from {{ ref('acumatica_invoices') }} )
 ,invoice_lot as ( select distinct invoice_key,bill_amount,bill_description from {{ ref('acumatica_invoices') }} where regexp_like(bill_description,'[0-9]{4}') )
 ,approved_invoice as ( select * from {{ ref('stg_gs__approved_invoice_lot_mapping') }} )
+,sad_cow_receiving as ( select * from {{ ref('sad_cow_entries') }} where sad_cow_entry_type = 'RECEIVING')
 
 ,get_ordered_detail as (
     select
@@ -104,6 +105,26 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         left join approved_invoice_details on calc_sku_lot_costs.lot_number = approved_invoice_details.lot_number
 )
 
+,sad_cow_received_sku as (
+    select
+        lot_number
+        ,sad_cow_receiving.sku_id
+        ,sum(sku_quantity) as sad_cow_received_quantity
+    from sad_cow_receiving
+        left join current_lot on sad_cow_receiving.lot_id = current_lot.lot_id
+    where sad_cow_receiving.sku_id is not null
+    group by 1, 2
+)
+
+,bring_in_sad_cow as (
+    select
+        get_invoice_details.*
+        ,sad_cow_received_sku.sad_cow_received_quantity
+    from get_invoice_details
+        left join sad_cow_received_sku on get_invoice_details.lot_number = sad_cow_received_sku.lot_number
+                                    and get_invoice_details.sku_id = sad_cow_received_sku.sku_id
+)
+
 ,final_calcs as (
     select
         *
@@ -111,10 +132,27 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,round(
             div0(total_sku_cost_received,total_lot_cost_received) * total_invoice_usd
         ,2) as total_sku_cost_invoiced
-    from get_invoice_details
+    from bring_in_sad_cow
 )
 
-select distinct
+,sad_cow_no_sku as (
+    select
+        current_lot.lot_number
+        ,sad_cow_receiving.fc_id
+        ,sum(sad_cow_receiving.sku_quantity) as sad_cow_received_quantity
+        ,current_lot.delivered_at_utc
+        ,ordered_item.pipeline_order_id
+        ,ordered_item.processor_out_name as processor_name
+        ,vendor.is_marketplace
+    from sad_cow_receiving
+        left join current_lot on sad_cow_receiving.lot_id = current_lot.lot_id
+        left join ordered_item on current_lot.lot_number = ordered_item.lot_number
+        left join vendor on current_lot.owner_id = vendor.sku_vendor_id
+    where sad_cow_receiving.sku_id is null
+    group by 1, 2, 4, 5, 6, 7
+)
+
+,unioned as ( select distinct
     {{ dbt_utils.surrogate_key(['lot_number','sku_id']) }} as order_received_id
     ,lot_number
     ,sku_id
@@ -127,6 +165,7 @@ select distinct
     ,sku_weight_ordered
     ,total_sku_cost_ordered
     ,total_lot_cost_ordered
+    ,sad_cow_received_quantity
     ,quantity_received
     ,sku_weight_received
     ,total_sku_cost_received
@@ -137,4 +176,35 @@ select distinct
     ,is_marketplace
     ,delivered_at_utc
 from final_calcs
+
+union all
+
+select distinct
+        {{ dbt_utils.surrogate_key(['lot_number','null']) }} as order_received_id
+        ,sad_cow_no_sku.lot_number
+        ,null::int as sku_id
+        ,null::varchar as sku_key
+        ,fc_id
+        ,pipeline_order_id
+        ,processor_name
+        ,null::float as cost_per_unit_usd
+        ,null::int as quantity_ordered
+        ,null::float as sku_weight_ordered
+        ,null::float as total_sku_cost_ordered
+        ,null::float as total_lot_cost_ordered
+        ,sad_cow_received_quantity
+        ,null::int as quantity_received
+        ,null::float as sku_weight_received
+        ,null::float as total_sku_cost_received
+        ,null::float as total_lot_cost_received
+        ,null::float as total_sku_cost_invoiced
+        ,null::float as total_invoice_usd
+        ,null::float as pct_of_cost_received
+        ,is_marketplace
+        ,delivered_at_utc
+from sad_cow_no_sku
+)
+
+select *
+from unioned
 where lot_number <> '0000'
