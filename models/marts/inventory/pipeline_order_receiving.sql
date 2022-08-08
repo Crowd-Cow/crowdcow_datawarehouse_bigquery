@@ -139,12 +139,17 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
     select
         current_lot.lot_number
         ,sad_cow_receiving.fc_id
-        ,sum(sku_quantity) as sad_cow_received_quantity
+        ,sum(sad_cow_receiving.sku_quantity) as sad_cow_received_quantity
         ,current_lot.delivered_at_utc
+        ,ordered_item.pipeline_order_id
+        ,ordered_item.processor_out_name as processor_name
+        ,vendor.is_marketplace
     from sad_cow_receiving
         left join current_lot on sad_cow_receiving.lot_id = current_lot.lot_id
-    where sku_id is null
-    group by 1, 2, 4
+        left join ordered_item on current_lot.lot_number = ordered_item.lot_number
+        left join vendor on current_lot.owner_id = vendor.sku_vendor_id
+    where sad_cow_receiving.sku_id is null
+    group by 1, 2, 4, 5, 6, 7
 )
 
 ,unioned as ( select distinct
@@ -175,32 +180,29 @@ from final_calcs
 union all
 
 select distinct
-        {{ dbt_utils.surrogate_key(['lot_number',null]) }} as order_received_id as order_received_id
+        {{ dbt_utils.surrogate_key(['lot_number','null']) }} as order_received_id
         ,sad_cow_no_sku.lot_number
-        ,null as sku_id
-        ,null as sku_key
-        ,sad_cow_no_sku.fc_id
-        ,ordered_item.pipeline_order_id
-        ,ordered_item.processor_out_name as processor_name
-        ,null as cost_per_unit_usd
-        ,null as quantity_ordered
-        ,null as sku_weight_ordered
-        ,null as total_sku_cost_ordered
-        ,null as total_lot_cost_ordered
+        ,null::int as sku_id
+        ,null::varchar as sku_key
+        ,fc_id
+        ,pipeline_order_id
+        ,processor_name
+        ,null::float as cost_per_unit_usd
+        ,null::int as quantity_ordered
+        ,null::float as sku_weight_ordered
+        ,null::float as total_sku_cost_ordered
+        ,null::float as total_lot_cost_ordered
         ,sad_cow_received_quantity
-        ,null as quantity_received
-        ,null as sku_weight_received
-        ,null as total_sku_cost_received
-        ,null as total_lot_cost_received
-        ,null as total_sku_cost_invoiced
-        ,null as total_invoice_usd
-        ,null as pct_of_cost_received
-        ,vendor.is_marketplace
-        ,current_lot.delivered_at_utc
+        ,null::int as quantity_received
+        ,null::float as sku_weight_received
+        ,null::float as total_sku_cost_received
+        ,null::float as total_lot_cost_received
+        ,null::float as total_sku_cost_invoiced
+        ,null::float as total_invoice_usd
+        ,null::float as pct_of_cost_received
+        ,is_marketplace
+        ,delivered_at_utc
 from sad_cow_no_sku
-        left join ordered_item on sad_cow_no_sku.lot_number = ordered_item.lot_number
-        left join vendor on current_lot.owner_id = vendor.sku_vendor_id
-
 )
 
 select *
