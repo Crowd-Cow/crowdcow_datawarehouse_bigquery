@@ -62,6 +62,8 @@ events as (
         ,feedback
         ,selected_reason
         ,scroll_depth
+        ,from_filter
+        ,to_filter
     from events
 )
 
