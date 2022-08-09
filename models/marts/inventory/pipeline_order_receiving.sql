@@ -116,6 +116,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
     group by 1, 2
 )
 
+
 ,bring_in_sad_cow as (
     select
         get_invoice_details.*
@@ -135,18 +136,26 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
     from bring_in_sad_cow
 )
 
+,processor_info as (
+    select distinct 
+        lot_number
+        ,pipeline_order_id
+        ,processor_out_name as processor_name
+    from ordered_item
+)
+
 ,sad_cow_no_sku as (
     select
         current_lot.lot_number
         ,sad_cow_receiving.fc_id
         ,sum(sad_cow_receiving.sku_quantity) as sad_cow_received_quantity
         ,current_lot.delivered_at_utc
-        ,ordered_item.pipeline_order_id
-        ,ordered_item.processor_out_name as processor_name
+        ,processor_info.pipeline_order_id
+        ,processor_info.processor_name
         ,vendor.is_marketplace
     from sad_cow_receiving
         left join current_lot on sad_cow_receiving.lot_id = current_lot.lot_id
-        left join ordered_item on current_lot.lot_number = ordered_item.lot_number
+        left join processor_info on current_lot.lot_number = processor_info.lot_number
         left join vendor on current_lot.owner_id = vendor.sku_vendor_id
     where sad_cow_receiving.sku_id is null
     group by 1, 2, 4, 5, 6, 7
