@@ -10,8 +10,8 @@ models:
       - name: order_id
         description: "Order ID"
 
-      - name: order_type
-        description: Order type used for filtering
+      - name: is_rastellis
+        description: Boolean indicating if the order is a Rastelli's fulfillment order
 
       - name: user_id
         description: "User ID"

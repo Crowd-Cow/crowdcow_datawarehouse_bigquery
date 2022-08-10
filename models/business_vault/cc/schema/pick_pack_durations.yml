@@ -10,8 +10,8 @@ models:
           - unique
           - not_null
 
-      - name: order_type
-        description: Order type of the order used for filtering
+      - name: is_rastellis
+        description: Boolean indicating if the order is a Rastelli's fulfillment order
 
       - name: user_id
         description: User ID of the person picking/packing

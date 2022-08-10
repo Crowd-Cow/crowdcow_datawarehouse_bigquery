@@ -81,6 +81,7 @@ source as ( select * from {{ source('cc', 'orders') }} where not _fivetran_delet
     ,last_changed_at as order_last_changed_at_utc
     ,checkout_completed_at as order_checkout_completed_at_utc
     ,{{ clean_strings('order_type') }} as order_type
+    ,order_type = 'RFG' as is_rastellis
     ,{{ clean_strings('where_order_placed') }} as where_order_placed
     ,shipments_computed_at as order_shipments_computed_at_utc
     ,next_box_notified_at as order_next_box_notified_at_utc

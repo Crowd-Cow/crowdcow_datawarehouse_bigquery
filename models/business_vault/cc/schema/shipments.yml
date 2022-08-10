@@ -34,8 +34,8 @@ models:
       - name: shipment_token
         description: "Shipment token"
 
-      - name: order_type
-        description: Order type used for filtering
+      - name: is_rastellis
+        description: Boolean indicating if this shipment was for a Rastelli's fulfillment order
 
       - name: shipment_tracking_code
         description: "Shipment tracking code"

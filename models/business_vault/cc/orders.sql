@@ -76,6 +76,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.order_bids_count
         ,zeroifnull(order_shipment.shipment_count) as shipment_count
         ,zeroifnull(order_reschedule.reschedule_count) as reschedule_count
+        ,orders.is_rastellis
         ,flags.has_free_shipping
         ,flags.is_ala_carte_order
         ,flags.is_membership_order
@@ -91,7 +92,6 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,flags.has_been_lost
         ,flags.is_fulfillment_risk
         ,flags.is_rescheduled
-        ,flags.is_rastellis
         ,ranks.overall_order_rank
         ,ranks.completed_order_rank
         ,ranks.paid_order_rank

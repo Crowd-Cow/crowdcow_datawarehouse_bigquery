@@ -5,7 +5,7 @@ order_survey as ( select * from {{ ref('stg_cc__post_order_survey_results') }} )
 select
     post_order_survey_id
     ,order_id
-    ,{{ get_order_type('order_survey') }} as order_type
+    ,{{ get_order_type('order_survey') }} as is_rastellis
     ,user_id
     ,survey_monkey_response_id
     ,age
