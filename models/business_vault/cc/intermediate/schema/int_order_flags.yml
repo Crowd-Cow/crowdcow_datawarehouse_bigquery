@@ -63,3 +63,6 @@ models:
 
       - name: is_rescheduled
         description: Boolean indicating if the order has been rescheduled at least once
+
+      - name: is_rastellis
+        description: Boolean indicating if the orer is a Rastelli's fulfillment order

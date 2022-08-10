@@ -91,6 +91,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,flags.has_been_lost
         ,flags.is_fulfillment_risk
         ,flags.is_rescheduled
+        ,flags.is_rastellis
         ,ranks.overall_order_rank
         ,ranks.completed_order_rank
         ,ranks.paid_order_rank
