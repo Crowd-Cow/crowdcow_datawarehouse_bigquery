@@ -10,6 +10,9 @@ models:
       - name: order_id
         description: "Order ID"
 
+      - name: order_type
+        description: Order type used for filtering
+
       - name: user_id
         description: "User ID"
 

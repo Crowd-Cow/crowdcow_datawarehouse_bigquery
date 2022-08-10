@@ -17,6 +17,7 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
 ,get_order_delivery_address as (
     select
         get_fc_key.*
+        ,order_delivery.order_type
         ,order_delivery.order_delivery_state
         ,order_delivery.order_delivery_postal_code
         ,order_delivery.coolant_weight_in_pounds
@@ -48,6 +49,7 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
         ,get_order_delivery_address.order_id
         ,get_order_delivery_address.fc_location_id
         ,get_order_delivery_address.shipment_token
+        ,get_order_delivery_address.order_type
         ,get_order_delivery_address.shipment_tracking_code
         ,get_order_delivery_address.shipment_postage_carrier
         

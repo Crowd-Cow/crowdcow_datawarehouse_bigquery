@@ -34,6 +34,9 @@ models:
       - name: shipment_token
         description: "Shipment token"
 
+      - name: order_type
+        description: Order type used for filtering
+
       - name: shipment_tracking_code
         description: "Shipment tracking code"
 
