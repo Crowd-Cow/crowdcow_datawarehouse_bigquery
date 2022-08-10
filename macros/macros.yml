@@ -25,6 +25,13 @@ macros:
         - name: column_name
           description: "The column name that contains the string value that needs to be cleaned"
 
+  - name: get_order_type
+    description: Gets the order type for a given order id
+    arguments:
+      - name: table_name
+        type: string
+        description: Table name of the table that contians the `order_id` to be looked up in the `business_vault.orders` table
+
   - name: setup_dev_env
     description: '{{ doc("setup_dev_env") }}'
     arguments:
