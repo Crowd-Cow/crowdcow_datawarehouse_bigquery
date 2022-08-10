@@ -7,32 +7,20 @@ models:
       - name: event_id
         description: Event ID
 
-      - name: occurred_at_utc
-        description: Timestamp for when the filter event occurred
-
       - name: visit_id
         description: Visit ID
 
       - name: user_id
         description: User ID
 
-      - name: event_name
-        description: Event name
+      - name: occurred_at_utc
+        description: Timestamp for when the filter event occurred
 
-      - name: did_filter_key_change
-        description: Boolean indicating if a new filter item was used
+      - name: filter_action
+        description: Describes whether the filter was added or modified by the user
 
-      - name: did_filter_value_change
-        description: Boolean indicating if a new filter value was used
+      - name: filter_name
+        description: The filter item being used
 
-      - name: from_filter_key
-        description: The inital filter item used
-      
-      - name: from_filter_value
-        description: The value set for the initial filter used
-
-      - name: to_filter_key
-        description: The name of existing or changed filter item used
-
-      - name: to_filter_value
-        description: The value set for the filter used. Either new or unchanged
+      - name: filter_value
+        description: The value setting of the filter
