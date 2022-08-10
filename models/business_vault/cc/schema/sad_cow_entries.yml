@@ -58,6 +58,9 @@ models:
       - name: photo_urls
         description: "Photos URLS"
 
+      - name: is_rastellis
+        description: Boolean indicating if this SKU vendor is a Ratelli's fulfillment vendor
+
       - name: lot_key
         description: Key that can be used to join to lots to get information about the lot at the time the entry was created
 
