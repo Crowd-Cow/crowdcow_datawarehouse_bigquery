@@ -3,7 +3,7 @@
     (
         select max( is_rastellis ) as is_rastellis
             from staging.stg_cc__orders
-            where orders.order_id = {{ table_name }}.order_id
+            where stg_cc__orders.order_id = {{ table_name }}.order_id
     )
   
 {%- endmacro -%}
