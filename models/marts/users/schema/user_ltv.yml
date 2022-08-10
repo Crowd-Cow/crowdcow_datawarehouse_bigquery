@@ -13,6 +13,9 @@ models:
           - unique
           - not_null
 
+      - name: is_rastellis
+        description: Boolean indicating if this order is a Rastelli's fulfillment order
+
       - name: customer_cohort_months
         description: The number of months from the customer's first paid/uncancelled order to the current paid/uncancelled order
 

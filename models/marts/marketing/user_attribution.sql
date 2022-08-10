@@ -22,17 +22,18 @@ visits as ( select * from {{ ref('visits') }} )
         join users on users.attributed_visit_id = visits.visit_id
 )
 
-select attribution_details.visit_id
-,attribution_details.started_at_utc
-,attribution_details.user_id
-,attribution_details.utm_source
-,attribution_details.utm_medium
-,attribution_details.utm_campaign
-,attribution_details.utm_content
-,attribution_details.utm_term
-,attribution_details.channel
-,attribution_details.sub_channel
-,attribution_details.visit_landing_page
-,attribution_details.visit_landing_page_path
-,{{ dbt_utils.surrogate_key( ['started_at_utc_date','campaign_grouping'] ) }} as campaign_key
+select 
+    attribution_details.visit_id
+    ,attribution_details.started_at_utc
+    ,attribution_details.user_id
+    ,attribution_details.utm_source
+    ,attribution_details.utm_medium
+    ,attribution_details.utm_campaign
+    ,attribution_details.utm_content
+    ,attribution_details.utm_term
+    ,attribution_details.channel
+    ,attribution_details.sub_channel
+    ,attribution_details.visit_landing_page
+    ,attribution_details.visit_landing_page_path
+    ,{{ dbt_utils.surrogate_key( ['started_at_utc_date','campaign_grouping'] ) }} as campaign_key
 from attribution_details

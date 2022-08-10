@@ -125,6 +125,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,case
             when user_roles_for_access is not null then 'EMPLOYEE'
             when user_email like '%@CROWDCOW.COM' and user_email not like 'TEMPORARY%CROWDCOW.COM' then 'INTERNAL'
+            when is_rastellis then 'RASTELLIS'
             when user_email like 'TEMPORARY%CROWDCOW.COM' then 'GUEST'
             when user_type = 'C' then 'CUSTOMER'
             when user_type = 'P' then 'PLACEHOLDER'
