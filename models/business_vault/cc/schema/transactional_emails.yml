@@ -1,0 +1,59 @@
+version: 2
+
+models:
+  - name: transactional_emails
+    description: Business logic table for transactional emails sent
+    columns:
+      - name: user_mail_log_id
+        description: User mail log ID
+
+      - name: created_at_utc
+        description: Timestamp for when the record was created
+
+      - name: to_email
+        description: To email address
+
+      - name: first_clicked_url
+        description: First URL clicked on by the user
+
+      - name: first_clicked_at_utc
+        description: Timestamp for when the user first clicked on the email
+
+      - name: to_user_id
+        description: User ID of the user the email was sent to
+
+      - name: user_mail_log_token
+        description: User mail log token
+
+      - name: first_opened_at_utc
+        description: Timestamp for when the email was first opened
+
+      - name: from_email
+        description: From email address
+
+      - name: event_id
+        description: Event ID
+
+      - name: reply_to_email
+        description: Reply to email address
+
+      - name: first_clicked_anchor
+        description: First anchor clicked by the user
+
+      - name: from_user_id
+        description: User ID for the user the email was from
+
+      - name: order_id
+        description: Order ID
+
+      - name: email_sent_at_utc
+        description: Timestamp for when the email was sent
+
+      - name: updated_at_utc
+        description: Timestamp for when the record was updated
+
+      - name: email_type
+        description: Email type
+
+      - name: email_subject
+        description: Subject line of the email that was sent
