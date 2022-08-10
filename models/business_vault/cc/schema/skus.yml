@@ -109,6 +109,9 @@ models:
       - name: is_marketplace
         description: "Boolean indicating if this SKU is a marketplace item"
 
+      - name: is_rastellis
+        description: Boolean indicating if this SKU is a Rastelli's fulfillment item
+
       - name: is_always_in_stock
         description: "Boolean indicating if this SKU is considered an Always in Stock SKU"
 

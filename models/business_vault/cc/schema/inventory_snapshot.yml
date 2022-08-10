@@ -112,6 +112,12 @@ models:
       - name: is_destroyed
         descripiton: "Boolean indicating if the SKU box has been marked as destroyed"
 
+      - name: is_marketplace
+        description: Boolean indicating if the SKU box owner is a marketplace vendor
+
+      - name: is_rastellis
+        description: Boolean indicating if the SKU box owner is Rastelli's fulfillment
+
       - name: created_at_utc
         description: "Timestamp for when the SKU box record was created UTC"
 

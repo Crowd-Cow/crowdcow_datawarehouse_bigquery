@@ -115,6 +115,7 @@ inventory_log as ( select * from {{ ref('stg_cc__inventory_logs') }} )
         ,vendor.sku_vendor_name 
         ,sku_owner.sku_vendor_name as sku_owner_name
         ,sku_owner.is_marketplace
+        ,sku_owner.is_rastellis
     from union_logs
         left join sku_vendor as vendor on union_logs.sku_vendor_id = vendor.sku_vendor_id
         left join sku_vendor as sku_owner on union_logs.inventory_owner_id = sku_owner.sku_vendor_id
