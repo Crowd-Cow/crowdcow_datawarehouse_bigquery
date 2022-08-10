@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: pick_pack_durations
+    description: Business logic model to calculate pick/pack durations for an order
+    columns:
+      - name: packing_action_id
+        description: Surrogate key to provide uniqueness. Combines `user_id`,`order_id`,`action`, and `action_date`
+        tests:
+          - unique
+          - not_null
+
+      - name: is_rastellis
+        description: Boolean indicating if the order is a Rastelli's fulfillment order
+
+      - name: user_id
+        description: User ID of the person picking/packing
+
+      - name: order_id
+        description: Order ID being picked/packed
+
+      - name: action
+        description: Action type (i.e. ADD_TO_BOX, REMOVED_FROM_BOX, PACKED_ITEM)
+
+      - name: action_date
+        description: The date the picking/packing action took place
+
+      - name: action_started_at_utc
+        descrtiption: Timestamp for when the picking/packing action started
+
+      - name: action_ended_at_utc
+        description: Timestamp for when the picking/packing action ended
+
+      - name: item_count
+        description: Number of items picked/packed
+
+      - name: hour_duration
+        description: The amount of time picking/packing in hours
+
+      - name: minute_duration
+        description: The amount of time picking/packing in minutes
+
+      - name: second_duration
+        description: The amount of time picking/packing in seconds

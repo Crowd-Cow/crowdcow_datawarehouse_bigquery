@@ -214,6 +214,9 @@ models:
       - name: is_current_promotion_ffl
         description: Boolean indicating if the current membership promotion selected for a user is a Free For Life promotion
 
+      - name: is_rastellis
+        description: Boolean indicating if the user came from a Rastelli's fulfillment order
+
       - name: last_sign_in_at_utc
         description: "User last signed in timestamp in UTC"
 

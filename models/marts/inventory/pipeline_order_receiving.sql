@@ -28,13 +28,14 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
          end as cost_per_unit_usd
 
         ,vendor.is_marketplace
+        ,vendor.is_rastellis
         ,sum(nullif(current_sku.sku_weight,0) * ordered_item.quantity_ordered) as sku_weight_ordered
         ,sum(ordered_item.quantity_ordered) as quantity_ordered
     from ordered_item
         left join current_lot on ordered_item.lot_number = current_lot.lot_number
         left join current_sku on ordered_item.sku_id = current_sku.sku_id
         left join vendor on current_lot.owner_id = vendor.sku_vendor_id
-    group by 1,2,3,4,5,6,7,8,9
+    group by 1,2,3,4,5,6,7,8,9,10
 )
 
 ,get_received_detail as (
@@ -50,6 +51,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,nullif(current_sku.sku_weight,0) * received_item.sku_lot_quantity as sku_weight_received
         ,iff(vendor.is_marketplace and current_sku.marketplace_cost_usd > 0, current_sku.marketplace_cost_usd,current_sku.owned_sku_cost_usd) as finance_cost
         ,vendor.is_marketplace
+        ,vendor.is_rastellis
     from received_item
         left join current_lot on received_item.lot_id = current_lot.lot_id
         left join pipeline_schedule on current_lot.lot_number = pipeline_schedule.lot_number
@@ -67,6 +69,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,coalesce(get_ordered_detail.processor_name,get_received_detail.processor_name) as processor_name
         ,coalesce(get_ordered_detail.cost_per_unit_usd,get_received_detail.finance_cost) as cost_per_unit_usd
         ,coalesce(get_ordered_detail.is_marketplace,get_received_detail.is_marketplace) as is_marketplace
+        ,coalesce(get_ordered_detail.is_rastellis,get_received_detail.is_rastellis) as is_rastellis
         ,zeroifnull(get_ordered_detail.quantity_ordered) as quantity_ordered
         ,zeroifnull(get_ordered_detail.sku_weight_ordered) as sku_weight_ordered
         ,zeroifnull(get_received_detail.quantity_received) as quantity_received
@@ -153,12 +156,13 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,processor_info.pipeline_order_id
         ,processor_info.processor_name
         ,vendor.is_marketplace
+        ,vendor.is_rastellis
     from sad_cow_receiving
         left join current_lot on sad_cow_receiving.lot_id = current_lot.lot_id
         left join processor_info on current_lot.lot_number = processor_info.lot_number
         left join vendor on current_lot.owner_id = vendor.sku_vendor_id
     where sad_cow_receiving.sku_id is null
-    group by 1, 2, 4, 5, 6, 7
+    group by 1, 2, 4, 5, 6, 7, 8
 )
 
 ,unioned as ( select distinct
@@ -183,6 +187,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
     ,total_invoice_usd
     ,pct_of_cost_received
     ,is_marketplace
+    ,is_rastellis
     ,delivered_at_utc
 from final_calcs
 
@@ -210,6 +215,7 @@ select distinct
         ,null::float as total_invoice_usd
         ,null::float as pct_of_cost_received
         ,is_marketplace
+        ,is_rastellis
         ,delivered_at_utc
 from sad_cow_no_sku
 )

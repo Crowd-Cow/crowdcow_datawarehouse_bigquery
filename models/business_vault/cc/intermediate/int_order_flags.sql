@@ -70,6 +70,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,shipping_flags.lost_at_utc is not null as has_been_lost
         ,coalesce(fulfillment_risk.is_fulfillment_risk,FALSE) as is_fulfillment_risk
         ,order_reschedule.order_id is not null as is_rescheduled
+        ,orders.order_type = 'RFG' as is_rastellis
     from orders
         left join gift_info on orders.order_id = gift_info.order_id 
         left join has_shipping_credit on orders.order_id = has_shipping_credit.order_id

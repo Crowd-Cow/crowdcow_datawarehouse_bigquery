@@ -4,6 +4,9 @@ models:
   - name: pipeline_order_receiving
     description: "Combines inventory that was ordered with inventory that was received/invoiced"
     columns:
+      - name: order_received_id
+        description: Surrogate key. Combines `lot_number` and `sku_id`
+      
       - name: lot_number
         description: "Lot number"
 
@@ -59,7 +62,10 @@ models:
         description: "The percent of cost of the SKUs received to the total cost for SKUs received for the lot"
 
       - name: is_marketplace
-        description: "Boolean indicating if the owner of these SKUs is considered a marketplace onwer"
+        description: "Boolean indicating if the owner of these SKUs is considered a marketplace owner"
+
+      - name: is_rastellis
+        description: Boolean indicating if the owner of these SKUs is considered a Rastelli's fulfillment owner
 
       - name: delivered_at_utc
         description: "Timestamp for when the lot was delivered"

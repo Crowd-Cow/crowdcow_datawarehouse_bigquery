@@ -6,6 +6,7 @@ purchasing_user as ( select * from {{ ref('users') }} where customer_cohort_date
 ,calc_margin as (
     select
         order_id
+        ,is_rastellis
         ,user_id
         ,order_paid_at_utc
         ,net_product_revenue - product_cost as product_profit
@@ -19,6 +20,7 @@ purchasing_user as ( select * from {{ ref('users') }} where customer_cohort_date
 select
     purchasing_user.user_id
     ,calc_margin.order_id
+    ,calc_margin.is_rastellis
     ,datediff(month,customer_cohort_date,order_paid_at_utc) as customer_cohort_months
     ,datediff(day,customer_cohort_date,order_paid_at_utc) as customer_cohort_days
     ,datediff(month,customer_cohort_date,sysdate()) as customer_cohort_tenure_months

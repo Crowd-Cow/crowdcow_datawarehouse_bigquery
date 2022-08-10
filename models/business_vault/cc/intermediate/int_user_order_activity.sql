@@ -8,6 +8,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
 ,user_order_activity as (
     select
         user_id
+        ,is_rastellis
         ,count(order_id) as total_order_count
         ,count_if(is_completed_order and is_membership_order) as total_completed_membership_orders
         ,count_if(is_paid_order and not is_cancelled_order and is_ala_carte_order) as total_paid_ala_carte_order_count
@@ -40,7 +41,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
          ) as total_california_orders
         ,avg(iff(is_paid_order and not is_cancelled_order,net_revenue,null)) as user_average_order_value
     from order_info
-    group by 1
+    group by 1,2
 )
 
 ,user_percentiles as (
@@ -141,6 +142,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,average_order_days.average_order_frequency_days
         ,average_order_days.average_membership_order_frequency_days
         ,average_order_days.average_ala_carte_order_frequency_days
+        ,coalesce(user_percentiles.is_rastellis,FALSE) as is_rastellis
         ,user_percentiles.customer_cohort_date
         ,user_percentiles.membership_cohort_date
         ,user_percentiles.last_paid_membership_order_date

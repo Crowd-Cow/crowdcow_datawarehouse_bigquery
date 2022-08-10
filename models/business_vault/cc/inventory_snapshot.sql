@@ -122,6 +122,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
          end as sku_cost_usd
 
         ,sku_vendor.is_marketplace
+        ,sku_vendor.is_rastellis
     from sku_box_locations
         left join sku_vendor on sku_box_locations.owner_id = sku_vendor.sku_vendor_id
         left join lot on sku_box_locations.lot_id = lot.lot_id
@@ -176,6 +177,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,is_sellable
         ,is_destroyed
         ,is_marketplace
+        ,is_rastellis
         ,created_at_utc
         ,updated_at_utc
         ,marked_not_for_sale_at_utc

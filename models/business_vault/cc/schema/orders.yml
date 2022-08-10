@@ -193,6 +193,9 @@ models:
       - name: reschedule_count
         description: Total number of times the order has been rescheduled
 
+      - name: is_rastellis
+        description: Boolean indicating if the orer is a Rastelli's fulfillment order
+
       - name: has_free_shipping
         description: "Boolean indicating if the order had a free shipping discount applied"
 

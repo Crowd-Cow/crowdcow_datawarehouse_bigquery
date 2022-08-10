@@ -47,6 +47,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,coalesce(farm.is_cargill,FALSE) as is_cargill
         ,coalesce(farm.is_edm,FALSE) as is_edm
         ,coalesce(sku_vendor.is_marketplace,FALSE) as is_marketplace
+        ,coalesce(sku_vendor.is_rastellis,FALSE) as is_rastellis
         ,sku_vendor.sku_vendor_name
         ,sku.vendor_funded_discount_start_at_utc
         ,sku.vendor_funded_discount_end_at_utc
@@ -126,6 +127,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku_joins.is_cargill
         ,sku_joins.is_edm
         ,sku_joins.is_marketplace
+        ,sku_joins.is_rastellis
         ,coalesce(ais.is_always_in_stock,FALSE) as is_always_in_stock
         ,inventory_classification.inventory_classification
         ,sku_joins.sku_vendor_name

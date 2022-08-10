@@ -3,6 +3,7 @@ with
 vendor_tags as ( select * from {{ ref('stg_cc__vendor_tags') }} where dbt_valid_to is null ) --uses current record since vendor tags don't seem to change in the snapshot
 ,farm_vendor_tags as ( select * from {{ ref('stg_cc__farm_vendor_tags') }} )
 ,farm as ( select * from {{ ref('stg_cc__farms') }} )
+,sku_vendor as ( select * from {{ ref('stg_cc__sku_vendors') }} )
 
 ,cargill_farm_tags as (
     select 
@@ -67,6 +68,7 @@ vendor_tags as ( select * from {{ ref('stg_cc__vendor_tags') }} where dbt_valid_
         ,farm.thanks_video_static_image_url
         ,coalesce(cargill_farm_tags.farm_id is not null, FALSE) as is_cargill
         ,coalesce(edm_farm_tags.farm_id is not null, FALSE) as is_edm
+        ,coalesce(sku_vendor.is_rastellis,FALSE) as is_rastellis
         ,farm.is_dry_aged
         ,farm.is_zero_antibiotics
         ,farm.is_zero_hormones
@@ -83,6 +85,7 @@ vendor_tags as ( select * from {{ ref('stg_cc__vendor_tags') }} where dbt_valid_
     from farm
         left join cargill_farm_tags on farm.farm_id = cargill_farm_tags.farm_id
         left join edm_farm_tags on farm.farm_id = edm_farm_tags.farm_id
+        left join sku_vendor on farm.sku_vendor_id = sku_vendor.sku_vendor_id
 )
 
 select * from farm_joins

@@ -126,6 +126,9 @@ models:
       - name: is_edm
         description: "Boolean indicating if this farm is an EDM farm"
 
+      - name: is_rastellis
+        descripiton: Boolean indicating if this farm is a Rastelli's fulfillment farm
+
       - name: is_dry_aged
         description: "Boolean indicating if this farm sells dry aged product"
 

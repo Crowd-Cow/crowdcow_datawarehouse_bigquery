@@ -61,6 +61,9 @@ models:
       - name: is_marketplace
         description: Boolean indicating if the SKU owner is marketplace
 
+      - name: is_rastellis
+        description: Boolean indicating if the SKU owner is Rastelli's fulfillment
+
       - name: fc_key
         description: "Key to join to fulfillment center information at the time the inventory log event was created"
 

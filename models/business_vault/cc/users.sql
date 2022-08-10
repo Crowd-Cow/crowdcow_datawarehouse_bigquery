@@ -83,6 +83,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,users.user_banned_at_utc is not null as is_banned
         ,postal_code.state_code
         ,postal_code.city_name
+        ,coalesce(user_order_activity.is_rastellis,FALSE) as is_rastellis
         ,zeroifnull(user_order_activity.lifetime_net_revenue) as lifetime_net_revenue
         ,zeroifnull(user_order_activity.lifetime_paid_order_count) as lifetime_paid_order_count
         ,zeroifnull(user_order_activity.total_completed_unpaid_uncancelled_orders) as total_completed_unpaid_uncancelled_orders
@@ -124,6 +125,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,case
             when user_roles_for_access is not null then 'EMPLOYEE'
             when user_email like '%@CROWDCOW.COM' and user_email not like 'TEMPORARY%CROWDCOW.COM' then 'INTERNAL'
+            when is_rastellis then 'RASTELLIS'
             when user_email like 'TEMPORARY%CROWDCOW.COM' then 'GUEST'
             when user_type = 'C' then 'CUSTOMER'
             when user_type = 'P' then 'PLACEHOLDER'
@@ -230,6 +232,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,is_banned
         ,is_current_promotion_ffl
         ,is_first_promotion_ffl
+        ,is_rastellis
         ,does_allow_sms
         ,has_opted_in_to_emails
         ,last_call_at_utc is not null as has_phone_burner_contact

@@ -76,6 +76,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.order_bids_count
         ,zeroifnull(order_shipment.shipment_count) as shipment_count
         ,zeroifnull(order_reschedule.reschedule_count) as reschedule_count
+        ,orders.is_rastellis
         ,flags.has_free_shipping
         ,flags.is_ala_carte_order
         ,flags.is_membership_order
