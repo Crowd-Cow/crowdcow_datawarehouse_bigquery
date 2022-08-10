@@ -82,6 +82,9 @@ models:
       - name: average_ala_carte_order_frequncy_days
         description: "The average number of days between paid, uncancelled ala carte orders for a user"
 
+      - name: is_rastellis
+        description: Boolean indicating if the user came from a Rastelli's fulfillment order
+
       - name: customer_cohort_date
         description: "Assigns the user to a customer cohort that starts on the date of their first paid/uncancelled order"
 
