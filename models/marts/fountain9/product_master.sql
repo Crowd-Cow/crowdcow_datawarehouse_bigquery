@@ -1,6 +1,6 @@
 with
 
-sku as ( select * from {{ ref('skus') }} )
+sku as ( select * from {{ ref('skus') }} where not is_rastellis )
 ,cuts as ( select * from {{ ref('cuts') }} )
 ,moq as ( select * from {{ ref('stg_gs__inventory_moq') }} )
 

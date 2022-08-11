@@ -1,5 +1,5 @@
 with
-inventory as ( select * from {{ ref('inventory_snapshot') }} )
+inventory as ( select * from {{ ref('inventory_snapshot') }} where not is_rastellis )
 ,sku as ( select * from {{ ref('skus') }} )
 ,fc as ( select * from {{ ref('fcs') }} )
 ,cut as ( select * from {{ ref('cuts') }} )

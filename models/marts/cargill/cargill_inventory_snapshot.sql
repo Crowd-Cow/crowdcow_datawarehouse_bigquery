@@ -1,6 +1,6 @@
 with
 
-inventory as ( select * from {{ ref('inventory_snapshot') }} )
+inventory as ( select * from {{ ref('inventory_snapshot') }} where not is_rastellis )
 --,sku as ( select * from {{ ref('skus') }} )
 
 select inventory.*
