@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: rastellis_order_items
+    description: "Business logic for Rastelli's order items"
+    columns:
+      - name: order_item_detail_id
+        description: "Order item detail ID"
+
+      - name: order_id
+        description: "Order ID"
+
+      - name: is_rastellis
+        description: "Boolean indicating if this is a Rastelli's order"
+
+      - name: sku_id
+        description: "SKU ID"
+
+      - name: sku_key
+        description: "Key that should be used to join to SKU information at the time the item was packed"
+
+      - name: sku_box_id
+        description: "SKU box ID"
+
+      - name: sku_box_key
+        description: "Key that should be used to join to SKU box information at the time the item was packed"
+
+      - name: sku_owner_id
+        description: "SKU owner ID"
+
+      - name: lot_number
+        description: "Lot number"
+
+      - name: fc_id
+        description: "FC ID"
+
+      - name: fc_key
+        description: "Key that can be used to join to fulfillment center information at the time the item was packed"
+
+      - name: owner_name
+        description: "SKU owner name"
+
+      - name: sku_quantity
+        description: "Total quantity of SKUs packed"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated"
+
+      - name: packed_created_at_utc
+        description: "Timestamp for when the item was packed"
+
+      - name: total_sku_weight
+        description: "Total weight of SKUs packed"
