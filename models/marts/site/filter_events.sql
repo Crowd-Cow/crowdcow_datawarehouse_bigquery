@@ -11,6 +11,8 @@ filter_event as ( select * from {{ ref('events') }} where event_name = 'PRODUCT-
         ,from_filter
         ,to_filter
         ,parse_json(datawarehouse.compare_objects(from_filter,to_filter)) as filter_changes
+        ,on_page_url
+        ,on_page_path
     from filter_event
 )
 
@@ -20,6 +22,8 @@ filter_event as ( select * from {{ ref('events') }} where event_name = 'PRODUCT-
         ,compare_filters.visit_id
         ,compare_filters.user_id
         ,compare_filters.occurred_at_utc
+        ,compare_filters.on_page_url
+        ,compare_filters.on_page_path
         ,modification.key
         ,modification.value::text as filter_value
         ,modification.path
@@ -42,6 +46,8 @@ filter_event as ( select * from {{ ref('events') }} where event_name = 'PRODUCT-
         ,visit_id
         ,user_id
         ,occurred_at_utc
+        ,on_page_url
+        ,on_page_path
 
         ,case 
             when path like 'added_filter%' then 'ADDED FILTER'
