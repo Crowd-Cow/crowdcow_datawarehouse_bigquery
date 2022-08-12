@@ -15,5 +15,6 @@ select
     ,display_reason
     ,feedback
     ,selected_reason
+    ,sentiment
 from cancel_events 
 qualify row_number() over ( partition by brightback_id order by occurred_at_utc desc ) = 1

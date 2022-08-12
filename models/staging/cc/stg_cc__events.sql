@@ -58,6 +58,7 @@ events as (
       ,event_json:properties:depth::int as scroll_depth
       ,event_json:properties:from as from_filter
       ,event_json:properties:to as to_filter
+      ,event_json:survey:sentiment::int as sentiment
       ,event_json
   from {{ ref('base_cc__ahoy_events') }}
 
@@ -113,6 +114,7 @@ events as (
     ,scroll_depth
     ,from_filter
     ,to_filter
+    ,sentiment
   from events
 )
 

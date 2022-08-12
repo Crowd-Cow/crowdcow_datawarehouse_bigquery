@@ -64,6 +64,7 @@ events as (
         ,scroll_depth
         ,from_filter
         ,to_filter
+        ,sentiment
     from events
 )
 
