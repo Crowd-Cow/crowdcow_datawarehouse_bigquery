@@ -2,7 +2,7 @@ with
 
 inventory_log as ( select * from {{ ref('stg_cc__inventory_logs') }} )
 ,sad_cow_entry as ( select * from {{ ref('stg_cc__sad_cow_entries') }} )
-,lot as ( select * from {{ ref('stg_cc__lots') }} )
+,lot as ( select * from {{ ref('stg_cc__lots') }} where dbt_valid_to is null )
 ,fc as ( select * from {{ ref('stg_cc__fcs') }} )
 ,sku_vendor as ( select * from {{ ref('stg_cc__sku_vendors') }} )
 ,sku as ( select * from {{ ref('stg_cc__skus') }} )
@@ -21,14 +21,12 @@ inventory_log as ( select * from {{ ref('stg_cc__inventory_logs') }} )
         ,inventory_log.user_id
         ,inventory_log.created_at_utc
         ,inventory_log.sad_cow_bin_entry_id
-        ,inventory_log.inventory_owner_id
+        ,lot.owner_id as inventory_owner_id
         ,inventory_log.sku_quantity
         ,inventory_log.order_id
     from inventory_log
         left join current_sku_box on inventory_log.sku_box_id = current_sku_box.sku_box_id
         left join lot on current_sku_box.lot_id = lot.lot_id
-            and current_sku_box.created_at_utc >= lot.adjusted_dbt_valid_from
-            and current_sku_box.created_at_utc < lot.adjusted_dbt_valid_to
     
 )
 
