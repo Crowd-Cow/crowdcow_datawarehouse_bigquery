@@ -16,6 +16,12 @@ models:
       - name: occurred_at_utc
         description: Timestamp for when the filter event occurred
 
+      - name: on_page_url
+        description: URL of the page where the filter was used
+
+      - name: on_page_path
+        description: Path of the URL of the page where the filter was used
+
       - name: filter_action
         description: Describes whether the filter was added or modified by the user
 
