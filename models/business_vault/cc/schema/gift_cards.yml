@@ -1,0 +1,66 @@
+version: 2
+
+models:
+  - name: gift_cards
+    description: "Business logic model for gift cards"
+    columns:
+      - name: gift_card_id
+        description: "Gift card ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: redeemed_at_utc
+        description: "Timestamp for when the gift card was redeemed"
+
+      - name: gift_card_vendor
+        description: "Gift card vendor"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created"
+
+      - name: batch_uuid
+        description: "Batch UUID"
+
+      - name: admin_id
+        description: "Admin ID"
+
+      - name: gift_info_id
+        description: "Gift info ID"
+
+      - name: frauded_at_utc
+        description: "Timestamp for when the gift card was identified as fraud"
+
+      - name: suspicion_reason
+        description: "Reason to suspect the gift card might be fraud"
+
+      - name: gift_card_amount_usd
+        description: "Gift card amount"
+
+      - name: suspicion_found_at_utc
+        description: "Timestamp for when a suspicious gift card was found"
+
+      - name: user_id
+        description: "User ID of the person redeeming the gift card"
+
+      - name: suspicion_resolved_at_utc
+        description: "Timestamp for when the suspicious gift card was resolved"
+
+      - name: gift_card_fraud_amount_usd
+        description: "Amount of gift card identified as fraud"
+
+      - name: image_url
+        description: "URL of the gift card image"
+
+      - name: gift_card_code
+        description: "Unique gift card code"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated"
+
+      - name: sold_at_utc
+        description: "Timestamp for when the gift card was sold"
+
+      - name: order_id
+        description: "Order ID of the purchased gift card"
+  

@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: gift_card_transaction_history
+    description: "Mart for gift card transaction history"
+    columns:
+      - name: gift_card_id
+        description: "Gift card ID"
+
+      - name: gift_info_id
+        description: "Gift info ID"
+
+      - name: redemption_user_id
+        description: "Redemption User ID"
+
+      - name: order_id
+        description: "Order ID"
+
+      - name: entry_type
+        description: "Type of entry. Either Purchase or Redemption"
+
+      - name: amount_usd
+        description: "Transaction amount"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated"
+
+      - name: balance
+        description: "Balance of the gift card as of the current transaction"
+
+      - name: current_balance
+        description: "Current balance for the gift card"
+
+      - name: purchase_order_id
+        description: "Order ID of the gift card purchase"
+
+      - name: has_outstanding_balance
+        description: "Boolean indicating if the gift card still has an outstanding balance"
+
+      - name: is_bulk_generated
+        description: "Boolean indicating that the gift card was bulk generated and not purchased through an order"

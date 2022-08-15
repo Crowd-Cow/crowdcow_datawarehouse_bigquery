@@ -12,6 +12,7 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
         ,credit.user_id
         ,credit.order_id
         ,credit.cow_cash_entry_source_id
+        ,awarded_cow_cash.gift_card_id
         ,credit.credit_type
         ,awarded_cow_cash.entry_type as awarded_cow_cash_entry_type
         ,credit.credit_description
@@ -34,6 +35,7 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
         ,add_cow_cash_information.user_id
         ,add_cow_cash_information.order_id
         ,add_cow_cash_information.cow_cash_entry_source_id
+        ,add_cow_cash_information.gift_card_id
         ,add_cow_cash_information.credit_type
         ,promotion.promotion_type
         ,add_cow_cash_information.promotion_source
@@ -67,6 +69,7 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
         ,user_id
         ,order_id
         ,cow_cash_entry_source_id
+        ,gift_card_id
         ,credit_type
         ,credit_description
         ,promotion_source
