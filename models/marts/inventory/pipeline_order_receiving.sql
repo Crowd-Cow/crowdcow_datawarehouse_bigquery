@@ -23,7 +23,12 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
 
         ,case
             when vendor.is_marketplace and ordered_item.cost_per_unit_usd is null and current_sku.marketplace_cost_usd > 0 then current_sku.marketplace_cost_usd
-            when (not vendor.is_marketplace or (vendor.is_marketplace and current_sku.marketplace_cost_usd = 0)) and ordered_item.cost_per_unit_usd is null then current_sku.owned_sku_cost_usd
+            when (
+                not ifnull(vendor.is_marketplace,FALSE)
+                or (ifnull(vendor.is_marketplace,FALSE) and current_sku.marketplace_cost_usd = 0)
+                ) 
+                and ordered_item.cost_per_unit_usd is null 
+            then current_sku.owned_sku_cost_usd
             else ordered_item.cost_per_unit_usd
          end as cost_per_unit_usd
 
