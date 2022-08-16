@@ -131,7 +131,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,sad_cow_received_sku.sad_cow_received_quantity
     from get_invoice_details
         left join sad_cow_received_sku on get_invoice_details.lot_number = sad_cow_received_sku.lot_number
-                                    and get_invoice_details.sku_id = sad_cow_received_sku.sku_id
+            and get_invoice_details.sku_id = sad_cow_received_sku.sku_id
 )
 
 ,final_calcs as (
@@ -170,35 +170,36 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
     group by 1, 2, 4, 5, 6, 7, 8
 )
 
-,unioned as ( select distinct
-    {{ dbt_utils.surrogate_key(['lot_number','sku_id']) }} as order_received_id
-    ,lot_number
-    ,sku_id
-    ,sku_key
-    ,fc_id
-    ,pipeline_order_id
-    ,processor_name
-    ,cost_per_unit_usd
-    ,quantity_ordered
-    ,sku_weight_ordered
-    ,total_sku_cost_ordered
-    ,total_lot_cost_ordered
-    ,sad_cow_received_quantity
-    ,quantity_received
-    ,sku_weight_received
-    ,total_sku_cost_received
-    ,total_lot_cost_received
-    ,total_sku_cost_invoiced
-    ,total_invoice_usd
-    ,pct_of_cost_received
-    ,is_marketplace
-    ,is_rastellis
-    ,delivered_at_utc
-from final_calcs
+,unioned as ( 
+    select distinct
+        {{ dbt_utils.surrogate_key(['lot_number','sku_id']) }} as order_received_id
+        ,lot_number
+        ,sku_id
+        ,sku_key
+        ,fc_id
+        ,pipeline_order_id
+        ,processor_name
+        ,cost_per_unit_usd
+        ,quantity_ordered
+        ,sku_weight_ordered
+        ,total_sku_cost_ordered
+        ,total_lot_cost_ordered
+        ,sad_cow_received_quantity
+        ,quantity_received
+        ,sku_weight_received
+        ,total_sku_cost_received
+        ,total_lot_cost_received
+        ,total_sku_cost_invoiced
+        ,total_invoice_usd
+        ,pct_of_cost_received
+        ,is_marketplace
+        ,is_rastellis
+        ,delivered_at_utc
+    from final_calcs
 
-union all
+    union all
 
-select distinct
+    select distinct
         {{ dbt_utils.surrogate_key(['lot_number','null']) }} as order_received_id
         ,sad_cow_no_sku.lot_number
         ,null::int as sku_id
@@ -222,7 +223,7 @@ select distinct
         ,is_marketplace
         ,is_rastellis
         ,delivered_at_utc
-from sad_cow_no_sku
+    from sad_cow_no_sku
 )
 
 select *
