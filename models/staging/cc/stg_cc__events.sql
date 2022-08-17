@@ -32,13 +32,13 @@ events as (
       ,lower(coalesce(event_json:product_id::text,event_json:properties:product_token::text)) as product_token
       ,event_json:bid_item_id::int as bid_item_id
       ,event_json:"$event_id"::text as token
-      ,event_json:name::text as name
+      ,coalesce(event_json:name::text,event_json:properties:name::text) as name
       ,event_json:order_id::text as order_id
       ,event_json:url::text as url
       ,event_json:referrer_url::text as referrer_url
       ,event_json:subscription_id::text as subscription_id
       ,event_json:title::text as title
-      ,try_cast(event_json:price::text as int) as price
+      ,coalesce(try_cast(event_json:price::text as int),event_json:properties:price*100::int) as price
       ,event_json:quantity::int as quantity
       ,event_json:old_scheduled_arrival_date::timestamp as old_scheduled_arrival_date
       ,event_json:new_scheduled_arrival_date::timestamp as new_scheduled_arrival_date

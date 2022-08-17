@@ -1,6 +1,6 @@
 with
 
-cart_events as ( select * from {{ ref('events') }} where event_name in ('ORDER_ADD_TO_CART','ORDER_REMOVE_FROM_CART','VIEWED_PRODUCT') )
+cart_events as ( select * from {{ ref('events') }} where event_name in ('ORDER_ADD_TO_CART','ORDER_REMOVE_FROM_CART','VIEWED_PRODUCT','PRODUCT_CARD_QUICK_ADD_TO_CART') )
 ,bid_item as ( select * from {{ ref('bid_items') }} )
 ,product as ( select * from {{ ref('products') }} )
 
@@ -12,8 +12,8 @@ cart_events as ( select * from {{ ref('events') }} where event_name in ('ORDER_A
         ,occurred_at_utc
         ,event_name
         ,price as item_price
-        ,quantity as item_quantity
-        ,price * quantity as item_amount
+        ,ifnull(quantity,1) as item_quantity
+        ,price * item_quantity as item_amount
         ,order_id
         ,bid_item_id
         ,product_token
