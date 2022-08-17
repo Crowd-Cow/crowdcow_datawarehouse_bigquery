@@ -6,6 +6,9 @@ models:
     columns:
       - name: event_id
         description: "Event ID"
+        tests:
+         - unique
+         - not_null
 
       - name: visit_id
         description: "Visit ID"

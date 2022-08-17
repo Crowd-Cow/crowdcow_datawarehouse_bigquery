@@ -1,25 +1,26 @@
 with
 
 cart_events as ( select * from {{ ref('events') }} where event_name in ('ORDER_ADD_TO_CART','ORDER_REMOVE_FROM_CART','VIEWED_PRODUCT','PRODUCT_CARD_QUICK_ADD_TO_CART') )
-,bid_item as ( select * from {{ ref('bid_items') }} )
+,bid_item as ( select * from {{ ref('bid_items') }} where dbt_valid_to is null )
 ,product as ( select * from {{ ref('products') }} )
 
 ,get_fields as (
     select
-        event_id
-        ,visit_id
-        ,user_id
-        ,occurred_at_utc
-        ,event_name
-        ,price as item_price
-        ,ifnull(quantity,1) as item_quantity
-        ,price * item_quantity as item_amount
-        ,order_id
-        ,bid_item_id
-        ,product_token
-        ,title as product_title  
-        ,name as bid_item_name
+        cart_events.event_id
+        ,cart_events.visit_id
+        ,cart_events.user_id
+        ,cart_events.occurred_at_utc
+        ,cart_events.event_name
+        ,cart_events.price as item_price
+        ,ifnull(cart_events.quantity,1) as item_quantity
+        ,cart_events.price * item_quantity as item_amount
+        ,cart_events.order_id   
+        ,iff(event_name = 'PRODUCT_CARD_QUICK_ADD_TO_CART',bid_item.bid_item_id,cart_events.bid_item_id) as bid_item_id
+        ,cart_events.product_token
+        ,cart_events.title as product_title  
+        ,cart_events.name as bid_item_name
     from cart_events
+        left join bid_item on lower(cart_events.event_properties_id) = bid_item.bid_item_token
 )
 
 ,get_product_details as (
