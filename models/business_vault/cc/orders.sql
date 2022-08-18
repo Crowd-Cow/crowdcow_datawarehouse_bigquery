@@ -74,10 +74,8 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 
         /*** Order Margin Calculations ***/
         ,net_product_revenue - product_cost as product_profit
-        ,div0(product_profit, gross_product_revenue) as product_margin
         ,net_revenue - product_cost - shipment_cost - packaging_cost - payment_processing_cost
             - coolant_cost - care_cost - fc_labor_cost - poseidon_fulfillment_cost - inbound_shipping_cost as gross_profit
-        ,div0(gross_profit,net_revenue) as gross_margin
 
         ,orders.coolant_weight_in_pounds
         ,orders.order_additional_coolant_weight_in_pounds
