@@ -181,6 +181,14 @@ models:
       - name: inbound_shipping_cost
         description: The total cost of inbound shipping attributed to an order
 
+      - name: product_profit
+        description: Net product revenue - product cost
+
+      - name: gross_profit
+        description: >
+          Net_revenue - product_cost - shipment_cost - packaging_cost - payment_processing_cost
+            - coolant_cost - care_cost - fc_labor_cost - poseidon_fulfillment_cost - inbound_shipping_cost
+
       - name: coolant_weight_in_pounds
         description: Total weight of coolant in pounds used to ship an order
 
