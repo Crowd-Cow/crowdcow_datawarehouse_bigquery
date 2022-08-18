@@ -71,12 +71,6 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(order_cost.poseidon_fulfillment_cost) as poseidon_fulfillment_cost
         ,zeroifnull(order_cost.inbound_shipping_cost) as inbound_shipping_cost
         ,iff(orders.stripe_charge_id is not null,order_revenue.net_revenue * 0.0274,0) as payment_processing_cost
-
-        /*** Order Margin Calculations ***/
-        ,net_product_revenue - product_cost as product_profit
-        ,net_revenue - product_cost - shipment_cost - packaging_cost - payment_processing_cost
-            - coolant_cost - care_cost - fc_labor_cost - poseidon_fulfillment_cost - inbound_shipping_cost as gross_profit
-
         ,orders.coolant_weight_in_pounds
         ,orders.order_additional_coolant_weight_in_pounds
         ,orders.order_bids_count
@@ -253,4 +247,13 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
     where orders.order_type not in ('BULK ORDER','BULK GIFT')
 )
 
-select * from order_joins
+,calc_margin as (
+    select
+        *
+        ,net_product_revenue - product_cost as product_profit
+        ,net_revenue - product_cost - shipment_cost - packaging_cost - payment_processing_cost
+            - coolant_cost - care_cost - fc_labor_cost - poseidon_fulfillment_cost - inbound_shipping_cost as gross_profit
+    from order_joins
+)
+
+select * from calc_margin
