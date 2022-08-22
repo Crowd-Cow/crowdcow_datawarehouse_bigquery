@@ -59,7 +59,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.order_user_id is null as is_lead
         ,user_order_activity.user_id is not null and user_order_activity.total_paid_ala_carte_order_count > 0 and zeroifnull(user_membership.total_membership_count) = 0 as is_purchasing_customer
         ,user_order_activity.user_id is not null and user_order_activity.total_paid_membership_order_count > 0 as is_purchasing_member
-        ,user_order_activity.user_id is not null and user_order_activity.last_90_days_paid_membership_order_count > 0 as is_active_member_90_day
+        ,user_order_activity.user_id is not null and user_order_activity.last_90_days_paid_membership_order_count > 0 and user_membership.total_uncancelled_memberships > 0 as is_active_member_90_day
         
         ,case
             when user_order_activity.customer_cohort_date < user_order_activity.membership_cohort_date then user_order_activity.membership_cohort_date - user_order_activity.customer_cohort_date
