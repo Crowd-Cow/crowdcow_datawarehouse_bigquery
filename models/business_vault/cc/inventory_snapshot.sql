@@ -93,6 +93,17 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         left join fc_location on daily_sku_boxes.fc_location_id = fc_location.fc_location_id
 )
 
+,get_recently_sellable_skus as (
+    select
+        sku_id
+        ,min(snapshot_date) as first_sellable_date
+        ,max(is_sellable) as was_sellable
+    from sku_box_locations
+    where snapshot_date >= dateadd(year,-1,sysdate()::date)
+        and is_sellable
+    group by 1
+)
+
 ,get_lot_cost_per_unit as (
     select distinct
         receivable.sku_id
@@ -106,7 +117,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
 
 ,inventory_joins as (
     select 
-        {{ dbt_utils.surrogate_key(['snapshot_date','sku_box_key'] ) }} as inventory_snapshot_id
+        {{ dbt_utils.surrogate_key(['sku_box_locations.snapshot_date','sku_box_locations.sku_box_key'] ) }} as inventory_snapshot_id
         ,sku_box_locations.*
         ,fc.fc_key
         ,sku.sku_key
@@ -123,19 +134,23 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
 
         ,sku_vendor.is_marketplace
         ,sku_vendor.is_rastellis
+        ,get_recently_sellable_skus.sku_id is not null 
+            and get_recently_sellable_skus.was_sellable 
+            and sku_box_locations.snapshot_date >= first_sellable_date as was_recently_sellable 
     from sku_box_locations
         left join sku_vendor on sku_box_locations.owner_id = sku_vendor.sku_vendor_id
         left join lot on sku_box_locations.lot_id = lot.lot_id
         left join get_lot_cost_per_unit on lot.lot_number = get_lot_cost_per_unit.lot_number
             and get_lot_cost_per_unit.sku_id = sku_box_locations.sku_id
+        left join get_recently_sellable_skus on sku_box_locations.sku_id = get_recently_sellable_skus.sku_id
 
         /*** Get various join keys to be able to grab information at the time of snapshot date ****/
         left join fc on sku_box_locations.fc_id = fc.fc_id
-            and snapshot_date >= fc.adjusted_dbt_valid_from
-            and snapshot_date < fc.adjusted_dbt_valid_to
+            and sku_box_locations.snapshot_date >= fc.adjusted_dbt_valid_from
+            and sku_box_locations.snapshot_date < fc.adjusted_dbt_valid_to
         left join sku on sku_box_locations.sku_id = sku.sku_id
-            and snapshot_date >= sku.adjusted_dbt_valid_from
-            and snapshot_date < sku.adjusted_dbt_valid_to
+            and sku_box_locations.snapshot_date >= sku.adjusted_dbt_valid_from
+            and sku_box_locations.snapshot_date < sku.adjusted_dbt_valid_to
         
 )
 
@@ -178,6 +193,8 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,is_destroyed
         ,is_marketplace
         ,is_rastellis
+        ,was_recently_sellable
+        ,was_recently_sellable and quantity_sellable < 10 as is_low_stock
         ,created_at_utc
         ,updated_at_utc
         ,marked_not_for_sale_at_utc
