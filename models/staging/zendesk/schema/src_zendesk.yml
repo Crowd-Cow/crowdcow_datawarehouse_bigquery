@@ -37,87 +37,223 @@ sources:
       - name: user
         description: Zendesk user
         columns:
-        - name: id
-          description: id
-        - name: url
-          description: url
-        - name: name
-          description: name
-        - name: email
-          description: email
-        - name: created_at
-          description: created_at
-        - name: updated_at
-          description: updated_at
-        - name: time_zone
-          description: time_zone
-        - name: phone
-          description: phone
-        - name: locale_id
-          description: locale_id
-        - name: locale
-          description: locale
-        - name: organization_id
-          description: organization_id
-        - name: role
-          description: role
-        - name: verified
-          description: verified
-        - name: authenticity_token
-          description: authenticity_token
-        - name: external_id
-          description: external_id
-        - name: alias
-          description: alias
-        - name: active
-          description: active
-        - name: shared
-          description: shared
-        - name: shared_agent
-          description: shared_agent
-        - name: last_login_at
-          description: last_login_at
-        - name: two_factor_auth_enabled
-          description: two_factor_auth_enabled
-        - name: signature
-          description: signature
-        - name: details
-          description: details
-        - name: notes    
-          description: notes
-        - name: custom_role_id
-          description: custom_role_id
-        - name: moderator
-          description: moderator
-        - name: ticket_restriction
-          description: ticket_restriction
-        - name: only_private_comments
-          description: only_private_comments
-        - name: restricted_agent
-          description: restricted_agent
-        - name: suspended
-          description: suspended
-        - name: chat_only
-          description: chat_only
-        - name: remote_photo_url
-          description: remote_photo_url
-        - name: custom_playlist_manager_
-          description: custom_playlist_manager_
-        - name: custom_playlist_autoplay_
-          description: custom_playlist_autoplay_
-        - name: _fivetran_synced
-          description: _fivetran_synced
-        - name: iana_time_zone
-          description: iana_time_zone
-        - name: report_csv
-          description: report_csv
-        - name: default_group_id
-          description: default_group_id
-        - name: custom_txt_embeddable_zendesk_user_fields_system_embeddable_last_seen_title
-          description: custom_txt_embeddable_zendesk_user_fields_system_embeddable_last_seen_title
-        - name: custom_account_verified
-          description: custom_account_verified
-        - name: custom_followers_count
-          description: custom_followers_count
-        - name: custom_instagram_account
-          description: custom_instagram_account
+          - name: id
+            description: id
+          - name: url
+            description: url
+          - name: name
+            description: name
+          - name: email
+            description: email
+          - name: created_at
+            description: created_at
+          - name: updated_at
+            description: updated_at
+          - name: time_zone
+            description: time_zone
+          - name: phone
+            description: phone
+          - name: locale_id
+            description: locale_id
+          - name: locale
+            description: locale
+          - name: organization_id
+            description: organization_id
+          - name: role
+            description: role
+          - name: verified
+            description: verified
+          - name: authenticity_token
+            description: authenticity_token
+          - name: external_id
+            description: external_id
+          - name: alias
+            description: alias
+          - name: active
+            description: active
+          - name: shared
+            description: shared
+          - name: shared_agent
+            description: shared_agent
+          - name: last_login_at
+            description: last_login_at
+          - name: two_factor_auth_enabled
+            description: two_factor_auth_enabled
+          - name: signature
+            description: signature
+          - name: details
+            description: details
+          - name: notes    
+            description: notes
+          - name: custom_role_id
+            description: custom_role_id
+          - name: moderator
+            description: moderator
+          - name: ticket_restriction
+            description: ticket_restriction
+          - name: only_private_comments
+            description: only_private_comments
+          - name: restricted_agent
+            description: restricted_agent
+          - name: suspended
+            description: suspended
+          - name: chat_only
+            description: chat_only
+          - name: remote_photo_url
+            description: remote_photo_url
+          - name: custom_playlist_manager_
+            description: custom_playlist_manager_
+          - name: custom_playlist_autoplay_
+            description: custom_playlist_autoplay_
+          - name: _fivetran_synced
+            description: _fivetran_synced
+          - name: iana_time_zone
+            description: iana_time_zone
+          - name: report_csv
+            description: report_csv
+          - name: default_group_id
+            description: default_group_id
+          - name: custom_txt_embeddable_zendesk_user_fields_system_embeddable_last_seen_title
+            description: custom_txt_embeddable_zendesk_user_fields_system_embeddable_last_seen_title
+          - name: custom_account_verified
+            description: custom_account_verified
+          - name: custom_followers_count
+            description: custom_followers_count
+          - name: custom_instagram_account
+            description: custom_instagram_account
+
+      - name: ticket
+        description: Zendesk tickets
+        columns:
+          - name: id
+            description: id
+          - name: url
+            description: url
+          - name: external_id
+            description: external_id
+          - name: via_channel
+            description: via_channel
+          - name: via_source_from_id
+            description: via_source_from_id
+          - name: via_source_from_title
+            description: via_source_from_title
+          - name: via_source_from_address
+            description: via_source_from_address
+          - name: via_source_to_name
+            description: via_source_to_name
+          - name: via_source_to_address
+            description: via_source_to_address
+          - name: via_source_rel
+            description: via_source_rel
+          - name: merged_ticket_ids
+            description: merged_ticket_ids
+          - name: created_at
+            description: created_at
+          - name: updated_at
+            description: updated_at
+          - name: type
+            description: type
+          - name: subject
+            description: subject
+          - name: description
+            description: description
+          - name: priority
+            description: priority
+          - name: status
+            description: status
+          - name: recipient
+            description: recipient
+          - name: requester_id
+            description: requester_id
+          - name: submitter_id
+            description: submitter_id
+          - name: assignee_id
+            description: assignee_id
+          - name: organization_id
+            description: organization_id
+          - name: group_id
+            description: group_id
+          - name: forum_topic_id
+            description: forum_topic_id
+          - name: problem_id
+            description: problem_id
+          - name: has_incidents
+            description: has_incidents
+          - name: is_public
+            description: is_public
+          - name: via_followup_source_id
+            description: via_followup_source_id
+          - name: followup_ids
+            description: followup_ids
+          - name: due_at
+            description: due_at
+          - name: ticket_form_id
+            description: ticket_form_id
+          - name: brand_id
+            description: brand_id
+          - name: allow_channelback
+            description: allow_channelback
+          - name: system_client
+            description: system_client
+          - name: system_raw_email_identifierd
+            escription: system_raw_email_identifier
+          - name: system_json_email_identifier
+            description: system_json_email_identifier
+          - name: system_message_id
+            description: system_message_id
+          - name: system_ip_address
+            description: system_ip_address
+          - name: custom_order_errors
+            description: custom_order_errors
+          - name: custom_playlist_assigned_at
+            description: custom_playlist_assigned_at
+          - name: custom_issue_category_
+            description: custom_issue_category_
+          - name: custom_cow_cash_reason
+            description: custom_cow_cash_reason
+          - name: custom_ai_category
+            description: custom_ai_category
+          - name: custom_filter_for_productivity
+            description: custom_filter_for_productivity
+          - name: custom_order_id
+            description: custom_order_id
+          - name: custom_time_spent_last_update_sec_
+            description: custom_time_spent_last_update_sec_
+          - name: custom_automation_type
+            description: custom_automation_type
+          - name: custom_playlist_assigned_
+            description: custom_playlist_assigned_
+          - name: custom_playlist_assigned_by
+            description: custom_playlist_assigned_by
+          - name: custom_total_time_spent_sec_
+            description: custom_total_time_spent_sec_
+          - name: custom_total_credit_refund_given
+            description: custom_total_credit_refund_given
+          - name: custom_type
+            description: custom_type
+          - name: custom_playlist_autoplayed_
+            description: custom_playlist_autoplayed_
+          - name: _fivetran_synced
+            description: _fivetran_synced
+          - name: system_location
+            description: system_location
+          - name: system_latitude
+            description: system_latitude
+          - name: system_longitude
+            description: system_longitude
+          - name: system_machine_generated
+            description: system_machine_generated
+          - name: system_ccs
+            description: system_ccs
+          - name: custom_blastable_potential_template
+            description: custom_blastable_potential_template
+          - name: custom_ticket_form_name
+            description: custom_ticket_form_name
+          - name: custom_ticket_form_order_number
+            description: custom_ticket_form_order_number
+          - name: custom_ticket_form_reason
+            description: custom_ticket_form_reason
+          - name: system_email_id
+            description: system_email_id
+          - name: system_eml_redacted
+            description: system_eml_redacted

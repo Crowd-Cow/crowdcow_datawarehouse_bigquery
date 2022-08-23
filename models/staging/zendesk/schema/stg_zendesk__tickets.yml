@@ -1,0 +1,206 @@
+version: 2
+
+models:
+  - name: stg_zendesk__tickets
+    description: ""
+    columns:
+      - name: ticket_id
+        description: "Ticket Id"
+        tests:
+          - unique
+          - not_null
+
+      - name: ticket_url
+        description: "Ticket URL"
+
+      - name: external_id
+        description: "External ID"
+
+      - name: via_channel
+        description: "Via channel"
+
+      - name: via_source_from_id
+        description: "Via source from ID"
+
+      - name: via_source_from_title
+        description: "Via source from title"
+
+      - name: via_source_from_email
+        description: "Via source_from_email"
+
+      - name: via_source_to_name
+        description: "Via source to name"
+
+      - name: via_source_to_email
+        description: "Via source to email"
+
+      - name: via_source_rel
+        description: "Via source rel"
+
+      - name: merged_ticket_ids
+        description: "Merged ticket IDs"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated"
+
+      - name: ticket_type
+        description: "Ticket type"
+
+      - name: ticket_subject
+        description: "Ticket subject"
+
+      - name: ticket_description
+        description: "Ticket description"
+
+      - name: ticket_priority
+        description: "Ticket priority"
+
+      - name: ticket_status
+        description: "Ticket status"
+
+      - name: recipeint_email
+        description: "Recipient email"
+
+      - name: requester_id
+        description: "Requester ID"
+
+      - name: submitter_id
+        description: "Submitter ID"
+
+      - name: assignee_id
+        description: "Assignee ID"
+
+      - name: organization_id
+        description: "Organization ID"
+
+      - name: group_id
+        description: "Group ID"
+
+      - name: forum_topic_id
+        description: "Forum topic ID"
+
+      - name: problem_id
+        description: "Problem ID"
+
+      - name: has_incidents
+        description: "Boolean indicating if the ticket has incidents"
+
+      - name: is_public
+        description: "Boolean indicating if the ticket is marked public"
+
+      - name: via_followup_source_id
+        description: "Via followup source ID"
+
+      - name: followup_ids
+        description: "Followup IDs"
+
+      - name: due_at_utc
+        description: "Timestamp for when the ticket resolution is due"
+
+      - name: ticket_form_id
+        description: "Ticket form ID"
+
+      - name: brand_id
+        description: "Brand ID"
+
+      - name: does_allow_channelback
+        description: "Boolean indicating if the ticket allows channelback"
+
+      - name: system_client
+        description: "System client"
+
+      - name: system_raw_email_identifier
+        description: "System raw email ID"
+
+      - name: system_json_email_identifier
+        description: "System JSON email ID"
+
+      - name: system_message_id
+        description: "System message ID"
+
+      - name: system_ip_address
+        description: "System IP address"
+
+      - name: order_errors
+        description: "Order errors"
+
+      - name: custom_playlist_assigned_at
+        description: "Custom playlist assigned at"
+
+      - name: issue_category
+        description: "Issue category"
+
+      - name: cow_cash_reason
+        description: "Cow Cash reason"
+
+      - name: ai_category
+        description: "AI assigned ticket category"
+
+      - name: filter_for_productivity
+        description: "Filter for productivity"
+
+      - name: order_token
+        description: "Order token"
+
+      - name: time_spent_last_update_seconds
+        description: "Time spent since the last ticket update in seconds"
+
+      - name: automation_type
+        description: "Automation type"
+
+      - name: playlist_assigned
+        description: "Playlist assigned"
+
+      - name: playlist_assigned_by
+        description: "Playlist assigned by"
+
+      - name: total_time_spent_seconds
+        description: "Total time spent on the ticket in seconds"
+
+      - name: total_credit_refund_given
+        description: "Total credit refund amount given"
+
+      - name: custom_type
+        description: "Custom ticket type"
+
+      - name: playlist_autoplayed
+        description: "Playlist autoplayed"
+
+      - name: _fivetran_synced
+        description: "Timestamp for when the record was synced by Fivetran"
+
+      - name: system_location
+        description: "System location"
+
+      - name: system_latitude
+        description: "System latitude"
+
+      - name: system_longitude
+        description: "System longitude"
+
+      - name: is_machine_generated
+        description: "Boolean indicating if the ticket is machine generated"
+
+      - name: system_ccs
+        description: "System CSS"
+
+      - name: is_potential_blastable_template
+        description: "Boolean indicating if the ticket is a potential blastable template"
+
+      - name: ticket_form_name
+        description: "Ticket form name"
+
+      - name: ticket_form_order_number
+        description: "Ticket form order number"
+
+      - name: ticket_form_reason
+        description: "Ticket form reason"
+
+      - name: system_email_id
+        description: "System email ID"
+
+      - name: system_eml_redacted
+        description: "System eml redacted"
