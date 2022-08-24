@@ -83,10 +83,10 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,fc_location.location_type
         ,fc_location.location_name
         
-        ,case 
-            when fc_location.is_sellable then daily_sku_boxes.quantity_available  
+        ,zeroifnull(case 
+            when fc_location.is_sellable then daily_sku_boxes.quantity_available
             else 0 
-         end as quantity_sellable
+         end) as quantity_sellable
         
         ,ifnull(fc_location.is_sellable,FALSE) as is_sellable
     from daily_sku_boxes
