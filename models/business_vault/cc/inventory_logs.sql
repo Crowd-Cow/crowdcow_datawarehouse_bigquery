@@ -73,7 +73,7 @@ inventory_log as ( select * from {{ ref('stg_cc__inventory_logs') }} )
     select
         sad_cow_bin_entry_id as inventory_log_id
         ,sku_vendor_id
-        ,'SAD_COW_RECEIVING' as reason
+        ,'SAD_COW' as reason
         ,sku_id
         ,updated_at_utc
         ,lot_number
@@ -92,7 +92,7 @@ inventory_log as ( select * from {{ ref('stg_cc__inventory_logs') }} )
     select
         sad_cow_bin_entry_id as inventory_log_id
         ,sku_vendor_id
-        ,'SAD_COW_DELIVER' as reason
+        ,'DELIVER' as reason
         ,sku_id
         ,updated_at_utc
         ,lot_number
