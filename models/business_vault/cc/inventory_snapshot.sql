@@ -88,7 +88,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
             else 0 
          end as quantity_sellable
         
-        ,fc_location.is_sellable
+        ,ifnull(fc_location.is_sellable,FALSE) as is_sellable
     from daily_sku_boxes
         left join fc_location on daily_sku_boxes.fc_location_id = fc_location.fc_location_id
 )
