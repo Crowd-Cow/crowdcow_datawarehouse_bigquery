@@ -16,6 +16,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
 ,sku_vendor as ( select * from {{ ref('stg_cc__sku_vendors') }} )
 ,receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
 ,pipeline_order as ( select * from {{ ref('stg_cc__pipeline_orders') }} )
+,fbq_item as ( select distinct sku_id from {{ ref('int_bid_item_skus') }} where is_fbq_item )
 
 ,inventory_snapshot as (
     select
@@ -123,11 +124,13 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
 
         ,sku_vendor.is_marketplace
         ,sku_vendor.is_rastellis
+        ,fbq_item.sku_id is not null as is_configured_for_fbq
     from sku_box_locations
         left join sku_vendor on sku_box_locations.owner_id = sku_vendor.sku_vendor_id
         left join lot on sku_box_locations.lot_id = lot.lot_id
         left join get_lot_cost_per_unit on lot.lot_number = get_lot_cost_per_unit.lot_number
             and get_lot_cost_per_unit.sku_id = sku_box_locations.sku_id
+        left join fbq_item on sku_box_locations.sku_id = fbq_item.sku_id
 
         /*** Get various join keys to be able to grab information at the time of snapshot date ****/
         left join fc on sku_box_locations.fc_id = fc.fc_id
@@ -178,6 +181,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,is_destroyed
         ,is_marketplace
         ,is_rastellis
+        ,is_configured_for_fbq
         ,created_at_utc
         ,updated_at_utc
         ,marked_not_for_sale_at_utc
