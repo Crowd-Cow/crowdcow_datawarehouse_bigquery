@@ -33,6 +33,8 @@ events as (
       ,event_json:bid_item_id::int as bid_item_id
       ,event_json:"$event_id"::text as token
       ,coalesce(event_json:name::text,event_json:properties:name::text) as name
+      ,event_json:properties:page_section::text as page_section
+      ,event_json:properties:modal_name::text as modal_name
       ,event_json:order_id::text as order_id
       ,event_json:url::text as url
       ,event_json:referrer_url::text as referrer_url
@@ -82,6 +84,8 @@ events as (
     ,{{ clean_strings('category') }} as category
     ,{{ clean_strings('action') }} as action
     ,{{ clean_strings('label') }} as label
+    ,{{ clean_strings('page_section') }} as page_section
+    ,{{ clean_strings('modal_name') }} as modal_name
     ,experiments
     ,is_member
     ,{{ clean_strings('event_properties_id') }} as event_properties_id

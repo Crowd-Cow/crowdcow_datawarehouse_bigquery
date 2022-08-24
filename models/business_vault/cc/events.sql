@@ -32,6 +32,8 @@ events as (
         ,category
         ,action
         ,label
+        ,page_section
+        ,modal_name
         ,experiments
         ,is_member
         ,event_properties_id
