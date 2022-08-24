@@ -21,8 +21,8 @@ renamed as (
             else dbt_valid_from
         end as adjusted_dbt_valid_from
         ,coalesce(dbt_valid_to,'2999-01-01') as adjusted_dbt_valid_to
-
     from source
+    qualify row_number() over(partition by bid_item_id, sku_id order by dbt_valid_from desc, id desc) = 1
 
 )
 
