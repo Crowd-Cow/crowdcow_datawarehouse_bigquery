@@ -1,0 +1,80 @@
+version: 2
+
+models:
+  - name: order_margin
+    description: "Mart model to analyze order margin drivers"
+    columns:
+      - name: order_id
+        description: "Order ID"
+
+      - name: order_type
+        description: "Order type"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: fc_id
+        description: "Fulfillment center ID"
+
+      - name: fc_key
+        description: "Key used to join to fulfillment center data at the time the order is created"
+
+      - name: order_delivery_state
+        description: "State code for where the order is delivered"
+
+      - name: product_profit
+        description: "Product profit"
+
+      - name: gross_profit
+        description: "Gross profit"
+
+      - name: net_revenue
+        description: "Net revenue"
+
+      - name: product_margin
+        description: "Product margin"
+
+      - name: gross_margin
+        description: "Gross margin"
+
+      - name: membership_discount
+        description: "Membership discount"
+
+      - name: merch_discount
+        description: "Merch discount"
+
+      - name: free_protein_promotion
+        description: "Free protein promotion discount"
+
+      - name: free_shipping_discount
+        description: "Free shipping discount"
+
+      - name: new_member_discount
+        description: "New member discount"
+
+      - name: refund_amount
+        description: "Refund amount"
+
+      - name: product_cost
+        description: "Product cost"
+
+      - name: shipment_cost
+        description: "Shipment cost"
+
+      - name: coolant_cost
+        description: "Coolant cost"
+
+      - name: packaging_cost
+        description: "Packaging cost"
+
+      - name: care_cost
+        description: "CARE cost"
+
+      - name: fc_labor_cost
+        description: "FC labor cost"
+
+      - name: inbound_shipping_cost
+        description: "Inbound shipping cost"
+
+      - name: shipped_at_utc
+        description: "Timestamp for when the order was shipped"
