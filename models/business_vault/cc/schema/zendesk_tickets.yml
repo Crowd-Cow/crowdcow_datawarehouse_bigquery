@@ -21,6 +21,9 @@ models:
 
       - name: ticket_id
         description: "Zendesk ticket ID"
+        tests:
+          - unique
+          - not_null
 
       - name: assignee_id
         description: "Assignee ID"
