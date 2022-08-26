@@ -26,6 +26,9 @@ shipped_orders as ( select * from {{ ref('orders') }} where has_shipped and orde
         ,care_cost
         ,fc_labor_cost
         ,inbound_shipping_cost
+        ,shipment_count
+        ,total_units
+        ,total_product_weight
         ,shipped_at_utc
     from shipped_orders
 )
