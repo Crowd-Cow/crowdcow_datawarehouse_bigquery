@@ -40,6 +40,9 @@ models:
       - name: product_token
         description: Product token
 
+      - name: product_id
+        description: Product ID
+
       - name: product_title
         description: Product title
 

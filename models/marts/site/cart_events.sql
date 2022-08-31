@@ -36,6 +36,7 @@ cart_events as ( select * from {{ ref('events') }} where event_name in ('ORDER_A
         ,get_fields.order_id
         ,get_fields.bid_item_id
         ,get_fields.product_token
+        ,product.product_id
         ,coalesce(get_fields.product_title,product.product_title,get_fields.bid_item_name) as product_title
         ,bid_item_name
     from get_fields
