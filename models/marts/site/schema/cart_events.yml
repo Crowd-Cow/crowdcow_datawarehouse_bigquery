@@ -48,3 +48,6 @@ models:
 
       - name: bid_item_name
         description: Bid item name
+
+      - name: product_quantity_available_key
+        description: Key that can be used to get product availability at the time of the cart event
