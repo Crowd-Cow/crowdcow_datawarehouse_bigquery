@@ -14,6 +14,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} where not is_rastel
         ,ifnull(sku.category,'NONE') as category
         ,ifnull(sku.sub_category,'NONE') as sub_category
         ,iff(inventory.quantity < 0,0,inventory.quantity) as quantity
+        ,iff(inventory.quantity_available < 0,0,inventory.quantity_available) as quantity_available
     from inventory
         left join sku on inventory.sku_key = sku.sku_key
         left join fc on inventory.fc_key = fc.fc_key
@@ -29,5 +30,6 @@ select
     ,category
     ,sub_category
     ,sum(quantity) as quantity
+    ,sum(quantity_available) as quantity_available
 from cleanup_cateogries_quantities
 group by 1,2,3,4,5,6,7
