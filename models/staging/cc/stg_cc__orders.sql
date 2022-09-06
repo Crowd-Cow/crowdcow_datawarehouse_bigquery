@@ -98,6 +98,7 @@ source as ( select * from {{ source('cc', 'orders') }} where not _fivetran_delet
       postal_code.state_code
       ,{{ clean_strings('delivery_state') }}
      ) as order_delivery_state
+    ,postal_code.dma_name
     ,postal_code.county_name as order_delivery_county_name
     ,total_weight_in_pounds as order_total_weight_in_pounds
     ,delivery_longitude as order_delivery_longitude

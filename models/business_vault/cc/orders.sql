@@ -39,6 +39,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.order_delivery_state
         ,orders.order_delivery_postal_code
         ,orders.order_delivery_county_name
+        ,orders.dma_name
         ,orders.billing_address_1
         ,orders.billing_address_2
         ,orders.billing_city
