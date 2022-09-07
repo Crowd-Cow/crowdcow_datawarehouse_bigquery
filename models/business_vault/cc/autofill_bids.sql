@@ -39,5 +39,34 @@ bid_log as ( select * from {{ ref('stg_cc__autofill_bid_logs') }} )
             and bid_log.created_at_utc < target_sku.adjusted_dbt_valid_to
 )
 
-select * from autofill_joins
+,get_final_sku_autofill_action as (
+    select
+        *
+
+        ,last_value(autofill_type || '|' || reason)  --concatenating two fields to make the "iff" logic easier
+            over(partition by order_id,target_sku_id 
+                order by created_at_utc,autofill_bid_log_id) as last_autofill_reason
+
+        ,last_value(autofill_bid_log_id) 
+            over(partition by order_id,target_sku_id 
+                order by created_at_utc,autofill_bid_log_id) as last_autofill_bid_log_id
+
+        ,iff(
+            autofill_bid_log_id = last_autofill_bid_log_id
+                and last_autofill_reason in ('REMOVAL|REMOVAL','UNRESERVABLE|REPLACEMENT')
+            ,autofill_quantity
+            ,0
+        ) as net_autofill_quantity
+        
+        ,iff(
+            autofill_bid_log_id = last_autofill_bid_log_id
+                and last_autofill_reason in ('REMOVAL|REMOVAL','UNRESERVABLE|REPLACEMENT')
+            ,autofill_sku_gross_product_revenue
+            ,0
+        ) as net_autofill_gross_product_revenue
+
+    from autofill_joins
+)
+
+select * from get_final_sku_autofill_action
     
