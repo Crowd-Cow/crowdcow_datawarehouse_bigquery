@@ -3,7 +3,6 @@ with
 cart_events as ( select * from {{ ref('events') }} where event_name in ('ORDER_ADD_TO_CART','ORDER_REMOVE_FROM_CART','VIEWED_PRODUCT','PRODUCT_CARD_QUICK_ADD_TO_CART') )
 ,bid_item as ( select * from {{ ref('bid_items') }} where dbt_valid_to is null )
 ,product as ( select * from {{ ref('products') }} )
-,product_availability as ( select * from {{ ref('product_quantity_availables') }} )
 
 ,get_fields as (
     select
@@ -20,6 +19,7 @@ cart_events as ( select * from {{ ref('events') }} where event_name in ('ORDER_A
         ,cart_events.product_token
         ,cart_events.title as product_title  
         ,cart_events.name as bid_item_name
+        ,cart_events.quantity_sellable
     from cart_events
         left join bid_item on lower(cart_events.event_properties_id) = bid_item.bid_item_token
 )
@@ -40,40 +40,10 @@ cart_events as ( select * from {{ ref('events') }} where event_name in ('ORDER_A
         ,product.product_id
         ,coalesce(get_fields.product_title,product.product_title,get_fields.bid_item_name) as product_title
         ,bid_item_name
+        ,quantity_sellable
     from get_fields
         left join product on get_fields.product_token = product.product_token
             and product.dbt_valid_to is null
-)
-
-,start_of_day_availability as (
-    select
-        product_id
-        ,product_quantity_available_key
-        ,updated_at_utc::date as updated_at_utc
-        ,quantity_available
-    from product_availability
-    where fc_id in (4,5)
-    qualify row_number() over(partition by product_id,fc_id,updated_at_utc::date order by updated_at_utc) = 1
-)
-
-,aggregate_availability as (
-    select
-        product_id
-        ,product_quantity_available_key
-        ,updated_at_utc
-        ,sum(quantity_available) as quantity_available
-    from start_of_day_availability
-    group by 1,2,3
-)
-
-,get_product_availability_key as (
-    select
-        get_product_details.*
-        ,aggregate_availability.product_quantity_available_key
-    from get_product_details
-        left join aggregate_availability on get_product_details.product_id = aggregate_availability.product_id
-            and get_product_details.occurred_at_utc::date = aggregate_availability.updated_at_utc
-
 )
 
 select * from get_product_details

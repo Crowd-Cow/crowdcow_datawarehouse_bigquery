@@ -61,6 +61,7 @@ events as (
       ,event_json:properties:from as from_filter
       ,event_json:properties:to as to_filter
       ,event_json:survey:sentiment::int as sentiment
+      ,event_json:product_offer:quantity_sellable::int as quantity_sellable
       ,event_json
   from {{ ref('base_cc__ahoy_events') }}
 
@@ -119,6 +120,7 @@ events as (
     ,from_filter
     ,to_filter
     ,sentiment
+    ,quantity_sellable
   from events
 )
 
