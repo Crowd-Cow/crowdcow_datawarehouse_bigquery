@@ -41,6 +41,7 @@ cart_events as ( select * from {{ ref('events') }} where event_name in ('ORDER_A
         ,coalesce(get_fields.product_title,product.product_title,get_fields.bid_item_name) as product_title
         ,bid_item_name
         ,quantity_sellable
+        ,event_name = 'VIEWED_PRODUCT' and quantity_sellable = 0 as is_oos_view
     from get_fields
         left join product on get_fields.product_token = product.product_token
             and product.dbt_valid_to is null
