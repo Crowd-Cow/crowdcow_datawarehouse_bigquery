@@ -115,9 +115,12 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,fc_id
         ,{{ dbt_utils.surrogate_key(['forecast_date','category','sub_category','cut_id','fc_id']) }} as join_key
         ,forecasted_sales
-        ,sum(case when forecasted_sales < 0 then 0 else forecasted_sales end) 
-            over(partition by category,sub_category,cut_id,fc_id 
-                order by forecast_date rows between unbounded preceding and unbounded following)/12 as avg_forecasted_weekly_units
+        ,avg(forecasted_sales) 
+            over(
+                partition by category,sub_category,cut_id,fc_id 
+                order by forecast_date 
+                rows between current row and 6 following
+            ) as next_seven_day_avg
     from forecast
 )
 
@@ -138,7 +141,8 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,inventory_aggregation_cut.quantity_reserved
         ,inventory_aggregation_cut.quantity_sellable
         ,inventory_aggregation_cut.potential_revenue
-        ,round(inventory_forecast.avg_forecasted_weekly_units,2) as avg_forecasted_weekly_units
+        ,round(inventory_forecast.forecasted_sales,2) as daily_forecasted_sales
+        ,round(inventory_forecast.next_seven_day_avg,2) as avg_forecasted_weekly_units
 
     from inventory_aggregation_cut
         left join inventory_forecast on inventory_aggregation_cut.join_key = inventory_forecast.join_key
