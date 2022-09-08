@@ -53,14 +53,14 @@ bid_log as ( select * from {{ ref('stg_cc__autofill_bid_logs') }} )
 
         ,iff(
             autofill_bid_log_id = last_autofill_bid_log_id
-                and last_autofill_reason in ('REMOVAL|REMOVAL','UNRESERVABLE|REPLACEMENT')
+                and last_autofill_reason in ('REMOVAL|REMOVAL')
             ,autofill_quantity
             ,0
         ) as net_autofill_quantity
         
         ,iff(
             autofill_bid_log_id = last_autofill_bid_log_id
-                and last_autofill_reason in ('REMOVAL|REMOVAL','UNRESERVABLE|REPLACEMENT')
+                and last_autofill_reason in ('REMOVAL|REMOVAL')
             ,autofill_sku_gross_product_revenue
             ,0
         ) as net_autofill_gross_product_revenue
