@@ -232,6 +232,15 @@ models:
       - name: most_recent_membership_cancelled_date
         description: "Timestamp of the most recently cancelled membership for a user"
 
+      - name: last_paid_membership_order_date
+        description: "The order paid date of the last membership order for a user"
+
+      - name: last_paid_ala_carte_order_date
+        description: "The order paid date of the last ala carte order for a user"
+
+      - name: last_paid_order_date
+        description: "The order paid date of the last paid order for a user"
+
       - name: created_at_utc
         description: "Timestamp for when the user was created in UTC"
 

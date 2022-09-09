@@ -97,6 +97,9 @@ models:
       - name: last_paid_ala_carte_order_date
         description: "The order paid date of the last ala carte order for a user"
 
+      - name: last_paid_order_date
+        description: "The order paid date of the last paid order for a user"
+
       - name: first_completed_order_date
         description: "The checkout completed date for the first completed order for a user"
 

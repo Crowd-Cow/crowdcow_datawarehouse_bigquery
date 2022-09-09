@@ -105,6 +105,9 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,zeroifnull(user_order_activity.user_average_order_value) as user_average_order_value
         ,zeroifnull(user_order_activity.lifetime_japanese_wagyu_revenue) as lifetime_japanese_wagyu_revenue
         ,zeroifnull(user_order_activity.japanese_buyers_club_revenue) as japanese_buyers_club_revenue
+        ,user_order_activity.last_paid_membership_order_date
+        ,user_order_activity.last_paid_ala_carte_order_date
+        ,user_order_activity.last_paid_order_date
 
     from users
         left join user_membership on users.user_id = user_membership.user_id
@@ -242,6 +245,9 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,first_membership_created_date
         ,most_recent_membership_created_date
         ,most_recent_membership_cancelled_date
+        ,last_paid_membership_order_date
+        ,last_paid_ala_carte_order_date
+        ,last_paid_order_date
         ,created_at_utc
         ,updated_at_utc
     from user_joins
