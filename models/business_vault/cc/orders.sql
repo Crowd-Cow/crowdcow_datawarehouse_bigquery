@@ -1,3 +1,9 @@
+{{
+  config(
+    snowflake_warehouse = 'TRANSFORMING_M'
+    )
+}}
+
 with
 
 orders as ( select * from {{ ref('stg_cc__orders') }} )
