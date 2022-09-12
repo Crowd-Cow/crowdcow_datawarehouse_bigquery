@@ -5,6 +5,7 @@ receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
 ,pipeline_order as ( select * from {{ ref('stg_cc__pipeline_orders') }} )
 ,lot as ( select * from {{ ref('stg_cc__lots') }} )
 ,sku as ( select * from {{ ref('skus') }} )
+,vendor as ( select * from {{ ref('stg_cc__sku_vendors') }} )
 
 ,pipeline_receivable as (
     select
@@ -33,6 +34,7 @@ receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
         ,receivable.quantity_ordered
         ,receivable.marked_destroyed_at_utc is not null as is_destroyed
         ,coalesce(pipeline_order.is_removed,FALSE) as is_order_removed
+        ,ifnull(vendor.is_rastellis,FALSE) as is_rastellis
         ,receivable.marked_destroyed_at_utc
         ,receivable.created_at_utc
         ,receivable.updated_at_utc
@@ -80,6 +82,7 @@ receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
     from receivable
         left join pipeline_schedule on receivable.pipeline_order_id = pipeline_schedule.pipeline_order_id
         left join pipeline_order on receivable.pipeline_order_id = pipeline_order.pipeline_order_id
+        left join vendor on pipeline_order.inventory_owner_id = vendor.sku_vendor_id
         left join sku on receivable.sku_id = sku.sku_id
             and receivable.updated_at_utc >= sku.adjusted_dbt_valid_from
             and receivable.updated_at_utc < sku.adjusted_dbt_valid_to

@@ -31,6 +31,9 @@ models:
       - name: is_destroyed
         description: "Boolean indicating if the receivable has been destroyed"
 
+      - name: is_rastellis
+        description: "Boolean indicating if the pipeline order is from Rastellis"
+
       - name: marked_destroyed_at_utc
         description: "Timestamp of when the receivable was destroyed"
 
