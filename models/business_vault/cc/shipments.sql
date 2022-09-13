@@ -10,8 +10,8 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
         ,fc.fc_key
     from shipment
         left join fc on shipment.fc_id = fc.fc_id
-            and shipment.shipped_at_utc >= fc.adjusted_dbt_valid_from
-            and shipment.shipped_at_utc < fc.adjusted_dbt_valid_to
+            and shipment.updated_at_utc >= fc.adjusted_dbt_valid_from
+            and shipment.updated_at_utc < fc.adjusted_dbt_valid_to
 )
 
 ,get_order_delivery_address as (
@@ -43,7 +43,7 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
         get_order_delivery_address.shipment_id
         ,get_order_delivery_address.print_queue_item_id
         ,get_order_delivery_address.box_type_id
-        ,get_order_delivery_address.scanned_box_type_id
+        ,coalesce(get_order_delivery_address.scanned_box_type_id,get_order_delivery_address.box_type_id) as scanned_box_type_id
         ,get_order_delivery_address.fc_id
         ,get_order_delivery_address.fc_key
         ,get_order_delivery_address.order_id
