@@ -16,5 +16,10 @@ select
     ,feedback
     ,selected_reason
     ,sentiment
+    ,iff(
+        feedback is not null
+        ,datascience.process_text(feedback)
+        ,null
+    ) as clean_feedback
 from cancel_events 
 qualify row_number() over ( partition by brightback_id order by occurred_at_utc desc ) = 1

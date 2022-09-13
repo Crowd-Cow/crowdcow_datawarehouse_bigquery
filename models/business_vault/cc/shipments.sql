@@ -80,6 +80,7 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
         ,get_order_delivery_address.does_use_zpl
         ,get_order_delivery_address.does_receive_tracking_updates
         ,get_order_delivery_address.is_delivery_date_guaranteed
+        ,get_order_delivery_address.scanned_box_type_id is null and get_order_delivery_address.delivered_at_utc is not null as is_not_scanned_box
         ,get_order_delivery_address.shipped_at_utc
         ,get_order_delivery_address.delivered_at_utc
         ,get_order_delivery_address.original_est_delivery_date_utc
