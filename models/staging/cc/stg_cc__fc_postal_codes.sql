@@ -1,6 +1,6 @@
 with
 
-source as ( select * from {{ ref('fc_postal_codes_ss') }} where not _fivetran_deleted )
+source as ( select * from {{ source('cc', 'fc_postal_codes') }} where not _fivetran_deleted )
 
 ,renamed as (
   select
