@@ -1,3 +1,9 @@
+{{
+  config(
+    snowflake_warehouse = 'TRANSFORMING_M'
+    )
+}}
+
 with
 
 user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
