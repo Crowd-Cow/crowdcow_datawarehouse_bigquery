@@ -1,6 +1,6 @@
 with
 
-fc_postal_code as ( select * from {{ ref('stg_cc__fc_postal_codes') }} where dbt_valid_to is null)
+fc_postal_code as ( select * from {{ ref('stg_cc__fc_postal_codes') }} )
 ,postal_code_ref as ( select distinct postal_code from {{ ref('stg_cc__postal_codes') }} )
 ,fc as ( select * from {{ ref('stg_cc__fcs') }} )
 
