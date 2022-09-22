@@ -23,6 +23,7 @@ orders as ( select * from {{ ref('orders') }} where is_paid_order and not is_can
         ,order_scheduled_fulfillment_date_utc
         ,order_scheduled_arrival_date_utc
         ,shipments.shipment_token
+        ,shipments.shipment_tracking_code
         ,shipments.shipped_at_utc
         ,shipments.original_est_delivery_date_utc
         ,shipments.est_delivery_date_utc
