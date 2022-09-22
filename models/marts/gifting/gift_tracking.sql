@@ -18,6 +18,7 @@ orders as ( select * from {{ ref('orders') }} where is_paid_order and not is_can
         ,is_gift_order
         ,is_bulk_gift_order
         ,is_gift_card_order
+        ,orders.order_created_at_utc
         ,orders.order_paid_at_utc
         ,order_scheduled_fulfillment_date_utc
         ,order_scheduled_arrival_date_utc
