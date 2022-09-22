@@ -1,7 +1,7 @@
 with
 
 purchasing_user as ( select * from {{ ref('users') }} where customer_cohort_date is not null )
-,paid_orders as ( select * from {{ ref('orders') }} where is_paid_order and not is_cancelled_order )
+,paid_orders as ( select * from {{ ref('orders') }} where is_paid_order and not is_cancelled_order and not is_bulk_gift_order)
 
 ,calc_margin as (
     select
