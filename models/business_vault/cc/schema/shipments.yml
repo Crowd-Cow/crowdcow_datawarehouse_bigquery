@@ -123,3 +123,9 @@ models:
 
       - name: lost_at_utc
         description: "Timestamp for when the shipment was lost if applicable"
+
+      - name: axlehire_zone
+        description: Axlehire zone
+
+      - name: axlehire_market
+        description: Axlehire market

@@ -3,6 +3,7 @@ with
 shipment as ( select * from {{ ref('stg_cc__shipments') }} )
 ,fc as ( select * from {{ ref('stg_cc__fcs') }} )
 ,order_delivery as ( select * from {{ ref('stg_cc__orders') }} )
+,axlehire_market as ( select * from {{ ref('stg_reference__axlehire_postal_code_markets') }} )
 
 ,get_fc_key as (
     select
@@ -100,4 +101,13 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
             and get_order_delivery_address.order_delivery_postal_code = calc_axlehire_default.order_delivery_postal_code
 )
 
-select * from add_default_cost
+,get_axlehire_market as (
+    select
+        add_default_cost.*
+        ,axlehire_market.axlehire_zone
+        ,axlehire_market.axlehire_market
+    from add_default_cost
+        left join axlehire_market on add_default_cost.order_delivery_postal_code = axlehire_market.postal_code
+)
+
+select * from get_axlehire_market

@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: stg_reference__axlehire_postal_code_markets
+    description: Lookup table for Axlehire postal code zones and markets
+    columns:
+      - name: postal_code
+        description: Postal code
+        tests:
+          - unique
+          - not_null
+
+      - name: zone
+        descripiton: Axlehire zone
+
+      - name: market
+        description: Axlehire market
+
+      - name: center_zone
+        description: Boolean indicating if the zone is a center zone
+
+      - name: sub_region
+        description: Sub region
