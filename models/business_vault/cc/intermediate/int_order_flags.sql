@@ -7,6 +7,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,gift_cards as (select * from {{ ref('stg_cc__gift_cards') }} )
 ,gift_infos as ( select * from {{ ref('stg_cc__gift_infos') }} )
 ,order_reschedule as ( select distinct order_id from {{ ref('stg_cc__events') }} where event_name = 'ORDER_RESCHEDULED' )
+,membership_status as (select * from {{ ref('stg_cc__subscriptions') }} )
 
 ,gift_card as (
     select
@@ -46,6 +47,16 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         group by 1
 )
 
+,placed_by_uncancelled_member as (
+    select distinct order_id
+        from orders
+        join membership_status on orders.user_id = membership_status.user_id
+                               and orders.order_paid_at_utc >= membership_status.subscription_created_at_utc
+                               and (orders.order_paid_at_utc < membership_status.subscription_cancelled_at_utc
+                                or membership_status.subscription_cancelled_at_utc is null
+                               )
+)
+
 ,flags as (
     select 
         orders.order_id
@@ -71,12 +82,14 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,coalesce(fulfillment_risk.is_fulfillment_risk,FALSE) as is_fulfillment_risk
         ,order_reschedule.order_id is not null as is_rescheduled
         ,orders.order_type = 'RFG' as is_rastellis
+        ,placed_by_uncancelled_member.order_id is not null as was_member
     from orders
         left join gift_info on orders.order_id = gift_info.order_id 
         left join has_shipping_credit on orders.order_id = has_shipping_credit.order_id
         left join shipping_flags on orders.order_id = shipping_flags.order_id
         left join fulfillment_risk on orders.order_id = fulfillment_risk.order_id
         left join order_reschedule on orders.order_id = order_reschedule.order_id
+        left join placed_by_uncancelled_member on orders.order_id = placed_by_uncancelled_member.order_id
 )
 
 select *
