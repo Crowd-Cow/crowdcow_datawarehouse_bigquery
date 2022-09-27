@@ -7,7 +7,6 @@ order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
 ,sku as ( select * from {{ ref('stg_cc__skus') }} )
 ,sku_box as ( select * from {{ ref('stg_cc__sku_boxes') }} )
 ,lot as ( select * from {{ ref('stg_cc__lots') }} )
-,vendor as ( select * from {{ ref('stg_cc__sku_vendors') }} )
 ,fc as ( select * from {{ ref('stg_cc__fcs') }} )
 
 ,order_packed_items as (
