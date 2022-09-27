@@ -246,6 +246,9 @@ models:
       - name: is_rescheduled
         description: Boolean indicating if the order has been rescheduled at least once
 
+      - name: was_member
+        description: Boolean indicating whether user was uncancelled member at time of purchase
+
       - name: overall_order_rank
         description: "Overall order rank for a user regardless of order type or status"
 
