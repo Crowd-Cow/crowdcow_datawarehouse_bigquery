@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: google_ads_campaign_performance
+    description: daily performance of google ads campaigns
+    columns:
+      - name: campaign_id
+        description: campaign id
+
+      - name: campaign_stat_date_utc
+        description: date that stats were taken
+
+      - name: total_clicks
+        description: total clicks to campaign
+
+      - name: total_impressions
+        description: total campaign impressions
+
+      - name: total_cost_usd
+        description: total spend on capmaign
+
+      - name: total_conversions
+        description: total conversions within campaign
+
+      - name: total_conversion_value
+        description: ""
+
+      - name: campaign_name
+        description: ""
+
