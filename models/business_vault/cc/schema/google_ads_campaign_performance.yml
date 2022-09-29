@@ -23,8 +23,8 @@ models:
         description: total conversions within campaign
 
       - name: total_conversion_value
-        description: ""
+        description: total conversion value as determined by google
 
       - name: campaign_name
-        description: ""
+        description: campaign name
 
