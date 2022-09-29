@@ -6,7 +6,7 @@ source as ( select * from {{ source('google_ads', 'campaign_stats') }} )
 
     select
         customer_id
-        ,date as campaign_stat_date
+        ,date as campaign_stat_date_utc
         ,{{ clean_strings('base_campaign') }} as base_campaign
         ,conversions_value
         ,conversions
@@ -23,7 +23,7 @@ source as ( select * from {{ source('google_ads', 'campaign_stats') }} )
         ,active_view_measurable_impressions
         ,active_view_measurable_cost_micros
         ,active_view_measurability
-        ,cost_micros/1000000 as cost
+        ,cost_micros/1000000 as cost_usd
 
     from source
 
