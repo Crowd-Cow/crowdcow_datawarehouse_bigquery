@@ -24,7 +24,7 @@ campaign_history as ( select * from {{ ref('stg_google_ads__campaign_history') }
         ,campaign_stats.campaign_stat_date_utc
         ,campaigns.campaign_name
         ,campaigns.advertising_channel_type
-        ,sum(campaign_stats.cost) as spend
+        ,sum(campaign_stats.cost_usd) as spend
         ,sum(campaign_stats.impressions) as impressions
         ,sum(campaign_stats.clicks) as clicks
         ,sum(campaign_stats.conversions) as conversions
