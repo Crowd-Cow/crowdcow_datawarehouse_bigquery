@@ -20,8 +20,8 @@ campaign_history as ( select * from {{ ref('stg_google_ads__campaign_history') }
 
 ,summary_stats as (
     select
-        {{ dbt_utils.surrogate_key( ['campaign_stat_date','campaign_name','advertising_channel_type'] ) }} as campaign_performance_id
-        ,campaign_stats.campaign_stat_date
+        {{ dbt_utils.surrogate_key( ['campaign_stat_date_utc','campaign_name','advertising_channel_type'] ) }} as campaign_performance_id
+        ,campaign_stats.campaign_stat_date_utc
         ,campaigns.campaign_name
         ,campaigns.advertising_channel_type
         ,sum(campaign_stats.cost) as spend
