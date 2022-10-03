@@ -45,8 +45,6 @@ inventory_log as ( select * from {{ ref('stg_cc__inventory_logs') }} )
         ,sad_cow_entry.sku_quantity
     from sad_cow_entry
         left join lot on sad_cow_entry.lot_id = lot.lot_id
-            and sad_cow_entry.created_at_utc >= lot.adjusted_dbt_valid_from
-            and sad_cow_entry.created_at_utc < lot.adjusted_dbt_valid_to
     where sad_cow_entry.sad_cow_entry_type = 'RECEIVING'
 )
 
