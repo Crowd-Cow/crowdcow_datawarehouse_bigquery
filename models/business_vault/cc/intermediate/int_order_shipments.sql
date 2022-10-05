@@ -11,7 +11,7 @@ select
     ,max(delivered_at_utc) as delivered_at_utc
     ,max(original_est_delivery_date_utc) as original_est_delivery_date_utc
     ,max(est_delivery_date_utc) as est_delivery_date_utc
-    ,avg(delivery_days_late) as delivery_days_late
+    ,max(delivery_days_late) as delivery_days_late
     ,listagg(shipment_tracking_code,' | ') as shipment_tracking_code_list
 from shipment
 group by 1
