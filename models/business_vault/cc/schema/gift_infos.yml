@@ -1,0 +1,61 @@
+version: 2
+
+models:
+  - name: gift_infos
+    description: "Business logic for gift infos"
+    columns:
+      - name: gift_info_id
+        description: "Gift info ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: recipient_email
+        description: "Gift recipient email"
+
+      - name: order_id
+        description: "Order ID"
+        tests:
+          - unique
+
+      - name: suggested_product_id
+        description: "Suggested product ID"
+
+      - name: gift_info_token
+        description: "Gift info token"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated"
+
+      - name: frauded_at_utc
+        description: "Timestamp for when fraud was detected"
+
+      - name: recipient_name
+        description: "Gift recipient name"
+
+      - name: sender_email
+        description: "Gift sender email"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created"
+
+      - name: gift_message
+        description: "Gift message"
+
+      - name: sender_name
+        description: "Gift sender name"
+
+      - name: delivery_method
+        description: "Gift delivery method"
+
+      - name: suggested_quantity
+        description: "Suggested quantity"
+
+      - name: suggested_bid_item_id
+        description: "Suggested bid item ID"
+
+      - name: image_url
+        description: "Image URL"
+
+      - name: is_surprise
+        description: "Boolean indicating if the gift is a surprise"
