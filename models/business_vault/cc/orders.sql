@@ -83,6 +83,8 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.order_additional_coolant_weight_in_pounds
         ,orders.order_bids_count
         ,zeroifnull(order_shipment.shipment_count) as shipment_count
+        ,order_shipment.delivery_days_late
+        ,order_shipment.shipment_tracking_code_list
         ,zeroifnull(order_reschedule.reschedule_count) as reschedule_count
         ,orders.is_rastellis
         ,flags.has_free_shipping
@@ -236,6 +238,8 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,order_shipment.shipped_at_utc
         ,order_shipment.delivered_at_utc
         ,order_shipment.lost_at_utc
+        ,order_shipment.original_est_delivery_date_utc
+        ,order_shipment.est_delivery_date_utc
         ,order_reschedule.occurred_at_utc as order_reschedule_occurred_at_utc
         ,order_reschedule.old_scheduled_fulfillment_date
         ,order_reschedule.new_scheduled_fulfillment_date
