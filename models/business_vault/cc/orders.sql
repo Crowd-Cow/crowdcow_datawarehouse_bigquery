@@ -35,6 +35,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 
         ,case
             when orders.parent_order_id is not null then 'CORP GIFT'
+            when orders.order_type = 'REPLACEMENT' and flags.is_bulk_gift_order then 'CORP GIFT REPLACEMENT'
             else orders.order_type
          end as order_type
         
