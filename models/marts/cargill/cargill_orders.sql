@@ -1,6 +1,6 @@
 with
 
-order_info as ( select * from {{ ref('orders') }} where not is_rastellis )
+order_info as ( select * from {{ ref('orders') }} where not is_rastellis or is_rastellis is null )
 --,order_item_detail as ( select * from {{ ref('order_item_details') }} )
 --,sku as ( select * from {{ ref('skus') }} )
 
