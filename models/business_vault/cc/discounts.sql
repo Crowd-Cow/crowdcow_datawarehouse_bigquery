@@ -19,6 +19,7 @@ credit as ( select * from {{ ref('credits') }} )
         ,created_at_utc
         ,updated_at_utc
     from credit
+    where order_id is not null --this will select only order level credits. Item level credits are added in the item discounts below under the "OTHER ITEM LEVEL PROMOTIONS" business_group
 
     union all 
 
@@ -30,7 +31,7 @@ credit as ( select * from {{ ref('credits') }} )
             when discounts.index = 2 then promotion_id else null
          end as promotion_id
 
-        ,'PROMOTION' as promotion_source --default to old promotions source until something changes with item level promotions
+        ,promotion_source
     
         ,order_id
 
