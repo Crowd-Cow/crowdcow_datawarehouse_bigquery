@@ -1,3 +1,9 @@
+{{
+    config(
+        snowflake_warehouse = 'TRANSFORMING_M'
+    )
+}}
+
 with
 
 order_item as ( select * from {{ ref('order_items') }} )
