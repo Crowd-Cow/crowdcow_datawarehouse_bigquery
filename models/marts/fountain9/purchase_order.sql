@@ -1,6 +1,6 @@
 with
 
-purchase_order as ( select * from {{ ref('pipeline_order_receiving') }} where not is_rastellis )
+purchase_order as ( select * from {{ ref('pipeline_order_receiving') }} where not is_rastellis or is_rastellis is null )
 ,sku as ( select * from {{ ref('skus') }})
 ,current_fc as ( select * from {{ ref('fcs') }} where dbt_valid_to is null )
 ,pipeline_order as ( select * from {{ ref('stg_cc__pipeline_orders') }} )
