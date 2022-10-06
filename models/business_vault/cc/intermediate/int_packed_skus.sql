@@ -1,3 +1,9 @@
+{{
+    config(
+        snowflake_warehouse = 'TRANSFORMING_M'
+    )
+}}
+
 with
 
 order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
