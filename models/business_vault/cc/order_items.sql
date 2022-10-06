@@ -1,14 +1,33 @@
+{{
+    config(
+        snowflake_warehouse = 'TRANSFORMING_M'
+    )
+}}
+
 with
 
 bids as ( select * from {{ ref('stg_cc__bids') }} )
 ,bid_items as (select * from {{ ref('stg_cc__bid_items') }} )
+,item_credits as ( select distinct  bid_id, credit_discount_usd,promotion_id,promotion_source from {{ ref('stg_cc__credits') }} where bid_id is not null )
 
 ,order_item_joins as (
     select
         bids.order_id
         ,bids.bid_id
         ,bids.bid_item_id
-        ,bids.promotion_id
+
+        ,iff(
+            item_credits.promotion_id is not null
+            ,item_credits.promotion_id
+            ,bids.promotion_id
+        ) as promotion_id
+
+        ,case
+            when item_credits.promotion_id is not null then item_credits.promotion_source
+            when item_credits.promotion_id is null and bids.promotion_id is not null then 'PROMOTION'
+            else null
+        end as promotion_source
+        
         ,bids.bid_token
         ,bids.product_id
         ,bids.product_name
@@ -24,11 +43,13 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,coalesce(bids.item_price_usd, bids.bid_price_paid_usd) as bid_price_paid_usd
         ,coalesce(bids.bid_non_member_price_usd,bids.item_price_usd) as bid_non_member_price_usd
         ,coalesce(bids.bid_member_price_usd,bids.item_price_usd) as bid_member_price_usd
+        ,zeroifnull(item_credits.credit_discount_usd) as bid_item_credit_usd
         ,bids.bid_quantity
         ,bids.created_at_utc
         ,bids.updated_at_utc
         ,bids.first_stuck_at_utc
     from bids
+        left join item_credits on bids.bid_id = item_credits.bid_id
         left join bid_items on bids.bid_item_id = bid_items.bid_item_id
             and bids.created_at_utc >= bid_items.adjusted_dbt_valid_from
             and bids.created_at_utc < bid_items.adjusted_dbt_valid_to
@@ -40,6 +61,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,bid_id
         ,bid_item_id
         ,promotion_id
+        ,promotion_source
         ,bid_token
         ,product_id
         ,product_name
@@ -69,6 +91,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
             else bid_non_member_price_usd
          end as bid_non_member_price_usd
 
+        ,bid_item_credit_usd
         ,bid_quantity
         ,created_at_utc
         ,updated_at_utc
@@ -82,6 +105,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,bid_id
         ,bid_item_id
         ,promotion_id
+        ,promotion_source
         ,bid_token
         ,product_id
         ,product_name
@@ -96,6 +120,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,(bid_list_price_usd - bid_price_paid_usd) * bid_quantity as total_order_item_discount
         ,bid_non_member_price_usd
         ,bid_member_price_usd
+        ,bid_item_credit_usd
         ,bid_quantity
         ,created_at_utc
         ,updated_at_utc
@@ -109,6 +134,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,bid_id
         ,bid_item_id
         ,promotion_id
+        ,promotion_source
         ,bid_token
         ,product_id
         ,product_name
@@ -138,13 +164,14 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
 
         ,round(
             case
-                when promotion_id is not null then total_order_item_discount
+                when promotion_id is not null then total_order_item_discount + bid_item_credit_usd
                 else 0
             end
         ,2) as item_promotion_discount
 
         ,bid_member_price_usd
         ,bid_non_member_price_usd
+        ,bid_item_credit_usd
         ,bid_quantity
         ,created_at_utc
         ,updated_at_utc

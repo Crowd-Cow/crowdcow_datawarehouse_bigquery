@@ -11,6 +11,7 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
         ,credit.promotion_id
         ,credit.user_id
         ,credit.order_id
+        ,credit.bid_id
         ,credit.cow_cash_entry_source_id
         ,awarded_cow_cash.gift_card_id
         ,credit.credit_type
@@ -34,6 +35,7 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
         ,add_cow_cash_information.promotion_id
         ,add_cow_cash_information.user_id
         ,add_cow_cash_information.order_id
+        ,add_cow_cash_information.bid_id
         ,add_cow_cash_information.cow_cash_entry_source_id
         ,add_cow_cash_information.gift_card_id
         ,add_cow_cash_information.credit_type
@@ -68,6 +70,7 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
         ,promotion_id
         ,user_id
         ,order_id
+        ,bid_id
         ,cow_cash_entry_source_id
         ,gift_card_id
         ,credit_type
@@ -97,6 +100,7 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
             when credit_type = 'GIFT_CODE_DOLLAR_AMOUNT' and promotion_id = 10 and promotion_source = 'PROMOTION' then 'ACQUISITION MARKETING - MEMBER REFERRAL'
             when credit_type = 'GIFT_CODE_DOLLAR_AMOUNT' and promotion_id = 8 and promotion_source = 'PROMOTION' then 'ACQUISITION MARKETING - INFLUENCER'
             when credit_type = 'DOLLAR_AMOUNT' and promotion_id = 2 and promotion_source = 'PROMOTIONS::PROMOTION' then 'MERCHANDISING DISCOUNT'
+            when bid_id is not null then 'ITEM CREDIT'
             else 'OTHER - UNKNOWN'
         end as credit_business_group
 
