@@ -91,6 +91,9 @@ models:
       - name: non_member_discount_percent
         description: "Non member discount percent"
 
+      - name: replenishment_code
+        description: SKU replenishment code
+
       - name: is_bulk_receivable
         description: "Boolean indicating if this SKU is bulk receivable"
 

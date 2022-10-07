@@ -55,6 +55,7 @@ renamed as (
         ,{{ convert_percent('non_member_discount_percent') }} as non_member_discount_percent
         ,non_member_discount_start_at as non_member_discount_start_at_utc
         ,{{ convert_percent('partial_member_discount_percent') }} as partial_member_discount_percent
+        ,{{ clean_strings('replenishment_code') }} as replenishment_code
         ,dbt_valid_to
         ,dbt_valid_from
         

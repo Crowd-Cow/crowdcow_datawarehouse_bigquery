@@ -41,6 +41,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku.promotional_price_usd
         ,sku.member_discount_percent
         ,sku.non_member_discount_percent
+        ,sku.replenishment_code
         ,sku.is_bulk_receivable
         ,sku.is_presellable
         ,sku.is_virtual_inventory
@@ -121,6 +122,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku_joins.promotional_price_usd
         ,sku_joins.member_discount_percent
         ,sku_joins.non_member_discount_percent
+        ,sku_joins.replenishment_code
         ,sku_joins.is_bulk_receivable
         ,sku_joins.is_presellable
         ,sku_joins.is_virtual_inventory

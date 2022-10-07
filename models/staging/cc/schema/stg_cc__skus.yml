@@ -109,6 +109,9 @@ models:
       - name: reservation_window_days
         description: Reservation window days for the given sku
 
+      - name: replenishment_code
+        description: SKU replenishment code
+
       - name: non_member_promotion_end_at_utc
         description: Non member promotion ended at UTC
 
