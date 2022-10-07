@@ -18,6 +18,7 @@ visits as ( select * from {{ ref('visits') }} )
         ,visits.sub_channel
         ,visits.visit_landing_page
         ,visits.visit_landing_page_path
+        ,visits.gclid
     from visits
         join users on users.attributed_visit_id = visits.visit_id
 )
@@ -35,5 +36,6 @@ select
     ,attribution_details.sub_channel
     ,attribution_details.visit_landing_page
     ,attribution_details.visit_landing_page_path
+    ,attribution_details.gclid
     ,{{ dbt_utils.surrogate_key( ['started_at_utc_date','campaign_grouping'] ) }} as campaign_key
 from attribution_details

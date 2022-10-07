@@ -36,3 +36,6 @@ models:
 
       - name: visit_landing_page_path
         description: "Landing page path of attributed visit"
+
+      - name: gclid
+        description: "Google click ID. Used for conversion tracking"
