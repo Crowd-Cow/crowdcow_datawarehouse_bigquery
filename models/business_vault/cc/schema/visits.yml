@@ -85,6 +85,9 @@ models:
       - name: utm_source
         description: "UTM source"
 
+      - name: gclid
+        description: "Google click ID. Used for conversion tracking"
+
       - name: channel
         description: "Channel of visit attributed source"
 

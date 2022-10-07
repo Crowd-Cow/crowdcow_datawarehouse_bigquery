@@ -73,6 +73,9 @@ models:
       - name: utm_term
         description: "UTM term"
 
+      - name: gclid
+        description: "Google click ID. Used for conversion tracking"
+
       - name: channel
         description: "Channel of visit attributed source"
 

@@ -91,10 +91,11 @@ base_visits as (
         ,visits.utm_content
         ,visits.utm_term
         ,parse_url(visits.visit_landing_page) as parsed_landing_page
-        ,parse_url(visits.visit_landing_page):parameters:UTM_MEDIUM::text as landing_utm_medium
-        ,parse_url(visits.visit_landing_page):parameters:UTM_SOURCE::text as landing_utm_source
-        ,parse_url(visits.visit_landing_page):parameters:UTM_CAMPAIGN::text as landing_utm_campaign
-        ,parse_url(visits.visit_landing_page):parameters:UTM_ADSET::text as landing_utm_adset
+        ,parsed_landing_page:parameters:UTM_MEDIUM::text as landing_utm_medium
+        ,parsed_landing_page:parameters:UTM_SOURCE::text as landing_utm_source
+        ,parsed_landing_page:parameters:UTM_CAMPAIGN::text as landing_utm_campaign
+        ,parsed_landing_page:parameters:UTM_ADSET::text as landing_utm_adset
+        ,parsed_landing_page:parameters:GCLID::text as gclid
         ,ambassador_paths.partner_path as ambassador_path
         ,most_current_partner_path.partner_id
         ,visits.visit_city
@@ -138,6 +139,7 @@ base_visits as (
         ,coalesce(landing_utm_adset,'') as utm_adset
         ,utm_content
         ,utm_term
+        ,gclid
         ,coalesce(ambassador_path,'') as ambassador_path
         ,partner_id
         ,visit_city
@@ -223,6 +225,7 @@ base_visits as (
         ,utm_adset
         ,utm_content
         ,utm_term
+        ,gclid
         
         ,case
             when is_paid_referrer and is_social_platform_referrer then 'SOCIAL'
