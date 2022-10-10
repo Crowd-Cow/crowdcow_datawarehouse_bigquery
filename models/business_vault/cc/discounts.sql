@@ -88,11 +88,12 @@ credit as ( select * from {{ ref('credits') }} )
             when business_group = 'MEMBERSHIP 5%' then 'MEMBERSHIP DISCOUNT'
             when business_group = 'MERCHANDISING DISCOUNT' then 'MERCH DISCOUNT'
             when business_group = 'MEMBERSHIP FREE PROTEIN PROMOTIONS' then 'FREE PROTEIN PROMOTION'
+            when business_group = 'OTHER ITEM LEVEL PROMOTIONS' then 'OTHER ITEM LEVEL PROMOTIONS'
             when business_group in ('ACQUISITION MARKETING - PROMOTION CREDITS','MEMBERSHIP PROMOTIONS','OTHER ITEM LEVEL PROMOTIONS')
                 and is_new_member_promotion then 'NEW MEMBER DISCOUNT'
             when business_group in ('GIFT CARD REDEMPTION') then 'GIFT REDEMPTION'
             when business_group in ('ACQUISITION MARKETING - GIFT', 'ACQUISITION MARKETING - INFLUENCER','ACQUISITION MARKETING - MEMBER REFERRAL'
-                    ,'ACQUISITION MARKETING - PROMOTION CREDITS','CARE CREDITS','OTHER - UNKNOWN','OTHER ITEM LEVEL PROMOTIONS','RETENTION MARKETING','REPLACEMENTS')
+                    ,'ACQUISITION MARKETING - PROMOTION CREDITS','CARE CREDITS','OTHER - UNKNOWN','RETENTION MARKETING','REPLACEMENTS')
                     and not is_new_member_promotion then 'OTHER DISCOUNT'
             else 'EXCLUDED FROM REVENUE BUCKETS'
         end as revenue_waterfall_bucket
