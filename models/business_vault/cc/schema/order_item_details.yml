@@ -67,6 +67,9 @@ models:
       - name: sku_merch_discount
         description: "If the bid item is a single SKU bid item, the SKU merch discount is the order item merch discount. Otherwise it is the sku price proportion times the order item merch discount to get the amount of discount attributed to that SKU"
 
+      - name: sku_free_protein_discount
+        description: "Total discount amount applied for a free protein item"
+
       - name: sku_promotion_discount
         description: "If the bid item is a single SKU bid item, the SKU free protein promotions is the order item promotion discount. Otherwise it is the sku price proportion times the order item free protein discount to get the amount of discount attributed to that SKU"
 

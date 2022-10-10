@@ -58,8 +58,11 @@ models:
       - name: item_merch_discount
         description: The remaining amount of the total item discount given, after subtracting the default 5% for the membership discount
 
+      - name: item_free_protein_discount
+        description: The amount of discount applied for a free protein item
+
       - name: item_promotion_discount
-        description: The amount of the discount given to the item due to a promotion (e.g. free protein discount, other item discount, etc)
+        description: Amount of item level promotion discounts
 
       - name: is_single_sku_bid_item
         description: Boolean indicating if this item only consists of a single SKU vs. a Bundle item that contains several SKUs

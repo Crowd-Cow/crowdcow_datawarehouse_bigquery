@@ -99,6 +99,9 @@ models:
       - name: free_protein_promotion
         description: "Item discount applied by a free protein promotion (e.g. free ground beef for life, etc)"
 
+      - name: item_promotion
+        description: "Item level promotion discount"
+
       - name: net_product_revenue
         description: >
           Net product revenue calculation:
