@@ -44,6 +44,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,coalesce(bids.bid_non_member_price_usd,bids.item_price_usd) as bid_non_member_price_usd
         ,coalesce(bids.bid_member_price_usd,bids.item_price_usd) as bid_member_price_usd
         ,zeroifnull(item_credits.credit_discount_usd) as bid_item_credit_usd
+        ,bids.is_fulfillment_at_risk
         ,bids.bid_quantity
         ,bids.created_at_utc
         ,bids.updated_at_utc
@@ -92,6 +93,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
          end as bid_non_member_price_usd
 
         ,bid_item_credit_usd
+        ,is_fulfillment_at_risk
         ,bid_quantity
         ,created_at_utc
         ,updated_at_utc
@@ -121,6 +123,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,bid_non_member_price_usd
         ,bid_member_price_usd
         ,bid_item_credit_usd
+        ,is_fulfillment_at_risk
         ,bid_quantity
         ,created_at_utc
         ,updated_at_utc
@@ -180,6 +183,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,bid_member_price_usd
         ,bid_non_member_price_usd
         ,bid_item_credit_usd
+        ,is_fulfillment_at_risk
         ,bid_quantity
         ,created_at_utc
         ,updated_at_utc
