@@ -47,6 +47,7 @@ order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
         ,zeroifnull(bid.bid_gross_product_revenue) as bid_gross_product_revenue
         ,zeroifnull(bid.item_member_discount) as item_member_discount
         ,zeroifnull(bid.item_merch_discount) as item_merch_discount
+        ,zeroifnull(bid.item_free_protein_discount) as item_free_protein_discount
         ,zeroifnull(bid.item_promotion_discount) as item_promotion_discount
         ,coalesce(bid_item_sku.is_single_sku_bid_item,TRUE) as is_single_sku_bid_item
         ,coalesce(bid.created_at_utc,order_packed_items.created_at_utc) as item_created_at_utc
@@ -109,6 +110,7 @@ select
     ,bid_gross_product_revenue
     ,item_member_discount
     ,item_merch_discount
+    ,item_free_protein_discount
     ,item_promotion_discount
     ,is_single_sku_bid_item
     ,true as is_item_packed

@@ -24,6 +24,7 @@ order_item as ( select * from {{ ref('order_items') }} )
         ,order_item.bid_gross_product_revenue
         ,order_item.item_member_discount
         ,order_item.item_merch_discount
+        ,order_item.item_free_protein_discount
         ,order_item.item_promotion_discount
         ,order_item.created_at_utc
         ,order_item.updated_at_utc
@@ -77,6 +78,7 @@ select
     ,bid_gross_product_revenue
     ,item_member_discount
     ,item_merch_discount
+    ,item_free_protein_discount
     ,item_promotion_discount
     ,is_single_sku_bid_item
     ,created_at_utc
