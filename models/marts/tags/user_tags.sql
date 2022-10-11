@@ -123,26 +123,6 @@ employee as (
     where user_type in ('CUSTOMER','EMPLOYEE') and total_california_orders > 0
 )
 
-,jp_wagyu_prospect as (
-    {{ generate_tag('users','user_id','jp_wagyu_prospect','user_segment','japanese_buyers_club_revenue') }}
-    where user_type in ('CUSTOMER','EMPLOYEE') and japanese_buyers_club_revenue > 0 and japanese_buyers_club_revenue < 200
-)
-
-,jp_wagyu_bronze as (
-    {{ generate_tag('users','user_id','jp_wagyu_bronze','user_segment','japanese_buyers_club_revenue') }}
-    where user_type in ('CUSTOMER','EMPLOYEE') and japanese_buyers_club_revenue between 200 and 499.99
-)
-
-,jp_wagyu_silver as (
-    {{ generate_tag('users','user_id','jp_wagyu_silver','user_segment','japanese_buyers_club_revenue') }}
-    where user_type in ('CUSTOMER','EMPLOYEE') and japanese_buyers_club_revenue between 500 and 999.99
-)
-
-,jp_wagyu_gold as (
-    {{ generate_tag('users','user_id','jp_wagyu_gold','user_segment','japanese_buyers_club_revenue') }}
-    where user_type in ('CUSTOMER','EMPLOYEE') and japanese_buyers_club_revenue >= 1000
-)
-
 ,churned_customer as (
     {{ generate_tag('users','user_id','churned_customer','user_segment') }}
     where user_type in ('CUSTOMER','EMPLOYEE') and lifetime_paid_order_count > 0 and last_90_days_paid_order_count = 0
@@ -187,13 +167,5 @@ union all
 select * from gift_giver
 union all
 select * from california_customer
-union all
-select * from jp_wagyu_prospect
-union all
-select * from jp_wagyu_bronze
-union all
-select * from jp_wagyu_silver
-union all
-select * from jp_wagyu_gold
 union all
 select * from churned_customer
