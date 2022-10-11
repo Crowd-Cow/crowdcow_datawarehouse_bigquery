@@ -54,7 +54,13 @@ credit as ( select * from {{ ref('credits') }} )
         ,created_at_utc
         ,updated_at_utc
     from order_item,
-        lateral flatten(array_construct(order_item.item_member_discount,order_item.item_merch_discount,order_item.item_promotion_discount)) as discounts
+        lateral flatten(
+        array_construct(
+            order_item.item_member_discount
+            ,order_item.item_merch_discount
+            ,order_item.item_free_protein_discount + order_item.item_promotion_discount
+        )
+    ) as discounts
 )
 
 ,add_promotion_type as (
