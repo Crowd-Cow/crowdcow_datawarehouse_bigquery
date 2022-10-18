@@ -25,6 +25,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,count_if(completed_order_rank = 1 and not is_paid_order and not is_cancelled_order) as total_completed_unpaid_uncancelled_orders
         ,count_if(is_gift_order and is_paid_order and not is_cancelled_order) as total_paid_gift_order_count
         ,sum(iff(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('month',-6,sysdate()),net_revenue,0)) as six_month_net_revenue
+        ,sum(iff(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('month',-6,sysdate()),gross_profit,0)) as six_month_gross_profit
         ,sum(iff(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('month',-12,sysdate()),net_revenue,0)) as twelve_month_net_revenue
         ,count_if(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('month',-6,sysdate())) as six_month_paid_order_count
         ,count_if(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('month',-12,sysdate())) as twelve_month_purchase_count
@@ -55,6 +56,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
     select
         *
         ,ntile(100) over(partition by six_month_net_revenue > 0 order by six_month_net_revenue) as six_month_net_revenue_percentile
+        ,ntile(100) over(partition by six_month_paid_order_count > 0 order by six_month_gross_profit) as six_month_gross_profit_percentile
         ,ntile(100) over(partition by twelve_month_net_revenue > 0 order by twelve_month_net_revenue) as twelve_month_net_revenue_percentile
         ,ntile(100) over(partition by lifetime_net_revenue > 0 order by lifetime_net_revenue) as lifetime_net_revenue_percentile
     from user_order_activity
@@ -133,6 +135,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,zeroifnull(user_percentiles.total_completed_unpaid_uncancelled_orders) as total_completed_unpaid_uncancelled_orders
         ,zeroifnull(user_percentiles.total_paid_gift_order_count) as total_paid_gift_order_count
         ,zeroifnull(user_percentiles.six_month_net_revenue) as six_month_net_revenue
+        ,zeroifnull(user_percentiles.six_month_gross_profit) as six_month_gross_profit
         ,zeroifnull(user_percentiles.twelve_month_net_revenue) as twelve_month_net_revenue
         ,zeroifnull(user_percentiles.six_month_paid_order_count) as six_month_paid_order_count
         ,zeroifnull(user_percentiles.twelve_month_purchase_count) as twelve_month_purchase_count
@@ -140,6 +143,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,zeroifnull(user_percentiles.last_180_days_paid_order_count) as last_180_days_paid_order_count
         ,zeroifnull(user_percentiles.recent_delivered_order_count) as recent_delivered_order_count
         ,zeroifnull(user_percentiles.six_month_net_revenue_percentile) as six_month_net_revenue_percentile
+        ,zeroifnull(user_percentiles.six_month_gross_profit_percentile) as six_month_gross_profit_percentile
         ,zeroifnull(user_percentiles.twelve_month_net_revenue_percentile) as twelve_month_net_revenue_percentile
         ,zeroifnull(user_percentiles.lifetime_net_revenue_percentile) as lifetime_net_revenue_percentile
         ,zeroifnull(user_percentiles.total_california_orders) as total_california_orders

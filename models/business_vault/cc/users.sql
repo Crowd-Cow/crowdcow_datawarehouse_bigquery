@@ -98,6 +98,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,zeroifnull(user_order_activity.last_90_days_paid_membership_order_count) as last_90_days_paid_membership_order_count
         ,zeroifnull(user_order_activity.total_paid_gift_order_count) as total_paid_gift_order_count
         ,zeroifnull(user_order_activity.six_month_net_revenue) as six_month_net_revenue
+        ,zeroifnull(user_order_activity.six_month_gross_profit) as six_month_gross_profit
         ,zeroifnull(user_order_activity.twelve_month_net_revenue) as twelve_month_net_revenue
         ,zeroifnull(user_order_activity.six_month_paid_order_count) as six_month_paid_order_count
         ,zeroifnull(user_order_activity.twelve_month_purchase_count) as twelve_month_purchase_count
@@ -105,6 +106,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,zeroifnull(user_order_activity.last_180_days_paid_order_count) as last_180_days_paid_order_count
         ,zeroifnull(user_order_activity.recent_delivered_order_count) as recent_delivered_order_count
         ,zeroifnull(user_order_activity.six_month_net_revenue_percentile) as six_month_net_revenue_percentile
+        ,zeroifnull(user_order_activity.six_month_gross_profit_percentile) as six_month_gross_profit_percentile
         ,zeroifnull(user_order_activity.twelve_month_net_revenue_percentile) as twelve_month_net_revenue_percentile
         ,zeroifnull(user_order_activity.lifetime_net_revenue_percentile) as lifetime_net_revenue_percentile
         ,zeroifnull(user_order_activity.total_california_orders) as total_california_orders
@@ -183,8 +185,10 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,total_paid_gift_order_count
         ,recent_delivered_order_count
         ,six_month_net_revenue
+        ,six_month_gross_profit
         ,twelve_month_net_revenue
         ,six_month_net_revenue_percentile
+        ,six_month_gross_profit_percentile
         ,twelve_month_net_revenue_percentile
         ,lifetime_net_revenue_percentile
         ,total_california_orders

@@ -53,6 +53,11 @@ employee as (
     where user_type = 'CUSTOMER' and six_month_net_revenue > 0 and six_month_net_revenue_percentile > 80
 )
 
+,vip_priority as (
+    {{ generate_tag('users','user_id','vip_priority','user_segment') }}
+    where user_type = 'CUSTOMER' and six_month_paid_order_count > 0 and six_month_gross_profit_percentile >= 80
+)
+
 ,member as (
     {{ generate_tag('users','user_id','has_ever_been_member','user_segment') }}
     where user_type in ('CUSTOMER','EMPLOYEE') and is_member
@@ -139,6 +144,8 @@ union all
 select * from vip_frequent
 union all
 select * from vip_profit
+union all
+select * from vip_priority
 union all
 select * from member
 union all

@@ -139,11 +139,17 @@ models:
       - name: six_month_net_revenue
         description: "The total net revenue for a user over the past 6 months"
 
+      - name: six_month_gross_profit
+        description: The total gross profit for a user over the past 6 months
+
       - name: twelve_month_net_revenue
         description: "The total net revenue for a user over the past 12 months"
 
       - name: six_month_net_revenue_percentile
         description: "The percentile rank of a user based on total net revenue amount over the past 6 months"
+
+      - name: six_month_gross_profit_percentile
+        description: The percentile rank of a user based on total gross profit amount over the past 6 months
 
       - name: twelve_month_net_revenue_percentile
         description: "The percentile rank of a user based on total net revenue amount over the past 12  months"
