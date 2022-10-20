@@ -69,3 +69,6 @@ models:
 
       - name: farm_name
         description: Farm name
+
+      - name: standard_category
+        description: Clean standardized failure category
