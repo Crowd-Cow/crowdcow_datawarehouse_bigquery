@@ -28,6 +28,9 @@ models:
       - name: visit_id
         description: "Visit ID"
 
+      - name: packer_id
+        description: "ID of user who packed the order"
+
       - name: stripe_charge_id
         description: "Stripe charge ID that can be used to link back to the `stripe.charges` table"
 
