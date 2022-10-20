@@ -1,0 +1,15 @@
+version: 2
+
+models:
+
+  - name: int_order_failures
+    description: Intermediate model to aggregate order failures at the order level
+    columns:
+      - name: order_id
+        description: Order ID
+        tests:
+          - unique
+          - not_null
+      
+      - name: failure_reasons
+        description: Aggregated list of failure reasons for an order
