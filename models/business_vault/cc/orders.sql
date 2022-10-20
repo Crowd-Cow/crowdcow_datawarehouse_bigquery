@@ -26,6 +26,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.subscription_id
         ,orders.fc_id
         ,orders.visit_id
+        ,orders.packer_id
         ,orders.stripe_charge_id
         ,order_promo_redeemed.partner_id
         ,order_promo_redeemed.partner_key
