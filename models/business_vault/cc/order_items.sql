@@ -8,7 +8,19 @@ with
 
 bids as ( select * from {{ ref('stg_cc__bids') }} )
 ,bid_items as (select * from {{ ref('stg_cc__bid_items') }} )
-,item_credits as ( select distinct  bid_id, credit_discount_usd,promotion_id,promotion_source from {{ ref('stg_cc__credits') }} where bid_id is not null )
+
+/*** The system allows for multiple item level credit for the same item which causes duplicate order items when joining to credits ***/
+/*** This doesn't allow us to accurately show which promos were applied to which item since the rest of the financial info (revenue, discounts, costs, etc) 
+/*** are at the item level and not the item/credit level. For now, we are taking the total amount of item credits for an item and the highest value credit as the one that was applied to the item ***/
+,item_credits as ( 
+    select distinct
+        bid_id
+        ,first_value(promotion_id) over(partition by bid_id order by credit_discount_usd desc) as promotion_id
+        ,first_value(promotion_source) over(partition by bid_id order by credit_discount_usd desc) as promotion_source
+        ,sum(credit_discount_usd) over(partition by bid_id) as credit_discount_usd
+    from {{ ref('stg_cc__credits') }}
+    where bid_id is not null
+)
 
 ,order_item_joins as (
     select
