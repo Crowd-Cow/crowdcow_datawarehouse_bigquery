@@ -28,7 +28,6 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku.sku_weight
         ,sku.owned_sku_cost_usd
         ,sku.marketplace_cost_usd
-        ,coalesce(standard_sku_cost.standard_sku_cost_usd,sku.owned_sku_cost_usd) as standard_sku_cost_usd
         ,sku.platform_fee_usd
         ,sku.fulfillment_fee_usd
         ,sku.payment_processing_fee_usd
@@ -65,7 +64,6 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku.dbt_valid_to
         ,sku.adjusted_dbt_valid_from
         ,sku.adjusted_dbt_valid_to
-        ,coalesce(standard_sku_cost.standard_cost_added_date,sku.dbt_valid_from::date) as standard_cost_added_date
     from sku
         left join cut on sku.cut_id = cut.cut_id
             and sku.created_at_utc >= cut.adjusted_dbt_valid_from
@@ -73,11 +71,9 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         left join farm on sku.sku_vendor_id = farm.sku_vendor_id
             and farm.dbt_valid_to is null
         left join sku_vendor on sku.sku_vendor_id = sku_vendor.sku_vendor_id
-        left Join standard_sku_cost on sku.sku_id = standard_sku_cost.sku_id
-            and sku.dbt_valid_to is null
 )
 
-,final as (
+,add_inventory_classification as (
     select
         sku_joins.sku_id
         ,sku_joins.sku_key
@@ -108,7 +104,6 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ) as owned_sku_cost_usd
 
         ,sku_joins.marketplace_cost_usd
-        ,sku_joins.standard_sku_cost_usd
         ,iff(sku_joins.is_marketplace,sku_joins.marketplace_cost_usd,sku_joins.owned_sku_cost_usd) as sku_cost_usd
         ,sku_joins.platform_fee_usd
         ,sku_joins.fulfillment_fee_usd
@@ -148,10 +143,73 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku_joins.dbt_valid_to
         ,sku_joins.adjusted_dbt_valid_from
         ,sku_joins.adjusted_dbt_valid_to
-        ,sku_joins.standard_cost_added_date
     from sku_joins
         left join ais on sku_joins.ais_id = ais.ais_id
         left join inventory_classification on sku_joins.inventory_classification_id = inventory_classification.inventory_classification_id
 )
 
-select * from final
+,add_standard_cost as (
+    select
+        add_inventory_classification.sku_id
+        ,add_inventory_classification.sku_key
+        ,add_inventory_classification.cut_id
+        ,add_inventory_classification.cut_key
+        ,add_inventory_classification.sku_vendor_id
+        ,add_inventory_classification.sku_barcode
+        ,add_inventory_classification.farm_id
+        ,add_inventory_classification.farm_name
+        ,add_inventory_classification.is_active_farm
+        ,add_inventory_classification.category
+        ,add_inventory_classification.sub_category
+        ,add_inventory_classification.cut_name
+        ,add_inventory_classification.sku_name
+        ,add_inventory_classification.sku_weight
+        ,add_inventory_classification.owned_sku_cost_usd
+        ,add_inventory_classification.marketplace_cost_usd
+        ,coalesce(standard_sku_cost.standard_sku_cost_usd,add_inventory_classification.owned_sku_cost_usd) as standard_sku_cost_usd
+        ,add_inventory_classification.sku_cost_usd
+        ,add_inventory_classification.platform_fee_usd
+        ,add_inventory_classification.fulfillment_fee_usd
+        ,add_inventory_classification.payment_processing_fee_usd
+        ,add_inventory_classification.standard_price_usd
+        ,add_inventory_classification.sku_price_usd
+        ,add_inventory_classification.average_box_quantity
+        ,add_inventory_classification.vendor_funded_discount_name
+        ,add_inventory_classification.vendor_funded_discount_usd
+        ,add_inventory_classification.vendor_funded_discount_percent
+        ,add_inventory_classification.promotional_price_usd
+        ,add_inventory_classification.member_discount_percent
+        ,add_inventory_classification.non_member_discount_percent
+        ,add_inventory_classification.replenishment_code
+        ,add_inventory_classification.is_bulk_receivable
+        ,add_inventory_classification.is_presellable
+        ,add_inventory_classification.is_virtual_inventory
+        ,add_inventory_classification.is_cargill
+        ,add_inventory_classification.is_edm
+        ,add_inventory_classification.is_marketplace
+        ,add_inventory_classification.is_rastellis
+        ,add_inventory_classification.is_always_in_stock
+        ,add_inventory_classification.inventory_classification
+        ,add_inventory_classification.sku_vendor_name
+        ,add_inventory_classification.vendor_funded_discount_start_at_utc
+        ,add_inventory_classification.vendor_funded_discount_end_at_utc
+        ,add_inventory_classification.promotion_start_at_utc
+        ,add_inventory_classification.promotion_end_at_utc
+        ,add_inventory_classification.member_discount_start_at_utc
+        ,add_inventory_classification.member_discount_end_at_utc
+        ,add_inventory_classification.non_member_discount_start_at_utc
+        ,add_inventory_classification.non_member_discount_end_at_utc
+        ,add_inventory_classification.active_at_utc
+        ,add_inventory_classification.created_at_utc
+        ,add_inventory_classification.updated_at_utc
+        ,add_inventory_classification.dbt_valid_from
+        ,add_inventory_classification.dbt_valid_to
+        ,add_inventory_classification.adjusted_dbt_valid_from
+        ,add_inventory_classification.adjusted_dbt_valid_to
+        ,coalesce(standard_sku_cost.standard_cost_added_date,add_inventory_classification.dbt_valid_from::date) as standard_cost_added_date
+    from add_inventory_classification
+        left Join standard_sku_cost on add_inventory_classification.sku_id = standard_sku_cost.sku_id
+            and add_inventory_classification.dbt_valid_to is null
+)
+
+select * from add_standard_cost
