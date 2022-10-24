@@ -10,6 +10,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
 ,invoice_lot as ( select distinct invoice_key,bill_amount,bill_description from {{ ref('acumatica_invoices') }} where regexp_like(bill_description,'[0-9]{4}') )
 ,approved_invoice as ( select * from {{ ref('stg_gs__approved_invoice_lot_mapping') }} )
 ,sad_cow_receiving as ( select * from {{ ref('sad_cow_entries') }} where sad_cow_entry_type = 'RECEIVING')
+,moq as ( select * from {{ ref('stg_gs__inventory_moq') }} )
 
 ,get_ordered_detail as (
     select
@@ -34,13 +35,16 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
 
         ,vendor.is_marketplace
         ,vendor.is_rastellis
+        ,moq.case_pack
         ,sum(nullif(current_sku.sku_weight,0) * ordered_item.quantity_ordered) as sku_weight_ordered
         ,sum(ordered_item.quantity_ordered) as quantity_ordered
     from ordered_item
         left join current_lot on ordered_item.lot_number = current_lot.lot_number
         left join current_sku on ordered_item.sku_id = current_sku.sku_id
         left join vendor on current_lot.owner_id = vendor.sku_vendor_id
-    group by 1,2,3,4,5,6,7,8,9,10
+        left join moq on current_sku.cut_id = moq.cut_id
+            and current_sku.farm_id = moq.farm_id
+    group by 1,2,3,4,5,6,7,8,9,10,11
 )
 
 ,get_received_detail as (
@@ -57,11 +61,14 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,iff(vendor.is_marketplace and current_sku.marketplace_cost_usd > 0, current_sku.marketplace_cost_usd,current_sku.owned_sku_cost_usd) as finance_cost
         ,vendor.is_marketplace
         ,vendor.is_rastellis
+        ,moq.case_pack
     from received_item
         left join current_lot on received_item.lot_id = current_lot.lot_id
         left join pipeline_schedule on current_lot.lot_number = pipeline_schedule.lot_number
         left join current_sku on received_item.sku_id = current_sku.sku_id
         left join vendor on current_lot.owner_id = vendor.sku_vendor_id
+        left join moq on current_sku.cut_id = moq.cut_id
+            and current_sku.farm_id = moq.farm_id
 )
 
 ,get_ordered_received as (
@@ -80,6 +87,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,zeroifnull(get_received_detail.quantity_received) as quantity_received
         ,zeroifnull(get_received_detail.sku_weight_received) as sku_weight_received
         ,coalesce(get_ordered_detail.delivered_at_utc,get_received_detail.delivered_at_utc) as delivered_at_utc
+        ,coalesce(get_ordered_detail.case_pack,get_received_detail.case_pack) as case_pack
     from get_ordered_detail
         full outer join get_received_detail on get_ordered_detail.lot_number = get_received_detail.lot_number
             and get_ordered_detail.sku_id = get_received_detail.sku_id
@@ -172,7 +180,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
 
 ,unioned as ( 
     select distinct
-        {{ dbt_utils.surrogate_key(['lot_number','sku_id']) }} as order_received_id
+        {{ dbt_utils.surrogate_key(['lot_number','sku_id','pipeline_order_id','processor_name','delivered_at_utc','is_marketplace']) }} as order_received_id
         ,lot_number
         ,sku_id
         ,sku_key
@@ -195,12 +203,13 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,is_marketplace
         ,is_rastellis
         ,delivered_at_utc
+        ,case_pack
     from final_calcs
 
     union all
 
     select distinct
-        {{ dbt_utils.surrogate_key(['lot_number','null']) }} as order_received_id
+        {{ dbt_utils.surrogate_key(['lot_number','null','pipeline_order_id','processor_name','delivered_at_utc','is_marketplace']) }} as order_received_id
         ,sad_cow_no_sku.lot_number
         ,null::int as sku_id
         ,null::varchar as sku_key
@@ -223,6 +232,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,is_marketplace
         ,is_rastellis
         ,delivered_at_utc
+        ,null::int as case_pack
     from sad_cow_no_sku
 )
 
