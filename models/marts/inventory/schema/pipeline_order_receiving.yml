@@ -72,3 +72,6 @@ models:
 
       - name: delivered_at_utc
         description: "Timestamp for when the lot was delivered"
+
+      - name: case_pack
+        descripton: Cut case pack size
