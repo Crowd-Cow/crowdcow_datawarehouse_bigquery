@@ -435,6 +435,9 @@ models:
       - name: pct_bundle
         description: "Pct of units that from the bundle category"
 
+      - name: jwagyu_reward_spend
+        description: The amount of qualified reward spend this order contributes to the Japanese Wagyu club
+
       - name: beef_item_rank
         description: The rank of the order where the order contained beef. For example, a rank of 1 means this is the user's first order that contained beef
 

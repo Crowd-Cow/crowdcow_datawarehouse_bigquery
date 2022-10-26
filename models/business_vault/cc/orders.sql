@@ -16,6 +16,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,order_reschedule as ( select * from {{ ref('int_order_reschedules') }} )
 ,order_promo_redeemed as ( select * from {{ ref('int_partner_promo_redemptions') }} )
 ,order_failure as ( select * from {{ ref('int_order_failures') }} )
+,reward as ( select * from {{ ref('int_order_rewards') }} )
 
 ,order_joins as (
     select
@@ -167,6 +168,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(units.pct_turkey) as pct_turkey
         ,zeroifnull(units.pct_wagyu) as pct_wagyu
         ,zeroifnull(units.pct_bundle) as pct_bundle
+        ,zeroifnull(reward.jwagyu_reward_spend) as jwagyu_reward_spend
         
         ,iff(
             units.beef_units > 0
@@ -259,6 +261,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         left join order_reschedule on orders.order_id = order_reschedule.order_id
         left join order_promo_redeemed on orders.order_id = order_promo_redeemed.order_id
         left join order_failure on orders.order_id = order_failure.order_id
+        left join reward on orders.order_id = reward.order_id
     
     /**** Removing these order types because they are just shell orders that provide no data value ****/
     /**** Children orders contain all the necessary information for revenue, addresses, dates, etc for the order ****/

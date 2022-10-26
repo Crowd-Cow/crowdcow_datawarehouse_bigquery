@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: int_order_rewards
+    description: Intermediate model to aggreate rewards spend at the order level
+    columns:
+      - name: order_id
+        description: Order ID
+
+      - name: jwagyu_reward_spend
+        description: The amount of qualifying Japanese Wagyu spend on the order
