@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: stg_cc__reward_points
+    description: Staging model for rewards points
+    columns:
+      - name: reward_point_id
+        description: Reward point ID
+        tests:
+          - unique
+          - not_null
+
+      - name: created_at_utc
+        description: Timestamp for when the record was created
+
+      - name: user_id
+        description: User ID
+
+      - name: giver_id
+        description: User ID of the person that gave rewards
+
+      - name: reward_reason
+        description: The reason the reward was given
+
+      - name: granted_at_utc
+        description: Timestamp for when the reward was granted
+
+      - name: rewards_program
+        description: Name of the rewards program the points were earned from
+
+      - name: updated_at_utc
+        description: Timestamp for when the record was updated
+
+      - name: order_id
+        description: Order ID
+
+      - name: reward_spend_amount
+        description: The amount spent applied to the reward total

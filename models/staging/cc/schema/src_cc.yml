@@ -7270,3 +7270,31 @@ sources:
           - name: updated_at
             description: updated_at
   
+      - name: reward_points
+        description: Crowd Cow reward point transaction logs
+
+        columns:
+          - name: id
+            description: id
+          - name: created_at
+            description: created_at
+          - name: user_id
+            description: user_id
+          - name: giver_id
+            description: giver_id
+          - name: reason
+            description: reason
+          - name: granted_at
+            description: granted_at
+          - name: rewards_program
+            description: rewards_program
+          - name: updated_at
+            description: updated_at
+          - name: order_id
+            description: order_id
+          - name: amount
+            description: amount
+          - name: _fivetran_deleted
+            description: _fivetran_deleted
+          - name: _fivetran_synced
+            description: _fivetran_synced
