@@ -1,0 +1,48 @@
+version: 2
+
+models:
+  - name: cow_cash_transaction_history
+    description: Transaction history of cow cash awarded and used
+    columns:
+
+      - name: cow_cash_id
+        description: Cow cash ID
+
+      - name: user_id
+        description: User ID
+
+      - name: credit_id
+        description: Credit ID
+
+      - name: given_by_user_id
+        description: User ID that awarded the cow cash
+
+      - name: gift_card_id
+        description: Gift card ID
+
+      - name: cow_cash_entry_source_id
+        description: The cow_cash ID of the entry that awarded the cow cash
+
+      - name: order_id
+        description: Order ID
+
+      - name: cow_cash_message
+        descripiton: Message describing the cow cash award
+
+      - name: entry_type
+        description: Cow cash entry type
+
+      - name: cow_cash_amount_usd
+        description: Cow cash amount
+
+      - name: amount_used_usd
+        description: Amount of the awared cow cash entry that has been used so far
+
+      - name: expires_at_utc
+        description: Timestamp for when the cow cash expires
+
+      - name: created_at_utc
+        description: Timestamp for when the record was created
+
+      - name: updated_at_utc
+        description: Timestamp for when the record was updated
