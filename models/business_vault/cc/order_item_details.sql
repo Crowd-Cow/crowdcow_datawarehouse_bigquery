@@ -8,6 +8,20 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
 ,non_gift_orders as ( select order_id from {{ ref('int_order_flags') }} where not is_gift_card_order )
 ,receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
 ,pipeline_order as ( select * from {{ ref('stg_cc__pipeline_orders') }} )
+,current_sku_reservation as (
+    select
+        order_id
+        ,bid_id
+        ,bid_item_id
+        ,sku_id
+    from {{ ref('stg_cc__sku_reservations') }}
+    where dbt_valid_to is null
+        and order_id is not null
+        and bid_id is not null
+        and bid_item_id is not null
+        and sku_id is not null
+    qualify row_number() over(partition by order_id,bid_id,bid_item_id,sku_id order by dbt_valid_from desc) = 1
+)
 
 ,get_packed_orders as (
     select
@@ -158,50 +172,55 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
 
 ,final as (
     select
-    order_item_detail_id
-    ,order_id
-    ,bid_id
-    ,bid_item_id
-    ,sku_id
-    ,sku_key
-    ,bid_sku_key
-    ,sku_box_id
-    ,sku_box_key
-    ,sku_owner_id
-    ,lot_number
-    ,fc_id
-    ,fc_key
-    ,promotion_id
-    ,owner_name
-    ,bid_item_name
-    ,bid_quantity
-    ,sku_quantity
-    ,total_sku_weight
-    ,sku_price_usd as sku_price
-    ,sku_cost_usd as sku_cost
-    ,sku_price_proportion
-    ,sku_gross_product_revenue
-    ,sku_member_discount
-    ,sku_merch_discount
-    ,sku_free_protein_discount
-    ,sku_promotion_discount
-    
-    ,sku_gross_product_revenue
-        + sku_member_discount
-        + sku_merch_discount
-        + sku_free_protein_discount
-        + sku_promotion_discount
-    as sku_net_product_revenue
-    
-    ,is_item_packed
-    ,is_marketplace
-    ,is_single_sku_bid_item
-    ,is_rastellis
-    ,created_at_utc
-    ,bid_created_at_utc
-    ,updated_at_utc
-    ,packed_created_at_utc
-from calculate_sku_revenue
+        calculate_sku_revenue.order_item_detail_id
+        ,calculate_sku_revenue.order_id
+        ,calculate_sku_revenue.bid_id
+        ,calculate_sku_revenue.bid_item_id
+        ,calculate_sku_revenue.sku_id
+        ,calculate_sku_revenue.sku_key
+        ,calculate_sku_revenue.bid_sku_key
+        ,calculate_sku_revenue.sku_box_id
+        ,calculate_sku_revenue.sku_box_key
+        ,calculate_sku_revenue.sku_owner_id
+        ,calculate_sku_revenue.lot_number
+        ,calculate_sku_revenue.fc_id
+        ,calculate_sku_revenue.fc_key
+        ,calculate_sku_revenue.promotion_id
+        ,calculate_sku_revenue.owner_name
+        ,calculate_sku_revenue.bid_item_name
+        ,calculate_sku_revenue.bid_quantity
+        ,calculate_sku_revenue.sku_quantity
+        ,calculate_sku_revenue.total_sku_weight
+        ,calculate_sku_revenue.sku_price_usd as sku_price
+        ,calculate_sku_revenue.sku_cost_usd as sku_cost
+        ,calculate_sku_revenue.sku_price_proportion
+        ,calculate_sku_revenue.sku_gross_product_revenue
+        ,calculate_sku_revenue.sku_member_discount
+        ,calculate_sku_revenue.sku_merch_discount
+        ,calculate_sku_revenue.sku_free_protein_discount
+        ,calculate_sku_revenue.sku_promotion_discount
+        
+        ,calculate_sku_revenue.sku_gross_product_revenue
+            + calculate_sku_revenue.sku_member_discount
+            + calculate_sku_revenue.sku_merch_discount
+            + calculate_sku_revenue.sku_free_protein_discount
+            + calculate_sku_revenue.sku_promotion_discount
+        as sku_net_product_revenue
+        
+        ,calculate_sku_revenue.is_item_packed
+        ,calculate_sku_revenue.is_marketplace
+        ,calculate_sku_revenue.is_single_sku_bid_item
+        ,calculate_sku_revenue.is_rastellis
+        ,current_sku_reservation.order_id is not null as is_reserved
+        ,calculate_sku_revenue.created_at_utc
+        ,calculate_sku_revenue.bid_created_at_utc
+        ,calculate_sku_revenue.updated_at_utc
+        ,calculate_sku_revenue.packed_created_at_utc
+    from calculate_sku_revenue
+        left join current_sku_reservation on calculate_sku_revenue.order_id = current_sku_reservation.order_id
+            and calculate_sku_revenue.bid_id = current_sku_reservation.bid_id
+            and calculate_sku_revenue.bid_item_id = current_sku_reservation.bid_item_id
+            and calculate_sku_revenue.sku_id = current_sku_reservation.sku_id
 )
 
 select * from final
