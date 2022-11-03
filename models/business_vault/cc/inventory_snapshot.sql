@@ -177,6 +177,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,quantity_sellable
         ,quantity_sellable * sku_price_usd as potential_revenue_sellable
         ,quantity_sellable * sku_cost_usd as sku_cost_sellable
+        ,snapshot_date - delivered_at_utc::date as days_from_delivery
         ,is_sellable
         ,is_destroyed
         ,is_marketplace
