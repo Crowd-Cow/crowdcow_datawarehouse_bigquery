@@ -125,6 +125,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,sku_vendor.is_marketplace
         ,sku_vendor.is_rastellis
         ,fbq_item.sku_id is not null as is_configured_for_fbq
+        ,lot.delivered_at_utc as lot_delivered_at_utc
     from sku_box_locations
         left join sku_vendor on sku_box_locations.owner_id = sku_vendor.sku_vendor_id
         left join lot on sku_box_locations.lot_id = lot.lot_id
@@ -177,7 +178,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,quantity_sellable
         ,quantity_sellable * sku_price_usd as potential_revenue_sellable
         ,quantity_sellable * sku_cost_usd as sku_cost_sellable
-        ,snapshot_date - delivered_at_utc::date as days_from_delivery
+        ,snapshot_date - lot_delivered_at_utc::date as days_from_delivery
         ,is_sellable
         ,is_destroyed
         ,is_marketplace
@@ -189,6 +190,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,marked_destroyed_at_utc
         ,delivered_at_utc
         ,moved_to_picking_at_utc
+        ,lot_delivered_at_utc
     from inventory_joins
 )
 
