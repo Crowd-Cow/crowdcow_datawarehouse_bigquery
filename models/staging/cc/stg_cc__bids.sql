@@ -24,6 +24,7 @@ renamed as (
     ,user_id
     ,product_id
     ,promotion_id
+    ,{{ clean_strings('promotion_type') }} as promotion_source
     ,{{ clean_strings('name')  }} as product_name
     ,{{ clean_strings('description') }} as product_description
     ,{{ clean_strings('item_photo_url') }} as item_photo_url

@@ -36,6 +36,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
 
         ,case
             when item_credits.promotion_id is not null then item_credits.promotion_source
+            when item_credits.promotion_id is null and bids.promotion_id is not null and bids.promotion_source is not null then bids.promotion_source
             when item_credits.promotion_id is null and bids.promotion_id is not null then 'PROMOTION'
             else null
         end as promotion_source
