@@ -24,7 +24,7 @@ source as ( select * from {{ source('cc', 'failure_cases') }} where not _fivetra
         ,created_at as created_at_utc
         ,shipped_at as shipped_at_utc
         ,{{ clean_strings('notes') }} as notes
-        ,zeroifnull(credit_amount) as credit_amount
+        ,zeroifnull({{ cents_to_usd('credit_amount') }} ) as credit_amount
         ,updated_at as updated_at_utc
         ,{{ clean_strings('farm_name') }} as farm_name
     from source
