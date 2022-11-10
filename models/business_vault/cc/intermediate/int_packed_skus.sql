@@ -41,6 +41,7 @@ order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
         order_packed_items.*
         ,bid.bid_quantity
         ,bid.promotion_id
+        ,bid.promotion_source
         ,bid.bid_item_name
         ,bid.created_at_utc as bid_created_at_utc
         ,zeroifnull(bid.bid_list_price_usd) as bid_list_price_usd
@@ -103,6 +104,7 @@ select
     ,fc_id
     ,fc_key
     ,promotion_id
+    ,promotion_source
     ,bid_item_name
     ,bid_quantity
     ,sku_quantity

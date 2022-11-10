@@ -55,6 +55,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
         ,ordered_items.fc_id
         ,ordered_items.fc_key
         ,ordered_items.promotion_id
+        ,ordered_items.promotion_source
         ,ordered_items.bid_item_name
         ,ordered_items.bid_quantity
         ,ordered_items.sku_quantity
@@ -186,6 +187,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
         ,calculate_sku_revenue.fc_id
         ,calculate_sku_revenue.fc_key
         ,calculate_sku_revenue.promotion_id
+        ,calculate_sku_revenue.promotion_source
         ,calculate_sku_revenue.owner_name
         ,calculate_sku_revenue.bid_item_name
         ,calculate_sku_revenue.bid_quantity

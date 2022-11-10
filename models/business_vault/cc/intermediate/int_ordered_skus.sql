@@ -18,6 +18,7 @@ order_item as ( select * from {{ ref('order_items') }} )
         ,order_item.bid_id
         ,order_item.bid_item_id
         ,order_item.promotion_id
+        ,order_item.promotion_source
         ,order_item.bid_item_name
         ,order_item.bid_quantity
         ,order_item.bid_list_price_usd
@@ -71,6 +72,7 @@ select
     ,fc_id
     ,fc_key
     ,promotion_id
+    ,promotion_source
     ,bid_item_name
     ,bid_quantity
     ,sku_quantity
