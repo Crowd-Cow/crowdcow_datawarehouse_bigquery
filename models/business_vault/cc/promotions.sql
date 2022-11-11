@@ -17,6 +17,11 @@ promotion as ( select * from {{ ref('stg_cc__promotions') }} where dbt_valid_to 
         ,is_always_available
         ,must_be_assigned_to_user
         ,must_be_assigned_to_order
+        ,claimable_window_in_days
+        ,must_be_claimed
+        ,must_be_applied_by_user
+        ,starts_at_utc
+        ,ends_at_utc
         ,created_at_utc
         ,updated_at_utc
     from promotion
