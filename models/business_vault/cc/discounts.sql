@@ -69,6 +69,7 @@ credit as ( select * from {{ ref('credits') }} )
         ,union_discounts.discount_source
         ,union_discounts.discount_id
         ,union_discounts.promotion_id
+        ,union_discounts.promotion_source
         ,promotion.promotion_type
         ,union_discounts.order_id
         ,union_discounts.business_group
@@ -111,6 +112,7 @@ select
     ,discount_source
     ,discount_id
     ,promotion_id
+    ,promotion_source
     ,promotion_type
     ,order_id
     ,business_group
