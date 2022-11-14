@@ -2,7 +2,7 @@
 
 ## Docs
 
-[Confluence]([https://crowdcow.atlassian.net/wiki/spaces/ED/pages/170623021/Data+Engineering](https://crowdcow.atlassian.net/wiki/spaces/ED/pages/280494081/Analytics))
+[Confluence](https://crowdcow.atlassian.net/wiki/spaces/ED/pages/280494081/Analytics)
 
 ## Events
 
