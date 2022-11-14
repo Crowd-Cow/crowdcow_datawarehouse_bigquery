@@ -143,6 +143,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
             else 'OTHER'
          end as user_type
         
+        ,active_order_id
         ,first_name
         ,last_name
         ,user_gender
