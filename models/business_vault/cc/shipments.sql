@@ -85,9 +85,13 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
         ,get_order_delivery_address.shipped_at_utc
         ,get_order_delivery_address.delivered_at_utc
         ,get_order_delivery_address.original_est_delivery_date_utc
-        ,get_order_delivery_address.original_est_delivery_date_utc + interval '20 hours' as delivery_cutoff_at_utc
-        ,get_order_delivery_address.delivered_at_utc::date > original_est_delivery_date_utc::date as is_delivery_late
-        ,iff(is_delivery_late or is_delivery_late is null,delivered_at_utc::date - original_est_delivery_date_utc::date,0) as delivery_days_late
+        ,get_order_delivery_address.original_est_delivery_date_utc + interval '20 hours' as delivery_cutoff_at_utc --this should no longer be used to calculate late deliveries
+
+        /* Using the Pacific Time for delivery and original est delivery to calculate late shipments */
+        /* Using UTC caused issues since the UTC day switched to a new day in the middle of our day which made the delivery look "late" */
+        ,get_order_delivery_address.delivered_at_pt::date > original_est_delivery_date_pt::date as is_delivery_late
+        ,iff(is_delivery_late or is_delivery_late is null,delivered_at_pt::date - original_est_delivery_date_pt::date,0) as delivery_days_late
+        
         ,get_order_delivery_address.est_delivery_date_utc
         ,get_order_delivery_address.postage_paid_at_utc
         ,get_order_delivery_address.scheduled_fulfillment_date_utc

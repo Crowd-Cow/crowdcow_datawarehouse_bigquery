@@ -19,8 +19,10 @@ source as ( select * from {{ source('cc', 'shipments') }} where not _fivetran_de
         ,{{ clean_strings('easypost_shipping_label_url') }} as easypost_shipping_label_url
         ,shipped_at as shipped_at_utc
         ,delivered_at as delivered_at_utc
+        ,convert_timezone('UTC','America/Los_Angeles',delivered_at) as delivered_at_pt
         ,{{ clean_strings('delivery_method') }} as delivery_method
         ,easypost_original_estimated_delivery_date as original_est_delivery_date_utc
+        ,convert_timezone('UTC','America/Los_Angeles',easypost_original_estimated_delivery_date) as original_est_delivery_date_pt
         ,easypost_postage_rate_id
         ,marked_not_shipped_at as marked_not_shipped_at_utc
         ,fc_id
@@ -81,8 +83,10 @@ source as ( select * from {{ source('cc', 'shipments') }} where not _fivetran_de
         ,easypost_shipping_label_url
         ,shipped_at_utc
         ,delivered_at_utc
+        ,delivered_at_pt
         ,delivery_method
         ,original_est_delivery_date_utc
+        ,original_est_delivery_date_pt
         ,easypost_postage_rate_id
         ,marked_not_shipped_at_utc
         ,fc_id
