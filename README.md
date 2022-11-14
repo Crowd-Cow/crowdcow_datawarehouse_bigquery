@@ -2,9 +2,7 @@
 
 ## Docs
 
-[Confluence](https://crowdcow.atlassian.net/wiki/spaces/ED/pages/170623021/Data+Engineering)
-
-[dbt docs](https://dbt-docs-160632217553a66d.onporter.run) are updated with merges to master. Login is in 1password under *Datawarehouse Documentation*.
+[Confluence]([https://crowdcow.atlassian.net/wiki/spaces/ED/pages/170623021/Data+Engineering](https://crowdcow.atlassian.net/wiki/spaces/ED/pages/280494081/Analytics))
 
 ## Events
 
