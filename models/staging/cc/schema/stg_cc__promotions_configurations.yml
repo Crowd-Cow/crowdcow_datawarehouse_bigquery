@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: stg_cc__promotions_configurations
+    descripton: Staging model for promotions configurations
+    columns:
+      - name: promotion_configuration_id
+        description: Promotion configuration ID
+        tests:
+          - unique
+          - not_null
+
+      - name: promotion_configuration_key
+        description: Promotion configuration key
+
+      - name: created_at_utc
+        description: Timestamp for when the record was created
+
+      - name: promotion_configuration_value
+        description: Promotion configuration_value
+
+      - name: configurable_type
+        description: Configurable type
+
+      - name: configurable_id
+        description: Configurable ID
+
+      - name: updated_at_utc
+        description: Timestamp for when the record was updated

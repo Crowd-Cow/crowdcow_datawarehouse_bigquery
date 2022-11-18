@@ -4938,6 +4938,29 @@ sources:
           - name: must_be_applied_by_user
             description: must_be_applied_by_user
 
+      - name: promotions_configurations
+        description: Promotions configurations
+        
+        columns:
+          - name: id
+            description: id
+          - name: key
+            description: key
+          - name: created_at
+            description: created_at
+          - name: value
+            description: value
+          - name: configurable_type
+            description: configurable_type
+          - name: configurable_id
+            description: configurable_id
+          - name: updated_at
+            description: updated_at
+          - name: _fivetran_deleted
+            description: _fivetran_deleted
+          - name: _fivetran_synced
+            description: _fivetran_synced
+
       - name: reclaimed_bids
         description: reclaimed_bids
 
