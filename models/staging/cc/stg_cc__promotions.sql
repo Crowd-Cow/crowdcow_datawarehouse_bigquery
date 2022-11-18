@@ -2,6 +2,15 @@ with
 
 promotion as ( select * from {{ ref('promotions_ss') }} where not _fivetran_deleted )
 ,promotion_promotion as ( select * from {{ ref('promotions_promotions_ss') }} where not _fivetran_deleted )
+,promotion_code as (
+    select
+        configurable_id as promotion_id
+        ,promotion_configuration_value as promo_code
+        ,configurable_type as promotion_source
+    from {{ ref('stg_cc__promotions_configurations') }}
+    where promotion_configuration_key = 'PROMO_CODE'
+    and configurable_type = 'PROMOTIONS::PROMOTION'
+)
 
 ,union_promotions as (
     select
@@ -50,29 +59,32 @@ from promotion_promotion
 ,renamed as (
 
     select
-        id as promotion_id
-        ,promotion_source
-        ,dbt_scd_id as promotion_key
-        ,{{ clean_strings('promotion_type') }} as promotion_type
-        ,always_available as is_always_available
-        ,must_be_assigned_to_user
-        ,must_be_assigned_to_order
-        ,claimable_window_in_days
-        ,must_be_claimed
-        ,must_be_applied_by_user
-        ,starts_at as starts_at_utc
-        ,ends_at as ends_at_utc
-        ,created_at as created_at_utc
-        ,updated_at as updated_at_utc
-        ,dbt_valid_to
-        ,dbt_valid_from
+        union_promotions.id as promotion_id
+        ,union_promotions.promotion_source
+        ,union_promotions.dbt_scd_id as promotion_key
+        ,{{ clean_strings('union_promotions.promotion_type') }} as promotion_type
+        ,promotion_code.promo_code
+        ,union_promotions.always_available as is_always_available
+        ,union_promotions.must_be_assigned_to_user
+        ,union_promotions.must_be_assigned_to_order
+        ,union_promotions.claimable_window_in_days
+        ,union_promotions.must_be_claimed
+        ,union_promotions.must_be_applied_by_user
+        ,union_promotions.starts_at as starts_at_utc
+        ,union_promotions.ends_at as ends_at_utc
+        ,union_promotions.created_at as created_at_utc
+        ,union_promotions.updated_at as updated_at_utc
+        ,union_promotions.dbt_valid_to
+        ,union_promotions.dbt_valid_from
         ,case
-            when dbt_valid_from = first_value(dbt_valid_from) over(partition by id order by dbt_valid_from) then '1970-01-01'
-            else dbt_valid_from
+            when union_promotions.dbt_valid_from = first_value(union_promotions.dbt_valid_from) over(partition by union_promotions.id order by union_promotions.dbt_valid_from) then '1970-01-01'
+            else union_promotions.dbt_valid_from
         end as adjusted_dbt_valid_from
-        ,coalesce(dbt_valid_to,'2999-01-01') as adjusted_dbt_valid_to
+        ,coalesce(union_promotions.dbt_valid_to,'2999-01-01') as adjusted_dbt_valid_to
 
     from union_promotions
+        left join promotion_code on union_promotions.id = promotion_code.promotion_id
+            and union_promotions.promotion_source = promotion_code.promotion_source
 
 )
 
