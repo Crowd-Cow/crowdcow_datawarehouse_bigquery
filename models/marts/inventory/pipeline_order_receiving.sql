@@ -6,7 +6,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
 ,current_lot as ( select * from {{ ref('lots') }} where dbt_valid_to is null)
 ,vendor as ( select * from {{ ref('stg_cc__sku_vendors') }})
 ,pipeline_schedule as ( select * from {{ ref('pipeline_schedules') }} )
-,invoice as ( select distinct invoice_key,bill_amount,bill_description from {{ ref('acumatica_invoices') }} )
+,invoice as ( select distinct invoice_key,bill_amount,bill_description,bill_date_utc,due_date_utc from {{ ref('acumatica_invoices') }} )
 ,invoice_lot as ( select distinct invoice_key,bill_amount,bill_description from {{ ref('acumatica_invoices') }} where regexp_like(bill_description,'[0-9]{4}') )
 ,approved_invoice as ( select * from {{ ref('stg_gs__approved_invoice_lot_mapping') }} )
 ,sad_cow_receiving as ( select * from {{ ref('sad_cow_entries') }} where sad_cow_entry_type = 'RECEIVING')
@@ -33,6 +33,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
             else ordered_item.cost_per_unit_usd
          end as cost_per_unit_usd
 
+        ,current_sku.sku_price_usd
         ,vendor.is_marketplace
         ,vendor.is_rastellis
         ,moq.case_pack
@@ -44,7 +45,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         left join vendor on current_lot.owner_id = vendor.sku_vendor_id
         left join moq on current_sku.cut_id = moq.cut_id
             and current_sku.farm_id = moq.farm_id
-    group by 1,2,3,4,5,6,7,8,9,10,11
+    group by 1,2,3,4,5,6,7,8,9,10,11,12
 )
 
 ,get_received_detail as (
@@ -59,6 +60,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,pipeline_schedule.processor_out_name as processor_name
         ,nullif(current_sku.sku_weight,0) * received_item.sku_lot_quantity as sku_weight_received
         ,iff(vendor.is_marketplace and current_sku.marketplace_cost_usd > 0, current_sku.marketplace_cost_usd,current_sku.owned_sku_cost_usd) as finance_cost
+        ,current_sku.sku_price_usd
         ,vendor.is_marketplace
         ,vendor.is_rastellis
         ,moq.case_pack
@@ -80,6 +82,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,coalesce(get_ordered_detail.fc_id,get_received_detail.fc_id) as fc_id
         ,coalesce(get_ordered_detail.processor_name,get_received_detail.processor_name) as processor_name
         ,coalesce(get_ordered_detail.cost_per_unit_usd,get_received_detail.finance_cost) as cost_per_unit_usd
+        ,coalesce(get_ordered_detail.sku_price_usd,get_received_detail.sku_price_usd) as sku_price
         ,coalesce(get_ordered_detail.is_marketplace,get_received_detail.is_marketplace) as is_marketplace
         ,coalesce(get_ordered_detail.is_rastellis,get_received_detail.is_rastellis) as is_rastellis
         ,zeroifnull(get_ordered_detail.quantity_ordered) as quantity_ordered
@@ -98,8 +101,12 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         *
         ,quantity_ordered * cost_per_unit_usd as total_sku_cost_ordered
         ,quantity_received * cost_per_unit_usd as total_sku_cost_received
+        ,quantity_ordered * sku_price as total_sku_price_ordered
+        ,quantity_received * sku_price as total_sku_price_received
         ,sum(quantity_ordered * cost_per_unit_usd) over(partition by lot_number) as total_lot_cost_ordered
         ,sum(quantity_received * cost_per_unit_usd) over(partition by lot_number) as total_lot_cost_received
+        ,sum(total_sku_price_ordered) over(partition by lot_number) as total_lot_price_ordered
+        ,sum(total_sku_price_received) over(partition by lot_number) as total_lot_price_received
     from get_ordered_received
 )
 
@@ -107,6 +114,8 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
     select
         coalesce(approved_invoice.lot_number,invoice_lot.bill_description) as lot_number
         ,sum(invoice.bill_amount) as total_invoice_usd
+        ,max(invoice.bill_date_utc) as invoice_date_utc
+        ,max(invoice.due_date_utc) as invoice_due_date_utc
     from invoice
         left join approved_invoice on invoice.invoice_key = approved_invoice.invoice_key
         left join invoice_lot on invoice.invoice_key = invoice_lot.invoice_key
@@ -117,6 +126,8 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
     select
         calc_sku_lot_costs.*
         ,zeroifnull(approved_invoice_details.total_invoice_usd) as total_invoice_usd
+        ,invoice_date_utc
+        ,invoice_due_date_utc
     from calc_sku_lot_costs
         left join approved_invoice_details on calc_sku_lot_costs.lot_number = approved_invoice_details.lot_number
 )
@@ -192,17 +203,21 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,sku_weight_ordered
         ,total_sku_cost_ordered
         ,total_lot_cost_ordered
+        ,total_sku_price_ordered
         ,sad_cow_received_quantity
         ,quantity_received
         ,sku_weight_received
         ,total_sku_cost_received
         ,total_lot_cost_received
+        ,total_sku_price_received
         ,total_sku_cost_invoiced
         ,total_invoice_usd
         ,pct_of_cost_received
         ,is_marketplace
         ,is_rastellis
         ,delivered_at_utc
+        ,invoice_date_utc
+        ,invoice_due_date_utc
         ,case_pack
     from final_calcs
 
@@ -221,17 +236,21 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,null::float as sku_weight_ordered
         ,null::float as total_sku_cost_ordered
         ,null::float as total_lot_cost_ordered
+        ,null::float as total_sku_price_ordered
         ,sad_cow_received_quantity
         ,null::int as quantity_received
         ,null::float as sku_weight_received
         ,null::float as total_sku_cost_received
         ,null::float as total_lot_cost_received
+        ,null::float as total_sku_price_received
         ,null::float as total_sku_cost_invoiced
         ,null::float as total_invoice_usd
         ,null::float as pct_of_cost_received
         ,is_marketplace
         ,is_rastellis
         ,delivered_at_utc
+        ,null::timestamp as invoice_date_utc
+        ,null::timestamp as invoice_due_date_utc
         ,null::int as case_pack
     from sad_cow_no_sku
 )
