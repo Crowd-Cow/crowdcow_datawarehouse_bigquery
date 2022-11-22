@@ -52,8 +52,8 @@ zd_tickets as (select * from {{ ref('stg_zendesk__tickets')}})
         ,cc_tickets.tags
         ,cc_tickets.user_id
         ,cc_tickets.zd_solved_at_utc
-        ,case when cc_tickets.ticket_id is not null then TRUE else FALSE end as is_ticket_in_cc_zendesk
-        ,case when zd_tickets.issue_category like 'ORDER_HELD%' or zd_tickets.ticket_subject like 'ORDER BEING HELD:%' then TRUE else FALSE end as is_order_held_ticket
+        ,cc_tickets.ticket_id is not null as is_ticket_in_cc_zendesk
+        ,zd_tickets.issue_category like 'ORDER_HELD%' or zd_tickets.ticket_subject like 'ORDER BEING HELD:%' as is_order_held_ticket
         ,array_size(zd_tickets.merged_ticket_ids) > 0 as is_merged_ticket
     from zd_tickets
         left join cc_tickets on zd_tickets.ticket_id::varchar = cc_tickets.ticket_id::varchar
