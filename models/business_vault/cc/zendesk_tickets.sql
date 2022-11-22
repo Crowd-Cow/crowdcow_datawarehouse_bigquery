@@ -56,7 +56,7 @@ zd_tickets as (select * from {{ ref('stg_zendesk__tickets')}})
         ,zd_tickets.issue_category like 'ORDER_HELD%' or zd_tickets.ticket_subject like 'ORDER BEING HELD:%' as is_order_held_ticket
         ,array_size(zd_tickets.merged_ticket_ids) > 0 as is_merged_ticket
     from zd_tickets
-        left join cc_tickets on zd_tickets.ticket_id::varchar = cc_tickets.ticket_id::varchar
+        left join cc_tickets on zd_tickets.ticket_id = cc_tickets.ticket_id
 )
 
 ,get_ratings_users as (

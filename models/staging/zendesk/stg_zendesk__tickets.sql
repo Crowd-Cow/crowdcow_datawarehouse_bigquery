@@ -4,7 +4,7 @@ source as ( select * from {{ source('zendesk', 'ticket') }} )
 
 ,renamed as (
     select
-        id as ticket_id
+        id::varchar as ticket_id
         ,{{ clean_strings('url') }} as ticket_url
         ,external_id
         ,{{ clean_strings('via_channel') }} as via_channel
