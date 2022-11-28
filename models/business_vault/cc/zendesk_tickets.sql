@@ -52,6 +52,7 @@ zd_tickets as (select * from {{ ref('stg_zendesk__tickets')}})
         ,cc_tickets.tags
         ,cc_tickets.user_id
         ,cc_tickets.zd_solved_at_utc
+        ,cc_tickets.reopens > 0 as is_ticket_reopened
         ,cc_tickets.ticket_id is not null as is_ticket_in_cc_zendesk
         ,zd_tickets.issue_category like 'ORDER_HELD%' or zd_tickets.ticket_subject like 'ORDER BEING HELD:%' as is_order_held_ticket
         ,array_size(zd_tickets.merged_ticket_ids) > 0 as is_merged_ticket
