@@ -142,7 +142,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,inventory_aggregation_cut.quantity_sellable
         ,inventory_aggregation_cut.potential_revenue
         ,round(inventory_forecast.forecasted_sales,2) as daily_forecasted_sales
-        ,round(inventory_forecast.next_seven_day_avg,2) as avg_forecasted_weekly_units
+        ,round(inventory_forecast.next_seven_day_avg*7,2) as avg_forecasted_weekly_units
 
     from inventory_aggregation_cut
         left join inventory_forecast on inventory_aggregation_cut.join_key = inventory_forecast.join_key
