@@ -19,7 +19,8 @@ shipped_orders as ( select * from {{ ref('orders') }} where has_shipped and orde
         ,-free_shipping_discount as free_shipping_discount
         ,-new_member_discount as new_member_discount
         ,-refund_amount as refund_amount
-        ,product_cost as product_cost
+        ,net_product_revenue
+        ,product_cost
         ,shipment_cost
         ,coolant_cost
         ,packaging_cost
