@@ -186,11 +186,11 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,2) as item_free_protein_discount
     
         ,round(
-                case
-                    when not(promotion_id in (18,20,22,35,37) and promotion_source = 'PROMOTION') 
-                        and promotion_id is not null then total_order_item_discount + bid_item_credit_usd
-                    else 0
-                end
+            case
+                when not(promotion_id in (18,20,22,35,37) and promotion_source = 'PROMOTION') 
+                    and promotion_id is not null then total_order_item_discount + bid_item_credit_usd
+                else 0
+            end
         ,2) as item_promotion_discount
 
         ,bid_member_price_usd
