@@ -23,6 +23,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,sum(inventory.potential_revenue) as potential_revenue
         ,sum(inventory.quantity_reserved) as quantity_reserved
         ,sum(inventory.quantity_sellable) as quantity_sellable
+        ,sum(inventory.sku_cost) as sku_cost
     from inventory
         left join sku on inventory.sku_key = sku.sku_key
         left join fc on inventory.fc_key = fc.fc_key
@@ -60,6 +61,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,inventory_aggregation_sku.potential_revenue
         ,inventory_aggregation_sku.quantity_reserved
         ,inventory_aggregation_sku.quantity_sellable
+        ,inventory_aggregation_sku.sku_cost
     
         ,first_value(first_available_pipeline_order.fc_scan_proposed_date) 
             over(partition by inventory_aggregation_sku.category,inventory_aggregation_sku.sub_category,inventory_aggregation_sku.cut_id,inventory_aggregation_sku.fc_id,inventory_aggregation_sku.snapshot_date 
@@ -102,6 +104,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,sum(potential_revenue) as potential_revenue
         ,sum(quantity_reserved) as quantity_reserved
         ,sum(quantity_sellable) as quantity_sellable
+        ,sum(sku_cost) as sku_cost
     from add_next_order 
     group by 1,2,3,4,5,6,7,8,9,10,11,12
 )
@@ -141,6 +144,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,inventory_aggregation_cut.quantity_reserved
         ,inventory_aggregation_cut.quantity_sellable
         ,inventory_aggregation_cut.potential_revenue
+        ,inventory_aggregation_cut.sku_cost
         ,round(inventory_forecast.forecasted_sales,2) as daily_forecasted_sales
         ,round(inventory_forecast.next_seven_day_avg*7,2) as avg_forecasted_weekly_units
 
