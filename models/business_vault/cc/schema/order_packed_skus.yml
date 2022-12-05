@@ -1,0 +1,69 @@
+version: 2
+
+models:
+  - name: order_packed_skus
+    description: ""
+    columns:
+      - name: order_packed_sku_id
+        description: "Packed SKU ID"
+
+      - name: order_packed_sku_name
+        description: "Packed SKU Name"
+
+      - name: payment_processing_fee_usd
+        description: "Payment processing fee in US Dollars"
+
+      - name: order_id
+        description: "Order ID SKU was added to"
+
+      - name: sku_id
+        description: "SKU ID of packed SKU"
+
+      - name: created_at_utc
+        description: "Time row was created"
+
+      - name: sku_reservation_id
+        description: "Reservation ID"
+
+      - name: sku_barcode
+        description: "Barcode of packed sku"
+
+      - name: farm_id
+        description: "Farm of packed sku"
+
+      - name: acumatica_confirmed_at_utc
+        description: ""
+
+      - name: sku_quantity
+        description: "Quantity of SKU packed"
+
+      - name: sku_box_id
+        description: "SKU Box ID picked from"
+
+      - name: platform_fee_usd
+        description: "Platform fee in US Dollars"
+
+      - name: fulfillment_fee_usd
+        description: "Fulfillment fee in US Dollars"
+
+      - name: updated_at_utc
+        description: "Updated at date UTC"
+
+      - name: reason
+        description: ""
+
+      - name: farm_name
+        description: "Farm name of packed SKU"
+
+      - name: user_id
+        description: "User ID"
+
+      - name: committed_at_utc
+        description: "Committed at date UTC"
+
+      - name: sku_cost_usd
+        description: "sku cost in US dollars"
+
+      - name: sku_weight
+        description: "Weight of packed sku in lbs"
+
