@@ -37,6 +37,7 @@ renamed as (
     ,reserve_inventory_immediately as is_reserve_inventory_immediately
     ,{{ clean_strings('fill_type') }} as fill_type
     ,fulfillment_at_risk as is_fulfillment_at_risk
+    ,ifnull(used_member_pricing,TRUE) as used_member_pricing
     ,product_permutation_id
     ,target_product_permutation_id
     ,first_stuck_at as first_stuck_at_utc

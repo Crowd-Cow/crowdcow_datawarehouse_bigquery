@@ -62,6 +62,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,bids.created_at_utc
         ,bids.updated_at_utc
         ,bids.first_stuck_at_utc
+        ,bids.used_member_pricing
     from bids
         left join item_credits on bids.bid_id = item_credits.bid_id
         left join bid_items on bids.bid_item_id = bid_items.bid_item_id
@@ -111,6 +112,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,created_at_utc
         ,updated_at_utc
         ,first_stuck_at_utc
+        ,used_member_pricing
     from order_item_joins
 )
 
@@ -141,6 +143,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,created_at_utc
         ,updated_at_utc
         ,first_stuck_at_utc
+        ,used_member_pricing
     from update_promotion_bid_prices
 )
 
@@ -166,14 +169,17 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
 
         ,round(
             case
-                when promotion_id is null and total_order_item_discount > 0 then (bid_list_price_usd * bid_quantity) * .05  -- Standard member discount is 5%
+                when promotion_id is null and total_order_item_discount > 0 and used_member_pricing then (bid_list_price_usd * bid_quantity) * .05  -- Standard member discount is 5%
                 else 0
             end
         ,2) as item_member_discount
     
         ,round(
             case
-                when promotion_id is null and total_order_item_discount > 0 then ((bid_list_price_usd - bid_price_paid_usd) * bid_quantity) - ((bid_list_price_usd * bid_quantity) * .05) -- Anything above the standard 5% member discount should be considered a merch discount
+                when promotion_id is null and total_order_item_discount > 0 and used_member_pricing
+                    then ((bid_list_price_usd - bid_price_paid_usd) * bid_quantity) - ((bid_list_price_usd * bid_quantity) * .05) -- Anything above the standard 5% member discount should be considered a merch discount
+                when promotion_id is null and total_order_item_discount > 0 and not used_member_pricing
+                    then ((bid_list_price_usd - bid_price_paid_usd) * bid_quantity)
                 else 0
             end
         ,2) as item_merch_discount
