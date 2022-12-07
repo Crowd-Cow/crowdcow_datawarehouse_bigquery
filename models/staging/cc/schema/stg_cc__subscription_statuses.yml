@@ -1,0 +1,77 @@
+version: 2
+
+models:
+  - name: stg_cc__subscription_statuses
+    description: "Staging model for subscription statuses. Helps find reasons for stuck orders"
+    columns:
+      - name: is_order_missing
+        description: "Boolean indicating if the order is missing"
+
+      - name: was_week_out_notification_sent
+        description: "Boolean indicating if the order notification email was sent"
+
+      - name: created_at_utc
+        description: "Timestamp for when the record was created"
+
+      - name: order_id
+        description: "Order ID"
+
+      - name: updated_at_utc
+        description: "Timestamp for when the record was updated"
+
+      - name: is_all_inventory_reserved
+        description: "Boolean indicating if all inventory is reserved for the order"
+
+      - name: is_order_cancelled
+        description: "Boolean indicating if the order is cancelled"
+
+      - name: arrival_date_utc
+        description: "Timestamp for when the order is expected to arrive"
+
+      - name: does_need_customer_confirmation
+        description: "Boolean indicating if the order needs customer confirmation"
+
+      - name: is_bids_fulfillment_at_risk
+        description: "Boolean indicating if the bids are at risk of being fulfilled"
+
+      - name: is_time_to_charge
+        description: "Boolean indicating if it is time to charge the card for payment for the order"
+
+      - name: is_payment_failure
+        description: "Boolean indicating if there was a failure in charging the card for payment"
+
+      - name: was_referred_to_customer_service
+        description: "Boolean indicating if the order was referred to customer service"
+
+      - name: is_invalid_postal_code
+        description: "Boolean indicating if the delivery postal code is invalid"
+
+      - name: is_order_charged
+        description: "Boolean indicating if the order has been charged to the customer's card"
+
+      - name: can_retry_payment
+        description: "Boolean indicating if we can retry payment for the order in case of a payment failure"
+
+      - name: subscription_status_id
+        description: "Subscription status ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: order_total_usd
+        description: "Order total amount USD according to Admin"
+
+      - name: order_subtotal_usd
+        description: "Order subtotal USD according to Admin"
+
+      - name: fulfillment_at_utc
+        description: "Timestamp for when the order was fulfilled"
+
+      - name: is_under_order_minimum
+        description: "Boolean indicating if the order amount is under the order minimum"
+
+      - name: is_order_scheduled_in_past
+        description: "Boolean indicating if the order is scheduled to fulfill on a past date"
+
+      - name: subscription_id
+        description: "Membership ID"

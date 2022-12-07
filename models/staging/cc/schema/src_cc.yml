@@ -6254,6 +6254,61 @@ sources:
           - name: cancelled_reason
             description: cancelled_reason
 
+      - name: subscription_statuses
+        description: subscription_statuses
+        
+        columns:
+          - name: order_missing
+            description: order_missing
+          - name: week_out_notification_sent
+            description: week_out_notification_sent
+          - name: created_at
+            description: created_at
+          - name: order_id
+            description: order_id
+          - name: updated_at
+            description: updated_at
+          - name: all_inventory_reserved
+            description: all_inventory_reserved
+          - name: order_cancelled
+            desription: order_cancelled
+          - name: arrival_date
+            description: arrival_date
+          - name: needs_customer_confirmation
+            description: needs_customer_confirmation
+          - name: bids_fulfillment_at_risk
+            description: bids_fulfillment_at_risk
+          - name: time_to_charge
+            description: time_to_charge
+          - name: payment_failure
+            description: payment_failure
+          - name: referred_to_customer_service
+            description: referred_to_customer_service\
+          - name: invalid_postal_code
+            description: invalid_postal_code
+          - name: order_charged
+            description: order_charged
+          - name: can_retry_payment
+            description: can_retry_payment
+          - name: id
+            descripiton: id
+          - name: order_total_cents
+            description: order_total_cents
+          - name: order_subtotal_cents
+            description: order_subtotal_cents
+          - name: fulfillment_date
+            description: fulfillment_date
+          - name: under_order_minimum
+            description: under_order_minimum
+          - name: order_scheduled_in_past
+            description: order_scheduled_in_past
+          - name: subscription_id
+            description: subscription_id
+          - name: _fivetran_deleted
+            description: _fivetran_deleted
+          - name: _fivetran_synced
+            description: _fivetran_synced
+
       - name: survey_monkey_responses
         description: survey_monkey_responses
 

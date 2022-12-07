@@ -108,6 +108,16 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,flags.is_fulfillment_risk
         ,flags.is_rescheduled
         ,flags.was_member
+        ,flags.was_week_out_notification_sent
+        ,flags.is_all_inventory_reserved
+        ,flags.does_need_customer_confirmation
+        ,flags.is_time_to_charge
+        ,flags.is_payment_failure
+        ,flags.was_referred_to_customer_service
+        ,flags.is_invalid_postal_code
+        ,flags.can_retry_payment
+        ,flags.is_under_order_minimum
+        ,flags.is_order_scheduled_in_past
         ,ranks.overall_order_rank
         ,ranks.completed_order_rank
         ,ranks.paid_order_rank

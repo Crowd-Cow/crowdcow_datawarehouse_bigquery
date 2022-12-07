@@ -9,6 +9,24 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,order_reschedule as ( select distinct order_id from {{ ref('stg_cc__events') }} where event_name = 'ORDER_RESCHEDULED' )
 ,membership_status as (select * from {{ ref('stg_cc__subscriptions') }} )
 ,user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
+,stuck_order_flags as ( select * from {{ ref('stg_cc__subscription_statuses') }} )
+
+,distinct_stuck_order_flag as (
+    select
+        order_id
+        ,was_week_out_notification_sent
+        ,is_all_inventory_reserved
+        ,does_need_customer_confirmation
+        ,is_time_to_charge
+        ,is_payment_failure
+        ,was_referred_to_customer_service
+        ,is_invalid_postal_code
+        ,can_retry_payment
+        ,is_under_order_minimum
+        ,is_order_scheduled_in_past
+    from stuck_order_flags
+    qualify row_number() over(partition by order_id order by updated_at_utc desc) = 1
+)
 
 ,gift_card as (
     select
@@ -43,19 +61,19 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 )
 
 ,fulfillment_risk as (
-        select order_id, max(is_fulfillment_at_risk) as is_fulfillment_risk
-        from bids
-        group by 1
+    select order_id, max(is_fulfillment_at_risk) as is_fulfillment_risk
+    from bids
+    group by 1
 )
 
 ,placed_by_uncancelled_member as (
     select distinct order_id
         from orders
         join membership_status on orders.user_id = membership_status.user_id
-                               and orders.order_paid_at_utc >= membership_status.subscription_created_at_utc
-                               and (orders.order_paid_at_utc < membership_status.subscription_cancelled_at_utc
-                                or membership_status.subscription_cancelled_at_utc is null
-                               )
+            and orders.order_paid_at_utc >= membership_status.subscription_created_at_utc
+            and (orders.order_paid_at_utc < membership_status.subscription_cancelled_at_utc
+                or membership_status.subscription_cancelled_at_utc is null
+            )
 )
 
 ,flags as (
@@ -93,6 +111,17 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,order_reschedule.order_id is not null as is_rescheduled
         ,orders.order_type = 'RFG' as is_rastellis
         ,placed_by_uncancelled_member.order_id is not null as was_member
+
+        ,distinct_stuck_order_flag.was_week_out_notification_sent
+        ,distinct_stuck_order_flag.is_all_inventory_reserved
+        ,distinct_stuck_order_flag.does_need_customer_confirmation
+        ,distinct_stuck_order_flag.is_time_to_charge
+        ,distinct_stuck_order_flag.is_payment_failure
+        ,distinct_stuck_order_flag.was_referred_to_customer_service
+        ,distinct_stuck_order_flag.is_invalid_postal_code
+        ,distinct_stuck_order_flag.can_retry_payment
+        ,distinct_stuck_order_flag.is_under_order_minimum
+        ,distinct_stuck_order_flag.is_order_scheduled_in_past
     from orders
         left join gift_info on orders.order_id = gift_info.order_id 
         left join has_shipping_credit on orders.order_id = has_shipping_credit.order_id
@@ -101,6 +130,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         left join order_reschedule on orders.order_id = order_reschedule.order_id
         left join placed_by_uncancelled_member on orders.order_id = placed_by_uncancelled_member.order_id
         left join user on orders.user_id = user.user_id
+        left join distinct_stuck_order_flag on orders.order_id = distinct_stuck_order_flag.order_id
 )
 
 select *
