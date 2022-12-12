@@ -37,6 +37,15 @@ models:
       - name: purchase_order_id
         description: "Order ID of the gift card purchase"
 
+      - name: gift_card_purchased_at_utc
+        description: Timestamp for when the gift card was purchased
+
+      - name: last_redemption_at_utc
+        description: Timestamp for when the gift card last had a redemption
+
+      - name: gift_card_unique_id
+        description: Surrogate key to provide uniqueness. Combines `gift_card_id`,`created_at_utc`, and `amount_usd`
+
       - name: has_outstanding_balance
         description: "Boolean indicating if the gift card still has an outstanding balance"
 

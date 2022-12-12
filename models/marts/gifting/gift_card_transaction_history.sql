@@ -50,6 +50,7 @@ gift_card as ( select * from {{ ref('gift_cards') }} )
 ,add_flags as (
     select
         *
+        ,{{ dbt_utils.surrogate_key( ['gift_card_id','created_at_utc','amount_usd'] ) }} as gift_card_unique_id
         ,current_balance > 0 as has_outstanding_balance
         ,purchase_order_id is null as is_bulk_generated
     from calc_gift_card_balance
