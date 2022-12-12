@@ -41,6 +41,8 @@ gift_card as ( select * from {{ ref('gift_cards') }} )
         ,round(sum(amount_usd) over(partition by gift_card_id order by created_at_utc),2) as balance
         ,round(sum(amount_usd) over(partition by gift_card_id),2) as current_balance
         ,first_value(order_id) over(partition by gift_card_id order by created_at_utc) as purchase_order_id
+        ,min(iff(entry_type = 'GIFT CARD PURCHASE',created_at_utc,null)) over(partition by gift_card_id) as gift_card_purchased_at_utc
+        ,max(iff(entry_type = 'GIFT CARD REDEMPTION',created_at_utc,null)) over(partition by gift_card_id) as last_redemption_at_utc
     from union_gift_card_transactions
     order by gift_card_id,entry_type,created_at_utc
 )
