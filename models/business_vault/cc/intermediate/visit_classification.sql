@@ -170,7 +170,7 @@ base_visits as (
             when utm_source like '%GEIST%' then 'GEIST'
             when visit_landing_page like '%/L_U%' and visit_landing_page_user_token <> '' then 'USER REFERRAL'
             when utm_medium  like '%PARTNER%' or utm_source  like '%PARTNER%' then 'PARTNER'
-            when utm_medium like '%AFFILIATE%' 
+            when utm_medium like any ('%AFFILIATE%' , '%HIVEWYRE%')
                 or utm_source like '%SHAREASALE%' 
                 or (visit_landing_page like any ('%/AFFILIATE-GIVEAWAY%','%/FREE-PRODUCT%') and utm_source not in ('GOOGLE','ITERABLE')) then 'AFFILIATE'
             when utm_medium like '%AMBASSADOR%' or visit_landing_page like '%/AMBASSADOR-GIVEAWAY%' or ambassador_path <> '' then 'AMBASSADOR'
