@@ -52,6 +52,7 @@ source as ( select * from {{ source('cc', 'orders') }} where not _fivetran_delet
     ,{{ cents_to_usd('shipping_fee_cents') }} as order_shipping_fee_usd
     ,notes_updated_at as order_notes_updated_at_utc
     ,scheduled_arrival_date as order_scheduled_arrival_date_utc
+    ,convert_timezone('UTC','America/Los_Angeles',scheduled_arrival_date) as order_scheduled_arrival_date_pt
     ,print_prepick_label_last_attempted_at as order_print_prepick_label_last_attempted_at_utc
     ,{{ clean_strings('force_postage_carrier') }} as order_force_postage_carrier 
     ,scheduled_fulfillment_date as order_scheduled_fulfillment_date_utc
