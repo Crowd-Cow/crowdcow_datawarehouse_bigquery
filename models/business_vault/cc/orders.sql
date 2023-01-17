@@ -36,6 +36,8 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,order_failure.failure_reasons
         ,orders.order_current_state
         ,order_reschedule.reschedule_reason
+        ,orders.third_party_internal_identifier 
+        ,orders.third_party_customer_identifier
 
         ,case
             when orders.parent_order_id is not null then 'CORP GIFT'

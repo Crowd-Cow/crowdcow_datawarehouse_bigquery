@@ -522,3 +522,9 @@ models:
       - name: promo_redeemed_at_utc
         description: Timestamp for when the promo code was redeemed
 
+      - name: third_party_internal_identifier
+        description: 3PL internal order identifier
+        
+      - name: third_party_customer_identifier
+        description: 3PL customer identifier
+
