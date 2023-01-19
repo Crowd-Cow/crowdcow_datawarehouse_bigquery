@@ -86,7 +86,7 @@ receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
         left join sku on receivable.sku_id = sku.sku_id
             and receivable.updated_at_utc >= sku.adjusted_dbt_valid_from
             and receivable.updated_at_utc < sku.adjusted_dbt_valid_to
-        left join lot on pipeline_order.lot_number = lot.lot_number
+        left join lot on pipeline_order.pipeline_order_id = lot.pipeline_order_id
             and receivable.updated_at_utc >= lot.adjusted_dbt_valid_from
             and receivable.updated_at_utc < lot.adjusted_dbt_valid_to
 )
