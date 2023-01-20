@@ -40,7 +40,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,sum(nullif(current_sku.sku_weight,0) * ordered_item.quantity_ordered) as sku_weight_ordered
         ,sum(ordered_item.quantity_ordered) as quantity_ordered
     from ordered_item
-        left join current_lot on ordered_item.lot_number = current_lot.lot_number
+        left join current_lot on ordered_item.pipeline_order_id = current_lot.pipeline_order_id
         left join current_sku on ordered_item.sku_id = current_sku.sku_id
         left join vendor on current_lot.owner_id = vendor.sku_vendor_id
         left join moq on current_sku.cut_id = moq.cut_id
