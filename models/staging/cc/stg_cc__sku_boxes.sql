@@ -23,7 +23,7 @@ renamed as (
         ,quantity_reserved
         ,barcode
         ,delivered_at as delivered_at_utc
-        ,pallet_id
+        {# ,pallet_id #}
         ,min_weight
         ,moved_to_picking_at as moved_to_picking_at_utc
         ,owner_id

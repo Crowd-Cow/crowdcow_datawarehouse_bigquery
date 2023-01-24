@@ -26,7 +26,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,sku_id
         ,owner_id
         ,lot_id
-        ,pallet_id
+        {# ,pallet_id #}
         ,sku_box_name
         ,min_weight
         ,max_weight
@@ -57,7 +57,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,inventory_snapshot.sku_id
         ,inventory_snapshot.owner_id
         ,inventory_snapshot.lot_id
-        ,inventory_snapshot.pallet_id
+        {# ,inventory_snapshot.pallet_id #}
         ,inventory_snapshot.sku_box_name
         ,inventory_snapshot.min_weight
         ,inventory_snapshot.max_weight
@@ -155,7 +155,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,sku_key
         ,owner_id
         ,lot_number
-        ,pallet_id
+        {# ,pallet_id #}
         ,fc_location_id
         ,sku_box_name
         ,sku_box_owner_name
