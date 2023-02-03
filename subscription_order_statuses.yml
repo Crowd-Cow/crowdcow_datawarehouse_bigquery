@@ -1,0 +1,76 @@
+21:03:19  Running with dbt=1.1.0
+21:03:21  version: 2
+
+models:
+  - name: subscription_order_statuses
+    description: ""
+    columns:
+      - name: is_order_missing
+        description: ""
+
+      - name: was_week_out_notification_sent
+        description: ""
+
+      - name: created_at_utc
+        description: ""
+
+      - name: order_id
+        description: ""
+
+      - name: updated_at_utc
+        description: ""
+
+      - name: is_all_inventory_reserved
+        description: ""
+
+      - name: is_order_cancelled
+        description: ""
+
+      - name: arrival_date_utc
+        description: ""
+
+      - name: does_need_customer_confirmation
+        description: ""
+
+      - name: is_bids_fulfillment_at_risk
+        description: ""
+
+      - name: is_time_to_charge
+        description: ""
+
+      - name: is_payment_failure
+        description: ""
+
+      - name: was_referred_to_customer_service
+        description: ""
+
+      - name: is_invalid_postal_code
+        description: ""
+
+      - name: is_order_charged
+        description: ""
+
+      - name: can_retry_payment
+        description: ""
+
+      - name: subscription_status_id
+        description: ""
+
+      - name: order_total_usd
+        description: ""
+
+      - name: order_subtotal_usd
+        description: ""
+
+      - name: fulfillment_at_utc
+        description: ""
+
+      - name: is_under_order_minimum
+        description: ""
+
+      - name: is_order_scheduled_in_past
+        description: ""
+
+      - name: subscription_id
+        description: ""
+
