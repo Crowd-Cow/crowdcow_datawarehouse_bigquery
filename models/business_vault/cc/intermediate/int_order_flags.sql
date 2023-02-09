@@ -110,6 +110,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,coalesce(fulfillment_risk.is_fulfillment_risk,FALSE) as is_fulfillment_risk
         ,order_reschedule.order_id is not null as is_rescheduled
         ,orders.order_type = 'RFG' as is_rastellis
+        ,orders.order_type = 'QVC' as is_qvc
         ,placed_by_uncancelled_member.order_id is not null as was_member
 
         ,distinct_stuck_order_flag.was_week_out_notification_sent

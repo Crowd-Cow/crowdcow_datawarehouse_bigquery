@@ -94,6 +94,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,order_shipment.shipment_tracking_code_list
         ,zeroifnull(order_reschedule.reschedule_count) as reschedule_count
         ,orders.is_rastellis
+        ,orders.is_qvc
         ,flags.has_free_shipping
         ,flags.is_ala_carte_order
         ,flags.is_membership_order
