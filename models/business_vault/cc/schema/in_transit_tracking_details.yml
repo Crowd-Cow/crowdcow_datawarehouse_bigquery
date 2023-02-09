@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: in_transit_tracking_details
+    description: "from arrival scan to out for delivery transit of shipments"
+    columns:
+      - name: shipment_id
+        description: "shipment id"
+
+      - name: city
+        description: "city where shipment is located"
+
+      - name: state
+        description: "state where shipment is located"
+
+      - name: arrived_at_utc
+        description: "arrival time"
+
+      - name: departed_at_utc
+        description: "departure time"
+

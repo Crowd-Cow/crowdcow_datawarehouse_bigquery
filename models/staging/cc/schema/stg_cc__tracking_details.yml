@@ -1,0 +1,48 @@
+version: 2
+
+models:
+  - name: stg_cc__tracking_details
+    description: "Tracking details for shipments by FedEx, UPS, and USPS"
+    columns:
+      - name: tracking_detail_id
+        description: "unique id of behavior"
+
+      - name: shipment_id
+        description: "shipment id"
+
+      - name: country
+        description: "country"
+
+      - name: message
+        description: "behavior occurring"
+
+      - name: carrier
+        description: "carrier"
+
+      - name: full_json
+        description: "unparsed json"
+
+      - name: extension_type
+        description: "reason for change to plan"
+
+      - name: city
+        description: "city where shipment is"
+
+      - name: state
+        description: "state where shipment is"
+
+      - name: zip
+        description: "zip where shipment is"
+
+      - name: status
+        description: "status of shipment"
+
+      - name: created_at_utc
+        description: "when record was created in db"
+
+      - name: tracking_updated_at_utc
+        description: "when tracking change occurred"
+
+      - name: updated_at_utc
+        description: "updated time"
+
