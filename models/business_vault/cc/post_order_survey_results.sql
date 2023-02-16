@@ -1,45 +1,53 @@
 with
 
 order_survey as ( select * from {{ ref('stg_cc__post_order_survey_results') }} )
+,order_details as (select order_id, is_rastellis, is_qvc from {{ ref('stg_cc__orders') }})
 
-select
-    post_order_survey_id
-    ,order_id
-    ,{{ get_order_type('order_survey') }} as is_rastellis
-    ,user_id
-    ,survey_monkey_response_id
-    ,age
-    ,gender
-    ,income
-    ,butcher_name
-    ,farm_name
-    ,how_first_heard
-    ,does_well
-    ,does_well_tags
-    ,needs_improvement
-    ,needs_improvement_tags
-    ,rank_of_diet
-    ,rank_of_producers
-    ,rank_of_convenience
-    ,rank_of_meds
-    ,rank_of_quality
-    ,rank_of_welfare
-    ,nps_score
-    ,nps_score_normalized
+,survey_order_combined as (
+    select
+    order_survey.post_order_survey_id
+    ,order_survey.order_id
+    ,order_details.is_rastellis
+    ,order_details.is_qvc
+    ,order_survey.user_id
+    ,order_survey.survey_monkey_response_id
+    ,order_survey.age
+    ,order_survey.gender
+    ,order_survey.income
+    ,order_survey.butcher_name
+    ,order_survey.farm_name
+    ,order_survey.how_first_heard
+    ,order_survey.does_well
+    ,order_survey.does_well_tags
+    ,order_survey.needs_improvement
+    ,order_survey.needs_improvement_tags
+    ,order_survey.rank_of_diet
+    ,order_survey.rank_of_producers
+    ,order_survey.rank_of_convenience
+    ,order_survey.rank_of_meds
+    ,order_survey.rank_of_quality
+    ,order_survey.rank_of_welfare
+    ,order_survey.nps_score
+    ,order_survey.nps_score_normalized
     
     ,case
-        when nps_score is null then null
-        when nps_score < 7 then 'DETRACTOR'
-        when nps_score < 9 then 'NEUTRAL'
+        when order_survey.nps_score is null then null
+        when order_survey.nps_score < 7 then 'DETRACTOR'
+        when order_survey.nps_score < 9 then 'NEUTRAL'
         else 'PROMOTER'
      end as nps_score_category
     
-    ,flavor_score
-    ,tender_score
-    ,did_leak
-    ,created_at_utc
-    ,updated_at_utc
-    ,added_as_testimonial_at_utc
-    ,solicited_google_review_at_utc
-    ,zendesk_notified_at_utc
+    ,order_survey.flavor_score
+    ,order_survey.tender_score
+    ,order_survey.did_leak
+    ,order_survey.created_at_utc
+    ,order_survey.updated_at_utc
+    ,order_survey.added_as_testimonial_at_utc
+    ,order_survey.solicited_google_review_at_utc
+    ,order_survey.zendesk_notified_at_utc
 from order_survey
+    left join order_details on order_survey.order_id = order_details.order_id
+    )
+
+    select *
+    from survey_order_combined
