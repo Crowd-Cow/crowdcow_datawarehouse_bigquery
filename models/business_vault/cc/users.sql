@@ -90,6 +90,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,postal_code.state_code
         ,postal_code.city_name
         ,coalesce(user_order_activity.is_rastellis,FALSE) as is_rastellis
+        ,coalesce(user_order_activity.is_qvc,FALSE) as is_qvc
         ,zeroifnull(user_order_activity.lifetime_net_revenue) as lifetime_net_revenue
         ,zeroifnull(user_order_activity.lifetime_paid_order_count) as lifetime_paid_order_count
         ,zeroifnull(user_order_activity.total_completed_unpaid_uncancelled_orders) as total_completed_unpaid_uncancelled_orders

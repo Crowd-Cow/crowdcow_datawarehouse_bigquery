@@ -19,6 +19,7 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
     select
         get_fc_key.*
         ,order_delivery.is_rastellis
+        ,order_delivery.is_qvc
         ,order_delivery.order_delivery_state
         ,order_delivery.order_delivery_postal_code
         ,order_delivery.coolant_weight_in_pounds
@@ -52,6 +53,7 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
         ,get_order_delivery_address.fc_location_id
         ,get_order_delivery_address.shipment_token
         ,get_order_delivery_address.is_rastellis
+        ,get_order_delivery_address.is_qvc
         ,get_order_delivery_address.shipment_tracking_code
         ,get_order_delivery_address.shipment_postage_carrier
         
