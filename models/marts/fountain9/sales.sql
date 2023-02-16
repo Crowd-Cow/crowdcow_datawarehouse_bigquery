@@ -2,7 +2,7 @@ with
 
 order_item as ( select * from {{ ref('order_item_details') }})
 ,sku as ( select * from {{ ref('skus') }} )
-,order_detail as ( select * from {{ ref('orders') }} where not is_rastellis or is_rastellis is null )
+,order_detail as ( select * from {{ ref('orders') }} where (not is_rastellis or is_rastellis is null) and (not is_qvc or is_qvc is null) )
 ,fc as ( select * from {{ ref('fcs') }} )
 
 ,order_item_skus as (
