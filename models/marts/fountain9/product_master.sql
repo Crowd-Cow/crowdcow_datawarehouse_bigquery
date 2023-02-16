@@ -10,11 +10,7 @@ select distinct
     ,ifnull(sku.category,'NONE') as category
     ,ifnull(sku.sub_category,'NONE') as sub_category
 
-    ,case
-        when sku.is_always_in_stock then 'AIS'
-        when sku.inventory_classification is not null then sku.inventory_classification
-        else 'OTHER'
-     end as inventory_classification
+    ,sku.inventory_classification
     
     ,sku.sku_vendor_id as brand_id
     ,sku.sku_vendor_name as brand
