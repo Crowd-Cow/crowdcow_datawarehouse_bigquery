@@ -182,6 +182,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(units.pct_wagyu) as pct_wagyu
         ,zeroifnull(units.pct_bundle) as pct_bundle
         ,zeroifnull(reward.jwagyu_reward_spend) as jwagyu_reward_spend
+        ,zeroifnull(reward.moolah_points) as moolah_points
         
         ,iff(
             units.beef_units > 0
