@@ -111,6 +111,8 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
     select
         user_id
         ,sum(iff(rewards_program = 'WAGYU_CLUB',reward_spend_amount,0)) as japanese_buyers_club_revenue
+        ,(sum(iff(rewards_program = 'MOOLAH',reward_spend_amount,0))*100)::int as moolah_points
+        ,(sum(iff(rewards_program = 'MOOLAH' and reward_spend_amount>0,reward_spend_amount,0))*100)::int as lifetime_awarded_moolah
     from reward
     group by 1
 )
@@ -145,6 +147,8 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,zeroifnull(user_percentiles.user_average_order_value) as user_average_order_value
         ,zeroifnull(user_order_item_activity.lifetime_japanese_wagyu_revenue) as lifetime_japanese_wagyu_revenue
         ,zeroifnull(user_reward_activity.japanese_buyers_club_revenue) as japanese_buyers_club_revenue
+        ,zeroifnull(user_reward_activity.moolah_points) as moolah_points
+        ,zeroifnull(user_reward_activity.lifetime_awarded_moolah) as lifetime_awarded_moolah
         ,average_order_days.average_order_frequency_days
         ,average_order_days.average_membership_order_frequency_days
         ,average_order_days.average_ala_carte_order_frequency_days
