@@ -7,8 +7,9 @@ promotion as ( select * from {{ ref('promotions_ss') }} where not _fivetran_dele
         configurable_id as promotion_id
         ,promotion_configuration_value as promo_code
         ,configurable_type as promotion_source
+        ,concat(promotion_configuration_key,'_',promotion_configuration_value) as promotion_key_value
     from {{ ref('stg_cc__promotions_configurations') }}
-    where promotion_configuration_key = 'PROMO_CODE'
+    where promotion_configuration_key in ('PROMO_CODE','REWARDS_PROGRAM')
     and configurable_type = 'PROMOTIONS::PROMOTION'
 )
 
@@ -81,7 +82,7 @@ from promotion_promotion
             else union_promotions.dbt_valid_from
         end as adjusted_dbt_valid_from
         ,coalesce(union_promotions.dbt_valid_to,'2999-01-01') as adjusted_dbt_valid_to
-
+        ,promotion_key_value
     from union_promotions
         left join promotion_code on union_promotions.id = promotion_code.promotion_id
             and union_promotions.promotion_source = promotion_code.promotion_source
