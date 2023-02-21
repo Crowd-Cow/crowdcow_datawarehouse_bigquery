@@ -9,6 +9,7 @@ promotion as ( select * from {{ ref('stg_cc__promotions') }} where dbt_valid_to 
         ,promotion_type
         ,promotion_source
         ,promo_code
+        ,promotion_key_value
 
         ,coalesce(promotion.promotion_type in 
             ('FREE_GROUND_BEEF','FREE_GROUND_WAGYU','FREE_SAUSAGE','FREE_PATTIES','FREE_SUMMER_SEAFOOD_BOX','NEW_SUBSCRIPTION_FREE_SPARERIBS','NEW_SUBSCRIPTION_25_PERCENT'
