@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: moolah_transaction_history
+    description: "table of all Moolah transactions"
+    columns:
+      - name: reward_point_id
+        description: "unique ID of reward point"
+
+      - name: created_at_utc
+        description: "time record was created"
+
+      - name: user_id
+        description: "user id of customer"
+
+      - name: giver_id
+        description: "when granted by CC employee, user id of grantor"
+
+      - name: order_id
+        description: "order id associated with reward transaction"
+
+      - name: reward_reason
+        description: "reason for reward transaction"
+
+      - name: point_change
+        description: "change to points balance"
+
+      - name: balance
+        description: "total user balance at time of transaction"
+
+      - name: was_outside_of_purchase
+        description: "was granted or redeemed outside of order purchase"
+
+      - name: promotion_id
+        description: "promotion id of selected promotion"
+
+      - name: promotion_source
+        description: "source table for promotions"
+
+      - name: promotion_type
+        description: "promotion selected"
+
+      - name: discount_usd
+        description: "discounted amount applied to order"
+
