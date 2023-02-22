@@ -62,6 +62,8 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(order_revenue.gross_product_revenue) as gross_product_revenue
         ,zeroifnull(order_revenue.membership_discount) as membership_discount
         ,zeroifnull(order_revenue.merch_discount) as merch_discount
+        ,zeroifnull(order_revenue.moolah_item_discount) as moolah_item_discount
+        ,zeroifnull(order_revenue.moolah_order_discount) as moolah_order_discount
         ,zeroifnull(order_revenue.free_protein_promotion) as free_protein_promotion
         ,zeroifnull(order_revenue.item_promotion) as item_promotion
         ,zeroifnull(order_revenue.net_product_revenue) as net_product_revenue
@@ -182,7 +184,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(units.pct_wagyu) as pct_wagyu
         ,zeroifnull(units.pct_bundle) as pct_bundle
         ,zeroifnull(reward.jwagyu_reward_spend) as jwagyu_reward_spend
-        ,zeroifnull(reward.moolah_points) as total_moolah_points
+        ,zeroifnull(reward.moolah_points) as total_moolah_balance_change
         ,zeroifnull(reward.total_moolah_redeemed) as total_moolah_redeemed
         ,zeroifnull(reward.total_awarded_moolah) as total_awarded_moolah
 

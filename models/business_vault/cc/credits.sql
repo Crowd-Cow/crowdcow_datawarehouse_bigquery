@@ -49,6 +49,7 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
         ,add_cow_cash_information.is_hidden_from_user
         ,add_cow_cash_information.is_controlled_by_promotion
         ,promotion.is_new_member_promotion
+        ,promotion.promotion_key_value
         ,add_cow_cash_information.created_at_utc
         ,add_cow_cash_information.updated_at_utc
     from add_cow_cash_information
@@ -79,6 +80,7 @@ credit as ( select * from {{ ref('stg_cc__credits') }} )
 
         ,case
             when credit_type = 'FREE_SHIPPING' then 'FREE SHIPPING'
+            when credit_type = 'DOLLAR_AMOUNT' and promotion_key_value = 'REWARDS_PROGRAM_MOOLAH' then 'MOOLAH'
             when credit_type = 'SUBSCRIPTION_FIVE_PERCENT'
                 or (credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'SUBSCRIPTION') then 'MEMBERSHIP 5%'
             when (credit_type = 'COW_CASH' and awarded_cow_cash_entry_type = 'CUSTOMER_SERVICE') 

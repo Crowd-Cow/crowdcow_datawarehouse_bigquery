@@ -71,6 +71,7 @@ credit as ( select * from {{ ref('credits') }} )
         ,union_discounts.promotion_id
         ,union_discounts.promotion_source
         ,promotion.promotion_type
+        ,promotion.promotion_key_value
         ,union_discounts.order_id
         ,union_discounts.business_group
         ,union_discounts.financial_account
@@ -93,6 +94,8 @@ credit as ( select * from {{ ref('credits') }} )
         ,case
             when business_group = 'FREE SHIPPING' then 'FREE SHIPPING DISCOUNT'
             when business_group = 'MEMBERSHIP 5%' then 'MEMBERSHIP DISCOUNT'
+            when (business_group = 'OTHER ITEM LEVEL PROMOTIONS' and promotion_key_value = 'REWARDS_PROGRAM_MOOLAH') then 'MOOLAH ITEM DISCOUNT'
+            when  business_group = 'MOOLAH' then 'MOOLAH ORDER DISCOUNT'
             when business_group = 'MERCHANDISING DISCOUNT' then 'MERCH DISCOUNT'
             when business_group = 'MEMBERSHIP FREE PROTEIN PROMOTIONS' then 'FREE PROTEIN PROMOTION'
             when business_group = 'OTHER ITEM LEVEL PROMOTIONS' then 'OTHER ITEM LEVEL PROMOTIONS'
