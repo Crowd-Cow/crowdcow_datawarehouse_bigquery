@@ -28,6 +28,8 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,sum(case when revenue_waterfall_bucket = 'NEW MEMBER DISCOUNT' then discount_usd end) as new_member_discount
         ,sum(case when revenue_waterfall_bucket = 'GIFT REDEMPTION' then discount_usd end) as gift_redemption
         ,sum(case when revenue_waterfall_bucket = 'OTHER DISCOUNT' then discount_usd end) as other_discount
+        ,sum(case when revenue_waterfall_bucket = 'MOOLAH ITEM DISCOUNT' then discount_usd end) as moolah_item_discount
+        ,sum(case when revenue_waterfall_bucket = 'MOOLAH ORDER DISCOUNT' then discount_usd end) as moolah_order_discount
 
     from discount
     group by 1
@@ -46,6 +48,8 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(discount_amounts.merch_discount) * -1 as merch_discount
         ,zeroifnull(discount_amounts.free_protein_promotion) * -1 as free_protein_promotion
         ,zeroifnull(discount_amounts.item_promotion) * -1 as item_promotion
+        ,zeroifnull(discount_amounts.moolah_item_discount)*-1 as moolah_item_discount
+        ,zeroifnull(discount_amounts.moolah_order_discount)*-1 as moolah_order_discount
         ,zeroifnull(discount_amounts.new_member_discount) * -1 as new_member_discount
         ,zeroifnull(discount_amounts.gift_redemption) * -1 as gift_redemption
         ,zeroifnull(discount_amounts.other_discount) * -1 as other_discount
@@ -76,6 +80,8 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,merch_discount
         ,free_protein_promotion
         ,item_promotion
+        ,moolah_item_discount
+		,moolah_order_discount
         ,new_member_discount
         ,gift_redemption
         ,other_discount
@@ -92,12 +98,14 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,merch_discount
         ,free_protein_promotion
         ,item_promotion
+        ,moolah_item_discount
         
         ,gross_product_revenue 
          + membership_discount 
          + merch_discount
          + free_protein_promotion
-         + item_promotion as net_product_revenue
+         + item_promotion 
+         + moolah_item_discount as net_product_revenue
         
         ,shipping_revenue
         ,free_shipping_discount
@@ -107,12 +115,14 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
          + merch_discount
          + free_protein_promotion
          + item_promotion
+         + moolah_item_discount
          + shipping_revenue 
          + free_shipping_discount as gross_revenue
         
         ,new_member_discount
         ,gift_redemption
         ,refund_amount
+        ,moolah_order_discount
         ,other_discount
 
         ,round(
@@ -121,8 +131,10 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
             + merch_discount
             + free_protein_promotion
             + item_promotion
+            + moolah_item_discount
             + shipping_revenue 
             + free_shipping_discount
+            + moolah_order_discount
             + new_member_discount
             + refund_amount
             + gift_redemption
