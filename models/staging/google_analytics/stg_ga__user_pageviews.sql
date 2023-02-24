@@ -12,4 +12,5 @@ date::date as date
 ,entrances
 ,users
 ,pageviews
+,{{ clean_strings('device_category') }} as device_type
 from user_pageviews
