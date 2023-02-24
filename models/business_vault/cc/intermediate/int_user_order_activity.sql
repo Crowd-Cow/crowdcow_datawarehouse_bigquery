@@ -41,6 +41,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,max(iff(is_paid_order and not is_cancelled_order,order_paid_at_utc::date,null)) as last_paid_order_date
         ,min(iff(completed_order_rank = 1,order_checkout_completed_at_utc,null)) as first_completed_order_date
         ,min(iff(completed_order_rank = 1,visit_id,null)) as first_completed_order_visit_id
+        ,max(iff(is_paid_order and not is_cancelled_order,order_token,null)) as most_recent_order
         ,count_if(
             not is_gift_order
             and not is_gift_card_order
@@ -123,6 +124,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,user.user_type
         ,user.created_at_utc
         ,user_percentiles.user_id as order_user_id
+        ,user_percentiles.most_recent_order as most_recent_paid_order_token
         ,zeroifnull(user_percentiles.total_completed_membership_orders) as total_completed_membership_orders
         ,zeroifnull(user_percentiles.total_paid_ala_carte_order_count) as total_paid_ala_carte_order_count
         ,zeroifnull(user_percentiles.total_paid_membership_order_count) as total_paid_membership_order_count
