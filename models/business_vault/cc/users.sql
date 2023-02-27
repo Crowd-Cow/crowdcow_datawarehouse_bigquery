@@ -141,6 +141,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
             when user_roles_for_access is not null then 'EMPLOYEE'
             when user_email like '%@CROWDCOW.COM' and user_email not like 'TEMPORARY%CROWDCOW.COM' then 'INTERNAL'
             when is_rastellis then 'RASTELLIS'
+            when is_qvc then 'QVC'
             when user_email like 'TEMPORARY%CROWDCOW.COM' then 'GUEST'
             when user_type = 'C' then 'CUSTOMER'
             when user_type = 'P' then 'PLACEHOLDER'
@@ -253,6 +254,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,is_current_promotion_ffl
         ,is_first_promotion_ffl
         ,is_rastellis
+        ,is_qvc
         ,does_allow_sms
         ,has_opted_in_to_emails
         ,last_call_at_utc is not null as has_phone_burner_contact
