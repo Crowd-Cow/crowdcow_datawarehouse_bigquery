@@ -1,11 +1,11 @@
 version: 2
 
 models:
-  - name: stg_tiktok__campaign_report_daily
-    description: ""
+  - name: stg_tiktok__ad_report_daily
+    description: "daily ad performance"
     columns:
-      - name: campaign_id
-        description: "campaign_id"
+      - name: ad_id
+        description: "ad_id"
 
       - name: stat_at_date
         description: "date of stats"
@@ -75,4 +75,3 @@ models:
 
       - name: shares
         description: "number of shares"
-
