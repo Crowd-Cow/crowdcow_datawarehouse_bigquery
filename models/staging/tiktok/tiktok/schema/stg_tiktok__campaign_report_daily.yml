@@ -1,0 +1,78 @@
+version: 2
+
+models:
+  - name: stg_tiktok__campaign_report_daily
+    description: "campaign performance daily"
+    columns:
+      - name: campaign_id
+        description: "campaign_id"
+
+      - name: stat_at_date
+        description: "date of stats"
+
+      - name: total_purchase
+        description: "the number of purchase events that are attributed to the ads"
+
+      - name: video_views_p_100
+        description: "video views reaching 100 percent completion"
+
+      - name: video_views_p_25
+        description: "video views reaching 25 percent completion"
+
+      - name: video_views_p_75
+        description: "video views reaching 75 percent completion"
+
+      - name: profile_visits_rate
+        description: "total profile visit rate"
+
+      - name: follows
+        description: "the number of follows"
+
+      - name: video_views_p_50
+        description: "video views reaching 50 percent completion"
+
+      - name: ctr
+        description: "the percentage of times users saw the ad and performed a click action."
+
+      - name: conversion
+        description: "the number of times the ads achieved an outcome based on the objective and settings selected"
+
+      - name: spend
+        description: "spend in usd"
+
+      - name: conversion_rate
+        description: "the percentage of results achieved out of all the clicks on the ads."
+
+      - name: profile_visits
+        description: "the number of visits to the advertiser profile."
+
+      - name: cpc
+        description: "the average amount of money spent on a click"
+
+      - name: clicks
+        description: "number of clicks on ads"
+
+      - name: video_watched_2_s
+        description: "number of times a video was played for at least 2 seconds. replays are not counted."
+
+      - name: likes
+        description: "the number of likes an ad gets"
+
+      - name: reach
+        description: "the number of unique users who saw your ads at least once. this metric is estimated."
+
+      - name: impressions
+        description: "number number of times ads were on screen."
+
+      - name: total_purchase_value
+        description: "the total value returned from all purchase events"
+
+      - name: video_watched_6_s
+        description: "number of times a video was played for at least 6 seconds. replays are not counted."
+
+      - name: video_play_actions
+        description: "number of times a video was played."
+
+      - name: shares
+        description: "number of shares"
+
