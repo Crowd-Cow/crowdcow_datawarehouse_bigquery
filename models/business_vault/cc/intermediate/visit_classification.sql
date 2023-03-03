@@ -192,7 +192,7 @@ base_visits as (
 ,assign_paid_social_platform as (
     select
         *
-        ,utm_medium in ('OCPM', 'CPC', 'CPCB', 'CPCNB', 'MAXCPA', 'CPM') 
+        ,utm_medium in ('OCPM', 'CPC', 'CPCB', 'CPCNB', 'MAXCPA', 'CPM', 'ADS') 
             or utm_source = 'PINTEREST' 
             or utm_source like 'PAID%'
             or utm_medium like 'PAID%'
