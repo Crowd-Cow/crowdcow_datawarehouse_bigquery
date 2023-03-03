@@ -114,3 +114,12 @@ sources:
             description: the percentage of times users saw the ad and performed a click action.
           - name: profile_visits_rate
             description: total profile visit rate
+
+      - name: ad_history
+        description: historical record of ad settings
+      
+      - name: adgroup_report_daily
+        description: daily report of adgroup performance
+
+      - name: adgroup_history
+        description: daily report of adgroup performance

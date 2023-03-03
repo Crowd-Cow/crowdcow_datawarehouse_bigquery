@@ -1,0 +1,81 @@
+version: 2
+
+models:
+  - name: stg_tiktok__ad_history
+    description: "tracking of ad settings over time"
+    columns:
+      - name: ad_id
+        description: "ad id"
+
+      - name: updated_at
+        description: "date when settings were updated"
+
+      - name: advertiser_id
+        description: "advertiser id"
+
+      - name: adgroup_id
+        description: "adgroup id"
+
+      - name: campaign_id
+        description: "campaign id"
+
+      - name: create_time
+        description: "time when ad was created"
+
+      - name: ad_name
+        description: "ad name"
+
+      - name: call_to_action
+        description: "call to action in ad"
+
+      - name: ad_status
+        description: "status of ad"
+
+      - name: opt_status
+        description: "op status"
+
+      - name: ad_text
+        description: "text in ad"
+
+      - name: video_id
+        description: "video id"
+
+      - name: app_name
+        description: "app name"
+
+      - name: open_url
+        description: "open url"
+
+      - name: landing_page_url
+        description: "landing page url"
+
+      - name: display_name
+        description: "display name"
+
+      - name: profile_image
+        description: "profile image"
+
+      - name: impression_tracking_url
+        description: "impression tracking url"
+
+      - name: click_tracking_url
+        description: "click tracking url"
+
+      - name: playable_url
+        description: "payable url"
+
+      - name: is_aco
+        description: "is aco"
+
+      - name: is_creative_authorized
+        description: "is creative authorized"
+
+      - name: is_new_structure
+        description: "is new structure"
+
+      - name: ad_valid_from_date
+        description: "date that ad is valid from"
+
+      - name: ad_valid_to_date
+        description: "date that ad is valid to"
+

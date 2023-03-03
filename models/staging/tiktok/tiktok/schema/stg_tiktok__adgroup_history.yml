@@ -1,0 +1,123 @@
+version: 2
+
+models:
+  - name: stg_tiktok__adgroup_history
+    description: "tracking of adgroup settings over time"
+    columns:
+      - name: adgroup_id
+        description: "adgroup id"
+
+      - name: updated_at
+        description: "adgroup updated at"
+
+      - name: advertiser_id
+        description: "advertiser id"
+
+      - name: campaign_id
+        description: "campaign id"
+
+      - name: create_time
+        description: "adgroup created at"
+
+      - name: adgroup_name
+        description: "adgroup name"
+
+      - name: placement_type
+        description: "adgroup placement"
+
+      - name: external_action
+        description: "external action"
+
+      - name: creative_material_mode
+        description: "mode of creative material"
+
+      - name: gender
+        description: "genders targeted"
+
+      - name: budget_mode
+        description: "mode of budget distribution"
+
+      - name: schedule_type
+        description: ""
+
+      - name: optimize_goal
+        description: ""
+
+      - name: pacing
+        description: ""
+
+      - name: billing_event
+        description: ""
+
+      - name: bid_type
+        description: ""
+
+      - name: adgroup_status
+        description: "adgroup status"
+
+      - name: opt_status
+        description: "opt status"
+
+      - name: video_download
+        description: ""
+
+      - name: budget
+        description: "adgroup budget"
+
+      - name: bid
+        description: ""
+
+      - name: conversion_bid
+        description: ""
+
+      - name: deep_cpabid
+        description: ""
+
+      - name: schedule_start_time
+        description: "scheduled start time of adgroup"
+
+      - name: schedule_end_time
+        description: "scheduled end time of adgroup"
+
+      - name: pixel_id
+        description: "pixel id"
+
+      - name: enable_inventory_filter
+        description: "enable inventory"
+
+      - name: is_hfss
+        description: "is hfss"
+
+      - name: is_new_structure
+        description: "is new structure"
+
+      - name: category
+        description: ""
+
+      - name: is_comment_disable
+        description: ""
+
+      - name: skip_learning_phase
+        description: ""
+
+      - name: location
+        description: "location array"
+
+      - name: interest_category_v_2
+        description: ""
+
+      - name: placement
+        description: "placement array"
+
+      - name: age
+        description: "age targeted array"
+
+      - name: languages
+        description: "language used array"
+
+      - name: adgroup_valid_from_date
+        description: "adgroup settomgs valid from date"
+
+      - name: adgroup_valid_to_date
+        description: "adgroup settings valid to date"
+
