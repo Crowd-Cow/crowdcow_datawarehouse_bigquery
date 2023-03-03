@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: stg_tiktok__campaign_history
+    description: "tracking of campaign settings"
+    columns:
+      - name: campaign_id
+        description: "campaign id"
+
+      - name: updated_at
+        description: "when settings were changed"
+
+      - name: advertiser_id
+        description: "advertiser id"
+
+      - name: campaign_name
+        description: "campaign name"
+
+      - name: campaign_type
+        description: "campaign type"
+
+      - name: budget_usd
+        description: "budget in usd"
+
+      - name: budget_mode
+        description: "mode to which budget is set"
+
+      - name: opt_status
+        description: "opt status"
+
+      - name: objective_type
+        description: "objective of campaign"
+
+      - name: is_new_structure
+        description: "is new campaign structure"
+
+      - name: split_test_variable
+        description: "variable that is being split tested"
+
+      - name: campaign_status
+        description: "status of campaign"
+
+      - name: create_time
+        description: "datetime of campaign creation"
+
+      - name: campaign_valid_from_date
+        description: "structure valid from"
+
+      - name: campaign_valid_to_date
+        description: "structure valid to"
+
