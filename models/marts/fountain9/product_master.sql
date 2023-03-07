@@ -16,8 +16,10 @@ select distinct
     ,sku.sku_vendor_name as brand
     ,'1 YEAR' as shelf_life
     ,'UNITS' as uom
-    ,moq.case_pack as batch_size
-    ,moq.case_pack as moq
+    ,moq.batch_size
+    ,moq.moq
+    ,is_primary_vendor
+    ,is_secondary_vendor
     ,max(ifnull(sku.replenishment_code = 'ACTIVELY_REORDERING',FALSE)) as is_actively_reordering
     ,round(avg(sku.sku_weight),2) as avg_product_weight
 from sku
@@ -28,4 +30,4 @@ from sku
 where sku.dbt_valid_to is null
     and sku.cut_id is not null
     and sku.category is not null
-group by 1,2,3,4,5,6,7,8,9,10,11
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13

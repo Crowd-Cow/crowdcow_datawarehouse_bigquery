@@ -11,8 +11,11 @@ source as ( select * from {{ source('google_sheets', 'inventory_moq') }} )
         ,cut_id
         ,{{ clean_strings('cut_name') }} as cut_name
         ,plu_weight
-        ,case_pack
+        ,batch_size
         ,case_weight
+        ,is_primary_vendor::boolean as is_primary_vendor
+        ,is_secondary_vendor::boolean as is_secondary_vendor
+        ,moq
     from source
 )
 
