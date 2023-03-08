@@ -36,7 +36,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,current_sku.sku_price_usd
         ,vendor.is_marketplace
         ,vendor.is_rastellis
-        ,moq.case_pack
+        ,moq.batch_size
         ,sum(nullif(current_sku.sku_weight,0) * ordered_item.quantity_ordered) as sku_weight_ordered
         ,sum(ordered_item.quantity_ordered) as quantity_ordered
     from ordered_item
@@ -63,7 +63,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,current_sku.sku_price_usd
         ,vendor.is_marketplace
         ,vendor.is_rastellis
-        ,moq.case_pack
+        ,moq.batch_size
     from received_item
         left join current_lot on received_item.lot_id = current_lot.lot_id
         left join pipeline_schedule on current_lot.lot_number = pipeline_schedule.lot_number
@@ -90,7 +90,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,zeroifnull(get_received_detail.quantity_received) as quantity_received
         ,zeroifnull(get_received_detail.sku_weight_received) as sku_weight_received
         ,coalesce(get_ordered_detail.delivered_at_utc,get_received_detail.delivered_at_utc) as delivered_at_utc
-        ,coalesce(get_ordered_detail.case_pack,get_received_detail.case_pack) as case_pack
+        ,coalesce(get_ordered_detail.batch_size,get_received_detail.batch_size) as batch_size
     from get_ordered_detail
         full outer join get_received_detail on get_ordered_detail.lot_number = get_received_detail.lot_number
             and get_ordered_detail.sku_id = get_received_detail.sku_id
@@ -218,7 +218,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,delivered_at_utc
         ,invoice_date_utc
         ,invoice_due_date_utc
-        ,case_pack
+        ,batch_size
     from final_calcs
 
     union all
@@ -251,7 +251,7 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
         ,delivered_at_utc
         ,null::timestamp as invoice_date_utc
         ,null::timestamp as invoice_due_date_utc
-        ,null::int as case_pack
+        ,null::int as batch_size
     from sad_cow_no_sku
 )
 
