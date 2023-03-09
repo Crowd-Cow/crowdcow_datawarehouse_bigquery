@@ -17,6 +17,17 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,order_promo_redeemed as ( select * from {{ ref('int_partner_promo_redemptions') }} )
 ,order_failure as ( select * from {{ ref('int_order_failures') }} )
 ,reward as ( select * from {{ ref('int_order_rewards') }} )
+,charges as (select * from {{ ref('stg_stripe__charges') }} )
+,payment_method_card as (select * from {{ ref('stg_stripe__payment_method_card') }} )
+
+,payment_methods as (
+    select order_id
+        ,wallet_type
+    from orders
+        left join charges on orders.stripe_charge_id = charges.stripe_charge_id
+        left join payment_method_card on charges.payment_method_id = payment_method_card.payment_method_id
+)
+
 
 ,order_joins as (
     select
@@ -29,6 +40,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.visit_id
         ,orders.packer_id
         ,orders.stripe_charge_id
+        ,payment_methods.wallet_type
         ,order_promo_redeemed.partner_id
         ,order_promo_redeemed.partner_key
         ,{{ get_join_key('stg_cc__fcs','fc_key','fc_id','orders','fc_id','order_updated_at_utc') }} as fc_key
@@ -281,6 +293,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         left join order_promo_redeemed on orders.order_id = order_promo_redeemed.order_id
         left join order_failure on orders.order_id = order_failure.order_id
         left join reward on orders.order_id = reward.order_id
+        left join payment_methods on orders.order_id = payment_methods.order_id
     
     /**** Removing these order types because they are just shell orders that provide no data value ****/
     /**** Children orders contain all the necessary information for revenue, addresses, dates, etc for the order ****/

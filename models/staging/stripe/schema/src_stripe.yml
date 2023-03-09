@@ -260,3 +260,18 @@ sources:
 
           - name: rule_predicate
             description: rule_predicate
+
+      - name: payment_method_card
+        description: Details of the payment method chosen
+        columns:
+          - name: id
+            description: Unique ID for the Stripe refund transaction
+
+          - name: brand
+            description: credit card brand
+
+          - name: funding
+            description: details of credit or debit
+          
+          - name: wallet_type
+            description: description of online wallet chosen
