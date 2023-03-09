@@ -79,8 +79,8 @@ models:
       - name: postage_paid_at_utc
         description: "Timestamp for when the postsage was paid for UTC"
 
-      - name: item_weight
-        description: "The weight of the order"
+      - name: shipment_weight
+        description: "The weight of the shipment (ice + products)"
 
       - name: scanned_box_type_id
         description: "Scanned box type ID"

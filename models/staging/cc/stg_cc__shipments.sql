@@ -30,7 +30,7 @@ source as ( select * from {{ source('cc', 'shipments') }} where not _fivetran_de
         ,temperature_last_updated_at as temperature_last_updated_at_utc
         ,easypost_postage_label_id as shipment_postage_label_id
         ,postage_paid_at as postage_paid_at_utc
-        ,item_weight
+        ,item_weight as shipment_weight
         ,scanned_box_type_id
         ,easypost_estimated_delivery_date as est_delivery_date_utc
         ,{{ cents_to_usd('packaging_freight_component_cost_cents') }} as packaging_freight_component_cost_usd
@@ -94,7 +94,7 @@ source as ( select * from {{ source('cc', 'shipments') }} where not _fivetran_de
         ,temperature_last_updated_at_utc
         ,shipment_postage_label_id
         ,postage_paid_at_utc
-        ,item_weight
+        ,shipment_weight
         ,scanned_box_type_id
         ,est_delivery_date_utc
         ,packaging_freight_component_cost_usd

@@ -70,7 +70,7 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
         ) as coolant_pounds_per_shipment
 
         ,get_order_delivery_address.delivery_method
-        ,get_order_delivery_address.item_weight
+        ,get_order_delivery_address.shipment_weight
         ,get_order_delivery_address.packaging_freight_component_cost_usd
         ,get_order_delivery_address.shipment_delivery_days
         
