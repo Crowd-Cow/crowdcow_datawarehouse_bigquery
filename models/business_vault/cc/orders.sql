@@ -199,6 +199,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(reward.moolah_points) as total_moolah_balance_change
         ,zeroifnull(reward.total_moolah_redeemed) as total_moolah_redeemed
         ,zeroifnull(reward.total_awarded_moolah) as total_awarded_moolah
+        ,zeroifnull(reward.moolah_available_for_order) as moolah_available_for_order
 
         
         ,iff(
