@@ -190,4 +190,24 @@ sources:
 
           - name: sku_vendor_id
             description: SKU vendor ID
+
+      - name: nps_manual_categorization
+        description: Manual classification of NPS detractor comments
+        columns:
+          - name: survey_id
+            description: Post order survey ID
+
+          - name: cut
+            description: specific cut that customer mentioned in detraction
+
+          - name: farm
+            description: specific farm of cut that customer mentioned in detraction
+
+          - name: category
+            description: category that customer mentioned in detraction
+
+          - name: manual_classification
+            description: reason for detraction
             
+          - name: lot
+            description: lot of cut that customer mentioned in detraction
