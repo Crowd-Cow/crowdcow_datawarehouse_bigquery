@@ -1,0 +1,75 @@
+version: 2
+
+sources:
+
+- name: facebook_ads
+  database: raw
+  schema: facebook_ads_2023
+
+  tables:
+
+    - name: basic_campaign_report_by_day
+      description: Facebook Ads daily campaign report
+      columns:
+        - name: campaign_id
+
+        - name: date
+
+        - name: account_id
+
+        - name: impressions
+
+        - name: inline_link_clicks
+
+        - name: reach
+
+        - name: cost_per_inline_link_click
+
+        - name: cpc
+
+        - name: cpm
+
+        - name: ctr
+
+        - name: frequency
+
+        - name: spend
+
+        - name: campaign_name
+
+        - name: inline_link_click_ctr
+
+    - name: basic_ad_report_daily
+      description: Facebook Ads daily ad report
+      columns:
+        - name: ad_id
+
+        - name: date
+
+        - name: account_id
+
+        - name: impressions
+
+        - name: inline_link_clicks
+
+        - name: reach
+
+        - name: cost_per_inline_link_click
+
+        - name: cpc
+
+        - name: cpm
+
+        - name: ctr
+
+        - name: frequency
+
+        - name: spend
+
+        - name: ad_name
+
+        - name: adset_name
+
+        - name: inline_link_click_ctr
+
+        - name: inline_link_click_ctr

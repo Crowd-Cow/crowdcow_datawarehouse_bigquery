@@ -1,0 +1,48 @@
+version: 2
+
+models:
+  - name: stg_fb_ads__campaign_report_daily
+    description: ""
+    columns:
+      - name: campaign_id
+        description: "campaign"
+
+      - name: stat_date
+        description: "date of stats"
+
+      - name: account_id
+        description: "account id"
+
+      - name: impressions
+        description: "ad impressions"
+
+      - name: inline_link_clicks
+        description: "count of the number of times links posted in the contents of the ad are clicked on"
+
+      - name: reach
+        description: "ad reach"
+        
+      - name: cost_per_inline_link_click_usd
+        description: "cost per time links posted in the contents of the ad are clicked on"
+
+      - name: cpc_usd
+        description: "ad cpc"
+
+      - name: cpm
+        description: "cost per mile. indicates how much is spent on average for 1,000 ad impressions"
+
+      - name: ctr
+        description: "ad ctr"
+
+      - name: frequency
+        description: "the average number of times the same person sees the ad in their newsfeed within a specific period of time"
+
+      - name: spend_usd
+        description: "daily spend"
+
+      - name: campaign_name
+        description: "campaign name"
+
+      - name: inline_link_click_ctr
+        description: "ctr of links posted in the contents of the ad"
+
