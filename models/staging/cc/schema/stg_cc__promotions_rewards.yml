@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: stg_cc__promotions_rewads
+    descripton: Staging model for promotions rewards
+    columns:
+      - name: id
+        description: Promotion reward id
+        tests:
+          - unique
+          - not_null
+
+      - name: updated_at_utc
+        description: Timestamp for when the record was updated
+
+      - name: promotions_promotion_id
+        description: Promotions id 
+
+      - name: created_at
+        description: Timestamp for when the record was created_at
+
+      - name: type
+        description: type
+
+      - name: name
+        description: name
+
+

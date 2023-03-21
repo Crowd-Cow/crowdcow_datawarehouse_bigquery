@@ -4961,6 +4961,25 @@ sources:
           - name: _fivetran_synced
             description: _fivetran_synced
 
+      - name: promotions_rewards
+        description: Promotions rewards
+        
+        columns:
+          - name: id
+            description: id
+          - name: updated_at
+            description: promotions_promotion_id
+          - name: created_at
+            description: created_at
+          - name: type
+            description: type
+          - name: name
+            description: name
+          - name: _fivetran_deleted
+            description: _fivetran_deleted
+          - name: _fivetran_synced
+            description: _fivetran_synced
+
       - name: reclaimed_bids
         description: reclaimed_bids
 

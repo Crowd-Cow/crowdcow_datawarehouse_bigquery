@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: current_moolah_skus
+    description: Skus of promotions
+    columns:
+      - name: id
+        description: ID for the promotions table 
+        tests:
+          - not_null
+      
+      - name: key
+        description: sku_id or quantity
+
+      - name: created_at
+        description: Timestamp record was created in UTC
+
+      - name: sku_id
+        description: SKU_ID
+
+      - name: configurable_type
+        description: configurable type
+
+      - name: configurable_id
+        description: Configurable ID
+
+      - name: updated_at
+        description: Timestamp record was updated in UTC
