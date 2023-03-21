@@ -40,4 +40,4 @@ WHERE
 
 )
 
-SELECT * FROM current_moolah_skus
+SELECT distinct sku_id FROM current_moolah_skus
