@@ -4,10 +4,8 @@ models:
   - name: current_moolah_skus
     description: Skus of promotions
     columns:
-      - name: id
-        description: ID for the promotions table 
-        tests:
-          - not_null
+      - name: promotion_configuration_id
+        description: promotion configuration id 
       
       - name: key
         description: sku_id or quantity
