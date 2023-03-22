@@ -1,6 +1,6 @@
 with
 
-source as ( select * from {{ source('cc', 'promotions_configurations') }} )
+source as ( select * from {{ source('cc', 'promotions_configurations') }} where not _fivetran_deleted )
 
 ,renamed as (
     select
