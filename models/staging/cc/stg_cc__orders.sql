@@ -84,6 +84,7 @@ source as ( select * from {{ source('cc', 'orders') }} where not _fivetran_delet
     ,{{ clean_strings('order_type') }} as order_type
     ,order_type = 'RFG' as is_rastellis
     ,order_type = 'QVC' as is_qvc
+    ,order_type = 'SEABEAR' as is_seabear
     ,{{ clean_strings('where_order_placed') }} as where_order_placed
     ,shipments_computed_at as order_shipments_computed_at_utc
     ,next_box_notified_at as order_next_box_notified_at_utc

@@ -109,6 +109,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(order_reschedule.reschedule_count) as reschedule_count
         ,orders.is_rastellis
         ,orders.is_qvc
+        ,orders.is_seabear
         ,flags.has_free_shipping
         ,flags.is_ala_carte_order
         ,flags.is_membership_order
