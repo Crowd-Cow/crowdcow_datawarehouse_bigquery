@@ -211,3 +211,72 @@ sources:
             
           - name: lot
             description: lot of cut that customer mentioned in detraction
+
+      - name: inventory_classification_master_v_2
+        description: Classifies cuts as discontinued, seasonal, etc
+        columns:
+          - name: _row
+            description: Fivetran added row number
+
+          - name: category
+            description: Category
+
+          - name: combo
+            description: column join category + subcategory + cut_name 
+
+          - name: sub_category
+            description: Sub category
+
+          - name: cut_name
+            description: Cut name
+
+          - name: _fivetran_synced
+            description: Timestamp for when the record was synced to the warehouse by Fivetran
+
+          - name: inventory_classification
+            description: Inventory classification for the cut (e.g. Discontinued, seasonal, etc.)
+
+      - name: product_master_v_2
+        description: product_master version 2
+        columns:
+          - name: cut_id
+            description: Cut ID
+
+          - name: cut_name
+            description: Cut name
+
+          - name: category
+            description: category
+
+          - name: sub_category
+            description: sub category
+
+          - name: combo
+            description: combo
+          
+          - name: farm_id
+            description: farm id
+          
+          - name: brand_id
+            description: brand id
+
+          - name: plu
+            description: PLU 
+         
+          - name: plu_weight
+            description: PLU weight
+
+          - name: batch_size
+            description: batch_size
+
+          - name: case_weight
+            description: Allowed weight for a case that is ordered
+          
+          - name: is_primary_vendor
+            description: is primary vendor  
+          
+          - name: Active/Inactive
+            description: active / inactive
+          
+          - name: Allocation_in_percentage
+            description: Allocation percentage
