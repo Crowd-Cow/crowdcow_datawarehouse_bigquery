@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: promotions_promotions
+    descripton: Staging model for promotions promotions
+    columns:
+      - name: id
+        description: Promotions promotions id
+
+      - name: updated_at_utc
+        description: Timestamp for when the record was updated
+
+      - name: starts_at
+        description: Timestamp for when the promotions starts  
+
+      - name: claimable_window_in_days
+        description: Claimable window in days
+
+      - name: must_be_claimed
+        description: Must be claimed 
+
+      - name: ends_at
+        description: Timestamp for when the promotions ends  
+
+      - name: created_at
+        description: Timestamp for when record was created
+
+      - name: name
+        description: Promotion name 
+
+      - name: must_be_applied_to_user
+        description: Boolean must be applied to user
+
+      - name: token
+        description: token
+
