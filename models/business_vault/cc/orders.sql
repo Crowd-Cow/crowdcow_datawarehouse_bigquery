@@ -58,6 +58,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
          end as order_type
         
         ,orders.stripe_failure_code
+        ,orders.stripe_card_brand
         ,orders.order_delivery_street_address_1
         ,orders.order_delivery_street_address_2
         ,orders.order_delivery_city
