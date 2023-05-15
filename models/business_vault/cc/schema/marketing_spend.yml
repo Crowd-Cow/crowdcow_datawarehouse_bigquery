@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: marketing_spend
+    description: Staging model for the marketing spend data
+    columns:
+      - name: channel
+        description: channel
+
+      - name: week
+        description: week
+
+      - name: spend
+        description: spend
+

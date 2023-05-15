@@ -280,3 +280,17 @@ sources:
           
           - name: Allocation_in_percentage
             description: Allocation percentage
+
+      - name: marketing_spend
+        description: Weekly marketing spend by channel 
+        columns:
+          - name: channel
+            description: channel
+
+          - name: week
+            description: week
+
+          - name: spend
+            description: spend
+
+
