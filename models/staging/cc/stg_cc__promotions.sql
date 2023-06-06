@@ -64,7 +64,7 @@ from promotion_promotion
         ,union_promotions.promotion_source
         ,union_promotions.dbt_scd_id as promotion_key
         ,{{ clean_strings('union_promotions.promotion_type') }} as promotion_type
-        ,promotion_code.promo_code
+        ,promotion_code.promo_code as promo_code
         ,union_promotions.always_available as is_always_available
         ,union_promotions.must_be_assigned_to_user
         ,union_promotions.must_be_assigned_to_order
@@ -86,7 +86,8 @@ from promotion_promotion
     from union_promotions
         left join promotion_code on union_promotions.id = promotion_code.promotion_id
             and union_promotions.promotion_source = promotion_code.promotion_source
-
+    WHERE 
+        promo_code != 'GIFT4DAD2023' 
 )
 
 select * from renamed
