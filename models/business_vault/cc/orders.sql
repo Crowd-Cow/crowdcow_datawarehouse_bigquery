@@ -275,6 +275,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.next_box_notified_at_utc
         ,orders.order_scheduled_fulfillment_date_utc
         ,orders.order_scheduled_arrival_date_utc
+        ,orders.gel_pack_count
         ,order_shipment.shipped_at_utc
         ,order_shipment.delivered_at_utc
         ,order_shipment.lost_at_utc

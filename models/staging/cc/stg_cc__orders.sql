@@ -141,6 +141,7 @@ source as ( select * from {{ source('cc', 'orders') }} where not _fivetran_delet
     ,stripe_card_last4::int as stripe_card_last4
     ,third_party_internal_identifier
     ,third_party_customer_identifier
+    ,gel_pack_count
 
   from source
     left join postal_code on left(source.delivery_postal_code,5) = postal_code.postal_code
