@@ -1,6 +1,7 @@
 with 
 
 source as ( select * from {{ source('cc', 'shipments') }} where not _fivetran_deleted )
+,fc_outbound_pallets as (select * from {{ source('cc', 'fc_outbound_pallets')}} where not _fivetran_deleted )
 
 ,renamed as (
     select
@@ -58,10 +59,21 @@ source as ( select * from {{ source('cc', 'shipments') }} where not _fivetran_de
     from source
 
 )
+/**** outbound pallets shipping option name  ****/
+    ,outbound_pallets as (
+    select 
+        source.id as shipment_id,
+        fc_outbound_pallets.shipping_option_name as shipping_option_name
+    from source 
+    join fc_outbound_pallets 
+    on fc_outbound_pallets.fc_location_id = source.fc_location_id 
+    --and fc_outbound_pallets.shipping_option_name IN ('LAX LH UPS', 'ATL LH UPS')
+    --and fc_outbound_pallets.shipping_carrier = 'UPS'
+)
 
 ,clean_axlehire_costs as (
     select
-        shipment_id
+        renamed.shipment_id
         ,latest_temperature_icon
         ,ready_for_pickup_at_utc
         ,shipment_tracking_code
@@ -117,8 +129,10 @@ source as ( select * from {{ source('cc', 'shipments') }} where not _fivetran_de
         ,does_receive_tracking_updates
         ,is_delivery_date_guaranteed
         ,fc_locations_id
-        ,fc_location_id
+        ,renamed.fc_location_id
+        ,outbound_pallets.shipping_option_name
     from renamed
+    left join outbound_pallets on outbound_pallets.shipment_id = renamed.shipment_id
 )
 
 select * from clean_axlehire_costs

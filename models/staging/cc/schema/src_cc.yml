@@ -7395,3 +7395,34 @@ sources:
             description: _fivetran_deleted
           - name: _fivetran_synced
             description: _fivetran_synced
+
+      - name: fc_outbound_pallets
+        description: fc_oubound_pallets
+
+        columns:
+          - name: id
+            description: id
+          - name: created_at
+            description: created_at
+          - name: truck_identifier
+            description: truck identifier
+          - name: shipped_at
+            description: shipper_at 
+          - name: updated_at
+            description: updated_at
+          - name: fc_location_id
+            description: fc location id 
+          - name: shipping_carrier_market
+            description: shipping carrier market 
+          - name: shipping_carrier
+            description: shipping carrier
+          - name: wrapped_at
+            description: wrapped at 
+          - name: postage_service
+            description: postage service
+          - name: shipping_option_name
+            description: shipping option name 
+          - name: _fivetran_deleted
+            description: _fivetran_deleted
+          - name: _fivetran_synced
+            description: _fivetran_synced

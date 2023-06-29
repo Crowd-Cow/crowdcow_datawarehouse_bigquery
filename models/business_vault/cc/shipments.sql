@@ -108,6 +108,7 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
         ,get_order_delivery_address.created_at_utc
         ,get_order_delivery_address.updated_at_utc
         ,get_order_delivery_address.lost_at_utc
+        ,get_order_delivery_address.shipping_option_name
     from get_order_delivery_address
         left join calc_axlehire_default on get_order_delivery_address.shipment_postage_carrier = calc_axlehire_default.shipment_postage_carrier
             and get_order_delivery_address.order_delivery_postal_code = calc_axlehire_default.order_delivery_postal_code
