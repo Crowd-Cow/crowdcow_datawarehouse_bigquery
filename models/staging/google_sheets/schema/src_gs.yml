@@ -293,4 +293,46 @@ sources:
           - name: spend
             description: spend
 
+      - name: marketing_plan_data
+        description: marketing plan data
+        columns:
+          - name: fiscal_week_number
+            description: fiscal week
+
+          - name: week_begining
+            description: week_begining
+
+          - name: traffic
+            description: traffic plan data
+
+          - name: new_customers
+            description: new_customers plan data
+
+          - name: ncsr
+            description: ncsr plan data
+
+          - name: conversion_rate
+            description: conversion_rate plan data
+          
+          - name: sem
+            description: sem plan data
+
+          - name: affiliates
+            description: affiliates plan data
+
+          - name: corp_gifting
+            description: corp_gifting plan data
+          
+          - name: other
+            description: other plan data
+          
+          - name: total_marketing_spend
+            description: total_marketing_spend plan data
+
+          - name: cac
+            description: cac plan data
+
+          - name: cac_excl_promo_costs
+            description: cac_excl_promo_cost plan data
+
 
