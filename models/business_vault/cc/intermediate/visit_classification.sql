@@ -150,6 +150,42 @@ base_visits as (
         ,updated_at_utc
     from extract_url_parts
 )
+  ,meta_subchannel as (
+    select 
+        visit_id
+        ,user_id
+        ,visitor_token
+        ,visit_token
+        ,visit_landing_page
+        ,visit_landing_page_host
+        ,visit_landing_page_path
+        ,visit_landing_page_user_token
+        ,visit_referring_domain
+        ,visit_referrer
+        ,visit_search_keyword
+        ,visit_browser
+        ,visit_ip
+        ,visit_device_type
+        ,visit_user_agent
+        ,visit_os
+        ,case when (utm_source is null or utm_source = '' or utm_source = '') and utm_campaign like '%VOLT%' THEN 'FACEBOOK' else utm_source end as utm_source
+        ,utm_medium
+        ,utm_campaign
+        ,utm_adset
+        ,utm_content
+        ,utm_term
+        ,gclid
+        ,ambassador_path
+        ,partner_id
+        ,visit_city
+        ,visit_country
+        ,visit_region
+        ,is_wall_displayed
+        ,started_at_utc
+        ,updated_at_utc 
+    from combine_elements_extract_user_token
+
+  )
 
 ,assign_sub_channel as (
     select
@@ -186,7 +222,7 @@ base_visits as (
             when utm_campaign = '' and utm_medium = '' and utm_source = '' and visit_referring_domain = '' then 'DIRECT'
             else 'OTHER'
          end as sub_channel
-    from combine_elements_extract_user_token
+    from meta_subchannel
 )
 
 ,assign_paid_social_platform as (
