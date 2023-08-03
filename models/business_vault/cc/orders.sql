@@ -22,6 +22,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 
 ,payment_methods as (
     select order_id
+        ,created_at_utc 
         ,wallet_type
     from orders
         left join charges on orders.stripe_charge_id = charges.stripe_charge_id
@@ -40,6 +41,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.visit_id
         ,orders.packer_id
         ,orders.stripe_charge_id
+        ,payment_methods.created_at_utc as stripe_charge_created_at_utc
         ,payment_methods.wallet_type
         ,order_promo_redeemed.partner_id
         ,order_promo_redeemed.partner_key
