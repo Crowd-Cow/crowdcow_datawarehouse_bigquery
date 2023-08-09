@@ -162,6 +162,33 @@ flags as ( select * from {{ ref('int_order_flags') }} )
     from flags
 )
 
+,moolah_order_ranks as (
+    select 
+      order_id
+
+      ,case 
+        when not is_moolah then null
+        else conditional_true_event(is_moolah) over (partition by user_id order by order_created_at_utc)
+       end as moolah_order_rank
+
+      ,case
+        when not is_moolah or not is_completed_order then null
+        else conditional_true_event(is_moolah and is_completed_order) over(partition by user_id order by order_checkout_completed_at_utc)
+       end as completed_moolah_order_rank
+
+      ,case
+        when not is_moolah or not is_paid_order or is_cancelled_order then null
+        else conditional_true_event(is_moolah and is_paid_order and not is_cancelled_order) over (partition by user_id order by order_paid_at_utc)
+       end as paid_moolah_order_rank
+
+      ,case
+        when not is_moolah or not is_cancelled_order or is_paid_order then null
+        else conditional_true_event(is_moolah and is_cancelled_order and not is_paid_order) over(partition by user_id order by order_cancelled_at_utc)
+       end as cancelled_moolah_order_rank
+
+    from flags 
+)
+
 ,combine_ranks as (
     select
       flags.order_id
@@ -189,6 +216,10 @@ flags as ( select * from {{ ref('int_order_flags') }} )
       ,gift_card_order_ranks.completed_gift_card_order_rank
       ,gift_card_order_ranks.paid_gift_card_order_rank
       ,gift_card_order_ranks.cancelled_gift_card_order_rank
+      ,moolah_order_ranks.moolah_order_rank
+      ,moolah_order_ranks.completed_moolah_order_rank
+      ,moolah_order_ranks.paid_moolah_order_rank
+      ,moolah_order_ranks.cancelled_moolah_order_rank
     from flags
       left join overall_order_ranks on flags.order_id = overall_order_ranks.order_id
       left join ala_carte_order_ranks on flags.order_id = ala_carte_order_ranks.order_id
@@ -196,6 +227,8 @@ flags as ( select * from {{ ref('int_order_flags') }} )
       left join unique_memberships_order_ranks on flags.order_id = unique_memberships_order_ranks.order_id
       left join gift_order_ranks on flags.order_id = gift_order_ranks.order_id
       left join gift_card_order_ranks on flags.order_id = gift_card_order_ranks.order_id
+      left join moolah_order_ranks on flags.order_id = moolah_order_ranks.order_id
+
 )
 
 select * from combine_ranks

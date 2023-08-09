@@ -163,6 +163,10 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,ranks.completed_gift_card_order_rank
         ,ranks.paid_gift_card_order_rank
         ,ranks.cancelled_gift_card_order_rank
+        ,ranks.moolah_order_rank
+        ,ranks.completed_moolah_order_rank
+        ,ranks.paid_moolah_order_rank
+        ,ranks.cancelled_moolah_order_rank
         ,zeroifnull(units.beef_units) as beef_units
         ,zeroifnull(units.bison_units) as bison_units
         ,zeroifnull(units.chicken_units) as chicken_units

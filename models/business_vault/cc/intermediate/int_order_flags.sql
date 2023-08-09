@@ -10,6 +10,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,membership_status as (select * from {{ ref('stg_cc__subscriptions') }} )
 ,user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
 ,stuck_order_flags as ( select * from {{ ref('stg_cc__subscription_statuses') }} )
+,moolah as ( select * from {{ ref('int_order_rewards') }} )
 
 ,distinct_stuck_order_flag as (
     select
@@ -75,6 +76,11 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
                 or membership_status.subscription_cancelled_at_utc is null
             )
 )
+,moolah_orders as (
+    select distinct order_id
+    from moolah
+    where total_moolah_redeemed < 0
+)
 
 ,flags as (
     select 
@@ -123,6 +129,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,distinct_stuck_order_flag.can_retry_payment
         ,distinct_stuck_order_flag.is_under_order_minimum
         ,distinct_stuck_order_flag.is_order_scheduled_in_past
+        ,moolah_orders.order_id is not null as is_moolah
     from orders
         left join gift_info on orders.order_id = gift_info.order_id 
         left join has_shipping_credit on orders.order_id = has_shipping_credit.order_id
@@ -132,6 +139,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         left join placed_by_uncancelled_member on orders.order_id = placed_by_uncancelled_member.order_id
         left join user on orders.user_id = user.user_id
         left join distinct_stuck_order_flag on orders.order_id = distinct_stuck_order_flag.order_id
+        left join moolah_orders on orders.order_id = moolah_orders.order_id
 )
 
 select *
