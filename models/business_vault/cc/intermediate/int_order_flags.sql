@@ -129,7 +129,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,distinct_stuck_order_flag.can_retry_payment
         ,distinct_stuck_order_flag.is_under_order_minimum
         ,distinct_stuck_order_flag.is_order_scheduled_in_past
-        ,moolah_orders.order_id is not null as is_moolah
+        ,moolah_orders.order_id is not null as is_moolah_order
     from orders
         left join gift_info on orders.order_id = gift_info.order_id 
         left join has_shipping_credit on orders.order_id = has_shipping_credit.order_id

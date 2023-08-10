@@ -123,6 +123,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,flags.is_gift_order
         ,flags.is_bulk_gift_order
         ,flags.is_gift_card_order
+        ,flags.is_moolah_order
         ,flags.has_shipped
         ,flags.has_been_delivered
         ,flags.has_been_lost
