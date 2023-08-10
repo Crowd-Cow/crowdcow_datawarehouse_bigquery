@@ -167,23 +167,23 @@ flags as ( select * from {{ ref('int_order_flags') }} )
       order_id
 
       ,case 
-        when not is_moolah then null
-        else conditional_true_event(is_moolah) over (partition by user_id order by order_created_at_utc)
+        when not is_moolah_order then null
+        else conditional_true_event(is_moolah_order) over (partition by user_id order by order_created_at_utc)
        end as moolah_order_rank
 
       ,case
-        when not is_moolah or not is_completed_order then null
-        else conditional_true_event(is_moolah and is_completed_order) over(partition by user_id order by order_checkout_completed_at_utc)
+        when not is_moolah_order or not is_completed_order then null
+        else conditional_true_event(is_moolah_order and is_completed_order) over(partition by user_id order by order_checkout_completed_at_utc)
        end as completed_moolah_order_rank
 
       ,case
-        when not is_moolah or not is_paid_order or is_cancelled_order then null
-        else conditional_true_event(is_moolah and is_paid_order and not is_cancelled_order) over (partition by user_id order by order_paid_at_utc)
+        when not is_moolah_order or not is_paid_order or is_cancelled_order then null
+        else conditional_true_event(is_moolah_order and is_paid_order and not is_cancelled_order) over (partition by user_id order by order_paid_at_utc)
        end as paid_moolah_order_rank
 
       ,case
-        when not is_moolah or not is_cancelled_order or is_paid_order then null
-        else conditional_true_event(is_moolah and is_cancelled_order and not is_paid_order) over(partition by user_id order by order_cancelled_at_utc)
+        when not is_moolah_order or not is_cancelled_order or is_paid_order then null
+        else conditional_true_event(is_moolah_order and is_cancelled_order and not is_paid_order) over(partition by user_id order by order_cancelled_at_utc)
        end as cancelled_moolah_order_rank
 
     from flags 
