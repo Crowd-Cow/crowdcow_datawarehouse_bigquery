@@ -152,3 +152,19 @@ sources:
 
           - name: additional_properties
             description: JSON object that stores additional properties about the user
+            
+      - name: stg_iterable__user_list
+        description: "Staging model for Iterable user lists"
+
+        columns:
+          - name: user_email
+            description: "Email address of the user"
+
+          - name: updated_at_utc
+            description: "Timestamp for when the user history record was updated in Iterable"
+
+          - name: user_token
+            description: "User token that ties back to the Crowd Cow `user_token`"
+
+          - name: list_id
+            description: "A list of email list IDs a user is part of"

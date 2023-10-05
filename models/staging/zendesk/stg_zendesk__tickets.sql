@@ -45,7 +45,7 @@ source as ( select * from {{ source('zendesk', 'ticket') }} )
         ,system_ip_address
         ,{{ clean_strings('custom_order_errors') }} as order_errors
         ,custom_playlist_assigned_at
-        ,{{ clean_strings('custom_issue_category_') }} as issue_category
+        ,case when {{ clean_strings('custom_issue_category_') }} is null then {{ clean_strings('custom_issue_triage') }} else {{ clean_strings('custom_issue_category_') }} end  as issue_category
         ,{{ clean_strings('custom_cow_cash_reason') }} as cow_cash_reason
         ,{{ clean_strings('custom_ai_category') }} as ai_category
         ,{{ clean_strings('custom_filter_for_productivity') }} as filter_for_productivity
