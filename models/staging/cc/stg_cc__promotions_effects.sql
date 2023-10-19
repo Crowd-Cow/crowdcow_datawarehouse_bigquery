@@ -1,8 +1,8 @@
 with
 
-source as ( select * from {{ source('cc', 'promotions_rewards') }} where not _fivetran_deleted  )
+source as ( select * from {{ source('cc', 'promotions_effects') }} where not _fivetran_deleted  )
 
-,promotions_rewards as (
+,promotions_effects as (
     select
         id
         ,updated_at
@@ -13,4 +13,4 @@ source as ( select * from {{ source('cc', 'promotions_rewards') }} where not _fi
     from source
 )
 
-select * from promotions_rewards
+select * from promotions_effects

@@ -4961,8 +4961,8 @@ sources:
           - name: _fivetran_synced
             description: _fivetran_synced
 
-      - name: promotions_rewards
-        description: Promotions rewards
+      - name: promotions_effects
+        description: Promotions effects
         
         columns:
           - name: id

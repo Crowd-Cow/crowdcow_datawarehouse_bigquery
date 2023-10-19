@@ -1,7 +1,7 @@
 with
 
 promotions_configurations as ( select * from {{ ref('stg_cc__promotions_configurations') }}),
-promotions_rewards as ( select * from {{ ref('stg_cc__promotions_rewards') }}),
+promotions_effects as ( select * from {{ ref('stg_cc__promotions_effects') }}),
 promotions_promotions as ( select * from {{ ref('stg_cc__promotions_promotions') }})
 
 ,promotion_ids AS (
@@ -17,10 +17,10 @@ promotions_promotions as ( select * from {{ ref('stg_cc__promotions_promotions')
 ),
 reward_ids AS (
     SELECT
-        promotions_rewards.id
+        promotions_effects.id
     FROM
-        promotions_rewards
-        INNER JOIN promotion_ids ON promotion_ids.id = promotions_rewards.promotions_promotion_id
+        promotions_effects
+        INNER JOIN promotion_ids ON promotion_ids.id = promotions_effects.promotions_promotion_id
 ),
 quantity as (
     SELECT

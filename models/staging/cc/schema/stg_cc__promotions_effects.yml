@@ -1,11 +1,11 @@
 version: 2
 
 models:
-  - name: stg_cc__promotions_rewads
-    descripton: Staging model for promotions rewards
+  - name: stg_cc__promotions_effects
+    descripton: Staging model for promotions effects
     columns:
       - name: id
-        description: Promotion reward id
+        description: Promotion effects id
 
       - name: updated_at_utc
         description: Timestamp for when the record was updated
