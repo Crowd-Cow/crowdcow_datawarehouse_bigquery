@@ -62,6 +62,7 @@ events as (
       ,event_json:properties:to as to_filter
       ,event_json:survey:sentiment::int as sentiment
       ,event_json:product_offer:quantity_sellable::int as quantity_sellable
+      ,coalesce(event_json:value::text,event_json:properties:value::text) as event_value
       ,event_json
   from {{ ref('base_cc__ahoy_events') }}
 
@@ -121,6 +122,7 @@ events as (
     ,to_filter
     ,sentiment
     ,quantity_sellable
+    ,{{ clean_strings('event_value') }} as event_value
   from events
 )
 

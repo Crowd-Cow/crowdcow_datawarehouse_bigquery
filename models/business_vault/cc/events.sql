@@ -68,6 +68,7 @@ events as (
         ,to_filter
         ,sentiment
         ,quantity_sellable
+        ,event_value
     from events
 )
 
