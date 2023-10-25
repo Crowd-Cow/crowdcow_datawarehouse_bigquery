@@ -116,6 +116,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,zeroifnull(user_order_activity.japanese_buyers_club_revenue) as japanese_buyers_club_revenue
         ,zeroifnull(user_order_activity.moolah_points) as moolah_points
         ,zeroifnull(user_order_activity.lifetime_awarded_moolah) as lifetime_awarded_moolah
+        ,user_order_activity.has_redeemed_moolah as has_redeemed_moolah
         ,user_order_activity.last_paid_membership_order_date
         ,user_order_activity.last_paid_ala_carte_order_date
         ,user_order_activity.last_paid_order_date
@@ -203,6 +204,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,japanese_buyers_club_revenue
         ,lifetime_awarded_moolah
         ,moolah_points
+        ,has_redeemed_moolah
         ,total_calls as total_phone_burner_calls
         ,call_result as last_phone_burner_call_result
         ,owner_name as phone_burner_contact_owner
