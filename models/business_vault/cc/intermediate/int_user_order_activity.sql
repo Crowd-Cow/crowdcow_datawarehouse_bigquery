@@ -111,12 +111,12 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
 ,user_reward_activity as (
     select
         user_id
-        ,iff(reward_reason = 'REDEMPTION',1,0) as has_redeemed_moolah 
+        ,(sum(iff(rewards_program = 'MOOLAH' and reward_reason = 'REDEMPTION', reward_spend_amount,0))*100)::int as redeemed_moolah_points
         ,sum(iff(rewards_program = 'WAGYU_CLUB',reward_spend_amount,0)) as japanese_buyers_club_revenue
         ,(sum(iff(rewards_program = 'MOOLAH',reward_spend_amount,0))*100)::int as moolah_points
         ,(sum(iff(rewards_program = 'MOOLAH' and reward_spend_amount>0,reward_spend_amount,0))*100)::int as lifetime_awarded_moolah
     from reward
-    group by 1,2 
+    group by 1
 )
 
 ,user_activity_joins as (
@@ -152,7 +152,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,zeroifnull(user_reward_activity.japanese_buyers_club_revenue) as japanese_buyers_club_revenue
         ,zeroifnull(user_reward_activity.moolah_points) as moolah_points
         ,zeroifnull(user_reward_activity.lifetime_awarded_moolah) as lifetime_awarded_moolah
-        ,user_reward_activity.has_redeemed_moolah as has_redeemed_moolah
+        ,zeroifnull(user_reward_activity.redeemed_moolah_points) as redeemed_moolah_points
         ,average_order_days.average_order_frequency_days
         ,average_order_days.average_membership_order_frequency_days
         ,average_order_days.average_ala_carte_order_frequency_days
