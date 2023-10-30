@@ -1,0 +1,76 @@
+version: 2
+
+sources:
+  - name: google_analytics_4
+    database: raw
+    schema: google_analytics_4
+
+    tables:
+      - name: incoming_traffic
+        description: google analytics attribution data of customers visiting our site
+        columns:
+          - name: date
+            description: date of visit
+          - name: channel_grouping
+            description: rule based grouping of traffic sources
+          - name: landing_page_path
+            description: landing page customer arrived at
+          - name: medium
+            description: the general category of the source
+          - name: source
+            description: the origin of the traffic
+          - name: new_users
+            description: volume of visitors who, according to Google's tracking snippet, have never been to the site before and initiated their first session on the site
+          - name: percent_new_visits
+            description: the percent of total users who came to the website for the first time
+          - name: percent_new_sessions
+            description: the percent of total users who came to the website for the first time
+          - name: users
+            description: volume of visitors who visited the site
+      - name: session_details
+        description: google analytics information about visit sessions to the site
+        columns:
+          - name: date
+            description: date of visit
+          - name: new_users
+            description: volume of visitors who, according to Google's tracking snippet, have never been to the site before and initiated their first session on the site
+          - name: sessions
+            description: a group of interactions recorded when a user visits the website within a given period. sessions end after 30 min of inactivity or when user leaves site.
+          - name: avg_session_duration
+            description: the average length of sessions on a website
+          - name: transaction_revenue
+            description: the total revenue generated for each transaction, including fees like tax and shipping costs.
+          - name: pageviews_per_session
+            description: the average number of pages a person views in a given session
+          - name: users
+            description: volume of visitors who visited the site
+      - name: site_performance
+        description: google analytics information about site performance
+        columns:
+          - name: date
+            description: date of visit
+          - name: avg_redirection_time
+            description: the average time (in seconds) spent in redirects before fetching this page. If there are no redirects, this is 0.
+          - name: dom_latency_metrics_sample
+            description: sample set (or count) of pageviews used to calculate the averages for site speed DOM metrics.
+          - name: avg_page_load_time
+            description: the average amount of time (in seconds) it takes that page to load, from initiation of the pageview (e.g., click on a page link) to load completion in the browser.
+      - name: user_pageviews
+        description: google analytics attribution data of customers visiting our site
+        columns:
+          - name: date
+            description: date of visit
+          - name: page_path
+            description: path of page that user visited
+          - name: sessions
+            description: the number of sessions from a single page
+          - name: new_users
+            description: volume of visitors who, according to Google's tracking snippet, have never been to the site before and initiated their first session on the site
+          - name: total_users
+            description: volume of visitors who visited the site
+          - name: user_engagement_duration
+            description: the average amount of time that visitors spend on the page across sessions
+          - name: engaged_sessions
+            description: the number of engaged sessions from a single page
+          - name: screen_page_views
+            description: the number of page views from a single page
