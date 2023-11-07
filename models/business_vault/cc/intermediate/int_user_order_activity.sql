@@ -61,7 +61,8 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,ntile(100) over(partition by six_month_net_revenue > 0 order by six_month_net_revenue) as six_month_net_revenue_percentile
         ,ntile(100) over(partition by six_month_paid_order_count > 0 order by six_month_gross_profit) as six_month_gross_profit_percentile
         ,ntile(100) over(partition by twelve_month_net_revenue > 0 order by twelve_month_net_revenue) as twelve_month_net_revenue_percentile
-        ,ntile(100) over(partition by lifetime_net_revenue > 0 order by lifetime_net_revenue) as lifetime_net_revenue_percentile
+        ,ntile(100) over(partition by lifetime_net_revenue > 0 order by lifetime_net_revenue) as lifetime_net_revenue_percentile 
+        ,ntile(100) over(partition by lifetime_paid_order_count > 0 order by lifetime_paid_order_count) as lifetime_paid_order_count_percentile 
     from user_order_activity
 )
 
@@ -146,6 +147,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,zeroifnull(user_percentiles.six_month_gross_profit_percentile) as six_month_gross_profit_percentile
         ,zeroifnull(user_percentiles.twelve_month_net_revenue_percentile) as twelve_month_net_revenue_percentile
         ,zeroifnull(user_percentiles.lifetime_net_revenue_percentile) as lifetime_net_revenue_percentile
+        ,zeroifnull(user_percentiles.lifetime_paid_order_count_percentile ) as lifetime_paid_order_count_percentile
         ,zeroifnull(user_percentiles.total_california_orders) as total_california_orders
         ,zeroifnull(user_percentiles.user_average_order_value) as user_average_order_value
         ,zeroifnull(user_order_item_activity.lifetime_japanese_wagyu_revenue) as lifetime_japanese_wagyu_revenue

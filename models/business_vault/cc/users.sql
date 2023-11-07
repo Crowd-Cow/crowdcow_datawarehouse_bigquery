@@ -110,6 +110,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,zeroifnull(user_order_activity.six_month_gross_profit_percentile) as six_month_gross_profit_percentile
         ,zeroifnull(user_order_activity.twelve_month_net_revenue_percentile) as twelve_month_net_revenue_percentile
         ,zeroifnull(user_order_activity.lifetime_net_revenue_percentile) as lifetime_net_revenue_percentile
+        ,zeroifnull(user_order_activity.lifetime_paid_order_count_percentile) as lifetime_paid_order_count_percentile
         ,zeroifnull(user_order_activity.total_california_orders) as total_california_orders
         ,zeroifnull(user_order_activity.user_average_order_value) as user_average_order_value
         ,zeroifnull(user_order_activity.lifetime_japanese_wagyu_revenue) as lifetime_japanese_wagyu_revenue
@@ -198,6 +199,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,six_month_gross_profit_percentile
         ,twelve_month_net_revenue_percentile
         ,lifetime_net_revenue_percentile
+        ,lifetime_paid_order_count_percentile
         ,total_california_orders
         ,user_average_order_value
         ,lifetime_japanese_wagyu_revenue
