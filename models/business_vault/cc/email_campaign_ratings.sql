@@ -7,7 +7,7 @@
 with
 
 event as ( select * from {{ ref('stg_iterable__events') }} where campaign_id in (1458359,1276196,7868265,1276197,1266464) ) --Rate your order campaigns 
-,campaign as ( select * From {{ ref('stg_iterable__campaign_history') }} where campaign_id in (1458359,1276196,7868265,1276197,1266464) )
+,campaign as ( select * From {{ ref('stg_iterable__campaign_history') }} )
 ,user as ( select * from {{ ref('stg_iterable__user_history') }} )
 ,cc_user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
 
