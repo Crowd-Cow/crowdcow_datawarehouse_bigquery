@@ -29,8 +29,10 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,sum(iff(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('month',-6,sysdate()),net_revenue,0)) as six_month_net_revenue
         ,sum(iff(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('month',-6,sysdate()),gross_profit,0)) as six_month_gross_profit
         ,sum(iff(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('month',-12,sysdate()),net_revenue,0)) as twelve_month_net_revenue
+        ,sum(iff(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('month',-24,sysdate()),net_revenue,0)) as twentyfour_month_net_revenue
         ,count_if(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('month',-6,sysdate())) as six_month_paid_order_count
         ,count_if(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('month',-12,sysdate())) as twelve_month_purchase_count
+        ,count_if(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('month',-24,sysdate())) as twentyfour_purchase_count
         ,count_if(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('day',-90,sysdate())) as last_90_days_paid_order_count
         ,count_if(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('day',-180,sysdate())) as last_180_days_paid_order_count
         ,count_if(has_been_delivered and delivered_at_utc >= dateadd('day',-7,sysdate())) as recent_delivered_order_count
