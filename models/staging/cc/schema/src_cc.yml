@@ -7426,3 +7426,26 @@ sources:
             description: _fivetran_deleted
           - name: _fivetran_synced
             description: _fivetran_synced
+      
+      - name: first_box_flow_sessions
+        description: first_box_flow_sessions
+
+        columns:
+          - name: id
+            description: id
+          - name: user_id 
+            description: user_id
+          - name: order_id 
+            description: order_id
+          - name: renew_period_type  
+            description: renew_period_type
+          - name: created_at
+            description: created_at
+          - name: updated_at
+            description: updated_at
+          - name: entered_at
+            description: entered_at
+          - name: completed_at
+            description: completed_at
+          - name: exited_at
+            description: exited_at

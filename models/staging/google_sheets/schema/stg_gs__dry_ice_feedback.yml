@@ -1,0 +1,21 @@
+version: 2
+
+models:
+
+  - name: stg_gs__dry_ice_feedback
+    description: Customer survey that's sent out when their orders are delivered
+    columns:
+      - name: timestamp
+        description: timestamp
+
+      - name: order_number
+        description: order_number
+
+      - name: did_the_box_show_any_signs_of_damage_
+        description: did_the_box_show_any_signs_of_damage_
+
+      - name: did_you_order_arrive_frozen_
+        description: did_you_order_arrive_frozen_
+        
+      - name: how_much_dry_ice_was_left_in_the_box_please_choose_the_closest_option_from_the_answers_pictographs_below_
+        description: how_much_dry_ice_was_left_in_the_box_please_choose_the_closest_option_from_the_answers_pictographs_below_
