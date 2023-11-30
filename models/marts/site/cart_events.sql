@@ -1,6 +1,6 @@
 with
 
-cart_events as ( select * from {{ ref('events') }} where event_name in ('ORDER_ADD_TO_CART','ORDER_REMOVE_FROM_CART','VIEWED_PRODUCT','PRODUCT_CARD_QUICK_ADD_TO_CART') )
+cart_events as ( select * from {{ ref('events') }} where event_name in ('ORDER_ADD_TO_CART','ORDER_REMOVE_FROM_CART','VIEWED_PRODUCT','PRODUCT_CARD_VIEWED','PRODUCT_CARD_QUICK_ADD_TO_CART') )
 ,bid_item as ( select * from {{ ref('bid_items') }} where dbt_valid_to is null )
 ,product as ( select * from {{ ref('products') }} )
 
