@@ -17,7 +17,7 @@ cart_events as ( select * from {{ ref('events') }} where event_name in ('ORDER_A
         ,ifnull(cart_events.quantity,1) as item_quantity
         ,cart_events.price * item_quantity as item_amount
         ,cart_events.order_id   
-        ,iff(event_name = 'PRODUCT_CARD_QUICK_ADD_TO_CART',bid_item.bid_item_id,cart_events.bid_item_id) as bid_item_id
+        ,iff(event_name = 'PRODUCT_CARD_QUICK_ADD_TO_CART' or event_name = 'VIEWED_PRODUCT' or event_name = 'PRODUCT_CARD_VIEWED',bid_item.bid_item_id,cart_events.bid_item_id) as bid_item_id
         ,cart_events.product_token
         ,cart_events.title as product_title  
         ,cart_events.name as bid_item_name
