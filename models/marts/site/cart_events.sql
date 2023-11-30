@@ -11,6 +11,8 @@ cart_events as ( select * from {{ ref('events') }} where event_name in ('ORDER_A
         ,cart_events.user_id
         ,cart_events.occurred_at_utc
         ,cart_events.event_name
+        ,cart_events.on_page_path
+        ,cart_events.page_section
         ,cart_events.price as item_price
         ,ifnull(cart_events.quantity,1) as item_quantity
         ,cart_events.price * item_quantity as item_amount
@@ -31,6 +33,8 @@ cart_events as ( select * from {{ ref('events') }} where event_name in ('ORDER_A
         ,get_fields.user_id
         ,get_fields.occurred_at_utc
         ,get_fields.event_name
+        ,get_fields.on_page_path
+        ,get_fields.page_section
         ,get_fields.item_price
         ,get_fields.item_quantity
         ,get_fields.item_amount
