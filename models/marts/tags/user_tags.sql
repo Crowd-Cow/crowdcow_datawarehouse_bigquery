@@ -47,9 +47,9 @@ employee as (
     {{ generate_tag('users','user_id','vip_frequent','user_segment') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and twelve_month_purchase_count >= 4
 )
-,vip_top20_orderhistory as (
-    {{ generate_tag('users','user_id','vip_top20_orderhistory','user_segment') }}
-    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and lifetime_paid_order_count >= 4 and lifetime_paid_order_count_percentile > 80
+,vip_top10_orderhistory as (
+    {{ generate_tag('users','user_id','vip_top10_orderhistory','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and lifetime_paid_order_count >= 4 and lifetime_paid_order_count_percentile > 90
 )
 ,vip_profit as (
     {{ generate_tag('users','user_id','vip_profit','user_segment') }}
@@ -58,6 +58,10 @@ employee as (
 ,vip_top20_spendhistory as (
     {{ generate_tag('users','user_id','vip_top20_spendhistory','user_segment') }}
     where user_type = 'CUSTOMER' and lifetime_net_revenue > 0 and lifetime_net_revenue_percentile > 80
+)
+,super_vip_spendhistory as (
+    {{ generate_tag('users','user_id','super_vip_spendhistory','user_segment') }}
+    where user_type = 'CUSTOMER' and lifetime_net_revenue > 0 and lifetime_net_revenue_percentile > 98
 )
 
 ,vip_priority as (
@@ -156,7 +160,9 @@ select * from vip_priority
 union all
 select * from vip_top20_spendhistory
 union all 
-select * from vip_top20_orderhistory
+select * from vip_top10_orderhistory
+union all
+select * from super_vip_spendhistory
 union all
 select * from member
 union all
