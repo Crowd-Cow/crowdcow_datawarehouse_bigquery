@@ -5,7 +5,8 @@ source as ( select * from {{ source('cc','referrals') }} where not _fivetran_del
 
 ,referrals as (
     select
-        created_at as created_at_utc
+        id as id 
+        ,created_at as created_at_utc
         ,updated_at as updated_at_utc
         ,purchased_at as purchased_at_utc
         ,from_user_id as referrer_user_id
