@@ -11,6 +11,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
 ,stuck_order_flags as ( select * from {{ ref('stg_cc__subscription_statuses') }} )
 ,moolah as ( select * from {{ ref('int_order_rewards') }} )
+,gift_card_redemption as (select * from {{ ref('credits') }} where credit_business_group = 'GIFT CARD REDEMPTION' )
 
 ,distinct_stuck_order_flag as (
     select
@@ -82,6 +83,12 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
     where total_moolah_redeemed < 0
 )
 
+,gift_card_redemption_orders as (
+    select distinct order_id
+    from gift_card_redemption
+
+)
+
 ,flags as (
     select 
         orders.order_id
@@ -130,6 +137,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,distinct_stuck_order_flag.is_under_order_minimum
         ,distinct_stuck_order_flag.is_order_scheduled_in_past
         ,moolah_orders.order_id is not null as is_moolah_order
+        ,gift_card_redemption_orders.order_id is not null as has_gift_card_redemption
     from orders
         left join gift_info on orders.order_id = gift_info.order_id 
         left join has_shipping_credit on orders.order_id = has_shipping_credit.order_id
@@ -140,6 +148,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         left join user on orders.user_id = user.user_id
         left join distinct_stuck_order_flag on orders.order_id = distinct_stuck_order_flag.order_id
         left join moolah_orders on orders.order_id = moolah_orders.order_id
+        left join gift_card_redemption_orders on orders.order_id = gift_card_redemption_orders.order_id
 )
 
 select *
