@@ -219,7 +219,9 @@ base_visits as (
             when (visit_referring_domain like '%BING.%' or utm_source = 'BING' or visit_referrer like '%BING%') then 'BING'
             when visit_referring_domain like any ('%YAHOO.%','%DUCKDUCKGO.%') or visit_referrer like any ('%YAHOO%','%DUCKDUCKGO%') then 'OTHER SEARCH'
             when visit_referring_domain <> '' and visit_referring_domain not like '%CROWDCOW.%' then 'NON-USER REFERRAL'
-            when utm_campaign = '' and utm_medium = '' and utm_source = '' and visit_referring_domain = '' then 'DIRECT'
+            when utm_campaign = '' and utm_medium = '' and utm_source = '' and (visit_referring_domain = '' or visit_referring_domain like '%CROWDCOW.%')
+                or (utm_campaign is null and utm_medium is null and utm_source is null and (visit_referring_domain is null or visit_referring_domain like '%CROWDCOW.%'))
+                or (trim(utm_campaign) = '' and trim(utm_medium) = '' and trim(utm_source) = '' and (trim(visit_referring_domain) = '' or visit_referring_domain like '%CROWDCOW.%'))then 'DIRECT'
             else 'OTHER'
          end as sub_channel
     from meta_subchannel
