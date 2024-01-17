@@ -81,7 +81,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_visits.first_visit_id
 
         ,case
-            when user_order_activity.first_completed_order_date::date - users.created_at_utc::date <= 10 then user_visits.first_visit_id
+            when user_order_activity.first_completed_order_date::date - users.created_at_utc::date <= 10 and user_visits.first_visit_id is not null then user_visits.first_visit_id
             else user_order_activity.first_completed_order_visit_id
          end as attributed_visit_id
 
