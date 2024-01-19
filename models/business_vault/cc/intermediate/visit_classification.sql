@@ -221,7 +221,9 @@ base_visits as (
             when visit_referring_domain <> '' and visit_referring_domain not like '%CROWDCOW.%' then 'NON-USER REFERRAL'
             when utm_campaign = '' and utm_medium = '' and utm_source = '' and (visit_referring_domain = '' or visit_referring_domain like '%CROWDCOW.%')
                 or (utm_campaign is null and utm_medium is null and utm_source is null and (visit_referring_domain is null or visit_referring_domain like '%CROWDCOW.%'))
-                or (trim(utm_campaign) = '' and trim(utm_medium) = '' and trim(utm_source) = '' and (trim(visit_referring_domain) = '' or visit_referring_domain like '%CROWDCOW.%'))then 'DIRECT'
+                or (trim(utm_campaign) = '' and trim(utm_medium) = '' and trim(utm_source) = '' and (trim(visit_referring_domain) = '' or visit_referring_domain like '%CROWDCOW.%')) 
+                or utm_medium = 'SOCIAL' and utm_source = 'REFERRAL' and visit_referring_domain like '%CROWDCOW.%' then 'DIRECT'
+            when utm_medium = 'SOCIAL' and utm_source = 'REFERRAL' and visit_referring_domain not like '%CROWDCOW.%' then 'SOCIAL REFERRAL' 
             else 'OTHER'
          end as sub_channel
     from meta_subchannel
@@ -235,7 +237,7 @@ base_visits as (
             or utm_source like 'PAID%'
             or utm_medium like 'PAID%'
             or sub_channel in ('FIELD-MARKETING','GEIST','USER REFERRAL','NON-USER REFERRAL','PARTNER','AFFILIATE','AMBASSADOR','INFLUENCER') as is_paid_referrer 
-        ,sub_channel in ('INSTAGRAM','FACEBOOK-GROUP','FACEBOOK','LINKTREE','YOUTUBE','REDDIT','LINKEDIN','TWITTER','TIKTOK','PINTEREST','PODCAST') as is_social_platform_referrer
+        ,sub_channel in ('INSTAGRAM','FACEBOOK-GROUP','FACEBOOK','LINKTREE','YOUTUBE','REDDIT','LINKEDIN','TWITTER','TIKTOK','PINTEREST','PODCAST','SOCIAL REFERRAL') as is_social_platform_referrer
     from assign_sub_channel
 )
 
