@@ -50,6 +50,7 @@ source as ( select * from {{ source('cc', 'orders') }} where not _fivetran_delet
     ,picked_up_at as order_picked_up_at_utc
     ,notes_fulfilled_at as order_notes_fulfilled_at_utc
     ,{{ cents_to_usd('shipping_fee_cents') }} as order_shipping_fee_usd
+    ,{{ cents_to_usd('expedited_shipping_fee_cents') }} as order_expedited_shipping_fee_usd
     ,notes_updated_at as order_notes_updated_at_utc
     ,scheduled_arrival_date as order_scheduled_arrival_date_utc
     ,convert_timezone('UTC','America/Los_Angeles',scheduled_arrival_date) as order_scheduled_arrival_date_pt

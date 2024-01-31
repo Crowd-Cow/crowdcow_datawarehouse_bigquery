@@ -83,6 +83,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,zeroifnull(order_revenue.item_promotion) as item_promotion
         ,zeroifnull(order_revenue.net_product_revenue) as net_product_revenue
         ,orders.order_shipping_fee_usd as shipping_revenue
+        ,orders.order_expedited_shipping_fee_usd as expedited_shipping_revenue
         ,zeroifnull(order_revenue.free_shipping_discount) as free_shipping_discount
         ,zeroifnull(order_revenue.gross_revenue) as gross_revenue
         ,zeroifnull(order_revenue.new_member_discount) as new_member_discount
