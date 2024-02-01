@@ -253,10 +253,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,is_purchasing_customer
         ,is_purchasing_member
         ,is_active_member_90_day
-        ,case
-            when not is_active_member_90_day and twelve_month_purchase_count > 0 then 'Yes' 
-            else 'No'
-        end as is_active_alc
+        ,not is_active_member_90_day and twelve_month_purchase_count > 0 as is_active_alc
         ,is_banned
         ,is_current_promotion_ffl
         ,is_first_promotion_ffl
