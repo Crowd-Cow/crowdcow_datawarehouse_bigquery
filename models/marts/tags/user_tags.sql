@@ -109,6 +109,16 @@ employee as (
     where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and is_purchasing_member
 )
 
+,active_customer_90_day as (
+    {{ generate_tag('users','user_id','90_day_active_customer','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and not is_active_member_90_day and last_90_days_paid_order_count > 0
+)
+
+,active_customer_180_day as (
+    {{ generate_tag('users','user_id','180_day_active_customer','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and not is_active_member_90_day and last_180_days_paid_order_count > 0
+)
+
 ,active_member_90_day as (
     {{ generate_tag('users','user_id','90_day_active_member','user_segment') }}
     where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and is_member and not is_cancelled_member and last_90_days_paid_order_count > 0
@@ -193,3 +203,7 @@ union all
 select * from california_customer
 union all
 select * from churned_customer
+union all
+select * from active_customer_180_day
+union all 
+select * from active_customer_90_day
