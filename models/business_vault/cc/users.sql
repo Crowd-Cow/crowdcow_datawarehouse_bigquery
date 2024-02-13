@@ -112,6 +112,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,zeroifnull(user_order_activity.lifetime_paid_order_count_percentile) as lifetime_paid_order_count_percentile
         ,zeroifnull(user_order_activity.total_california_orders) as total_california_orders
         ,zeroifnull(user_order_activity.user_average_order_value) as user_average_order_value
+        ,zeroifnull(user_order_activity.twelve_month_japanese_wagyu_revenue)as twelve_month_japanese_wagyu_revenue
         ,zeroifnull(user_order_activity.lifetime_japanese_wagyu_revenue) as lifetime_japanese_wagyu_revenue
         ,zeroifnull(user_order_activity.japanese_buyers_club_revenue) as japanese_buyers_club_revenue
         ,zeroifnull(user_order_activity.moolah_points) as moolah_points
@@ -201,6 +202,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,lifetime_paid_order_count_percentile
         ,total_california_orders
         ,user_average_order_value
+        ,twelve_month_japanese_wagyu_revenue
         ,lifetime_japanese_wagyu_revenue
         ,japanese_buyers_club_revenue
         ,lifetime_awarded_moolah

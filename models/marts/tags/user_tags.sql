@@ -134,6 +134,11 @@ employee as (
     where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and is_member and not is_cancelled_member and last_90_days_paid_order_count = 0
 )
 
+,twelve_month_japanese_wagyu_revenue as (
+    {{ generate_tag('users','user_id','japanese_wagyu_interest','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and twelve_month_japanese_wagyu_revenue > 0
+)
+
 ,inactive_member_180_day as (
     {{ generate_tag('users','user_id','180_day_inactive_member','user_segment') }}
     where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and is_member and not is_cancelled_member and last_180_days_paid_order_count = 0
@@ -207,3 +212,5 @@ union all
 select * from active_customer_180_day
 union all 
 select * from active_customer_90_day
+union all 
+select * from twelve_month_japanese_wagyu_revenue
