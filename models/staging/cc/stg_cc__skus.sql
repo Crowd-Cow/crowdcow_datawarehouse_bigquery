@@ -1,10 +1,23 @@
-with source as (
+with 
 
-    select * from {{ ref('skus_ss') }} where not _fivetran_deleted
+source as ( select * from {{ ref('skus_ss') }} ) --where not _fivetran_deleted )
+ ,raw_data as (select * from  {{ source('cc', 'skus') }} ) --where not _fivetran_deleted)
 
-),
+--The sku_snapshot CTE has been hardcoded to correct specific discrepancies identified within the snapshot table.
+,sku_snapshot as (
+    select 
+        source.* 
+    ,case 
+        when source._fivetran_deleted != raw_data._fivetran_deleted and source.dbt_valid_to is null 
+            then raw_data._fivetran_deleted else source._fivetran_deleted end as adjusted_fivetran_deleted
+    ,case
+        when source._fivetran_deleted != raw_data._fivetran_deleted and source.dbt_valid_to is null 
+            then raw_data.updated_at else source.dbt_valid_to end as _adjusted_dbt_valid_to
+    from source
+    left join raw_data on raw_data.id = source.id 
+)
 
-renamed as (
+,renamed as (
 
     select
         id as sku_id
@@ -56,7 +69,7 @@ renamed as (
         ,non_member_discount_start_at as non_member_discount_start_at_utc
         ,{{ convert_percent('partial_member_discount_percent') }} as partial_member_discount_percent
         ,{{ clean_strings('replenishment_code') }} as replenishment_code
-        ,dbt_valid_to
+        ,_adjusted_dbt_valid_to as dbt_valid_to
         ,dbt_valid_from
         
         ,case
@@ -64,9 +77,10 @@ renamed as (
             else dbt_valid_from
          end as adjusted_dbt_valid_from
 
-        ,coalesce(dbt_valid_to,'2999-01-01') as adjusted_dbt_valid_to
+        ,coalesce(_adjusted_dbt_valid_to,'2999-01-01') as adjusted_dbt_valid_to
 
-    from source
+    from sku_snapshot
+    where not adjusted_fivetran_deleted
 
 )
 
