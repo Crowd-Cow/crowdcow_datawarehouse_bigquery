@@ -141,6 +141,10 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,flags.can_retry_payment
         ,flags.is_under_order_minimum
         ,flags.is_order_scheduled_in_past
+        ,flags.is_order_missing
+        ,flags.is_order_cancelled
+        ,flags.is_order_charged
+        ,flags.is_bids_fulfillment_at_risk
         ,flags.has_gift_card_redemption
         ,ranks.overall_order_rank
         ,ranks.completed_order_rank

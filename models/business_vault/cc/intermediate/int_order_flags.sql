@@ -26,6 +26,10 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,can_retry_payment
         ,is_under_order_minimum
         ,is_order_scheduled_in_past
+        ,is_order_missing
+        ,is_order_cancelled
+        ,is_order_charged    
+        ,is_bids_fulfillment_at_risk
     from stuck_order_flags
     qualify row_number() over(partition by order_id order by updated_at_utc desc) = 1
 )
@@ -136,6 +140,10 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,distinct_stuck_order_flag.can_retry_payment
         ,distinct_stuck_order_flag.is_under_order_minimum
         ,distinct_stuck_order_flag.is_order_scheduled_in_past
+        ,distinct_stuck_order_flag.is_order_missing
+        ,distinct_stuck_order_flag.is_order_cancelled
+        ,distinct_stuck_order_flag.is_order_charged    
+        ,distinct_stuck_order_flag.is_bids_fulfillment_at_risk
         ,moolah_orders.order_id is not null as is_moolah_order
         ,gift_card_redemption_orders.order_id is not null as has_gift_card_redemption
     from orders
