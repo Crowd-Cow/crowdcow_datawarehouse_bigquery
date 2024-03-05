@@ -69,6 +69,8 @@ source as ( select * from {{ ref('skus_ss') }} ) --where not _fivetran_deleted )
         ,non_member_discount_start_at as non_member_discount_start_at_utc
         ,{{ convert_percent('partial_member_discount_percent') }} as partial_member_discount_percent
         ,{{ clean_strings('replenishment_code') }} as replenishment_code
+        ,{{ clean_strings('vendor_product_code') }} as vendor_product_code
+        ,vendor_case_pack_quantity as vendor_case_pack_quantity
         ,_adjusted_dbt_valid_to as dbt_valid_to
         ,dbt_valid_from
         

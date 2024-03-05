@@ -41,6 +41,8 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku.member_discount_percent
         ,sku.non_member_discount_percent
         ,sku.replenishment_code
+        ,sku.vendor_case_pack_quantity
+        ,sku.vendor_product_code
         ,sku.is_bulk_receivable
         ,sku.is_presellable
         ,sku.is_virtual_inventory
@@ -118,6 +120,8 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku_joins.member_discount_percent
         ,sku_joins.non_member_discount_percent
         ,sku_joins.replenishment_code
+        ,sku_joins.vendor_case_pack_quantity
+        ,sku_joins.vendor_product_code
         ,sku_joins.is_bulk_receivable
         ,sku_joins.is_presellable
         ,sku_joins.is_virtual_inventory
@@ -181,6 +185,8 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,add_inventory_classification.member_discount_percent
         ,add_inventory_classification.non_member_discount_percent
         ,add_inventory_classification.replenishment_code
+        ,add_inventory_classification.vendor_case_pack_quantity
+        ,add_inventory_classification.vendor_product_code
         ,add_inventory_classification.is_bulk_receivable
         ,add_inventory_classification.is_presellable
         ,add_inventory_classification.is_virtual_inventory
