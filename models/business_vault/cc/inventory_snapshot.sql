@@ -17,6 +17,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
 ,receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
 ,pipeline_order as ( select * from {{ ref('stg_cc__pipeline_orders') }} )
 ,fbq_item as ( select distinct sku_id from {{ ref('int_bid_item_skus') }} where is_fbq_item )
+,sku_reservations as (select * from {{ ref('stg_cc__sku_reservations') }} where dbt_valid_to is null)
 
 ,inventory_snapshot as (
     select
@@ -105,6 +106,16 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
     where receivable.marked_destroyed_at_utc is null
 )
 
+,sku_reservations_aggregation as (
+    select
+        sku_id
+        ,fc_id
+        ,sum(sku_reservation_quantity) as sku_reservation_quantity
+    from sku_reservations 
+    where adjusted_dbt_valid_from = '1970-01-01' and adjusted_dbt_valid_to = '2999-01-01'
+    group by 1,2
+
+)
 ,inventory_joins as (
     select 
         {{ dbt_utils.surrogate_key(['sku_box_locations.snapshot_date','sku_box_locations.sku_box_key'] ) }} as inventory_snapshot_id
@@ -126,6 +137,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,sku_vendor.is_rastellis
         ,fbq_item.sku_id is not null as is_configured_for_fbq
         ,lot.delivered_at_utc as lot_delivered_at_utc
+        ,sku_reservations_aggregation.sku_reservation_quantity /** As this is reservation qqt is not box level there is the need to select the right aggregation in Looker**/
     from sku_box_locations
         left join sku_vendor on sku_box_locations.owner_id = sku_vendor.sku_vendor_id
         left join lot on sku_box_locations.lot_id = lot.lot_id
@@ -140,6 +152,8 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         left join sku on sku_box_locations.sku_id = sku.sku_id
             and sku_box_locations.snapshot_date >= sku.adjusted_dbt_valid_from
             and sku_box_locations.snapshot_date < sku.adjusted_dbt_valid_to
+        left join sku_reservations_aggregation on sku_box_locations.sku_id = sku_reservations_aggregation.sku_id
+            and sku_box_locations.fc_id = sku_reservations_aggregation.fc_id
         
 )
 
@@ -166,9 +180,13 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,quantity
         ,quantity * sku_price_usd as potential_revenue
         ,quantity * sku_cost_usd as sku_cost
+        /**
         ,quantity_reserved
         ,quantity_reserved * sku_price_usd as potential_revenue_reserved
-        ,quantity_reserved * sku_cost_usd as sku_cost_reserved
+        ,quantity_reserved * sku_cost_usd as sku_cost_reserved **/
+        ,sku_reservation_quantity as quantity_reserved
+        ,sku_reservation_quantity * sku_price_usd as potential_revenue_reserved
+        ,sku_reservation_quantity * sku_cost_usd as sku_cost_reserved  
         ,quantity_available
         ,quantity_available * sku_price_usd as potential_revenue_available
         ,quantity_available * sku_cost_usd as sku_cost_available
