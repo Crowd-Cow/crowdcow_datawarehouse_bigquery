@@ -199,6 +199,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,user_percentiles.first_completed_order_date
         ,user_percentiles.first_completed_order_visit_id
         ,user_percentiles.most_recent_order_promotion_id
+        ,user_percentiles.most_recent_order_id
     from user
         left join user_percentiles on user.user_id = user_percentiles.user_id
         left join average_order_days on user.user_id = average_order_days.user_id
