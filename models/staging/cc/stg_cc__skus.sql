@@ -8,6 +8,9 @@ source as ( select * from {{ ref('skus_ss') }} ) --where not _fivetran_deleted )
     select 
         source.* 
     ,case 
+        when source.replenishment_code != raw_data.replenishment_code and source.dbt_valid_to is null 
+            then raw_data.replenishment_code else source.replenishment_code end as adjusted_replenishment_code
+    ,case 
         when source._fivetran_deleted != raw_data._fivetran_deleted and source.dbt_valid_to is null 
             then raw_data._fivetran_deleted else source._fivetran_deleted end as adjusted_fivetran_deleted
     ,case
@@ -68,7 +71,7 @@ source as ( select * from {{ ref('skus_ss') }} ) --where not _fivetran_deleted )
         ,{{ convert_percent('non_member_discount_percent') }} as non_member_discount_percent
         ,non_member_discount_start_at as non_member_discount_start_at_utc
         ,{{ convert_percent('partial_member_discount_percent') }} as partial_member_discount_percent
-        ,{{ clean_strings('replenishment_code') }} as replenishment_code
+        ,{{ clean_strings('adjusted_replenishment_code') }} as replenishment_code
         ,{{ clean_strings('vendor_product_code') }} as vendor_product_code
         ,vendor_case_pack_quantity as vendor_case_pack_quantity
         ,_adjusted_dbt_valid_to as dbt_valid_to
