@@ -123,6 +123,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.last_paid_order_date
         ,user_order_activity.most_recent_paid_order_token
         ,user_order_activity.most_recent_order_promotion_id
+        ,user_order_activity.most_recent_order_id
 
     from users
         left join user_membership on users.user_id = user_membership.user_id
@@ -276,6 +277,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,last_paid_order_date
         ,most_recent_paid_order_token
         ,most_recent_order_promotion_id
+        ,most_recent_order_id
         ,created_at_utc
         ,updated_at_utc
     from user_joins
