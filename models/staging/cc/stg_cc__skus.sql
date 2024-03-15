@@ -8,7 +8,7 @@ source as ( select * from {{ ref('skus_ss') }} ) --where not _fivetran_deleted )
     select 
         source.* 
     ,case 
-        when source.replenishment_code != raw_data.replenishment_code and source.dbt_valid_to is null 
+        when coalesce(source.replenishment_code,'') != coalesce(raw_data.replenishment_code,'') and source.dbt_valid_to is null 
             then raw_data.replenishment_code else source.replenishment_code end as adjusted_replenishment_code
     ,case 
         when source._fivetran_deleted != raw_data._fivetran_deleted and source.dbt_valid_to is null 
