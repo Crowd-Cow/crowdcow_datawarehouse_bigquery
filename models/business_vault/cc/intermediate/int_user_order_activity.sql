@@ -10,11 +10,11 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
 ,order_info as ( select * from {{ ref('orders') }} )
 ,order_item_units as ( select * from {{ ref('int_order_units_pct') }} )
 ,reward as ( select * from {{ ref('stg_cc__reward_points') }} )
-
+,discounts as (select * from {{ ref('discounts') }})
 
 ,user_order_activity as (
     select
-        user_id
+        order_info.user_id
         ,is_rastellis
         ,is_qvc
         ,count(order_id) as total_order_count
@@ -44,6 +44,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,min(iff(completed_order_rank = 1,order_checkout_completed_at_utc,null)) as first_completed_order_date
         ,min(iff(completed_order_rank = 1,visit_id,null)) as first_completed_order_visit_id
         ,max(iff(is_paid_order and not is_cancelled_order,order_token,null)) as most_recent_order
+        ,max(iff(is_paid_order and not is_cancelled_order,order_id,null)) as most_recent_order_id
         ,count_if(
             not is_gift_order
             and not is_gift_card_order
@@ -57,15 +58,42 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
     group by 1,2,3
 )
 
+-- CTE to rank discounts of the last orders, excluding specified promotions and buckets
+,ranked_discounts AS (
+    SELECT
+        distinct
+        lpo.user_id,
+        d.promotion_id,
+        --d.discount_usd,
+        --d.order_id,
+        RANK() OVER (
+            PARTITION BY lpo.user_id 
+            ORDER BY d.discount_usd DESC, d.promotion_id DESC
+        ) AS rank
+    FROM user_order_activity lpo
+    JOIN discounts d ON lpo.most_recent_order_id = d.order_id
+    WHERE 
+       d.promotion_id NOT IN (104, 106, 226)
+      AND d.revenue_waterfall_bucket NOT IN (
+          'MOOLAH ITEM DISCOUNT', 'FREE SHIPPING DISCOUNT', 'FREE PROTEIN PROMOTION'
+      )
+      AND d.business_group NOT IN ('MEMBERSHIP 5%')
+      AND d.promotion_source <> 'PROMOTION'
+      
+)
+
+
 ,user_percentiles as (
     select
-        *
+        user_order_activity.*
         ,ntile(100) over(partition by six_month_net_revenue > 0 order by six_month_net_revenue) as six_month_net_revenue_percentile
         ,ntile(100) over(partition by six_month_paid_order_count > 0 order by six_month_gross_profit) as six_month_gross_profit_percentile
         ,ntile(100) over(partition by twelve_month_net_revenue > 0 order by twelve_month_net_revenue) as twelve_month_net_revenue_percentile
         ,ntile(100) over(partition by lifetime_net_revenue > 0 order by lifetime_net_revenue) as lifetime_net_revenue_percentile 
         ,ntile(100) over(partition by lifetime_paid_order_count > 0 order by lifetime_paid_order_count) as lifetime_paid_order_count_percentile 
+        ,ranked_discounts.promotion_id as most_recent_order_promotion_id
     from user_order_activity
+    left join ranked_discounts on ranked_discounts.user_id = user_order_activity.user_id and ranked_discounts.rank = 1 
 )
 
 ,order_frequency as (
@@ -170,6 +198,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,user_percentiles.last_paid_order_date
         ,user_percentiles.first_completed_order_date
         ,user_percentiles.first_completed_order_visit_id
+        ,user_percentiles.most_recent_order_promotion_id
     from user
         left join user_percentiles on user.user_id = user_percentiles.user_id
         left join average_order_days on user.user_id = average_order_days.user_id
