@@ -23,6 +23,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,count_if(is_paid_order and not is_cancelled_order and is_membership_order) total_paid_membership_order_count
         ,count_if(is_paid_order and not is_cancelled_order and is_membership_order and sysdate()::date - order_paid_at_utc::date <= 90) as last_90_days_paid_membership_order_count
         ,sum(iff(is_paid_order and not is_cancelled_order,net_revenue,0)) as lifetime_net_revenue
+        ,sum(iff(is_paid_order and not is_cancelled_order,net_product_revenue,0)) as lifetime_net_product_revenue
         ,count_if(is_paid_order and not is_cancelled_order) as lifetime_paid_order_count
         ,count_if(completed_order_rank = 1 and not is_paid_order and not is_cancelled_order) as total_completed_unpaid_uncancelled_orders
         ,count_if(is_gift_order and is_paid_order and not is_cancelled_order) as total_paid_gift_order_count
@@ -162,6 +163,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,zeroifnull(user_percentiles.total_paid_membership_order_count) as total_paid_membership_order_count
         ,zeroifnull(user_percentiles.last_90_days_paid_membership_order_count) as last_90_days_paid_membership_order_count
         ,zeroifnull(user_percentiles.lifetime_net_revenue) as lifetime_net_revenue
+        ,zeroifnull(user_percentiles.lifetime_net_product_revenue) as lifetime_net_product_revenue
         ,zeroifnull(user_percentiles.lifetime_paid_order_count) as lifetime_paid_order_count
         ,zeroifnull(user_percentiles.total_completed_unpaid_uncancelled_orders) as total_completed_unpaid_uncancelled_orders
         ,zeroifnull(user_percentiles.total_paid_gift_order_count) as total_paid_gift_order_count
@@ -200,6 +202,15 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,user_percentiles.first_completed_order_visit_id
         ,user_percentiles.most_recent_order_promotion_id
         ,user_percentiles.most_recent_order_id
+        ,coalesce(first_completed_order_date is not null, FALSE) as purchaser
+        ,coalesce(first_completed_order_date is null, FALSE) as all_leads 
+        ,coalesce(first_completed_order_date is null and user.created_at_utc >= dateadd('day',-15,sysdate()), FALSE ) as hot_lead
+        ,coalesce(first_completed_order_date is null and user.created_at_utc <= dateadd('day',-15,sysdate()) and user.created_at_utc >= dateadd('day',-45,sysdate()), FALSE ) as warm_lead
+        ,coalesce(first_completed_order_date is null and user.created_at_utc <= dateadd('day',-45,sysdate()), FALSE ) as cold_lead
+        ,coalesce(user_percentiles.last_paid_order_date >= dateadd('day',-90,sysdate()), FALSE) as recent_purchaser
+        ,coalesce(user_percentiles.last_paid_order_date < dateadd('day',-90,sysdate()) and user_percentiles.last_paid_order_date >= dateadd('day',-180,sysdate()), FALSE) as lapsed_purchaser
+        ,coalesce(user_percentiles.last_paid_order_date < dateadd('day',-180,sysdate()), FALSE) as dormant_purchaser
+        
     from user
         left join user_percentiles on user.user_id = user_percentiles.user_id
         left join average_order_days on user.user_id = average_order_days.user_id
