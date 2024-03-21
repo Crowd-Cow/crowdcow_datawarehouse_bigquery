@@ -163,6 +163,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_roles_for_access
         ,state_code
         ,city_name
+        ,full_contact_id as fc_id
         ,user_zip
         ,user_token
         ,user_referrer_token
