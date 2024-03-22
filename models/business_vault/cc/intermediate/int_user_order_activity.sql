@@ -134,29 +134,29 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
                 ,0
             )
         ) as lifetime_japanese_wagyu_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('month',-12,sysdate()),order_item_units.japanese_wagyu_revenue,0)) as twelve_month_japanese_wagyu_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.beef_revenue > 0, beef_revenue, false)) as beef_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.bison_revenue > 0, bison_revenue, false)) as bison_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.chicken_revenue > 0, chicken_revenue, false)) as chicken_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.japanese_wagyu_revenue > 0, japanese_wagyu_revenue, false)) as japanese_wagyu_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.lamb_revenue > 0, lamb_revenue, false)) as lamb_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.pork_revenue > 0, pork_revenue, false)) as pork_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.seafood_revenue > 0, seafood_revenue, false)) as seafood_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.starters_sides_revenue > 0, starters_sides_revenue, false)) as sides_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.turkey_revenue > 0, turkey_revenue, false)) as turkey_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.wagyu_revenue > 0, wagyu_revenue, false)) as wagyu_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.bundle_revenue > 0, bundle_revenue, false)) as bundle_revenue
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.beef_units > 0, order_paid_at_utc,0)) as most_recent_beef_order_date   
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.bison_units > 0, order_paid_at_utc,0)) as most_recent_bison_order_date 
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.chicken_units > 0, order_paid_at_utc,0)) as most_recent_chicken_order_date
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.japanese_wagyu_units > 0, order_paid_at_utc,0)) as most_recent_japanse_wagyu_order_date
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.lamb_units > 0, order_paid_at_utc,0)) as most_recent_lamb_order_date
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.pork_units > 0, order_paid_at_utc,0)) as most_recent_pork_order_date
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.seafood_units > 0, order_paid_at_utc,0)) as most_recent_seafood_order_date
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.starters_sides_units > 0, order_paid_at_utc,0)) as most_recent_sides_order_date
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.turkey_units > 0, order_paid_at_utc,0)) as most_recent_turkey_order_date
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.wagyu_units > 0, order_paid_at_utc,0)) as most_recent_wagyu_order_date
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.bundle_units > 0, order_paid_at_utc,0)) as most_recent_bundle_order_date
+        ,sum(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_paid_at_utc >= dateadd('month',-12,sysdate()),order_item_units.japanese_wagyu_revenue,0)) as twelve_month_japanese_wagyu_revenue
+        ,sum(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.beef_revenue > 0, beef_revenue, 0)) as beef_revenue
+        ,sum(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.bison_revenue > 0, bison_revenue, 0)) as bison_revenue
+        ,sum(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.chicken_revenue > 0, chicken_revenue, 0)) as chicken_revenue
+        ,sum(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.japanese_wagyu_revenue > 0, japanese_wagyu_revenue, 0)) as japanese_wagyu_revenue
+        ,sum(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.lamb_revenue > 0, lamb_revenue, 0)) as lamb_revenue
+        ,sum(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.pork_revenue > 0, pork_revenue, 0)) as pork_revenue
+        ,sum(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.seafood_revenue > 0, seafood_revenue, 0)) as seafood_revenue
+        ,sum(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.starters_sides_revenue > 0, starters_sides_revenue, 0)) as sides_revenue
+        ,sum(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.turkey_revenue > 0, turkey_revenue, 0)) as turkey_revenue
+        ,sum(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.wagyu_revenue > 0, wagyu_revenue, 0)) as wagyu_revenue
+        ,sum(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.bundle_revenue > 0, bundle_revenue, 0)) as bundle_revenue
+        ,max(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.beef_units > 0, order_paid_at_utc,null)) as most_recent_beef_order_date   
+        ,max(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.bison_units > 0, order_paid_at_utc,null)) as most_recent_bison_order_date 
+        ,max(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.chicken_units > 0, order_paid_at_utc,null)) as most_recent_chicken_order_date
+        ,max(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.japanese_wagyu_units > 0, order_paid_at_utc,null)) as most_recent_japanse_wagyu_order_date
+        ,max(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.lamb_units > 0, order_paid_at_utc,null)) as most_recent_lamb_order_date
+        ,max(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.pork_units > 0, order_paid_at_utc,null)) as most_recent_pork_order_date
+        ,max(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.seafood_units > 0, order_paid_at_utc,null)) as most_recent_seafood_order_date
+        ,max(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.starters_sides_units > 0, order_paid_at_utc,null)) as most_recent_sides_order_date
+        ,max(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.turkey_units > 0, order_paid_at_utc,null)) as most_recent_turkey_order_date
+        ,max(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.wagyu_units > 0, order_paid_at_utc,null)) as most_recent_wagyu_order_date
+        ,max(iff(order_info.is_paid_order and not order_info.is_cancelled_order and order_item_units.bundle_units > 0, order_paid_at_utc,null)) as most_recent_bundle_order_date
     from order_item_units
         inner join order_info on order_item_units.order_id = order_info.order_id
     group by 1
@@ -232,28 +232,27 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,coalesce(user_percentiles.last_paid_order_date >= dateadd('day',-90,sysdate()), FALSE) as recent_purchaser
         ,coalesce(user_percentiles.last_paid_order_date < dateadd('day',-90,sysdate()) and user_percentiles.last_paid_order_date >= dateadd('day',-180,sysdate()), FALSE) as lapsed_purchaser
         ,coalesce(user_percentiles.last_paid_order_date < dateadd('day',-180,sysdate()), FALSE) as dormant_purchaser
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.beef_revenue > 0, beef_revenue, false)) as beef_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.bison_revenue > 0, bison_revenue, false)) as bison_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.chicken_revenue > 0, chicken_revenue, false)) as chicken_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.japanese_wagyu_revenue > 0, japanese_wagyu_revenue, false)) as japanese_wagyu_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.lamb_revenue > 0, lamb_revenue, false)) as lamb_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.pork_revenue > 0, pork_revenue, false)) as pork_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.seafood_revenue > 0, seafood_revenue, false)) as seafood_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.starters_sides_revenue > 0, starters_sides_revenue, false)) as sides_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.turkey_revenue > 0, turkey_revenue, false)) as turkey_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.wagyu_revenue > 0, wagyu_revenue, false)) as wagyu_revenue
-        ,sum(iff(is_paid_order and not is_cancelled_order and order_items_units.bundle_revenue > 0, bundle_revenue, false)) as bundle_revenue
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.beef_units > 0, order_paid_at_utc,0)) as most_recent_beef_order_date   
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.bison_units > 0, order_paid_at_utc,0)) as most_recent_bison_order_date 
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.chicken_units > 0, order_paid_at_utc,0)) as most_recent_chicken_order_date
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.japanese_wagyu_units > 0, order_paid_at_utc,0)) as most_recent_japanse_wagyu_order_date
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.lamb_units > 0, order_paid_at_utc,0)) as most_recent_lamb_order_date
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.pork_units > 0, order_paid_at_utc,0)) as most_recent_pork_order_date
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.seafood_units > 0, order_paid_at_utc,0)) as most_recent_seafood_order_date
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.starters_sides_units > 0, order_paid_at_utc,0)) as most_recent_sides_order_date
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.turkey_units > 0, order_paid_at_utc,0)) as most_recent_turkey_order_date
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.wagyu_units > 0, order_paid_at_utc,0)) as most_recent_wagyu_order_date
-        ,max(iff(is_paid_order and not is_cancelled_order and order_item_units.bundle_units > 0, order_paid_at_utc,0)) as most_recent_bundle_order_date
+        ,beef_revenue
+        ,bison_revenue
+        ,chicken_revenue
+        ,japanese_wagyu_revenue
+        ,lamb_revenue
+        ,pork_revenue
+        ,sides_revenue
+        ,turkey_revenue
+        ,wagyu_revenue
+        ,bundle_revenue
+        ,most_recent_beef_order_date   
+        ,most_recent_bison_order_date 
+        ,most_recent_chicken_order_date
+        ,most_recent_japanse_wagyu_order_date
+        ,most_recent_lamb_order_date
+        ,most_recent_pork_order_date
+        ,most_recent_seafood_order_date
+        ,most_recent_sides_order_date
+        ,most_recent_turkey_order_date
+        ,most_recent_wagyu_order_date
+        ,most_recent_bundle_order_date
         
     from user
         left join user_percentiles on user.user_id = user_percentiles.user_id
