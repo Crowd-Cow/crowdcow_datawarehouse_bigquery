@@ -91,6 +91,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,coalesce(user_order_activity.is_rastellis,FALSE) as is_rastellis
         ,coalesce(user_order_activity.is_qvc,FALSE) as is_qvc
         ,zeroifnull(user_order_activity.lifetime_net_revenue) as lifetime_net_revenue
+        ,zeroifnull(user_order_activity.lifetime_net_product_revenue) as lifetime_net_product_revenue
         ,zeroifnull(user_order_activity.lifetime_paid_order_count) as lifetime_paid_order_count
         ,zeroifnull(user_order_activity.total_completed_unpaid_uncancelled_orders) as total_completed_unpaid_uncancelled_orders
         ,zeroifnull(user_order_activity.total_paid_ala_carte_order_count) as total_paid_ala_carte_order_count
@@ -124,6 +125,14 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.most_recent_paid_order_token
         ,user_order_activity.most_recent_order_promotion_id
         ,user_order_activity.most_recent_order_id
+        ,user_order_activity.all_leads
+        ,user_order_activity.hot_lead
+        ,user_order_activity.warm_lead
+        ,user_order_activity.cold_lead
+        ,user_order_activity.purchaser
+        ,user_order_activity.recent_purchaser
+        ,user_order_activity.lapsed_purchaser
+        ,user_order_activity.dormant_purchaser
 
     from users
         left join user_membership on users.user_id = user_membership.user_id
@@ -184,6 +193,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,average_ala_carte_order_frequency_days
         ,days_from_ala_carte_to_membership
         ,lifetime_net_revenue
+        ,lifetime_net_product_revenue
         ,lifetime_paid_order_count
         ,total_completed_unpaid_uncancelled_orders
         ,total_paid_ala_carte_order_count
@@ -281,6 +291,36 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,most_recent_order_id
         ,created_at_utc
         ,updated_at_utc
+        ,all_leads
+        ,hot_lead
+        ,warm_lead
+        ,cold_lead
+        ,purchaser
+        ,recent_purchaser
+        ,lapsed_purchaser
+        ,dormant_purchaser
+        ,coalesce(total_paid_ala_carte_order_count > 0 and not is_member, FALSE) as alc_customer
+        ,coalesce(total_paid_ala_carte_order_count = 1 and not is_member, FALSE) as new_alc 
+        ,coalesce(total_paid_ala_carte_order_count = 1 and (lifetime_japanese_wagyu_revenue/iff(lifetime_net_product_revenue = 0,1,lifetime_net_product_revenue)) > 0.5 and not is_member, FALSE) as new_alc_wagyu
+        ,coalesce(recent_purchaser and not is_member, FALSE) as recent_alc
+        ,coalesce(lapsed_purchaser and not is_member, FALSE) as lapsed_alc
+        ,coalesce(dormant_purchaser and not is_member, FALSE) as dormant_alc
+        ,coalesce(total_paid_membership_order_count = 1 and is_member and not is_cancelled_member, FALSE ) as new_subscriber
+        ,coalesce(total_paid_membership_order_count = 1 and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-1-WEEK','RENEW-PERIOD-2-WEEKS','RENEW-PERIOD-3-WEEKS','RENEW-PERIOD-4-WEEKS','RENEW-PERIOD-MONTHLY'), FALSE ) as new_subscriber_4_weeks
+        ,coalesce(total_paid_membership_order_count = 1 and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-6-WEEKS','RENEW-PERIOD-8-WEEKS'), FALSE ) as new_subscriber_5_8_weeks
+        ,coalesce(total_paid_membership_order_count = 1 and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-12-WEEKS'), FALSE ) as new_subscriber_12_weeks
+        ,coalesce(last_paid_membership_order_date >= dateadd('day',-42,sysdate()) and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-1-WEEK','RENEW-PERIOD-2-WEEKS','RENEW-PERIOD-3-WEEKS','RENEW-PERIOD-4-WEEKS','RENEW-PERIOD-MONTHLY'), FALSE ) as active_subscriber_4_weeks
+        ,coalesce(last_paid_membership_order_date >= dateadd('day',-70,sysdate()) and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-6-WEEKS','RENEW-PERIOD-8-WEEKS'), FALSE ) as active_subscriber_5_8_weeks
+        ,coalesce(last_paid_membership_order_date >= dateadd('day',-100,sysdate()) and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-12-WEEKS'), FALSE ) as active_subscriber_12_weeks
+        ,coalesce(last_paid_membership_order_date <= dateadd('day',-42,sysdate()) and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-1-WEEK','RENEW-PERIOD-2-WEEKS','RENEW-PERIOD-3-WEEKS','RENEW-PERIOD-4-WEEKS','RENEW-PERIOD-MONTHLY'), FALSE ) as lapsed_subscriber_4_weeks
+        ,coalesce(last_paid_membership_order_date <= dateadd('day',-70,sysdate()) and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-6-WEEKS','RENEW-PERIOD-8-WEEKS'), FALSE ) as lapsed_subscriber_5_8_weeks
+        ,coalesce(last_paid_membership_order_date <= dateadd('day',-100,sysdate()) and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-12-WEEKS'), FALSE ) as lapsed_subscriber_12_weeks
+        ,coalesce( last_paid_order_date >= most_recent_membership_cancelled_date and is_cancelled_member and most_recent_membership_cancelled_date >= dateadd('day',-90,sysdate()), FALSE ) as active_cancelled_subscriber 
+        ,coalesce( last_paid_order_date <= most_recent_membership_cancelled_date and is_cancelled_member and most_recent_membership_cancelled_date >= dateadd('day',-90,sysdate()), FALSE ) as recent_cancelled_subscriber 
+        ,coalesce( last_paid_order_date <= most_recent_membership_cancelled_date and is_cancelled_member and most_recent_membership_cancelled_date < dateadd('day',-90,sysdate()), FALSE ) as lapsed_cancelled_subscriber 
+
+
+
     from user_joins
     where not is_ccpa
 )
