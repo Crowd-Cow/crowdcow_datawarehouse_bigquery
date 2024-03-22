@@ -159,6 +159,119 @@ employee as (
     where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and lifetime_paid_order_count > 0 and last_90_days_paid_order_count = 0
 )
 
+,all_leads as (
+    {{ generate_tag('users','user_id','all_leads','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and all_leads
+)
+,hot_lead as (
+    {{ generate_tag('users','user_id','hot_lead','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and hot_lead
+)
+,hot_lead as (
+    {{ generate_tag('users','user_id','hot_lead','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and hot_lead
+)
+,warm_lead as (
+    {{ generate_tag('users','user_id','warm_lead','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and warm_lead
+)
+,cold_lead as (
+    {{ generate_tag('users','user_id','cold_lead','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and cold_lead
+)
+,purchaser as (
+    {{ generate_tag('users','user_id','purchaser','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and purchaser
+)
+,recent_purchaser as (
+    {{ generate_tag('users','user_id','recent_purchaser','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and recent_purchaser
+)
+,lapsed_purchaser as (
+    {{ generate_tag('users','user_id','lapsed_purchaser','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and lapsed_purchaser
+)
+,dormant_purchaser as (
+    {{ generate_tag('users','user_id','dormant_purchaser','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and dormant_purchaser
+)
+,alc_customer as (
+    {{ generate_tag('users','user_id','alc_customer','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and alc_customer
+)
+,new_alc as (
+    {{ generate_tag('users','user_id','new_alc','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and new_alc
+)
+,new_alc_wagyu as (
+    {{ generate_tag('users','user_id','new_alc_wagyu','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and new_alc_wagyu
+)
+,recent_alc as (
+    {{ generate_tag('users','user_id','recent_alc','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and recent_alc
+)
+,lapsed_alc as (
+    {{ generate_tag('users','user_id','lapsed_alc','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and lapsed_alc
+)
+,dormant_alc as (
+    {{ generate_tag('users','user_id','dormant_alc','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and dormant_alc
+)
+,new_subscriber as (
+    {{ generate_tag('users','user_id','new_subscriber','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and new_subscriber
+)
+,new_subscriber_4_weeks as (
+    {{ generate_tag('users','user_id','new_subscriber_4_weeks','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and new_subscriber_4_weeks
+)
+,new_subscriber_5_8_weeks as (
+    {{ generate_tag('users','user_id','new_subscriber_5_8_weeks','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and new_subscriber_5_8_weeks
+)
+,new_subscriber_12_weeks as (
+    {{ generate_tag('users','user_id','new_subscriber_12_weeks','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and new_subscriber_12_weeks
+)
+,active_subscriber_4_weeks as (
+    {{ generate_tag('users','user_id','active_subscriber_4_weeks','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and active_subscriber_4_weeks
+)
+,active_subscriber_5_8_weeks as (
+    {{ generate_tag('users','user_id','active_subscriber_5_8_weeks','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and active_subscriber_5_8_weeks
+)
+,active_subscriber_12_weeks as (
+    {{ generate_tag('users','user_id','active_subscriber_12_weeks','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and active_subscriber_12_weeks
+)
+,lapsed_subscriber_4_weeks as (
+    {{ generate_tag('users','user_id','lapsed_subscriber_4_weeks','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and lapsed_subscriber_4_weeks
+)
+,lapsed_subscriber_5_8_weeks as (
+    {{ generate_tag('users','user_id','lapsed_subscriber_5_8_weeks','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and lapsed_subscriber_5_8_weeks
+)
+,lapsed_subscriber_12_weeks as (
+    {{ generate_tag('users','user_id','lapsed_subscriber_12_weeks','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and lapsed_subscriber_12_weeks
+)
+,active_cancelled_subscriber as (
+    {{ generate_tag('users','user_id','active_cancelled_subscriber','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and active_cancelled_subscriber
+)
+,recent_cancelled_subscriber as (
+    {{ generate_tag('users','user_id','recent_cancelled_subscriber','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and recent_cancelled_subscriber
+)
+,lapsed_cancelled_subscriber as (
+    {{ generate_tag('users','user_id','lapsed_cancelled_subscriber','user_segment') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and lapsed_cancelled_subscriber
+)
+
 select * from employee
 union all
 select * from recent_delivery
@@ -214,3 +327,57 @@ union all
 select * from active_customer_90_day
 union all 
 select * from twelve_month_japanese_wagyu_revenue
+union all 
+select * from all_leads
+union all 
+select * from hot_lead
+union all 
+select * from warm_lead
+union all 
+select * from cold_lead
+union all 
+select * from purchaser
+union all 
+select * from recent_purchaser
+union all 
+select * from lapsed_purchaser
+union all 
+select * from dormant_purchaser
+union all 
+select * from alc_customer
+union all 
+select * from new_alc 
+union all 
+select * from new_alc_wagyu
+union all 
+select * from recent_alc
+union all 
+select * from lapsed_alc
+union all 
+select * from dormant_alc
+union all 
+select * from new_subscriber
+union all 
+select * from new_subscriber_4_weeks
+union all 
+select * from new_subscriber_5_8_weeks
+union all 
+select * from new_subscriber_12_weeks
+union all 
+select * from active_subscriber_4_weeks
+union all 
+select * from active_subscriber_5_8_weeks
+union all 
+select * from active_subscriber_12_weeks
+union all 
+select * from lapsed_subscriber_4_weeks
+union all 
+select * from lapsed_subscriber_5_8_weeks
+union all 
+select * from lapsed_subscriber_12_weeks
+union all 
+select * from active_cancelled_subscriber 
+union all 
+select * from recent_cancelled_subscriber 
+union all 
+select * from lapsed_cancelled_subscriber 

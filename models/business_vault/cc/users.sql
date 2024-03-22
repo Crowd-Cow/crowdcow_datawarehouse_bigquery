@@ -125,11 +125,11 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.most_recent_paid_order_token
         ,user_order_activity.most_recent_order_promotion_id
         ,user_order_activity.most_recent_order_id
-        ,user_order_activity.purchaser
         ,user_order_activity.all_leads
         ,user_order_activity.hot_lead
         ,user_order_activity.warm_lead
         ,user_order_activity.cold_lead
+        ,user_order_activity.purchaser
         ,user_order_activity.recent_purchaser
         ,user_order_activity.lapsed_purchaser
         ,user_order_activity.dormant_purchaser
@@ -290,6 +290,14 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,most_recent_order_id
         ,created_at_utc
         ,updated_at_utc
+        ,all_leads
+        ,hot_lead
+        ,warm_lead
+        ,cold_lead
+        ,purchaser
+        ,recent_purchaser
+        ,lapsed_purchaser
+        ,dormant_purchaser
         ,coalesce(total_paid_ala_carte_order_count > 0 and not is_member, FALSE) as alc_customer
         ,coalesce(total_paid_ala_carte_order_count = 1 and not is_member, FALSE) as new_alc 
         ,coalesce(total_paid_ala_carte_order_count = 1 and (lifetime_japanese_wagyu_revenue/iff(lifetime_net_product_revenue = 0,1,lifetime_net_product_revenue)) > 0.5 and not is_member, FALSE) as new_alc_wagyu
