@@ -133,6 +133,28 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.recent_purchaser
         ,user_order_activity.lapsed_purchaser
         ,user_order_activity.dormant_purchaser
+        ,user_order_activity.beef_revenue
+        ,user_order_activity.bison_revenue
+        ,user_order_activity.chicken_revenue
+        ,user_order_activity.japanese_wagyu_revenue
+        ,user_order_activity.lamb_revenue
+        ,user_order_activity.pork_revenue
+        ,user_order_activity.sides_revenue
+        ,user_order_activity.turkey_revenue
+        ,user_order_activity.wagyu_revenue
+        ,user_order_activity.bundle_revenue
+        ,user_order_activity.seafood_revenue
+        ,user_order_activity.most_recent_beef_order_date   
+        ,user_order_activity.most_recent_bison_order_date 
+        ,user_order_activity.most_recent_chicken_order_date
+        ,user_order_activity.most_recent_japanse_wagyu_order_date
+        ,user_order_activity.most_recent_lamb_order_date
+        ,user_order_activity.most_recent_pork_order_date
+        ,user_order_activity.most_recent_seafood_order_date
+        ,user_order_activity.most_recent_sides_order_date
+        ,user_order_activity.most_recent_turkey_order_date
+        ,user_order_activity.most_recent_wagyu_order_date
+        ,user_order_activity.most_recent_bundle_order_date
 
     from users
         left join user_membership on users.user_id = user_membership.user_id

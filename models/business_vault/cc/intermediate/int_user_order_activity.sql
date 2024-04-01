@@ -242,6 +242,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,turkey_revenue
         ,wagyu_revenue
         ,bundle_revenue
+        ,seafood_revenue
         ,most_recent_beef_order_date   
         ,most_recent_bison_order_date 
         ,most_recent_chicken_order_date
