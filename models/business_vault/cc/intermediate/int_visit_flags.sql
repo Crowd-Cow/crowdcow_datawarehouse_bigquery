@@ -25,6 +25,8 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,count_if(category = 'PRODUCT' and action = 'PAGE-INTERACTION' and label = 'CLICKED-ADD-TO-CART') as pdp_add_to_carts
         ,count_if(event_name = 'VIEWED_PRODUCT') as viewed_pdps
         ,count_if(event_sequence_number = 1 and event_name = 'PAGE_VIEW' and parse_url(url):path::text in ('','L')) as homepage_views
+        ,count_if(event_name = 'CLICK' and label in ('GET STARTED','CLAIM OFFER') and on_page_path like '%/LANDING%') as landing_offer_claim
+        ,count_if(event_name = 'CLICK' and label = 'SKIP' and on_page_path like '%/LANDING%') as landing_offer_skiped
         ,count(*) as event_count
     from events
     group by 1
@@ -68,6 +70,12 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,zeroifnull(visit_activity.pcp_impression_clicks) as pcp_impression_clicks_count
         ,zeroifnull(visit_activity.pdp_add_to_carts) as pdp_product_add_to_cart_count
         ,zeroifnull(visit_activity.viewed_pdps) as pdp_views_count
+        ,case 
+            when landing_offer_claim = 0 and landing_offer_skiped = 0 then null
+            when landing_offer_claim > landing_offer_skiped then 'CLAIM' 
+            when landing_offer_claim > 0 and landing_offer_skiped > 0 then 'CLAIM'
+            when landing_offer_claim = 0 and landing_offer_skiped > 0 then 'SKIPPED'
+            else null end as landing_offer
     from visit_clean_urls
         left join suspicious_ips on visit_clean_urls.visit_ip = suspicious_ips.visit_ip
         left join user_orders on visit_clean_urls.user_id = user_orders.user_id

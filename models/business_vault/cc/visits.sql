@@ -79,6 +79,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,visit_flags.pcp_impressions_count
         ,visit_flags.pcp_impression_clicks_count
         ,visit_flags.pdp_product_add_to_cart_count
+        ,visit_flags.landing_offer
         ,get_ip_session.started_at_utc
         ,get_ip_session.updated_at_utc
     from get_ip_session
