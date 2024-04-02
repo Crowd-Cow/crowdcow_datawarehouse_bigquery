@@ -275,12 +275,12 @@ employee as (
     {{ generate_tag('users','user_id','gifts_sent','user_segment', 'total_paid_gift_order_count') }}
     where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and total_paid_gift_order_count > 0
 )
-
+/*
 ,most_recent_beef_order_date as (
     {{ generate_tag('users','user_id','lapsed_cancelled_subscriber','user_segment', 'most_recent_beef_order_date') }}
-    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and most_recent_beef_order_date
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and most_recent_beef_order_date is not null
 )
-
+*/
 select * from employee
 union all
 select * from recent_delivery
