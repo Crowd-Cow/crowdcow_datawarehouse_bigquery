@@ -340,7 +340,28 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,coalesce( last_paid_order_date >= most_recent_membership_cancelled_date and is_cancelled_member and most_recent_membership_cancelled_date >= dateadd('day',-90,sysdate()), FALSE ) as active_cancelled_subscriber 
         ,coalesce( last_paid_order_date <= most_recent_membership_cancelled_date and is_cancelled_member and most_recent_membership_cancelled_date >= dateadd('day',-90,sysdate()), FALSE ) as recent_cancelled_subscriber 
         ,coalesce( last_paid_order_date <= most_recent_membership_cancelled_date and is_cancelled_member and most_recent_membership_cancelled_date < dateadd('day',-90,sysdate()), FALSE ) as lapsed_cancelled_subscriber 
-
+        ,beef_revenue
+        ,bison_revenue
+        ,chicken_revenue
+        ,japanese_wagyu_revenue
+        ,lamb_revenue
+        ,pork_revenue
+        ,sides_revenue
+        ,turkey_revenue
+        ,wagyu_revenue
+        ,bundle_revenue
+        ,seafood_revenue
+        ,most_recent_beef_order_date   
+        ,most_recent_bison_order_date 
+        ,most_recent_chicken_order_date
+        ,most_recent_japanse_wagyu_order_date
+        ,most_recent_lamb_order_date
+        ,most_recent_pork_order_date
+        ,most_recent_seafood_order_date
+        ,most_recent_sides_order_date
+        ,most_recent_turkey_order_date
+        ,most_recent_wagyu_order_date
+        ,most_recent_bundle_order_date
 
 
     from user_joins
