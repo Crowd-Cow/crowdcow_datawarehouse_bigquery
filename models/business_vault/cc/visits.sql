@@ -81,6 +81,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,visit_flags.pdp_product_add_to_cart_count
         ,visit_flags.landing_offer
         ,visit_flags.home_page_redirect
+        ,visit_flags.is_prospect_12_months
         ,visit_flags.segment_definitions
         ,get_ip_session.started_at_utc
         ,get_ip_session.updated_at_utc

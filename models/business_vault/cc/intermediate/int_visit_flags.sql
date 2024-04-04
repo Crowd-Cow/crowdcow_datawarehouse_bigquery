@@ -45,6 +45,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
 
         ,visit_ip
         ,utm_content
+        ,utm_campaign
         ,visit_user_agent
         ,started_at_utc
     from visits
@@ -65,17 +66,21 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,user_orders.user_id is not null and user_orders.first_completed_order_date < visit_clean_urls.started_at_utc as has_previous_completed_order
         ,user_membership.user_id is not null and user_membership.first_membership_created_date < visit_clean_urls.started_at_utc as has_previous_subscription
         ,user_orders.user_id is not null and user_orders.created_at_utc < visit_clean_urls.started_at_utc as had_account_created
+        ,user_orders.last_paid_order_date < DATEADD('day', -365, CURRENT_DATE()) OR user_orders.last_paid_order_date IS NULL or has_previous_completed_order is null  as  no_orders_12_months
         ,CASE
             WHEN 
-                (user_orders.last_paid_order_date < DATEADD('day', -365, CURRENT_DATE()) OR user_orders.last_paid_order_date IS NULL)
-                AND user_membership.total_uncancelled_memberships <= 0 or user_membership.total_uncancelled_memberships is null
+                (user_orders.last_paid_order_date < DATEADD('day', -365, CURRENT_DATE()) OR user_orders.last_paid_order_date IS NULL or visit_clean_urls.user_id is null)
+                and user_membership.total_uncancelled_memberships <= 0 or user_membership.total_uncancelled_memberships is null or visit_clean_urls.user_id is null
                 AND (
-                    visit_clean_urls.visit_landing_page_path LIKE '%JAPANESE%' 
-                    OR visit_clean_urls.visit_landing_page_path LIKE '%WAGYU%'
-                    OR visit_clean_urls.visit_landing_page_path LIKE '%TURKEY%'
-                    OR visit_clean_urls.visit_landing_page_path LIKE '%GIFT%'
+                    contains(visit_clean_urls.visit_landing_page_path,'JAPANESE') 
+                    OR contains(visit_clean_urls.visit_landing_page_path,'WAGYU')
+                    OR contains(visit_clean_urls.visit_landing_page_path,'TURKEY')
+                    OR contains(visit_clean_urls.visit_landing_page_path,'GIFT')
                     OR visit_clean_urls.utm_content = 'ALCNONSUB'
                 )
+                and (not has_previous_subscription or user_id is null)
+                and (not(visit_referrer like any ('%ZENDESK%','%ADMIN%','%TRACKING-INFO','%SHIPMENT-IN-TRANSIT')) 
+                    or visit_referrer is null)
             THEN 'ALC PROSPECT'
 
             WHEN 
@@ -83,8 +88,11 @@ visits as ( select * from {{ ref('visit_classification') }} )
             THEN 'ACTIVE SUBSCRIBER'
             
             WHEN 
-                (user_orders.last_paid_order_date < DATEADD('day', -365, CURRENT_DATE()) OR user_orders.last_paid_order_date IS NULL)
-                AND user_membership.total_uncancelled_memberships <= 0 or user_membership.total_uncancelled_memberships is null
+                (user_orders.last_paid_order_date < DATEADD('day', -365, CURRENT_DATE()) OR user_orders.last_paid_order_date IS NULL  or visit_clean_urls.user_id is null)
+                AND user_membership.total_uncancelled_memberships <= 0 or user_membership.total_uncancelled_memberships is null or visit_clean_urls.user_id is null
+                and (not has_previous_subscription or user_id is null)
+                and (not(visit_referrer like any ('%ZENDESK%','%ADMIN%','%TRACKING-INFO','%SHIPMENT-IN-TRANSIT')) 
+                    or visit_referrer is null)
             THEN 'SUBSCRIBER PROSPECT'
             
             ELSE 'DEFAULT'
@@ -126,6 +134,14 @@ visits as ( select * from {{ ref('visit_classification') }} )
             and (not has_previous_subscription or user_id is null)
             and (not(visit_referrer like any ('%ZENDESK%','%ADMIN%','%TRACKING-INFO','%SHIPMENT-IN-TRANSIT')) 
                     or visit_referrer is null) as is_prospect
+        ,--(not has_previous_completed_order or has_previous_completed_order is null)
+             not is_bot
+            and not is_internal_traffic
+            and not is_server
+            and (not has_previous_subscription or user_id is null)
+            and (not(visit_referrer like any ('%ZENDESK%','%ADMIN%','%TRACKING-INFO','%SHIPMENT-IN-TRANSIT')) 
+            and no_orders_12_months
+                    or visit_referrer is null) as is_prospect_12_months
     from add_flags
 )
 

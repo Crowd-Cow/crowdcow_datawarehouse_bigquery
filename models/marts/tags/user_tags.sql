@@ -516,17 +516,6 @@ select
 from most_recent_bison_order_date  
 union all 
 select 
-tag_id
-,tag_source_table
-,user_id 
-,tag_key
-,extract(epoch from tag_value) * 1000 as tag_value
-,tag_purpose
-,created_at_utc
-,updated_at_utc
-from most_recent_bison_order_date 
-union all 
-select 
     tag_id
     ,tag_source_table
     ,user_id 
