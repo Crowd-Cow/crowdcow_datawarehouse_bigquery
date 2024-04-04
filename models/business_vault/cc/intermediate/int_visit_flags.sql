@@ -27,6 +27,8 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,count_if(event_sequence_number = 1 and event_name = 'PAGE_VIEW' and parse_url(url):path::text in ('','L')) as homepage_views
         ,count_if(event_name = 'CLICK' and label in ('GET STARTED','CLAIM OFFER') and on_page_path like '%/LANDING%') as landing_offer_claim
         ,count_if(event_name = 'CLICK' and label = 'SKIP' and on_page_path like '%/LANDING%') as landing_offer_skiped
+        ,count( distinct case when event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' and experiments:"exp-cc-home_page_redirect"::STRING = 'experimental' then visit_id end) as home_page_redirect_experimental
+        ,count( distinct case when event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' and experiments:"exp-cc-home_page_redirect"::STRING = 'control' then visit_id end) as home_page_redirect_control
         ,count(*) as event_count
     from events
     group by 1
@@ -37,10 +39,12 @@ visits as ( select * from {{ ref('visit_classification') }} )
         visit_id
         ,user_id
         ,visit_referrer
+        ,visit_landing_page_path
         ,visit_landing_page_host = 'WWW.CROWDCOW.COM' 
             and visit_landing_page_path in ('/','/L') as is_homepage_landing
 
         ,visit_ip
+        ,utm_content
         ,visit_user_agent
         ,started_at_utc
     from visits
@@ -61,10 +65,29 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,user_orders.user_id is not null and user_orders.first_completed_order_date < visit_clean_urls.started_at_utc as has_previous_completed_order
         ,user_membership.user_id is not null and user_membership.first_membership_created_date < visit_clean_urls.started_at_utc as has_previous_subscription
         ,user_orders.user_id is not null and user_orders.created_at_utc < visit_clean_urls.started_at_utc as had_account_created
+        /*,case 
+            when (user_orders.last_paid_order_date < dateadd('day',-365,sysdate()) = true or last_paid_order_date is null)
+                and user_membership.total_uncancelled_memberships > 0 
+                and visit_clean_urls.visit_landing_page_path like any ('%JAPANESE%', 'WAGYU', 'TURKEY', 'GIFT')
+                or visits_clean_urls.utm_content = 'ALCNONSUB'
+                and user_membership.total_uncancelled_memberships > 0 then 'ALC PROSPECT'
+            when not ((user_orders.last_paid_order_date < dateadd('day',-365,sysdate()) = true or last_paid_order_date is null)
+                and user_membership.total_uncancelled_memberships > 0 
+                and visit_clean_urls.visit_landing_page_path like any ('%JAPANESE%', 'WAGYU', 'TURKEY', 'GIFT')
+                or visits_clean_urls.utm_content = 'ALCNONSUB'
+                and user_membership.total_uncancelled_memberships > 0)
+                and (user_orders.last_paid_order_date < dateadd('day',-365,sysdate()) = true or last_paid_order_date is null)
+                and user_membership.total_uncancelled_memberships > 0 then 'SUBSCRIBER PROSPECT'
+            when */
+            
         ,visit_activity.visit_id is not null and subscribes - unsubscribes > 0 as did_subscribe
         ,visit_activity.visit_id is not null and subscribes - unsubscribes < 0 as did_unsubscribe
         ,visit_activity.visit_id is not null and sign_ups > 0 as did_sign_up
         ,visit_activity.visit_id is not null and order_completes > 0 as did_complete_order
+        ,case 
+            when visit_activity.home_page_redirect_experimental > 0  then 'EXPERIMENTAL'   
+            when visit_activity.home_page_redirect_control > 0 then 'CONTROL'
+        else null end as home_page_redirect 
         ,visit_clean_urls.is_homepage_landing and (visit_activity.visit_id is null or (visit_activity.homepage_views = 1 and visit_activity.event_count = 1)) as did_bounce_homepage
         ,zeroifnull(visit_activity.pcp_impressions) as pcp_impressions_count
         ,zeroifnull(visit_activity.pcp_impression_clicks) as pcp_impression_clicks_count
