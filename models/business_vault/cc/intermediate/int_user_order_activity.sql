@@ -34,7 +34,10 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,count_if(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('month',-6,sysdate())) as six_month_paid_order_count
         ,count_if(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('month',-12,sysdate())) as twelve_month_purchase_count
         ,count_if(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('month',-24,sysdate())) as twentyfour_purchase_count
+        ,count_if(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('day',-30,sysdate())) as last_30_days_paid_order_count
+        ,count_if(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('day',-60,sysdate())) as last_60_days_paid_order_count
         ,count_if(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('day',-90,sysdate())) as last_90_days_paid_order_count
+        ,count_if(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('day',-120,sysdate())) as last_120_days_paid_order_count
         ,count_if(is_paid_order and not is_cancelled_order and order_paid_at_utc >= dateadd('day',-180,sysdate())) as last_180_days_paid_order_count
         ,count_if(has_been_delivered and delivered_at_utc >= dateadd('day',-7,sysdate())) as recent_delivered_order_count
         ,min(iff(is_paid_order and not is_cancelled_order,order_paid_at_utc::date,null)) as customer_cohort_date
@@ -194,7 +197,10 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,zeroifnull(user_percentiles.twelve_month_net_revenue) as twelve_month_net_revenue
         ,zeroifnull(user_percentiles.six_month_paid_order_count) as six_month_paid_order_count
         ,zeroifnull(user_percentiles.twelve_month_purchase_count) as twelve_month_purchase_count
+        ,zeroifnull(user_percentiles.last_30_days_paid_order_count) as last_30_days_paid_order_count
+        ,zeroifnull(user_percentiles.last_60_days_paid_order_count) as last_60_days_paid_order_count
         ,zeroifnull(user_percentiles.last_90_days_paid_order_count) as last_90_days_paid_order_count
+        ,zeroifnull(user_percentiles.last_120_days_paid_order_count) as last_120_days_paid_order_count
         ,zeroifnull(user_percentiles.last_180_days_paid_order_count) as last_180_days_paid_order_count
         ,zeroifnull(user_percentiles.recent_delivered_order_count) as recent_delivered_order_count
         ,zeroifnull(user_percentiles.six_month_net_revenue_percentile) as six_month_net_revenue_percentile

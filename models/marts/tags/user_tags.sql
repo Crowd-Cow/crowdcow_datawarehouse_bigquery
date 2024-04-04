@@ -272,15 +272,126 @@ employee as (
     where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and lapsed_cancelled_subscriber
 )
 ,gifts_sent as (
-    {{ generate_tag('users','user_id','gifts_sent','user_segment', 'total_paid_gift_order_count') }}
+    {{ generate_tag('users','user_id','gifts_sent','user_data_point', 'total_paid_gift_order_count') }}
     where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and total_paid_gift_order_count > 0
 )
-/*
+,most_recent_bison_order_date as (
+    {{ generate_tag('users','user_id','most_recent_bison_order_date','user_data_point','most_recent_bison_order_date') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_bison_order_date is not null
+) 
+
 ,most_recent_beef_order_date as (
-    {{ generate_tag('users','user_id','lapsed_cancelled_subscriber','user_segment', 'most_recent_beef_order_date') }}
+    {{ generate_tag('users','user_id','most_recent_beef_order_date','user_data_point', 'most_recent_beef_order_date') }}
     where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and most_recent_beef_order_date is not null
 )
-*/
+
+
+,most_recent_chicken_order_date as (
+    {{ generate_tag('users','user_id','most_recent_chicken_order_date','user_data_point','most_recent_chicken_order_date') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_chicken_order_date is not null
+)
+,most_recent_japanse_wagyu_order_date as (
+    {{ generate_tag('users','user_id','most_recent_japanse_wagyu_order_date','user_data_point','most_recent_japanse_wagyu_order_date') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_japanse_wagyu_order_date is not null
+)
+,most_recent_lamb_order_date as (
+    {{ generate_tag('users','user_id','most_recent_lamb_order_date','user_data_point','most_recent_lamb_order_date') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_lamb_order_date is not null
+)
+,most_recent_pork_order_date as (
+    {{ generate_tag('users','user_id','most_recent_pork_order_date','user_data_point','most_recent_pork_order_date') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_pork_order_date is not null
+)
+,most_recent_seafood_order_date as (
+    {{ generate_tag('users','user_id','most_recent_seafood_order_date','user_data_point','most_recent_seafood_order_date') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_seafood_order_date is not null
+)
+,most_recent_sides_order_date as (
+    {{ generate_tag('users','user_id','most_recent_sides_order_date','user_data_point','most_recent_sides_order_date') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_sides_order_date is not null
+)
+,most_recent_turkey_order_date as (
+    {{ generate_tag('users','user_id','most_recent_turkey_order_date','user_data_point','most_recent_turkey_order_date') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_turkey_order_date is not null
+)
+,most_recent_wagyu_order_date as (
+    {{ generate_tag('users','user_id','most_recent_wagyu_order_date','user_data_point','most_recent_wagyu_order_date') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_wagyu_order_date is not null
+)
+,most_recent_bundle_order_date as (
+    {{ generate_tag('users','user_id','most_recent_bundle_order_date','user_data_point','most_recent_bundle_order_date') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_bundle_order_date is not null
+)
+,has_ordered_beef as (
+    {{ generate_tag('users','user_id','has_ordered_beef','user_segment','null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and beef_revenue > 0
+)
+,has_ordered_bison as (
+    {{ generate_tag('users','user_id','has_ordered_bison','user_segment','null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and bison_revenue > 0
+)
+,has_ordered_chicken as (
+    {{ generate_tag('users','user_id','has_ordered_chicken','user_segment','null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and chicken_revenue > 0
+)
+,has_ordered_japanese_wagyu as (
+    {{ generate_tag('users','user_id','has_ordered_japanese_wagyu','user_segment','null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and japanese_wagyu_revenue > 0
+)
+,has_ordered_lamb as (
+    {{ generate_tag('users','user_id','has_ordered_lamb','user_segment','null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and lamb_revenue > 0
+)
+,has_ordered_pork as (
+    {{ generate_tag('users','user_id','has_ordered_pork','user_segment','null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and pork_revenue > 0
+)
+,has_ordered_sides as (
+    {{ generate_tag('users','user_id','has_ordered_sides','user_segment','null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and sides_revenue > 0
+)
+,has_ordered_turkey as (
+    {{ generate_tag('users','user_id','has_ordered_turkey','user_segment','null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and turkey_revenue > 0
+)
+,has_ordered_wagyu as (
+    {{ generate_tag('users','user_id','has_ordered_wagyu','user_segment','null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and wagyu_revenue > 0
+)
+,has_ordered_bundle as (
+    {{ generate_tag('users','user_id','has_ordered_bundle','user_segment','null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and bundle_revenue > 0
+)
+,has_ordered_seafood as (
+    {{ generate_tag('users','user_id','has_ordered_seafood','user_segment','null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and seafood_revenue > 0
+)
+
+,last_30_days_paid_order_count as (
+    {{ generate_tag('users','user_id','last_30_days_paid_order_count','user_segment','last_30_days_paid_order_count') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and last_30_days_paid_order_count > 0
+)
+,last_60_days_paid_order_count as (
+    {{ generate_tag('users','user_id','last_60_days_paid_order_count','user_segment','last_60_days_paid_order_count') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and last_60_days_paid_order_count > 0
+)
+,last_90_days_paid_order_count as (
+    {{ generate_tag('users','user_id','last_90_days_paid_order_count','user_segment','last_90_days_paid_order_count') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and last_90_days_paid_order_count > 0
+)
+,last_120_days_paid_order_count as (
+    {{ generate_tag('users','user_id','last_120_days_paid_order_count','user_segment','last_120_days_paid_order_count') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and last_120_days_paid_order_count > 0
+)
+,last_180_days_paid_order_count as (
+    {{ generate_tag('users','user_id','last_180_days_paid_order_count','user_segment','last_180_days_paid_order_count') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and last_180_days_paid_order_count > 0
+)
+
+
+
+
+
 select * from employee
 union all
 select * from recent_delivery
@@ -392,3 +503,159 @@ union all
 select * from lapsed_cancelled_subscriber 
 union all 
 select * from gifts_sent
+union all 
+select 
+    tag_id
+    ,tag_source_table
+    ,user_id 
+    ,tag_key
+    ,extract(epoch from tag_value) * 1000 as tag_value
+    ,tag_purpose
+    ,created_at_utc
+    ,updated_at_utc
+from most_recent_bison_order_date  
+union all 
+select 
+tag_id
+,tag_source_table
+,user_id 
+,tag_key
+,extract(epoch from tag_value) * 1000 as tag_value
+,tag_purpose
+,created_at_utc
+,updated_at_utc
+from most_recent_bison_order_date 
+union all 
+select 
+    tag_id
+    ,tag_source_table
+    ,user_id 
+    ,tag_key
+    ,extract(epoch from tag_value) * 1000 as tag_value
+    ,tag_purpose
+    ,created_at_utc
+    ,updated_at_utc
+from most_recent_chicken_order_date
+union all 
+select 
+    tag_id
+    ,tag_source_table
+    ,user_id 
+    ,tag_key
+    ,extract(epoch from tag_value) * 1000 as tag_value
+    ,tag_purpose
+    ,created_at_utc
+    ,updated_at_utc
+from most_recent_japanse_wagyu_order_date
+union all 
+select 
+    tag_id
+    ,tag_source_table
+    ,user_id 
+    ,tag_key
+    ,extract(epoch from tag_value) * 1000 as tag_value
+    ,tag_purpose
+    ,created_at_utc
+    ,updated_at_utc
+from most_recent_lamb_order_date
+union all 
+select 
+    tag_id
+    ,tag_source_table
+    ,user_id 
+    ,tag_key
+    ,extract(epoch from tag_value) * 1000 as tag_value
+    ,tag_purpose
+    ,created_at_utc
+    ,updated_at_utc
+from most_recent_pork_order_date
+union all 
+select 
+    tag_id
+    ,tag_source_table
+    ,user_id 
+    ,tag_key
+    ,extract(epoch from tag_value) * 1000 as tag_value
+    ,tag_purpose
+    ,created_at_utc
+    ,updated_at_utc
+from most_recent_seafood_order_date
+union all 
+select 
+    tag_id
+    ,tag_source_table
+    ,user_id 
+    ,tag_key
+    ,extract(epoch from tag_value) * 1000 as tag_value
+    ,tag_purpose
+    ,created_at_utc
+    ,updated_at_utc
+from most_recent_sides_order_date
+union all 
+select 
+    tag_id
+    ,tag_source_table
+    ,user_id 
+    ,tag_key
+    ,extract(epoch from tag_value) * 1000 as tag_value
+    ,tag_purpose
+    ,created_at_utc
+    ,updated_at_utc
+from most_recent_turkey_order_date
+union all 
+select 
+    tag_id
+    ,tag_source_table
+    ,user_id 
+    ,tag_key
+    ,extract(epoch from tag_value) * 1000 as tag_value
+    ,tag_purpose
+    ,created_at_utc
+    ,updated_at_utc
+from most_recent_wagyu_order_date
+union all 
+select 
+    tag_id
+    ,tag_source_table
+    ,user_id 
+    ,tag_key
+    ,extract(epoch from tag_value) * 1000 as tag_value
+    ,tag_purpose
+    ,created_at_utc
+    ,updated_at_utc
+from most_recent_bundle_order_date
+
+union all
+select * from has_ordered_beef
+union all
+select * from has_ordered_bison
+union all
+select * from has_ordered_chicken
+union all
+select * from has_ordered_japanese_wagyu
+union all
+select * from has_ordered_lamb
+union all
+select * from has_ordered_pork
+union all
+select * from has_ordered_sides
+union all
+select * from has_ordered_turkey
+union all
+select * from has_ordered_wagyu
+union all
+select * from has_ordered_bundle
+union all
+select * from has_ordered_seafood
+
+union all
+select * from last_30_days_paid_order_count
+union all
+select * from last_60_days_paid_order_count
+union all
+select * from last_90_days_paid_order_count
+union all
+select * from last_120_days_paid_order_count
+union all
+select * from last_180_days_paid_order_count
+    

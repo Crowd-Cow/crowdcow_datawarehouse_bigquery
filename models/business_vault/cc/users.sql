@@ -103,7 +103,10 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,zeroifnull(user_order_activity.twelve_month_net_revenue) as twelve_month_net_revenue
         ,zeroifnull(user_order_activity.six_month_paid_order_count) as six_month_paid_order_count
         ,zeroifnull(user_order_activity.twelve_month_purchase_count) as twelve_month_purchase_count
+        ,zeroifnull(user_order_activity.last_30_days_paid_order_count) as last_30_days_paid_order_count
+        ,zeroifnull(user_order_activity.last_60_days_paid_order_count) as last_60_days_paid_order_count
         ,zeroifnull(user_order_activity.last_90_days_paid_order_count) as last_90_days_paid_order_count
+        ,zeroifnull(user_order_activity.last_120_days_paid_order_count) as last_120_days_paid_order_count
         ,zeroifnull(user_order_activity.last_180_days_paid_order_count) as last_180_days_paid_order_count
         ,zeroifnull(user_order_activity.recent_delivered_order_count) as recent_delivered_order_count
         ,zeroifnull(user_order_activity.six_month_net_revenue_percentile) as six_month_net_revenue_percentile
@@ -221,7 +224,10 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,total_paid_ala_carte_order_count
         ,total_paid_membership_order_count
         ,last_90_days_paid_membership_order_count
+        ,last_30_days_paid_order_count
+        ,last_60_days_paid_order_count
         ,last_90_days_paid_order_count
+        ,last_120_days_paid_order_count
         ,last_180_days_paid_order_count
         ,six_month_paid_order_count
         ,twelve_month_purchase_count
