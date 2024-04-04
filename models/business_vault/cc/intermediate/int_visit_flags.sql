@@ -65,21 +65,30 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,user_orders.user_id is not null and user_orders.first_completed_order_date < visit_clean_urls.started_at_utc as has_previous_completed_order
         ,user_membership.user_id is not null and user_membership.first_membership_created_date < visit_clean_urls.started_at_utc as has_previous_subscription
         ,user_orders.user_id is not null and user_orders.created_at_utc < visit_clean_urls.started_at_utc as had_account_created
-        /*,case 
-            when (user_orders.last_paid_order_date < dateadd('day',-365,sysdate()) = true or last_paid_order_date is null)
-                and user_membership.total_uncancelled_memberships > 0 
-                and visit_clean_urls.visit_landing_page_path like any ('%JAPANESE%', 'WAGYU', 'TURKEY', 'GIFT')
-                or visits_clean_urls.utm_content = 'ALCNONSUB'
-                and user_membership.total_uncancelled_memberships > 0 then 'ALC PROSPECT'
-            when not ((user_orders.last_paid_order_date < dateadd('day',-365,sysdate()) = true or last_paid_order_date is null)
-                and user_membership.total_uncancelled_memberships > 0 
-                and visit_clean_urls.visit_landing_page_path like any ('%JAPANESE%', 'WAGYU', 'TURKEY', 'GIFT')
-                or visits_clean_urls.utm_content = 'ALCNONSUB'
-                and user_membership.total_uncancelled_memberships > 0)
-                and (user_orders.last_paid_order_date < dateadd('day',-365,sysdate()) = true or last_paid_order_date is null)
-                and user_membership.total_uncancelled_memberships > 0 then 'SUBSCRIBER PROSPECT'
-            when */
+        ,CASE
+            WHEN 
+                (user_orders.last_paid_order_date < DATEADD('day', -365, CURRENT_DATE()) OR user_orders.last_paid_order_date IS NULL)
+                AND user_membership.total_uncancelled_memberships <= 0 or user_membership.total_uncancelled_memberships is null
+                AND (
+                    visit_clean_urls.visit_landing_page_path LIKE '%JAPANESE%' 
+                    OR visit_clean_urls.visit_landing_page_path LIKE '%WAGYU%'
+                    OR visit_clean_urls.visit_landing_page_path LIKE '%TURKEY%'
+                    OR visit_clean_urls.visit_landing_page_path LIKE '%GIFT%'
+                    OR visit_clean_urls.utm_content = 'ALCNONSUB'
+                )
+            THEN 'ALC PROSPECT'
+
+            WHEN 
+                 user_membership.total_uncancelled_memberships > 0
+            THEN 'ACTIVE SUBSCRIBER'
             
+            WHEN 
+                (user_orders.last_paid_order_date < DATEADD('day', -365, CURRENT_DATE()) OR user_orders.last_paid_order_date IS NULL)
+                AND user_membership.total_uncancelled_memberships <= 0 or user_membership.total_uncancelled_memberships is null
+            THEN 'SUBSCRIBER PROSPECT'
+            
+            ELSE 'DEFAULT'
+        END AS segment_definitions
         ,visit_activity.visit_id is not null and subscribes - unsubscribes > 0 as did_subscribe
         ,visit_activity.visit_id is not null and subscribes - unsubscribes < 0 as did_unsubscribe
         ,visit_activity.visit_id is not null and sign_ups > 0 as did_sign_up
