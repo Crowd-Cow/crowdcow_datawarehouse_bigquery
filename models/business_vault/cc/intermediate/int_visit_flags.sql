@@ -70,7 +70,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,CASE
             WHEN 
                 (user_orders.last_paid_order_date < DATEADD('day', -365, CURRENT_DATE()) OR user_orders.last_paid_order_date IS NULL or visit_clean_urls.user_id is null)
-                and user_membership.total_uncancelled_memberships <= 0 or user_membership.total_uncancelled_memberships is null or visit_clean_urls.user_id is null
+                and user_membership.total_uncancelled_memberships <= 0 or user_membership.total_uncancelled_memberships is null 
                 AND (
                     contains(visit_clean_urls.visit_landing_page_path,'JAPANESE') 
                     OR contains(visit_clean_urls.visit_landing_page_path,'WAGYU')
@@ -78,21 +78,14 @@ visits as ( select * from {{ ref('visit_classification') }} )
                     OR contains(visit_clean_urls.visit_landing_page_path,'GIFT')
                     OR visit_clean_urls.utm_content = 'ALCNONSUB'
                 )
-                and (not has_previous_subscription or visit_clean_urls.user_id is null)
-                and (not(visit_referrer like any ('%ZENDESK%','%ADMIN%','%TRACKING-INFO','%SHIPMENT-IN-TRANSIT')) 
-                    or visit_referrer is null)
             THEN 'ALC PROSPECT'
-
             WHEN 
                  user_membership.total_uncancelled_memberships > 0
             THEN 'ACTIVE SUBSCRIBER'
             
             WHEN 
                 (user_orders.last_paid_order_date < DATEADD('day', -365, CURRENT_DATE()) OR user_orders.last_paid_order_date IS NULL  or visit_clean_urls.user_id is null)
-                AND user_membership.total_uncancelled_memberships <= 0 or user_membership.total_uncancelled_memberships is null or visit_clean_urls.user_id is null
-                and (not has_previous_subscription or visit_clean_urls.user_id is null)
-                and (not(visit_referrer like any ('%ZENDESK%','%ADMIN%','%TRACKING-INFO','%SHIPMENT-IN-TRANSIT')) 
-                    or visit_referrer is null)
+                AND user_membership.total_uncancelled_memberships <= 0 or user_membership.total_uncancelled_memberships is null 
             THEN 'SUBSCRIBER PROSPECT'
             
             ELSE 'DEFAULT'
