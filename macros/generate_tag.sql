@@ -2,8 +2,6 @@
 
 {%- set table_ref = builtins.ref(ref).include(database=false) -%}
 
-
-
     select
         {{ dbt_utils.surrogate_key(['{}'.format(id_field),"'{}'".format(tag_key)]) }} as tag_id
         ,'{{ table_ref }}' as tag_source_table
@@ -16,3 +14,4 @@
     from {{ table_ref }}
   
 {%- endmacro -%}
+
