@@ -285,7 +285,6 @@ employee as (
     where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and most_recent_beef_order_date is not null
 )
 
-
 ,most_recent_chicken_order_date as (
     {{ generate_tag('users','user_id','most_recent_chicken_order_date','user_data_point','most_recent_chicken_order_date') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_chicken_order_date is not null
@@ -504,115 +503,29 @@ select * from lapsed_cancelled_subscriber
 union all 
 select * from gifts_sent
 union all 
-select 
-    tag_id
-    ,tag_source_table
-    ,user_id 
-    ,tag_key
-    ,extract(epoch from tag_value) * 1000 as tag_value
-    ,tag_purpose
-    ,created_at_utc
-    ,updated_at_utc
-from most_recent_bison_order_date  
+select * from most_recent_beef_order_date  
 union all 
-select 
-    tag_id
-    ,tag_source_table
-    ,user_id 
-    ,tag_key
-    ,extract(epoch from tag_value) * 1000 as tag_value
-    ,tag_purpose
-    ,created_at_utc
-    ,updated_at_utc
-from most_recent_chicken_order_date
+select * from most_recent_bison_order_date  
 union all 
-select 
-    tag_id
-    ,tag_source_table
-    ,user_id 
-    ,tag_key
-    ,extract(epoch from tag_value) * 1000 as tag_value
-    ,tag_purpose
-    ,created_at_utc
-    ,updated_at_utc
-from most_recent_japanse_wagyu_order_date
+select * from most_recent_bison_order_date 
 union all 
-select 
-    tag_id
-    ,tag_source_table
-    ,user_id 
-    ,tag_key
-    ,extract(epoch from tag_value) * 1000 as tag_value
-    ,tag_purpose
-    ,created_at_utc
-    ,updated_at_utc
-from most_recent_lamb_order_date
+select * from most_recent_chicken_order_date
 union all 
-select 
-    tag_id
-    ,tag_source_table
-    ,user_id 
-    ,tag_key
-    ,extract(epoch from tag_value) * 1000 as tag_value
-    ,tag_purpose
-    ,created_at_utc
-    ,updated_at_utc
-from most_recent_pork_order_date
+select * from most_recent_japanse_wagyu_order_date
 union all 
-select 
-    tag_id
-    ,tag_source_table
-    ,user_id 
-    ,tag_key
-    ,extract(epoch from tag_value) * 1000 as tag_value
-    ,tag_purpose
-    ,created_at_utc
-    ,updated_at_utc
-from most_recent_seafood_order_date
+select * from most_recent_lamb_order_date
 union all 
-select 
-    tag_id
-    ,tag_source_table
-    ,user_id 
-    ,tag_key
-    ,extract(epoch from tag_value) * 1000 as tag_value
-    ,tag_purpose
-    ,created_at_utc
-    ,updated_at_utc
-from most_recent_sides_order_date
+select * from most_recent_pork_order_date
 union all 
-select 
-    tag_id
-    ,tag_source_table
-    ,user_id 
-    ,tag_key
-    ,extract(epoch from tag_value) * 1000 as tag_value
-    ,tag_purpose
-    ,created_at_utc
-    ,updated_at_utc
-from most_recent_turkey_order_date
+select * from most_recent_seafood_order_date
 union all 
-select 
-    tag_id
-    ,tag_source_table
-    ,user_id 
-    ,tag_key
-    ,extract(epoch from tag_value) * 1000 as tag_value
-    ,tag_purpose
-    ,created_at_utc
-    ,updated_at_utc
-from most_recent_wagyu_order_date
+select * from most_recent_sides_order_date
 union all 
-select 
-    tag_id
-    ,tag_source_table
-    ,user_id 
-    ,tag_key
-    ,extract(epoch from tag_value) * 1000 as tag_value
-    ,tag_purpose
-    ,created_at_utc
-    ,updated_at_utc
-from most_recent_bundle_order_date
+select * from most_recent_turkey_order_date
+union all 
+select * from most_recent_wagyu_order_date
+union all 
+select * from most_recent_bundle_order_date
 
 union all
 select * from has_ordered_beef
