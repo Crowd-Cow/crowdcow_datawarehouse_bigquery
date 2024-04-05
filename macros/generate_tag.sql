@@ -7,7 +7,7 @@
         ,'{{ table_ref }}' as tag_source_table
         ,{{ id_field }}
         ,'{{ tag_key }}' as tag_key
-        ,coalesce({{ tag_value }},null) as tag_value
+        ,coalesce({{ tag_value }},null)::string as tag_value
         ,'{{ tag_purpose }}' as tag_purpose
         ,sysdate() as created_at_utc
         ,sysdate() as updated_at_utc
