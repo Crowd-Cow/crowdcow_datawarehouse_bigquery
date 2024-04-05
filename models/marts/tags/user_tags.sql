@@ -507,8 +507,6 @@ select * from most_recent_beef_order_date
 union all 
 select * from most_recent_bison_order_date  
 union all 
-select * from most_recent_bison_order_date 
-union all 
 select * from most_recent_chicken_order_date
 union all 
 select * from most_recent_japanse_wagyu_order_date
