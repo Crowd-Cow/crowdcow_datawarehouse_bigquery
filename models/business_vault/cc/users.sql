@@ -357,17 +357,17 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,wagyu_revenue
         ,bundle_revenue
         ,seafood_revenue
-        ,most_recent_beef_order_date   
-        ,most_recent_bison_order_date 
-        ,most_recent_chicken_order_date
-        ,most_recent_japanse_wagyu_order_date
-        ,most_recent_lamb_order_date
-        ,most_recent_pork_order_date
-        ,most_recent_seafood_order_date
-        ,most_recent_sides_order_date
-        ,most_recent_turkey_order_date
-        ,most_recent_wagyu_order_date
-        ,most_recent_bundle_order_date
+        ,most_recent_beef_order_date::date   
+        ,most_recent_bison_order_date::date 
+        ,most_recent_chicken_order_date::date
+        ,most_recent_japanse_wagyu_order_date::date
+        ,most_recent_lamb_order_date::date
+        ,most_recent_pork_order_date::date
+        ,most_recent_seafood_order_date::date
+        ,most_recent_sides_order_date::date
+        ,most_recent_turkey_order_date::date
+        ,most_recent_wagyu_order_date::date
+        ,most_recent_bundle_order_date::date
 
 
     from user_joins

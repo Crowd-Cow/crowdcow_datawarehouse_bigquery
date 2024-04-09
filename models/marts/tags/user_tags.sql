@@ -276,7 +276,7 @@ employee as (
     where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and total_paid_gift_order_count > 0
 )
 ,last_bison_order_date as (
-    {{ generate_tag('users','user_id','last_bison_order_date','user_data_point','most_recent_bison_order_date') }}
+    {{ generate_tag('users','user_id','last_bisons_order_date','user_data_point','most_recent_bison_order_date') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_bison_order_date is not null
 ) 
 
