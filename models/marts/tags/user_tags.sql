@@ -272,11 +272,11 @@ employee as (
     where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and lapsed_cancelled_subscriber
 )
 ,gifts_sent as (
-    {{ generate_tag('users','user_id','gifts_sent','user_data_point', 'total_paid_gift_order_count') }}
+    {{ generate_tag('users','user_id','number_of_gifts_sent','user_data_point', 'total_paid_gift_order_count') }}
     where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and total_paid_gift_order_count > 0
 )
-,most_recent_bison_order_date as (
-    {{ generate_tag('users','user_id','most_recent_bison_order_date','user_data_point','most_recent_bison_order_date') }}
+,last_bison_order_date as (
+    {{ generate_tag('users','user_id','last_bison_order_date','user_data_point','most_recent_bison_order_date') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_bison_order_date is not null
 ) 
 
@@ -505,7 +505,7 @@ select * from gifts_sent
 union all 
 select * from most_recent_beef_order_date  
 union all 
-select * from most_recent_bison_order_date  
+select * from last_bison_order_date  
 union all 
 select * from most_recent_chicken_order_date
 union all 
