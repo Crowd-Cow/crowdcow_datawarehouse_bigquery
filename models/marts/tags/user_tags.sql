@@ -281,44 +281,44 @@ employee as (
 ) 
 
 ,most_recent_beef_order_date as (
-    {{ generate_tag('users','user_id','most_recent_beef_order_date','user_data_point', 'most_recent_beef_order_date') }}
+    {{ generate_tag('users','user_id','last_beef_order_date','user_data_point', 'most_recent_beef_order_date') }}
     where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and most_recent_beef_order_date is not null
 )
 
 ,most_recent_chicken_order_date as (
-    {{ generate_tag('users','user_id','most_recent_chicken_order_date','user_data_point','most_recent_chicken_order_date') }}
+    {{ generate_tag('users','user_id','last_chicken_order_date','user_data_point','most_recent_chicken_order_date') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_chicken_order_date is not null
 )
 ,most_recent_japanse_wagyu_order_date as (
-    {{ generate_tag('users','user_id','most_recent_japanse_wagyu_order_date','user_data_point','most_recent_japanse_wagyu_order_date') }}
+    {{ generate_tag('users','user_id','last_japanse_wagyu_order_date','user_data_point','most_recent_japanse_wagyu_order_date') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_japanse_wagyu_order_date is not null
 )
 ,most_recent_lamb_order_date as (
-    {{ generate_tag('users','user_id','most_recent_lamb_order_date','user_data_point','most_recent_lamb_order_date') }}
+    {{ generate_tag('users','user_id','last_lamb_order_date','user_data_point','most_recent_lamb_order_date') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_lamb_order_date is not null
 )
 ,most_recent_pork_order_date as (
-    {{ generate_tag('users','user_id','most_recent_pork_order_date','user_data_point','most_recent_pork_order_date') }}
+    {{ generate_tag('users','user_id','last_pork_order_date','user_data_point','most_recent_pork_order_date') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_pork_order_date is not null
 )
 ,most_recent_seafood_order_date as (
-    {{ generate_tag('users','user_id','most_recent_seafood_order_date','user_data_point','most_recent_seafood_order_date') }}
+    {{ generate_tag('users','user_id','last_seafood_order_date','user_data_point','most_recent_seafood_order_date') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_seafood_order_date is not null
 )
 ,most_recent_sides_order_date as (
-    {{ generate_tag('users','user_id','most_recent_sides_order_date','user_data_point','most_recent_sides_order_date') }}
+    {{ generate_tag('users','user_id','last_sides_order_date','user_data_point','most_recent_sides_order_date') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_sides_order_date is not null
 )
 ,most_recent_turkey_order_date as (
-    {{ generate_tag('users','user_id','most_recent_turkey_order_date','user_data_point','most_recent_turkey_order_date') }}
+    {{ generate_tag('users','user_id','last_turkey_order_date','user_data_point','most_recent_turkey_order_date') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_turkey_order_date is not null
 )
 ,most_recent_wagyu_order_date as (
-    {{ generate_tag('users','user_id','most_recent_wagyu_order_date','user_data_point','most_recent_wagyu_order_date') }}
+    {{ generate_tag('users','user_id','last_wagyu_order_date','user_data_point','most_recent_wagyu_order_date') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_wagyu_order_date is not null
 )
 ,most_recent_bundle_order_date as (
-    {{ generate_tag('users','user_id','most_recent_bundle_order_date','user_data_point','most_recent_bundle_order_date') }}
+    {{ generate_tag('users','user_id','last_bundle_order_date','user_data_point','most_recent_bundle_order_date') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and most_recent_bundle_order_date is not null
 )
 ,has_ordered_beef as (
@@ -367,27 +367,25 @@ employee as (
 )
 
 ,last_30_days_paid_order_count as (
-    {{ generate_tag('users','user_id','last_30_days_paid_order_count','user_segment','last_30_days_paid_order_count') }}
+    {{ generate_tag('users','user_id','last_30_paid_order_count','user_segment','last_30_days_paid_order_count') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and last_30_days_paid_order_count > 0
 )
 ,last_60_days_paid_order_count as (
-    {{ generate_tag('users','user_id','last_60_days_paid_order_count','user_segment','last_60_days_paid_order_count') }}
+    {{ generate_tag('users','user_id','last_60_paid_order_count','user_segment','last_60_days_paid_order_count') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and last_60_days_paid_order_count > 0
 )
 ,last_90_days_paid_order_count as (
-    {{ generate_tag('users','user_id','last_90_days_paid_order_count','user_segment','last_90_days_paid_order_count') }}
+    {{ generate_tag('users','user_id','last_90_paid_order_count','user_segment','last_90_days_paid_order_count') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and last_90_days_paid_order_count > 0
 )
 ,last_120_days_paid_order_count as (
-    {{ generate_tag('users','user_id','last_120_days_paid_order_count','user_segment','last_120_days_paid_order_count') }}
+    {{ generate_tag('users','user_id','last_120_paid_order_count','user_segment','last_120_days_paid_order_count') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and last_120_days_paid_order_count > 0
 )
 ,last_180_days_paid_order_count as (
-    {{ generate_tag('users','user_id','last_180_days_paid_order_count','user_segment','last_180_days_paid_order_count') }}
+    {{ generate_tag('users','user_id','last_180_paid_order_count','user_segment','last_180_days_paid_order_count') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and last_180_days_paid_order_count > 0
 )
-
-
 
 
 
