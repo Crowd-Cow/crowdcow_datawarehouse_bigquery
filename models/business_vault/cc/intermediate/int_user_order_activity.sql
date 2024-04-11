@@ -49,6 +49,9 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,min(iff(completed_order_rank = 1,visit_id,null)) as first_completed_order_visit_id
         ,max(iff(is_paid_order and not is_cancelled_order,order_token,null)) as most_recent_order
         ,max(iff(is_paid_order and not is_cancelled_order,order_id,null)) as most_recent_order_id
+        ,max(iff(is_paid_order and not is_cancelled_order and is_moolah_order,order_paid_at_utc::date,null)) as last_paid_moolah_order_date
+        ,count_if(is_customer_impactful_reschedule and order_reschedule_occurred_at_utc >= dateadd('day',-14,sysdate())) as last_14_days_impacful_customer_reschedules
+
         ,count_if(
             not is_gift_order
             and not is_gift_card_order
@@ -113,6 +116,14 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,lead(case when paid_ala_carte_order_rank is not null then order_paid_at_utc::date end,1) 
             over (partition by user_id order by paid_ala_carte_order_rank)  - order_paid_at_utc::date as days_to_next_paid_ala_carte_order
     from order_info
+)
+
+,last_paid_order_info as (
+    select
+        user_order_activity.user_id as user_id
+        ,order_info.net_revenue as last_paid_order_value
+    from user_order_activity
+    left join order_info on user_order_activity.most_recent_order_id = order_info.order_id
 )
 
 ,average_order_days as (
@@ -260,12 +271,16 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,most_recent_turkey_order_date
         ,most_recent_wagyu_order_date
         ,most_recent_bundle_order_date
+        ,last_paid_order_info.last_paid_order_value
+        ,last_paid_moolah_order_date
+        ,last_14_days_impacful_customer_reschedules
         
     from user
         left join user_percentiles on user.user_id = user_percentiles.user_id
         left join average_order_days on user.user_id = average_order_days.user_id
         left join user_order_item_activity on user.user_id = user_order_item_activity.user_id
         left join user_reward_activity on user.user_id = user_reward_activity.user_id
+        left join last_paid_order_info on user.user_id = last_paid_order_info.user_id
 )
 
 select * from user_activity_joins

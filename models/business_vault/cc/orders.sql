@@ -298,6 +298,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,order_reschedule.occurred_at_utc as order_reschedule_occurred_at_utc
         ,order_reschedule.old_scheduled_fulfillment_date
         ,order_reschedule.new_scheduled_fulfillment_date
+        ,iff(order_reschedule.is_customer_reschedule and old_scheduled_fulfillment_date < new_scheduled_fulfillment_date and datediff('day',order_reschedule.old_scheduled_fulfillment_date,order_reschedule.new_scheduled_fulfillment_date) >= 14, true,false) as is_customer_impactful_reschedule
         ,order_promo_redeemed.redeemed_at_utc as promo_redeemed_at_utc
         
     from orders

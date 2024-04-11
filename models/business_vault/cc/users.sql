@@ -15,6 +15,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
 ,postal_code as ( select * from {{ ref('stg_cc__postal_codes') }} )
 ,identity as ( select * from {{ ref('int_recent_user_identities') }} )
 ,contact as ( select * from {{ ref('contacts') }} )
+,referrals as ( select * from {{ ref('referrals') }})
+,gift_card_transaction_history as ( select * from {{ ref('gift_card_transaction_history') }} )
 
 ,user_contacts as (
     select 
@@ -35,6 +37,22 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
     from visit
     where user_id is not null
     qualify row_number() over(partition by user_id order by started_at_utc, visit_id) = 1
+)
+
+,user_referrals as (
+    select 
+        referrer_user_id as user_id 
+        ,count(distinct referee_user_id) as referrals_sent
+        ,count( distinct iff(purchased_at_utc is not null, referee_user_id,null)) as referrals_redeemed
+    from referrals 
+    group by 1
+)
+,user_gift_card_transaction_history as (
+    select 
+        distinct
+        redemption_user_id
+    from gift_card_transaction_history
+    where redemption_user_id is not null 
 )
 
 ,user_joins as (
@@ -158,6 +176,12 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.most_recent_turkey_order_date
         ,user_order_activity.most_recent_wagyu_order_date
         ,user_order_activity.most_recent_bundle_order_date
+        ,user_order_activity.last_paid_order_value
+        ,user_order_activity.last_paid_moolah_order_date
+        ,user_order_activity.last_14_days_impacful_customer_reschedules
+        ,user_referrals.referrals_sent
+        ,user_referrals.referrals_redeemed
+        ,iff(redemption_user_id is not null, true, false) as has_redeemed_gift_card
 
     from users
         left join user_membership on users.user_id = user_membership.user_id
@@ -168,6 +192,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         left join postal_code on users.user_zip = postal_code.postal_code
         left join identity on users.user_id = identity.user_id
         left join user_contacts on users.user_token = user_contacts.user_token
+        left join user_referrals on users.user_id = user_referrals.user_id
+        left join user_gift_card_transaction_history on users.user_id = user_gift_card_transaction_history.redemption_user_id 
 )
 
 ,final as (
@@ -313,7 +339,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,most_recent_membership_cancelled_date
         ,last_paid_membership_order_date
         ,last_paid_ala_carte_order_date
-        ,last_paid_order_date
+        ,last_paid_order_date::date as last_paid_order_date
         ,most_recent_paid_order_token
         ,most_recent_order_promotion_id
         ,most_recent_order_id
@@ -368,6 +394,12 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,most_recent_turkey_order_date::date as most_recent_turkey_order_date 
         ,most_recent_wagyu_order_date::date as most_recent_wagyu_order_date 
         ,most_recent_bundle_order_date::date as most_recent_bundle_order_date 
+        ,last_paid_order_value
+        ,last_paid_moolah_order_date::date as last_paid_moolah_order_date
+        ,last_14_days_impacful_customer_reschedules
+        ,referrals_sent
+        ,referrals_redeemed
+        ,has_redeemed_gift_card
 
 
     from user_joins

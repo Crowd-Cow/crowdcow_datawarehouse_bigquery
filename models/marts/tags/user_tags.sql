@@ -367,25 +367,70 @@ employee as (
 )
 
 ,last_30_days_paid_order_count as (
-    {{ generate_tag('users','user_id','last_30_paid_order_count','user_segment','last_30_days_paid_order_count') }}
+    {{ generate_tag('users','user_id','last_30_paid_order_count','user_data_point','last_30_days_paid_order_count') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and last_30_days_paid_order_count > 0
 )
 ,last_60_days_paid_order_count as (
-    {{ generate_tag('users','user_id','last_60_paid_order_count','user_segment','last_60_days_paid_order_count') }}
+    {{ generate_tag('users','user_id','last_60_paid_order_count','user_data_point','last_60_days_paid_order_count') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and last_60_days_paid_order_count > 0
 )
 ,last_90_days_paid_order_count as (
-    {{ generate_tag('users','user_id','last_90_paid_order_count','user_segment','last_90_days_paid_order_count') }}
+    {{ generate_tag('users','user_id','last_90_paid_order_count','user_data_point','last_90_days_paid_order_count') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and last_90_days_paid_order_count > 0
 )
 ,last_120_days_paid_order_count as (
-    {{ generate_tag('users','user_id','last_120_paid_order_count','user_segment','last_120_days_paid_order_count') }}
+    {{ generate_tag('users','user_id','last_120_paid_order_count','user_data_point','last_120_days_paid_order_count') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and last_120_days_paid_order_count > 0
 )
 ,last_180_days_paid_order_count as (
-    {{ generate_tag('users','user_id','last_180_paid_order_count','user_segment','last_180_days_paid_order_count') }}
+    {{ generate_tag('users','user_id','last_180_paid_order_count','user_data_point','last_180_days_paid_order_count') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and last_180_days_paid_order_count > 0
 )
+,lifetime_paid_order_count as (
+    {{ generate_tag('users','user_id','lifetime_paid_order_count','user_data_point','lifetime_paid_order_count') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and lifetime_paid_order_count > 0
+)
+,lifetime_net_revenue as (
+    {{ generate_tag('users','user_id','lifetime_paid_net_revenue','user_data_point','lifetime_net_revenue') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and lifetime_net_revenue > 0
+)
+,user_average_order_value as (
+    {{ generate_tag('users','user_id','average_paid_order_value','user_data_point','user_average_order_value') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and user_average_order_value > 0
+)
+,last_paid_order_date as (
+    {{ generate_tag('users','user_id','last_paid_order_date','user_data_point','last_paid_order_date') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and last_paid_order_date is not null
+)
+,last_paid_order_value as (
+    {{ generate_tag('users','user_id','last_paid_order_value','user_data_point','last_paid_order_value') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and last_paid_order_value > 0
+)
+,last_paid_moolah_order_date as (
+    {{ generate_tag('users','user_id','last_paid_moolah_order_date','user_data_point','last_paid_moolah_order_date') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and last_paid_moolah_order_date is not null
+)
+,has_redeemed_moolah as (
+    {{ generate_tag('users','user_id','has_redeemed_moolah','user_data_point','null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and redeemed_moolah_points < 0
+)
+,last_14_days_impacful_customer_reschedules as (
+    {{ generate_tag('users','user_id','last_14_days_impacful_customer_reschedules','user_data_point','null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and last_14_days_impacful_customer_reschedules > 0
+)
+,referrals_sent as (
+    {{ generate_tag('users','user_id','referrals_sent','user_data_point','referrals_sent') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and referrals_sent > 0
+)
+,referrals_redeemed as (
+    {{ generate_tag('users','user_id','referrals_redeemed','user_data_point','referrals_redeemed') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and referrals_redeemed > 0
+)
+,has_redeemed_gift_card as (
+    {{ generate_tag('users','user_id','has_redeemed_gift_card','user_data_point','null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and has_redeemed_gift_card 
+)
+
 
 
 
@@ -556,4 +601,33 @@ union all
 select * from last_120_days_paid_order_count
 union all
 select * from last_180_days_paid_order_count
-    
+
+
+
+union all 
+select * from lifetime_paid_order_count
+union all 
+select * from lifetime_net_revenue
+union all 
+select * from user_average_order_value
+union all 
+select * from last_paid_order_date
+union all 
+select * from last_paid_order_value
+union all 
+select * from has_redeemed_moolah
+union all 
+select * from last_paid_moolah_order_date
+union all 
+select * from last_14_days_impacful_customer_reschedules
+union all 
+select * from referrals_sent
+union all 
+select * from referrals_redeemed
+union all 
+select * from has_redeemed_gift_card
+
+
+
+
+
