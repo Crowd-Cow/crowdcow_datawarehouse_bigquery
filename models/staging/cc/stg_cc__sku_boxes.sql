@@ -33,6 +33,8 @@ renamed as (
         ,scanned as is_scanned
         ,filled as is_filled
         ,printed as is_printed
+        ,pack_date
+        ,best_by_date
         ,dbt_valid_to
         ,dbt_valid_from
         ,case

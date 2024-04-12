@@ -42,6 +42,8 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,marked_destroyed_at_utc
         ,delivered_at_utc
         ,moved_to_picking_at_utc
+        ,best_by_date
+        ,pack_date
         ,dbt_valid_from::date as dbt_valid_from
         ,coalesce(dbt_valid_to::date,sysdate()::date + 1) as dbt_valid_to
         ,row_number() over(partition by sku_box_id, dbt_valid_from::date order by dbt_valid_from desc) as rn
@@ -74,6 +76,8 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,inventory_snapshot.marked_destroyed_at_utc
         ,inventory_snapshot.delivered_at_utc
         ,inventory_snapshot.moved_to_picking_at_utc
+        ,inventory_snapshot.best_by_date
+        ,inventory_snapshot.pack_date
     from dates
         left join inventory_snapshot on dates.calendar_date >= inventory_snapshot.dbt_valid_from
             and dates.calendar_date < inventory_snapshot.dbt_valid_to
@@ -208,6 +212,8 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,delivered_at_utc
         ,moved_to_picking_at_utc
         ,lot_delivered_at_utc
+        ,best_by_date
+        ,pack_date
     from inventory_joins
 )
 
