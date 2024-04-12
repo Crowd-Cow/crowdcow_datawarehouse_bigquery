@@ -214,6 +214,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,lot_delivered_at_utc
         ,best_by_date
         ,pack_date
+        ,coalesce(best_by_date,dateadd(day,365,pack_date)) as proxy_bbd
     from inventory_joins
 )
 
