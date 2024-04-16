@@ -55,6 +55,11 @@ zd_tickets as (select * from {{ ref('stg_zendesk__tickets')}})
         ,zd_tickets.stylo_peak_frustration
         ,zd_tickets.stylo_urgency_options
         ,zd_tickets.ask_stylo_issue_category
+        ,zd_tickets.form_inquiry_category
+        ,zd_tickets.form_product_quality_issue_catagories
+        ,zd_tickets.form_order_issue_catagories
+        ,zd_tickets.form_delivery_catagories
+        ,zd_tickets.form_website_catagories
         ,cc_tickets.agent_wait_time_in_minutes
         ,cc_tickets.assignee_user_id
         ,cc_tickets.comments

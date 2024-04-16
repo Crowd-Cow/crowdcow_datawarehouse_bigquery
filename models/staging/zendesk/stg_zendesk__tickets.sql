@@ -87,6 +87,11 @@ source as ( select * from {{ source('zendesk', 'ticket') }} )
         ,custom_stylo_peak_frustration as stylo_peak_frustration
         ,custom_stylo_urgency_options as stylo_urgency_options
         ,custom_ask_stylo_issue_category as ask_stylo_issue_category
+        ,custom_form_inquiry_category as form_inquiry_category
+        ,custom_form_product_quality_issue_catagories_ as form_product_quality_issue_catagories
+        ,custom_form_order_issue_catagories as form_order_issue_catagories
+        ,custom_form_delivery_catagories as form_delivery_catagories
+        ,custom_form_website_catagories_ as form_website_catagories
 
 
     from source
