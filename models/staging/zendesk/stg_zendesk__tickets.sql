@@ -70,7 +70,27 @@ source as ( select * from {{ source('zendesk', 'ticket') }} )
         ,{{ clean_strings('custom_ticket_form_reason') }} as ticket_form_reason
         ,system_email_id
         ,system_eml_redacted
+        ,custom_stylo_frustration_options as stylo_frustration_options
+        ,custom_stylo_urgency as stylo_urgency
+        ,custom_stylo_de_escalate as stylo_de_escalate
+        ,custom_stylo_p_csat as stylo_p_csat
+        ,custom_stylo_peak_delight as stylo_peak_delight
+        ,custom_stylo_frustration_change as stylo_frustration_change
+        ,custom_stylo_delight as stylo_delight
+        ,custom_stylo_urgency_change as stylo_urgency_change
+        ,custom_stylo_frustration_change_numeric as stylo_frustration_change_numeric
+        ,custom_stylo_peak_agent_frustration as stylo_peak_agent_frustration
+        ,custom_stylo_delight_change_numeric as stylo_delight_change_numeric
+        ,custom_stylo_urgency_change_numeric as stylo_urgency_change_numeric
+        ,custom_stylo_frustration as stylo_frustration
+        ,custom_stylo_peak_urgency as stylo_peak_urgency
+        ,custom_stylo_peak_frustration as stylo_peak_frustration
+        ,custom_stylo_urgency_options as stylo_urgency_options
+        ,custom_ask_stylo_issue_category as ask_stylo_issue_category
+
+
     from source
 )
 
 select * from renamed
+

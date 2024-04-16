@@ -38,6 +38,23 @@ zd_tickets as (select * from {{ ref('stg_zendesk__tickets')}})
         ,zd_tickets.ticket_description
         ,zd_tickets.ticket_form_order_number
         ,zd_tickets.via_channel
+        ,zd_tickets.stylo_frustration_options
+        ,zd_tickets.stylo_urgency
+        ,zd_tickets.stylo_de_escalate
+        ,zd_tickets.stylo_p_csat
+        ,zd_tickets.stylo_peak_delight
+        ,zd_tickets.stylo_frustration_change
+        ,zd_tickets.stylo_delight
+        ,zd_tickets.stylo_urgency_change
+        ,zd_tickets.stylo_frustration_change_numeric
+        ,zd_tickets.stylo_peak_agent_frustration
+        ,zd_tickets.stylo_delight_change_numeric
+        ,zd_tickets.stylo_urgency_change_numeric
+        ,zd_tickets.stylo_frustration
+        ,zd_tickets.stylo_peak_urgency
+        ,zd_tickets.stylo_peak_frustration
+        ,zd_tickets.stylo_urgency_options
+        ,zd_tickets.ask_stylo_issue_category
         ,cc_tickets.agent_wait_time_in_minutes
         ,cc_tickets.assignee_user_id
         ,cc_tickets.comments
