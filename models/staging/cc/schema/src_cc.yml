@@ -7464,3 +7464,26 @@ sources:
             description: created_at
           - name: updated_at
             description: updated_at
+        
+      - name: promotions_claims
+        description: promotion_claims
+
+        columns:
+          - name: id 
+            description: id
+          - name: user_id
+            description: user_id
+          - name: promotions_promotion_id
+            description: promotions_promotion_id
+          - name: order_id
+            description: order_id
+          - name: promo_code
+            description: promo_code
+          - name: claimed_at
+            description: claimed_at
+          - name: unclaimed_at
+            description: unclaimed_at
+          - name: updated_at 
+            description: updated_at
+          - name: created_at 
+            description: created_at

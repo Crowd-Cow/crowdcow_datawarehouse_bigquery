@@ -3,6 +3,7 @@ with
 credit as ( select * from {{ ref('credits') }} )
 ,order_item as ( select * from {{ ref('order_items') }} )
 ,promotion as ( select * from {{ ref('promotions') }} )
+,promotions_claims as ( select * from {{ ref('stg_cc__promotions_claims') }} where claimed_at_utc is not null and unclaimed_at_utc is null )
 
 ,union_discounts as (
     select
@@ -111,20 +112,24 @@ credit as ( select * from {{ ref('credits') }} )
 )
 
 select
-    discount_detail_id
-    ,discount_source
-    ,discount_id
-    ,promotion_id
-    ,promotion_source
-    ,promotion_type
-    ,order_id
-    ,business_group
-    ,financial_account
-    ,credit_description
-    ,awarded_cow_cash_message
-    ,revenue_waterfall_bucket
-    ,discount_usd
-    ,is_new_member_promotion
-    ,created_at_utc
-    ,updated_at_utc
+    group_by_revenue_bucket.discount_detail_id
+    ,group_by_revenue_bucket.discount_source
+    ,group_by_revenue_bucket.discount_id
+    ,group_by_revenue_bucket.promotion_id
+    ,group_by_revenue_bucket.promotion_source
+    ,group_by_revenue_bucket.promotion_type
+    ,group_by_revenue_bucket.order_id
+    ,group_by_revenue_bucket.business_group
+    ,group_by_revenue_bucket.financial_account
+    ,group_by_revenue_bucket.credit_description
+    ,group_by_revenue_bucket.awarded_cow_cash_message
+    ,group_by_revenue_bucket.revenue_waterfall_bucket
+    ,group_by_revenue_bucket.discount_usd
+    ,group_by_revenue_bucket.is_new_member_promotion
+    ,promotions_claims.promo_code
+    ,group_by_revenue_bucket.created_at_utc
+    ,group_by_revenue_bucket.updated_at_utc
 from group_by_revenue_bucket
+    left join promotions_claims 
+     on promotions_claims.promotions_promotion_id = group_by_revenue_bucket.promotion_id 
+     and promotions_claims.order_id = group_by_revenue_bucket.order_id 
