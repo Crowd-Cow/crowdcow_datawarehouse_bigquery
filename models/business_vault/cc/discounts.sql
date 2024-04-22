@@ -3,7 +3,7 @@ with
 credit as ( select * from {{ ref('credits') }} )
 ,order_item as ( select * from {{ ref('order_items') }} )
 ,promotion as ( select * from {{ ref('promotions') }} )
-,promotions_claims as ( select * from {{ ref('stg_cc__promotions_claims') }} where claimed_at_utc is not null and unclaimed_at_utc is null )
+,promotions_claims as ( select distinct promotions_promotion_id, order_id, promo_code from {{ ref('stg_cc__promotions_claims') }} where claimed_at_utc is not null and unclaimed_at_utc is null )
 
 ,union_discounts as (
     select
