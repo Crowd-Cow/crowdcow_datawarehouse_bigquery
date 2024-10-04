@@ -145,7 +145,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         order_id,
         discounts.promotion_id,
         discounts.promotion_source,
-        case when discounts.promotion_source = 'PROMOTION' then promotions.promotion_type else promotions_promotions.name end as promotion_name, 
+        case when discounts.promotion_source = 'PROMOTION' then {{ clean_strings('promotions.promotion_type') }} else {{ clean_strings('promotions_promotions.name') }} end as promotion_name, 
         discount_usd,
         ROW_NUMBER() OVER (PARTITION BY order_id ORDER BY discount_usd DESC) AS rank
     from discounts
