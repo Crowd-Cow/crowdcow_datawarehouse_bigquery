@@ -82,6 +82,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,visit_flags.had_account_created
         ,visit_flags.did_subscribe
         ,visit_flags.did_unsubscribe
+        ,visit_flags.express_checkout
         ,visit_flags.did_sign_up
         ,visit_flags.did_complete_order
         ,visit_flags.did_bounce_homepage

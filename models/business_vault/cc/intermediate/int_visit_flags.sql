@@ -29,6 +29,10 @@ visits as ( select * from {{ ref('visit_classification') }} )
         COUNTIF(event_name = 'CLICK' AND label = 'SKIP' AND on_page_path LIKE '%/LANDING%') AS landing_offer_skipped,
         COUNT(DISTINCT IF(event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' AND JSON_EXTRACT_SCALAR(experiments, '$.exp-cc-home_page_redirect') = 'experimental', visit_id, NULL)) AS home_page_redirect_experimental,
         COUNT(DISTINCT IF(event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' AND JSON_EXTRACT_SCALAR(experiments, '$.exp-cc-home_page_redirect') = 'control', visit_id, NULL)) AS home_page_redirect_control,
+        COUNT(DISTINCT CASE WHEN event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' AND JSON_EXTRACT_SCALAR(experiments, '$.exp-cc-hp_redirect_2') = 'experimental'  THEN visit_id END) AS hp_redirect_2_experimental,
+        COUNT(DISTINCT CASE WHEN event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' AND JSON_EXTRACT_SCALAR(experiments, '$.exp-cc-hp_redirect_2') = 'control'  THEN visit_id END) AS hp_redirect_2_control, 
+        COUNT(DISTINCT CASE WHEN event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' AND JSON_EXTRACT_SCALAR(experiments, '$.exp-cc-express_checkout') = 'control'  THEN visit_id END) AS express_checkout_control,
+        COUNT(DISTINCT CASE WHEN event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' AND JSON_EXTRACT_SCALAR(experiments, '$.exp-cc-express_checkout') = 'experimental'  THEN visit_id END) AS express_checkout_experimental, 
         COUNT(*) AS event_count
     from events
     group by 1
@@ -95,9 +99,15 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,visit_activity.visit_id is not null and sign_ups > 0 as did_sign_up
         ,visit_activity.visit_id is not null and order_completes > 0 as did_complete_order
         ,case 
-            when visit_activity.home_page_redirect_experimental > 0  then 'EXPERIMENTAL'   
-            when visit_activity.home_page_redirect_control > 0 then 'CONTROL'
+            when visit_activity.home_page_redirect_experimental > 0  then 'EXPERIMENTAL1.0'   
+            when visit_activity.home_page_redirect_control > 0 then 'CONTROL1.0'
+            when visit_activity.hp_redirect_2_experimental > 0 then 'EXPERIMENTAL2.0'   
+            when visit_activity.hp_redirect_2_control > 0 then 'CONTROL2.0'   
         else null end as home_page_redirect 
+        ,case 
+            when visit_activity.express_checkout_experimental > 0  then 'EXPERIMENTAL1.0'   
+            when visit_activity.express_checkout_control > 0 then 'CONTROL1.0' 
+        else null end as express_checkout 
         ,visit_clean_urls.is_homepage_landing and (visit_activity.visit_id is null or (visit_activity.homepage_views = 1 and visit_activity.event_count = 1)) as did_bounce_homepage
         ,coalesce(visit_activity.pcp_impressions) as pcp_impressions_count
         ,coalesce(visit_activity.pcp_impression_clicks) as pcp_impression_clicks_count
