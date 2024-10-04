@@ -82,7 +82,7 @@ inventory_log as ( select * from {{ ref('stg_cc__inventory_logs') }} )
         ,sad_cow_bin_entry_id
         ,owner_id as inventory_owner_id
         ,-sku_quantity
-        ,null::int as order_id
+        ,cast(null as INT64) as order_id
     from get_sad_cow_receiving_log
 
     union all
@@ -101,7 +101,7 @@ inventory_log as ( select * from {{ ref('stg_cc__inventory_logs') }} )
         ,sad_cow_bin_entry_id
         ,owner_id as inventory_owner_id
         ,sku_quantity
-        ,null::int as order_id
+        ,cast(null as INT64) as order_id
     from get_sad_cow_receiving_log
 )
 

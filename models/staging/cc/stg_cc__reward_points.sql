@@ -1,6 +1,6 @@
 with
 
-reward as ( select * from {{ source('cc', 'reward_points') }} where not _fivetran_deleted )
+reward as ( select * from {{ source('cc', 'reward_points') }} where __deleted is null )
 
 ,renamed as (
     select

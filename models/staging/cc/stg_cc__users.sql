@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ ref('users_ss') }} where not _fivetran_deleted
+    select * from {{ ref('users_ss') }}  where __deleted is null
 
 ),
 
@@ -11,7 +11,7 @@ renamed as (
         ,{{ clean_strings('user_type') }} as user_type
         ,{{ clean_strings('email') }} as user_email
         ,{{ clean_strings('gender') }} as user_gender
-        ,{{ clean_strings('default_card_token') }} as default_card_token
+        --, clean_strings('default_card_token') }} as default_card_token
         ,{{ clean_strings('last_geocoded_address') }} as user_last_geocoded_address
         ,{{ clean_strings('last_geocoded_city') }} as user_last_geocoded_city
         ,{{ clean_strings('last_geocoded_state_code') }} as user_last_geocoded_state_code
@@ -82,7 +82,7 @@ renamed as (
         ,{{ clean_strings('unconfirmed_email') }} as user_unconfirmed_email
         ,{{ clean_strings('notes_for_next_order') }} as user_notes_for_next_order
         ,resubscribed_at as user_resubscribed_at_utc
-        ,{{ clean_strings('adgroup_id') }} as adgroup_id
+        ,adgroup_id
         ,failed_attempts as user_total_failed_attempts
         ,merged_into_user_id
         ,mailchimp_unsubscribed_all_at as user_mailchimp_unsubscribed_all_at_utc
@@ -117,7 +117,7 @@ renamed as (
         ,{{ clean_strings('opt_out_list') }} as user_opt_out_list
         ,banned_from_referrals as user_is_banned_from_referrals
         ,was_email_lead
-        ,opted_in_to_emails as has_opted_in_to_emails
+        ,if(opted_in_to_emails=1,true,false) as has_opted_in_to_emails
         ,dbt_valid_to 
         ,dbt_valid_from
         ,dbt_scd_id as user_key

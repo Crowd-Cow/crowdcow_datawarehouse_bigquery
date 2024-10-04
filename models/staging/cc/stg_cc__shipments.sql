@@ -1,7 +1,7 @@
 with 
 
-source as ( select * from {{ source('cc', 'shipments') }} where not _fivetran_deleted )
-,fc_outbound_pallets as (select * from {{ source('cc', 'fc_outbound_pallets')}} where not _fivetran_deleted )
+source as ( select * from {{ source('cc', 'shipments') }} where __deleted is null )
+,fc_outbound_pallets as (select * from {{ source('cc', 'fc_outbound_pallets')}} where __deleted is null )
 
 ,renamed as (
     select
@@ -20,12 +20,12 @@ source as ( select * from {{ source('cc', 'shipments') }} where not _fivetran_de
         ,{{ clean_strings('easypost_shipping_label_url') }} as easypost_shipping_label_url
         ,shipped_at as shipped_at_utc
         ,delivered_at as delivered_at_utc
-        ,convert_timezone('UTC','America/Los_Angeles',delivered_at) as delivered_at_pt
+        ,FORMAT_TIMESTAMP('%F %T',delivered_at,'America/Los_Angeles') as delivered_at_pt
         ,{{ clean_strings('delivery_method') }} as delivery_method
         ,easypost_original_estimated_delivery_date as original_est_delivery_date_utc
-        ,convert_timezone('UTC','America/Los_Angeles',easypost_original_estimated_delivery_date) as original_est_delivery_date_pt
+        ,FORMAT_TIMESTAMP('%F %T',easypost_original_estimated_delivery_date,'America/Los_Angeles') as original_est_delivery_date_pt
         ,easypost_postage_rate_id
-        ,marked_not_shipped_at as marked_not_shipped_at_utc
+        --,marked_not_shipped_at as marked_not_shipped_at_utc
         ,fc_id
         ,maximum_temperature
         ,temperature_last_updated_at as temperature_last_updated_at_utc
@@ -53,7 +53,7 @@ source as ( select * from {{ source('cc', 'shipments') }} where not _fivetran_de
         ,use_zpl as does_use_zpl
         ,receives_tracking_updates as does_receive_tracking_updates
         ,easypost_delivery_date_guaranteed as is_delivery_date_guaranteed
-        ,fc_locations_id
+        --,fc_locations_id
         ,fc_location_id
 
     from source
@@ -81,7 +81,7 @@ source as ( select * from {{ source('cc', 'shipments') }} where not _fivetran_de
         ,print_queue_item_id
         ,delivery_window_end_at_utc
         
-        ,iff(
+        ,if(
            (shipment_postage_carrier = 'AXLEHIREV3' and shipment_postage_rate_usd = 0.01) or
            (shipment_postage_carrier = 'AXLEHIREV3' and shipped_at_utc < '2021-12-01')
            ,null
@@ -100,7 +100,7 @@ source as ( select * from {{ source('cc', 'shipments') }} where not _fivetran_de
         ,original_est_delivery_date_utc
         ,original_est_delivery_date_pt
         ,easypost_postage_rate_id
-        ,marked_not_shipped_at_utc
+        --,marked_not_shipped_at_utc
         ,fc_id
         ,maximum_temperature
         ,temperature_last_updated_at_utc
@@ -128,7 +128,7 @@ source as ( select * from {{ source('cc', 'shipments') }} where not _fivetran_de
         ,does_use_zpl
         ,does_receive_tracking_updates
         ,is_delivery_date_guaranteed
-        ,fc_locations_id
+        --,fc_locations_id
         ,renamed.fc_location_id
         ,outbound_pallets.shipping_option_name
     from renamed

@@ -10,60 +10,59 @@ with
 
 events as (
   select
-      event_id
-      ,visit_id
-      ,user_id
-      ,occurred_at_utc
-      ,updated_at_utc
-      ,event_sequence_number
-      ,case
-          when event_name = 'custom_event' then event_json:category::text || '_' || event_json:action::text
-          else replace(event_name,' ','_')
-      end as event_name
-      ,event_json:context:page:url::text as on_page_url
-      ,event_json:context:page:path::text as on_page_path
-      ,event_json:properties:url::text as next_page_url
-      ,event_json:category::text as category
-      ,event_json:action::text as action
-      ,coalesce(event_json:label::text,event_json:properties:name::text) as label
-      ,event_json:experiments as experiments
-      ,event_json:member::boolean as is_member
-      ,event_json:properties:id::text as event_properties_id
-      ,lower(coalesce(event_json:product_id::text,event_json:properties:product_token::text)) as product_token
-      ,event_json:bid_item_id::int as bid_item_id
-      ,event_json:"$event_id"::text as token
-      ,coalesce(event_json:name::text,event_json:properties:name::text) as name
-      ,event_json:properties:page_section::text as page_section
-      ,event_json:properties:modal_name::text as modal_name
-      ,event_json:order_id::text as order_id
-      ,event_json:url::text as url
-      ,event_json:referrer_url::text as referrer_url
-      ,event_json:subscription_id::text as subscription_id
-      ,event_json:title::text as title
-      ,coalesce(try_cast(event_json:price::text as int),event_json:properties:price*100::int) as price
-      ,event_json:quantity::int as quantity
-      ,event_json:old_scheduled_arrival_date::timestamp as old_scheduled_arrival_date
-      ,event_json:new_scheduled_arrival_date::timestamp as new_scheduled_arrival_date
-      ,event_json:old_scheduled_fulfillment_date::timestamp as old_scheduled_fulfillment_date
-      ,event_json:new_scheduled_fulfillment_date::timestamp as new_scheduled_fulfillment_date
-      ,event_json:reason::text as reason
-      ,event_json:user_making_change_id::int as user_making_change_id
-      ,event_json:id::text as brightback_id
-      ,event_json:app_id::text as app_id
-      ,event_json:fields:session_id::text as session_id
-      ,event_json:fields:session_key::text as session_key
-      ,event_json:fields:"cancel.account.internal_id"::text as user_token
-      ,event_json:fields:"cancel.custom.subscription.token"::text as subscription_token
-      ,event_json:survey:display_reason::text as display_reason
-      ,event_json:survey:feedback::text as feedback
-      ,event_json:survey:selected_reason::text as selected_reason
-      ,event_json:properties:depth::int as scroll_depth
-      ,event_json:properties:from as from_filter
-      ,event_json:properties:to as to_filter
-      ,event_json:survey:sentiment::int as sentiment
-      ,event_json:product_offer:quantity_sellable::int as quantity_sellable
-      ,coalesce(event_json:value::text,event_json:properties:value::text) as event_value
-      ,event_json
+   event_id,
+   visit_id,
+   user_id,
+   occurred_at_utc,
+   updated_at_utc,
+   event_sequence_number,
+   CASE
+       WHEN event_name = 'custom_event' THEN CONCAT(SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.category') AS STRING), '_', SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.action') AS STRING))
+       ELSE REPLACE(event_name, ' ', '_')
+   END AS event_name,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.context.page.url') AS STRING) AS on_page_url,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.context.page.path') AS STRING) AS on_page_path,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.properties.url') AS STRING) AS next_page_url,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.category') AS STRING) AS category,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.action') AS STRING) AS action,
+   COALESCE(SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.label') AS STRING), SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.properties.name') AS STRING)) AS label,
+   JSON_EXTRACT(event_json, '$.experiments') AS experiments,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.member') AS BOOL) AS is_member,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.properties.id') AS STRING) AS event_properties_id,
+   LOWER(COALESCE(SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.product_id') AS STRING), SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.properties.product_token') AS STRING))) AS product_token,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.bid_item_id') AS INT64) AS bid_item_id,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.event_id') AS STRING) AS token,
+   COALESCE(SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.name') AS STRING), SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.properties.name') AS STRING)) AS name,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.properties.page_section') AS STRING) AS page_section,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.properties.modal_name') AS STRING) AS modal_name,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.order_id') AS STRING) AS order_id,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.url') AS STRING) AS url,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.referrer_url') AS STRING) AS referrer_url,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.subscription_id') AS STRING) AS subscription_id,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.title') AS STRING) AS title,
+   COALESCE(SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.price') AS INT64), SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.properties.price') AS INT64) * 100) AS price,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.quantity') AS INT64) AS quantity,
+   TIMESTAMP(SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.old_scheduled_arrival_date') AS STRING)) AS old_scheduled_arrival_date,
+   TIMESTAMP(SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.new_scheduled_arrival_date') AS STRING)) AS new_scheduled_arrival_date,
+   TIMESTAMP(SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.old_scheduled_fulfillment_date') AS STRING)) AS old_scheduled_fulfillment_date,
+   TIMESTAMP(SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.new_scheduled_fulfillment_date') AS STRING)) AS new_scheduled_fulfillment_date,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.reason') AS STRING) AS reason,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.user_making_change_id') AS INT64) AS user_making_change_id,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.id') AS STRING) AS brightback_id,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.app_id') AS STRING) AS app_id,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.fields.session_id') AS STRING) AS session_id,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.fields.session_key') AS STRING) AS session_key,
+   JSON_EXTRACT_SCALAR(event_json, '$.fields.cancel.account.internal_id') AS user_token,
+   JSON_EXTRACT_SCALAR(event_json, '$.fields.cancel.custom.subscription.token') AS subscription_token,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.survey.display_reason') AS STRING) AS display_reason,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.survey.feedback') AS STRING) AS feedback,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.survey.selected_reason') AS STRING) AS selected_reason,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.properties.depth') AS INT64) AS scroll_depth,
+   JSON_EXTRACT(event_json, '$.properties.from') AS from_filter,
+   JSON_EXTRACT(event_json, '$.properties.to') AS to_filter,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.survey.sentiment') AS INT64) AS sentiment,
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.product_offer.quantity_sellable') AS INT64) AS quantity_sellable,
+   COALESCE(SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.value') AS STRING), SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.properties.value') AS STRING)) AS event_value
   from {{ ref('base_cc__ahoy_events') }}
 
   {% if is_incremental() %}

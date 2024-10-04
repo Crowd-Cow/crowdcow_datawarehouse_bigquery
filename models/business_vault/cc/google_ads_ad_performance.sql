@@ -1,4 +1,7 @@
-with 
+{{ config(
+  enabled=false
+) }}
+with  
 
 ad_stats as (select * from {{ ref('stg_google_ads__ad_stats')}})
 ,ad_history as (select * from {{ ref('stg_google_ads__ad_history')}})

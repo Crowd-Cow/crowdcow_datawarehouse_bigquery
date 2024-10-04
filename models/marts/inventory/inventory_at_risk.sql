@@ -37,7 +37,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,fc_id
         ,lot_number
         ,farm_out_name as farm_name
-        ,fc_scan_proposed_date::date as fc_scan_proposed_date
+        ,cast(fc_scan_proposed_date as date) as fc_scan_proposed_date
         ,sum(quantity_ordered) as quantity_ordered
     from receivable
     where not is_destroyed
@@ -154,15 +154,15 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
 
 ,calcs as (
     select *
-    ,div0(potential_revenue,quantity) * avg_forecasted_weekly_units as avg_weekly_potential_revenue
-    ,iff(div0(potential_revenue,quantity) * avg_forecasted_weekly_units > potential_revenue,div0(potential_revenue,quantity) * avg_forecasted_weekly_units - potential_revenue,0) as potential_missed_revenue
-    ,div0(quantity_sellable,avg_forecasted_weekly_units) as wos
-    ,div0(quantity,avg_forecasted_weekly_units) as est_wos_total
-    ,div0(quantity_reserved,quantity_sellable) as pct_reserved
-    ,sysdate()::date 
-        + (div0(quantity_sellable,avg_forecasted_weekly_units) 
+    ,safe_divide(potential_revenue,quantity) * avg_forecasted_weekly_units as avg_weekly_potential_revenue
+    ,if(safe_divide(potential_revenue,quantity) * avg_forecasted_weekly_units > potential_revenue,safe_divide(potential_revenue,quantity) * avg_forecasted_weekly_units - potential_revenue,0) as potential_missed_revenue
+    ,safe_divide(quantity_sellable,avg_forecasted_weekly_units) as wos
+    ,safe_divide(quantity,avg_forecasted_weekly_units) as est_wos_total
+    ,safe_divide(quantity_reserved,quantity_sellable) as pct_reserved
+    ,CURRENT_DATE()
+        + cast((safe_divide(quantity_sellable,avg_forecasted_weekly_units) 
         * 7 
-        * (1 - div0(quantity_reserved,quantity_sellable)))::int as est_oos_date
+        * (1 - safe_divide(quantity_reserved,quantity_sellable))) as int) as est_oos_date
     from join_forecast
 )
 

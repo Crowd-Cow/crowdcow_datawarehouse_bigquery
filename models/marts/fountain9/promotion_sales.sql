@@ -1,9 +1,9 @@
 with
-order_item as ( select * from business_vault.order_item_details)
-,sku as ( select * from business_vault.skus )
-,order_detail as ( select * from business_vault.orders where (not is_rastellis or is_rastellis is null) and (not is_qvc or is_qvc is null) )
-,fc as ( select * from business_vault.fcs )
-,discounts as (select distinct promotion_id, business_group, revenue_waterfall_bucket from business_vault.discounts where promotion_id is not null)
+order_item as ( select * from {{ ref('order_item_details') }})
+,sku as ( select * from {{ ref('skus') }})
+,order_detail as ( select * from {{ ref('orders')}} where (not is_rastellis or is_rastellis is null) and (not is_qvc or is_qvc is null) )
+,fc as ( select * from {{ ref('fcs')}} )
+,discounts as (select distinct promotion_id, business_group, revenue_waterfall_bucket from {{ ref('discounts') }} where promotion_id is not null)
 
 ,order_item_skus as (
     select
@@ -46,7 +46,7 @@ order_item as ( select * from business_vault.order_item_details)
 
 ,item_revenue as (
     select
-        order_fc.order_paid_at_utc::date as order_paid_date
+        cast(order_fc.order_paid_at_utc as date) as order_paid_date
         ,order_fc.fc_name
         ,order_item_skus.category
         ,order_item_skus.sub_category
@@ -71,8 +71,8 @@ select
     WHEN discounts.promotion_id in (104,226) THEN 'IN-CART SPECIALS'
     WHEN discounts.business_group is null and discounts.promotion_id is null THEN 'MERCH DISCOUNT'
     ELSE null end as promotion_type
-    ,round(div0(gross_revenue,quantity_sold),2) as avgerage_list_price
-    ,round(div0(net_revenue,quantity_sold),2) as average_effective_price
+    ,round(safe_divide(gross_revenue,quantity_sold),2) as avgerage_list_price
+    ,round(safe_divide(net_revenue,quantity_sold),2) as average_effective_price
 from item_revenue
 left join discounts on discounts.promotion_id = item_revenue.promotion_id
 where 

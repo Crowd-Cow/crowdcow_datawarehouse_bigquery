@@ -3,10 +3,9 @@ version: 2
 sources:
 
   - name: shipwell
-    database: raw
-    schema: shipwell
+    schema: raw_shipwell
     tables:
-      - name: shipments
+      - name: shipwell_shipments
         description: Inbound shipments to fulfillment centers. Data comes from the Shipwell system
         columns:
           - name: id
@@ -282,7 +281,7 @@ sources:
           - name: _fivetran_synced
             description: Timestamp for when Fivetran synced the record
 
-      - name: shipment_tags
+      - name: shipwell_shipmenttags
         description: Shipwell shipment tags
         columns:
           - name: id
@@ -305,4 +304,6 @@ sources:
 
           - name: _fivetran_synced
             description: Timestamp for when the record was synced by Fivetran
+      
+      - name: shipwell_purchaseorders_line_items
      

@@ -1,3 +1,6 @@
+{{ config(
+  enabled=false
+) }}
 with
 
 session_details as ( select * from {{ source('google_analytics', 'session_details') }} )

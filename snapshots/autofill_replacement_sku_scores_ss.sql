@@ -6,7 +6,7 @@
       unique_key='id',
 
       strategy='timestamp',
-      updated_at='_fivetran_synced',
+      updated_at='__updatetime',
     )
 }}
 

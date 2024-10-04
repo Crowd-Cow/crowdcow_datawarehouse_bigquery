@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ ref('partners_ss') }} where not _fivetran_deleted
+    select * from {{ ref('partners_ss') }} 
 
 ),
 
@@ -9,7 +9,7 @@ renamed as (
   select
     id as partner_id
     ,dbt_scd_id as partner_key
-    ,event_id
+    --,event_id
     ,created_by_user_id as partner_created_by_user_id
     ,street_team_user_id
     ,{{ clean_strings('redirect_path') }} as partner_redirect_path

@@ -1,6 +1,6 @@
 with
 
-locations as ( select * from {{ source('cc', 'fc_locations') }} where not _fivetran_deleted )
+locations as ( select * from {{ source('cc', 'fc_locations') }} where __deleted is null )
 
 ,renamed as (
     select
@@ -9,8 +9,8 @@ locations as ( select * from {{ source('cc', 'fc_locations') }} where not _fivet
         ,sad_cow_bin_id
         ,{{ clean_strings('name') }} as location_name
         ,parent_id as fc_location_parent_id
-        ,{{ clean_strings('merchandising_request_status') }} as merchandising_request_status
-        ,{{ clean_strings('fc_transfer_status') }} as fc_transfer_status
+        --, clean_strings('merchandising_request_status') }} as merchandising_request_status
+        --, clean_strings('fc_transfer_status') }} as fc_transfer_status
         ,on_deck_score
         ,position
         ,created_at as created_at_utc
@@ -20,7 +20,7 @@ locations as ( select * from {{ source('cc', 'fc_locations') }} where not _fivet
         ,{{ clean_strings('location_type') }} as location_type
         ,marked_destroyed_at as marked_destroyed_at_utc
         ,sku_box_id
-        ,sellable as is_sellable
+        ,if(sellable = 1, true, false) as is_sellable
         ,on_deck as is_on_deck
     from locations
 )

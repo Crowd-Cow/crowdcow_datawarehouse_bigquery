@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ source('cc', 'box_types') }} where not _fivetran_deleted
+    select * from {{ source('cc', 'box_types') }} 
 
 ),
 

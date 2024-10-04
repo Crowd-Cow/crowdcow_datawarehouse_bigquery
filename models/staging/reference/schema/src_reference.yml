@@ -3,8 +3,7 @@ version: 2
 sources:
 
 - name: reference_data
-  database: raw
-  schema: reference_data
+  schema: raw_reference_data
   tables:
     - name: ip_lookup
       description: Detailed IP information used to enhance Visits analysis

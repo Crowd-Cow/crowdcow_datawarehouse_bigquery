@@ -1,6 +1,6 @@
 with
 
-source as ( select * from {{ source('shipwell', 'shipment_tags') }} )
+source as ( select * from {{ source('shipwell', 'shipwell_shipmenttags') }} )
 
 ,renamed as (
     select

@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ source('cc', 'pipeline_receivables') }} where not _fivetran_deleted
+    select * from {{ source('cc', 'pipeline_receivables') }} 
 
 ),
 
@@ -11,8 +11,8 @@ renamed as (
         ,sku_id
         ,quantity as quantity_ordered
         ,marked_destroyed_at as marked_destroyed_at_utc
-        ,cut_id
-        ,weight
+        --,cut_id
+        --,weight
         ,created_at as created_at_utc
         ,quantity_received
         ,received_at as received_at_utc

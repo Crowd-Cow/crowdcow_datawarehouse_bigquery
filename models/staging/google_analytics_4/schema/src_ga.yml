@@ -2,8 +2,7 @@ version: 2
 
 sources:
   - name: google_analytics_4
-    database: raw
-    schema: google_analytics_4
+    schema: raw_google_analytics_4
 
     tables:
       - name: incoming_traffic
@@ -55,7 +54,7 @@ sources:
             description: sample set (or count) of pageviews used to calculate the averages for site speed DOM metrics.
           - name: avg_page_load_time
             description: the average amount of time (in seconds) it takes that page to load, from initiation of the pageview (e.g., click on a page link) to load completion in the browser.
-      - name: user_pageviews
+      - name: user_page_views
         description: google analytics attribution data of customers visiting our site
         columns:
           - name: date

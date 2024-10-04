@@ -2,135 +2,114 @@ with
 
 flags as ( select * from {{ ref('int_order_flags') }} )
 
-,overall_order_ranks as(
-  select
-    order_id
-    ,row_number() over(partition by user_id order by order_created_at_utc) as overall_order_rank
-    
-    ,case 
-      when not is_completed_order then null 
-      else conditional_true_event(is_completed_order) over (partition by user_id order by order_checkout_completed_at_utc) 
-     end as completed_order_rank
+,overall_order_ranks AS (
+  SELECT
+    order_id,
+    ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY order_created_at_utc) AS overall_order_rank,
+    CASE 
+      WHEN NOT is_completed_order THEN NULL 
+      ELSE SUM(CASE WHEN is_completed_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id ORDER BY order_checkout_completed_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) 
+    END AS completed_order_rank,
+    CASE 
+      WHEN NOT is_paid_order THEN NULL 
+      ELSE SUM(CASE WHEN is_paid_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id ORDER BY order_paid_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) 
+    END AS paid_order_rank,
+    CASE
+      WHEN NOT is_cancelled_order THEN NULL
+      ELSE SUM(CASE WHEN is_cancelled_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id ORDER BY order_cancelled_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) 
+    END AS cancelled_order_rank
+  FROM flags
+),
 
-    ,case 
-      when not is_paid_order then null 
-      else conditional_true_event(is_paid_order) over (partition by user_id order by order_paid_at_utc) 
-     end as paid_order_rank
+ala_carte_order_ranks AS (
+  SELECT
+    order_id,
+    CASE
+      WHEN is_membership_order OR NOT is_ala_carte_order THEN NULL
+      ELSE SUM(CASE WHEN is_ala_carte_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id ORDER BY order_created_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+    END AS ala_carte_order_rank,
+    CASE
+      WHEN NOT is_completed_order OR NOT is_ala_carte_order OR is_membership_order THEN NULL
+      ELSE SUM(CASE WHEN is_completed_order AND is_ala_carte_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id ORDER BY order_checkout_completed_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+    END AS completed_ala_carte_order_rank,
+    CASE
+      WHEN NOT is_paid_order OR is_cancelled_order OR NOT is_ala_carte_order THEN NULL
+      ELSE SUM(CASE WHEN is_paid_order AND NOT is_cancelled_order AND is_ala_carte_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id ORDER BY order_paid_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+    END AS paid_ala_carte_order_rank,
+    CASE
+      WHEN NOT is_cancelled_order OR NOT is_ala_carte_order OR is_paid_order THEN NULL
+      ELSE SUM(CASE WHEN is_cancelled_order AND is_ala_carte_order AND NOT is_paid_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id ORDER BY order_cancelled_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+    END AS cancelled_ala_carte_order_rank
+  FROM flags
+),
 
-    ,case
-      when not is_cancelled_order then null
-      else conditional_true_event(is_cancelled_order) over (partition by user_id order by order_cancelled_at_utc) 
-     end as cancelled_order_rank
+all_memberships_order_ranks AS (
+  SELECT
+    order_id,
+    CASE
+      WHEN NOT is_membership_order THEN NULL
+      ELSE SUM(CASE WHEN is_membership_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id ORDER BY order_created_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+    END AS membership_order_rank,
+    CASE
+      WHEN NOT is_completed_order OR NOT is_membership_order THEN NULL
+      ELSE SUM(CASE WHEN is_completed_order AND is_membership_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id ORDER BY order_checkout_completed_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+    END AS completed_membership_order_rank,
+    CASE
+      WHEN NOT is_paid_order OR is_cancelled_order OR NOT is_membership_order THEN NULL
+      ELSE SUM(CASE WHEN is_paid_order AND NOT is_cancelled_order AND is_membership_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id ORDER BY order_paid_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+    END AS paid_membership_order_rank,
+    CASE
+      WHEN NOT is_cancelled_order OR is_paid_order OR NOT is_membership_order THEN NULL
+      ELSE SUM(CASE WHEN is_cancelled_order AND is_membership_order AND NOT is_paid_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id ORDER BY order_cancelled_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+    END AS cancelled_membership_order_rank
+  FROM flags
+),
 
-    from flags
-)
-
-,ala_carte_order_ranks as (
-    select
-      order_id
-
-      ,case
-        when is_membership_order or not is_ala_carte_order then null
-        else conditional_true_event(is_ala_carte_order) over(partition by user_id order by order_created_at_utc)
-       end as ala_carte_order_rank
-
-      ,case
-        when not is_completed_order or not is_ala_carte_order or is_membership_order then null
-        else conditional_true_event(is_completed_order and is_ala_carte_order) over (partition by user_id order by order_checkout_completed_at_utc)
-       end as completed_ala_carte_order_rank
-
-      ,case
-        when not is_paid_order or is_cancelled_order or not is_ala_carte_order then null
-        else conditional_true_event(is_paid_order and not is_cancelled_order and is_ala_carte_order) over (partition by user_id order by order_paid_at_utc)
-       end as paid_ala_carte_order_rank
-
-      ,case
-        when not is_cancelled_order or not is_ala_carte_order or is_paid_order then null
-        else conditional_true_event(is_cancelled_order and is_ala_carte_order and not is_paid_order) over(partition by user_id order by order_cancelled_at_utc)
-       end as cancelled_ala_carte_order_rank
-
-    from flags
-)
-
-,all_memberships_order_ranks as (
-  select
-    order_id
-    
-    ,case
-      when not is_membership_order then null
-      else conditional_true_event(is_membership_order) over(partition by user_id order by order_created_at_utc)
-     end as membership_order_rank
-
-    ,case
-      when not is_completed_order or not is_membership_order then null
-      else conditional_true_event(is_completed_order and is_membership_order) over (partition by user_id order by order_checkout_completed_at_utc)
-     end as completed_membership_order_rank
-
-    ,case
-      when not is_paid_order or is_cancelled_order or not is_membership_order then null
-      else conditional_true_event(is_paid_order and not is_cancelled_order and is_membership_order) over (partition by user_id order by order_paid_at_utc) 
-     end as paid_membership_order_rank
-
-    ,case
-      when not is_cancelled_order or is_paid_order or not is_membership_order then null
-      else conditional_true_event(is_cancelled_order and is_membership_order and not is_paid_order) over (partition by user_id order by order_cancelled_at_utc)
-     end as cancelled_membership_order_rank
-
-  from flags
-)
-
-,unique_memberships_order_ranks as (
-  select
-    order_id
-
-    ,case
-      when not is_membership_order then null
-      else conditional_true_event(is_membership_order) over(partition by user_id, subscription_id order by order_created_at_utc)
-     end as unique_membership_order_rank
-
-    ,case
-      when not is_completed_order or not is_membership_order then null
-      else conditional_true_event(is_completed_order and is_membership_order) over (partition by user_id, subscription_id order by order_checkout_completed_at_utc)
-     end as completed_unique_membership_order_rank
-
-    ,case
-      when not is_paid_order or is_cancelled_order or not is_membership_order then null
-      else conditional_true_event(is_paid_order and is_membership_order) over (partition by user_id, subscription_id order by order_paid_at_utc) 
-     end as paid_unique_membership_order_rank
-
-    ,case
-      when not is_cancelled_order or is_paid_order or not is_membership_order then null
-      else conditional_true_event(is_cancelled_order and is_membership_order and not is_paid_order) over(partition by user_id, subscription_id order by order_cancelled_at_utc)
-     end as cancelled_unique_membership_order_rank
-
-  from flags
-
+unique_memberships_order_ranks AS (
+  SELECT
+    order_id,
+    CASE
+      WHEN NOT is_membership_order THEN NULL
+      ELSE SUM(CASE WHEN is_membership_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id, subscription_id ORDER BY order_created_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+    END AS unique_membership_order_rank,
+    CASE
+      WHEN NOT is_completed_order OR NOT is_membership_order THEN NULL
+      ELSE SUM(CASE WHEN is_completed_order AND is_membership_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id, subscription_id ORDER BY order_checkout_completed_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+    END AS completed_unique_membership_order_rank,
+    CASE
+      WHEN NOT is_paid_order OR is_cancelled_order OR NOT is_membership_order THEN NULL
+      ELSE SUM(CASE WHEN is_paid_order AND is_membership_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id, subscription_id ORDER BY order_paid_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+    END AS paid_unique_membership_order_rank,
+    CASE
+      WHEN NOT is_cancelled_order OR is_paid_order OR NOT is_membership_order THEN NULL
+      ELSE SUM(CASE WHEN is_cancelled_order AND is_membership_order AND NOT is_paid_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id, subscription_id ORDER BY order_cancelled_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+    END AS cancelled_unique_membership_order_rank
+  FROM flags
 )
 
 ,gift_order_ranks as (
   select
     order_id
 
-    ,case
-      when not is_gift_order then null
-      else conditional_true_event(is_gift_order) over (partition by user_id order by order_created_at_utc)
-     end as gift_order_rank
+      ,CASE
+          WHEN NOT is_gift_order THEN NULL
+          ELSE SUM(CASE WHEN is_gift_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id ORDER BY order_created_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+      END AS gift_order_rank
 
-    ,case
-      when not is_gift_order or not is_completed_order then null
-      else conditional_true_event(is_gift_order and is_completed_order) over(partition by user_id order by order_checkout_completed_at_utc)
-     end as completed_gift_order_rank
+      ,CASE
+          WHEN NOT is_gift_order OR NOT is_completed_order THEN NULL
+          ELSE SUM(CASE WHEN is_gift_order AND is_completed_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id ORDER BY order_checkout_completed_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+      END AS completed_gift_order_rank
 
-    ,case
-      when not is_gift_order or not is_paid_order or is_cancelled_order then null
-      else conditional_true_event(is_gift_order and is_paid_order and not is_cancelled_order) over (partition by user_id order by order_paid_at_utc)
-     end as paid_gift_order_rank
+      ,CASE
+          WHEN NOT is_gift_order OR NOT is_paid_order OR is_cancelled_order THEN NULL
+          ELSE SUM(CASE WHEN is_gift_order AND is_paid_order AND NOT is_cancelled_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id ORDER BY order_paid_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+      END AS paid_gift_order_rank
 
-    ,case
-      when not is_gift_order or not is_cancelled_order or is_paid_order then null
-      else conditional_true_event(is_gift_order and is_cancelled_order and not is_paid_order) over(partition by user_id order by order_cancelled_at_utc)
-     end as cancelled_gift_order_rank
-
+      ,CASE
+          WHEN NOT is_gift_order OR NOT is_cancelled_order OR is_paid_order THEN NULL
+          ELSE SUM(CASE WHEN is_gift_order AND is_cancelled_order AND NOT is_paid_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id ORDER BY order_cancelled_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+      END AS cancelled_gift_order_rank
   from flags
 
 )
@@ -139,25 +118,25 @@ flags as ( select * from {{ ref('int_order_flags') }} )
     select 
       order_id
 
-      ,case 
-        when not is_gift_card_order then null
-        else conditional_true_event(is_gift_card_order) over (partition by user_id order by order_created_at_utc)
-       end as gift_card_order_rank
+      ,CASE 
+          WHEN NOT is_gift_card_order THEN NULL
+          ELSE SUM(CASE WHEN is_gift_card_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id ORDER BY order_created_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+      END AS gift_card_order_rank
 
-      ,case
-        when not is_gift_card_order or not is_completed_order then null
-        else conditional_true_event(is_gift_card_order and is_completed_order) over(partition by user_id order by order_checkout_completed_at_utc)
-       end as completed_gift_card_order_rank
+      ,CASE
+          WHEN NOT is_gift_card_order OR NOT is_completed_order THEN NULL
+          ELSE SUM(CASE WHEN is_gift_card_order AND is_completed_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id ORDER BY order_checkout_completed_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+      END AS completed_gift_card_order_rank
 
-      ,case
-        when not is_gift_card_order or not is_paid_order or is_cancelled_order then null
-        else conditional_true_event(is_gift_card_order and is_paid_order and not is_cancelled_order) over (partition by user_id order by order_paid_at_utc)
-       end as paid_gift_card_order_rank
+      ,CASE
+          WHEN NOT is_gift_card_order OR NOT is_paid_order OR is_cancelled_order THEN NULL
+          ELSE SUM(CASE WHEN is_gift_card_order AND is_paid_order AND NOT is_cancelled_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id ORDER BY order_paid_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+      END AS paid_gift_card_order_rank
 
-      ,case
-        when not is_gift_card_order or not is_cancelled_order or is_paid_order then null
-        else conditional_true_event(is_gift_card_order and is_cancelled_order and not is_paid_order) over(partition by user_id order by order_cancelled_at_utc)
-       end as cancelled_gift_card_order_rank
+      ,CASE
+          WHEN NOT is_gift_card_order OR NOT is_cancelled_order OR is_paid_order THEN NULL
+          ELSE SUM(CASE WHEN is_gift_card_order AND is_cancelled_order AND NOT is_paid_order THEN 1 ELSE 0 END) OVER (PARTITION BY user_id ORDER BY order_cancelled_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+      END AS cancelled_gift_card_order_rank
 
     from flags
 )
@@ -166,25 +145,25 @@ flags as ( select * from {{ ref('int_order_flags') }} )
     select 
       order_id
 
-      ,case 
-        when not is_moolah_order then null
-        else conditional_true_event(is_moolah_order) over (partition by user_id order by order_created_at_utc)
-       end as moolah_order_rank
+     ,CASE 
+          WHEN NOT is_moolah_order THEN NULL
+          ELSE COUNTIF(is_moolah_order) OVER (PARTITION BY user_id ORDER BY order_created_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+      END AS moolah_order_rank
 
-      ,case
-        when not is_moolah_order or not is_completed_order then null
-        else conditional_true_event(is_moolah_order and is_completed_order) over(partition by user_id order by order_checkout_completed_at_utc)
-       end as completed_moolah_order_rank
+      ,CASE
+          WHEN NOT is_moolah_order OR NOT is_completed_order THEN NULL
+          ELSE COUNTIF(is_moolah_order AND is_completed_order) OVER (PARTITION BY user_id ORDER BY order_checkout_completed_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+      END AS completed_moolah_order_rank
 
-      ,case
-        when not is_moolah_order or not is_paid_order or is_cancelled_order then null
-        else conditional_true_event(is_moolah_order and is_paid_order and not is_cancelled_order) over (partition by user_id order by order_paid_at_utc)
-       end as paid_moolah_order_rank
+      ,CASE
+          WHEN NOT is_moolah_order OR NOT is_paid_order OR is_cancelled_order THEN NULL
+          ELSE COUNTIF(is_moolah_order AND is_paid_order AND NOT is_cancelled_order) OVER (PARTITION BY user_id ORDER BY order_paid_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+      END AS paid_moolah_order_rank
 
-      ,case
-        when not is_moolah_order or not is_cancelled_order or is_paid_order then null
-        else conditional_true_event(is_moolah_order and is_cancelled_order and not is_paid_order) over(partition by user_id order by order_cancelled_at_utc)
-       end as cancelled_moolah_order_rank
+      ,CASE
+          WHEN NOT is_moolah_order OR NOT is_cancelled_order OR is_paid_order THEN NULL
+          ELSE COUNTIF(is_moolah_order AND is_cancelled_order AND NOT is_paid_order) OVER (PARTITION BY user_id ORDER BY order_cancelled_at_utc ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+      END AS cancelled_moolah_order_rank
 
     from flags 
 )

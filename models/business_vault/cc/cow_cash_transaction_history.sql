@@ -18,7 +18,7 @@ cow_cash_entry as ( select * from {{ ref('stg_cc__cow_cash_entries') }} )
         ,expires_at_utc
         ,created_at_utc
         ,updated_at_utc
-    from staging.stg_cc__cow_cash_entries
+    from cow_cash_entry
 )
 
 select * from cow_cash

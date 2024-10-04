@@ -1,3 +1,6 @@
+{{ config(
+  enabled=false
+) }}
 with 
 email_campaign_events as ( select * from {{ ref('email_campaign_events') }} )
 

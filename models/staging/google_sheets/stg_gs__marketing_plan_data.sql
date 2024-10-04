@@ -3,21 +3,21 @@ with
 
     ,renamed as (
         select
-            extract(week from week_begining) as fiscal_week_number,
-            week_begining::date as week_begining,
-            traffic::number as traffic,
-            new_customers::number as new_customers,
-            ncsr::float as ncsr ,
-            conversion_rate::float as conversion_rate,
-            sem::number as sem,
-            affiliates::number as affiliates,
-            offline::number as offline,
-            corp_gifting::number as corp_gifting,
-            other::number as other,
-            total_marketing_spend::number as total_marketing_spend,
-            cac::number as cac,
-            cac_excl_promo_costs::number as cac_excl_promo_costs
-        from source 
+            EXTRACT(WEEK FROM week_begining) AS fiscal_week_number,
+            CAST(week_begining AS DATE) AS week_begining,
+            CAST(traffic AS INT64) AS traffic,
+            CAST(new_customers AS INT64) AS new_customers,
+            CAST(ncsr AS FLOAT64) AS ncsr,
+            CAST(conversion_rate AS FLOAT64) AS conversion_rate,
+            CAST(sem AS INT64) AS sem,
+            CAST(affiliates AS INT64) AS affiliates,
+            CAST(offline AS INT64) AS offline,
+            CAST(corp_gifting AS INT64) AS corp_gifting,
+            CAST(other AS INT64) AS other,
+            CAST(total_marketing_spend AS INT64) AS total_marketing_spend,
+            CAST(cac AS INT64) AS cac,
+            CAST(cac___excl_promo_costs AS INT64) AS cac_excl_promo_costs
+        FROM source 
     )
 
     select * from renamed 

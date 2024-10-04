@@ -2,7 +2,7 @@ with
 
 order_survey as ( select * from {{ ref('stg_cc__post_order_survey_results') }} )
 ,order_details as (select order_id, is_rastellis, is_qvc from {{ ref('stg_cc__orders') }})
-,detraction_classifications as (select * from {{ ('stg_gs__nps_manual_categorization') }})
+,detraction_classifications as (select * from {{ ref('stg_gs__nps_manual_categorization') }})
 
 ,survey_order_combined as (
     select

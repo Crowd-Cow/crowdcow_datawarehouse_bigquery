@@ -1,6 +1,6 @@
 with
 
-lot as ( select * from {{ ref('lots_ss') }} where not _fivetran_deleted )
+lot as ( select * from {{ ref('lots_ss') }} )
 
 ,renamed as (
     select
@@ -16,7 +16,7 @@ lot as ( select * from {{ ref('lots_ss') }} where not _fivetran_deleted )
         ,pipeline_order_id
         ,grind_weight_in_pounds
         ,{{ clean_strings('received_but_not_delivered_location_name') }} as received_but_not_delivered_location_name
-        ,received_not_delivered_location_id
+        --,received_not_delivered_location_id
         ,total_weight_in_pounds
         ,delivered_at as delivered_at_utc
         ,created_at as created_at_utc

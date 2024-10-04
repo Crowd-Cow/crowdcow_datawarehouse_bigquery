@@ -4,9 +4,9 @@ fc_labor_hour as ( select * from {{ ref('stg_s3__fc_labor_hours') }} )
 
 ,parse_tasks as (
     select
-        *
-        ,split(task_description,',')[1]::text as task_description_short
-        ,regexp_substr(task_description,'FC [A-Za-z]* {0,}[A-Za-z]{0,}') as fc_name
+        *,
+        CAST(SPLIT(task_description, ',')[SAFE_OFFSET(1)] AS STRING) AS task_description_short,
+        REGEXP_EXTRACT(task_description, 'FC [A-Za-z]* ?[A-Za-z]*') AS fc_name
     from fc_labor_hour
 )
 

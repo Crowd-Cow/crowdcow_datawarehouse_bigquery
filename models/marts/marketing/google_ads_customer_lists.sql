@@ -45,13 +45,13 @@ user as ( select * from {{ ref('users') }} )
 
 ,validate_email_phone as (
     select
-        iff(regexp_count(email,'^[a-z0-9!._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$') > 0,email,null) as email
+        IF(REGEXP_CONTAINS(email, r'^[a-z0-9!._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$'), email, NULL) AS email
         ,first_name
         ,last_name
         ,country
         ,state
         ,zip
-        ,iff(regexp_like(phone_number,'\\([0-9]{3}\\) [0-9]{3}-[0-9]{4}'),'1 ' || phone_number,null) as phone_number
+        ,if(regexp_contains(phone_number,'\\([0-9]{3}\\) [0-9]{3}-[0-9]{4}'),'1 ' || phone_number,null) as phone_number
         ,is_customer_lead
         ,is_lead_and_registered_user
         ,is_customer

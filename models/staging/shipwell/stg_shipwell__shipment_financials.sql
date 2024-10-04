@@ -1,18 +1,19 @@
 with
 
-source as ( select * from {{ source('shipwell', 'shipments') }} )
+source as ( select * from {{ source('shipwell', 'shipwell_shipments') }} )
 
 ,renamed as (
-    select
-        id as shipment_id
-        ,shipment_financial.value:id::text as shipment_financial_id
-        ,shipment_financial.value:effective_amount::float as shipment_amount
-        ,{{ clean_strings('shipment_financial.value:category::text') }} as shipment_category
-        ,{{ clean_strings('shipment_financial.value:unit_name::text') }} as shipment_category_name
-        ,shipment_financial.value:created_at::timestamp as created_at_utc
-        ,shipment_financial.value:updated_at::timestamp as updated_at_utc
-    from source,
-        lateral flatten(input => relationship_to_vendor, path => 'vendor_charge_line_items') shipment_financial
+SELECT
+    source.id AS shipment_id,
+    CAST(JSON_EXTRACT_SCALAR(shipment_financial, '$.id') AS STRING) AS shipment_financial_id,
+    CAST(JSON_EXTRACT_SCALAR(shipment_financial, '$.effective_amount') AS FLOAT64) AS shipment_amount,
+    {{ clean_strings('CAST(JSON_EXTRACT_SCALAR(shipment_financial, \'$.category\') AS STRING)') }} AS shipment_category,
+    {{ clean_strings('CAST(JSON_EXTRACT_SCALAR(shipment_financial, \'$.unit_name\') AS STRING)') }} AS shipment_category_name,
+    CAST(JSON_EXTRACT_SCALAR(shipment_financial, '$.created_at') AS TIMESTAMP) AS created_at_utc,
+    CAST(JSON_EXTRACT_SCALAR(shipment_financial, '$.updated_at') AS TIMESTAMP) AS updated_at_utc
+FROM 
+    source,
+    UNNEST(JSON_EXTRACT_ARRAY(source.relationship_to_vendor.vendor_charge_line_items)) AS shipment_financial
 )
 
 select * from renamed

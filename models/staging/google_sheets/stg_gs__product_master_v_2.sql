@@ -1,6 +1,6 @@
 with
 
-    source as ( select * from {{ source('google_sheets', 'product_master_v_2') }} )
+    source as ( select * from {{ source('google_sheets', 'product_master_v2') }} )
  
 
 select 
@@ -17,7 +17,7 @@ select
     ,batch_size
     ,case_weight
     ,is_primary_vendor
-    ,active_inactive
+    ,active_solidus_inactive
     ,allocation_in_percentage
 from source
     
