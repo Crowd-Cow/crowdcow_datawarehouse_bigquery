@@ -1,7 +1,7 @@
 {{
   config(
     snowflake_warehouse = 'TRANSFORMING_M'
-    ,enabled=false
+    
   )
 }}
 
@@ -36,12 +36,8 @@ event as ( select * from {{ ref('stg_iterable__events') }} where campaign_id in 
         ,campaign.send_size
         ,campaign.campaign_type
         ,event.transactional_data
-        ,event.additional_properties
-        ,case 
-            when event.transactional_data is null 
-            then PARSE_JSON(additional_properties:transactionalData)::VARIANT:order::VARIANT:order_id::int 
-            else PARSE_JSON(transactional_data)::VARIANT:order::VARIANT:order_id::int 
-        end as email_order_id
+        --,event.additional_properties
+        ,CAST(JSON_EXTRACT_SCALAR(transactional_data, '$.order.order_id') AS INT64) as email_order_id
         ,event.created_at_utc
         ,case
             when campaign.campaign_type = 'TRIGGERED' then event.created_at_utc
@@ -65,16 +61,16 @@ event as ( select * from {{ ref('stg_iterable__events') }} where campaign_id in 
         ,created_by_user_id
         ,send_size
         ,campaign_type
-        ,transactional_data
-        ,additional_properties
+        ,null as transactional_data
+        ,null as additional_properties
         ,email_order_id
         ,ended_at_utc
-        ,count_if(event_name = 'EMAILSEND') as send_count
-        ,count_if(event_name = 'EMAILOPEN') as open_count
-        ,count_if(event_name = 'EMAILCLICK') as click_count
+        ,countif(event_name = 'EMAILSEND') as send_count
+        ,countif(event_name = 'EMAILOPEN') as open_count
+        ,countif(event_name = 'EMAILCLICK') as click_count
         ,count(distinct if(event_name = 'EMAILCLICK',user_id,null)) as unique_click_count
         ,count(distinct if(event_name = 'EMAILOPEN',user_id,null)) as unique_open_count
-        ,count_if(event_name = 'EMAILBOUNCE') as bounce_count
+        ,countif(event_name = 'EMAILBOUNCE') as bounce_count
     from join_events_campaigns
     group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14
 )

@@ -18,7 +18,7 @@ events as ( select * from {{ source('iterable', 'events') }} )
         --,unsub_source as unsub_source
         ,{{ clean_strings('useragent') }} as user_agent
         ,{{ clean_strings('useragentdevice') }} as user_agent_device
-        ,transactionaldata
+        ,transactionaldata as transactional_data
         --,additional_properties
         --,is_custom_event
     from events
