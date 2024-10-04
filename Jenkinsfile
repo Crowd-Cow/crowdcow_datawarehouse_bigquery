@@ -1,66 +1,86 @@
-stage('Setup dbt profile') {
-  steps {
-    withCredentials([file(credentialsId: 'BigQueryServiceAccountKeyFile', variable: 'SERVICE_ACCOUNT_KEY')]) {
+pipeline {
+  agent any
 
-      // Create the .dbt directory and adjust permissions
-      sh '''
-        echo "Current user: $(whoami)"
-        echo "Workspace directory permissions:"
-        ls -ld $WORKSPACE
-        mkdir -p $WORKSPACE/.dbt
-        chmod u+w $WORKSPACE/.dbt
-        echo "Permissions of .dbt directory:"
-        ls -ld $WORKSPACE/.dbt
-      '''
+  stages {
+    stage('Checkout and Build Image') {
+      steps {
+        checkout scm
 
-      // Verify service account key file
-      sh '''
-        if [ -f "$SERVICE_ACCOUNT_KEY" ]; then
-          echo "Service account key file exists at $SERVICE_ACCOUNT_KEY"
-        else
-          echo "Service account key file not found at $SERVICE_ACCOUNT_KEY"
-          exit 1
-        fi
-      '''
+        sh "docker build -t crowdcow_datawarehouse_bigquery ."
+      }
+    }
 
-      // Copy the service account key into the .dbt directory
-      sh '''
-        cp "$SERVICE_ACCOUNT_KEY" $WORKSPACE/.dbt/bigquery_service_account_key.json
-        chmod 600 $WORKSPACE/.dbt/bigquery_service_account_key.json
-      '''
+    stage('Setup dbt profile') {
+      steps {
+        withCredentials([file(credentialsId: 'BigQueryServiceAccountKeyFile', variable: 'SERVICE_ACCOUNT_KEY')]) {
 
-      // Create profiles.yml with BigQuery configuration
-      sh """
-        cat > $WORKSPACE/profiles.yml <<EOL
-cc_datawarehouse:
+          // Create the .dbt directory in the workspace
+          sh '''
+            echo "Current user: $(whoami)"
+            echo "Workspace directory permissions:"
+            ls -ld $WORKSPACE
+            mkdir -p $WORKSPACE/.dbt
+            chmod u+w $WORKSPACE/.dbt
+            echo "Permissions of .dbt directory:"
+            ls -ld $WORKSPACE/.dbt
+          '''
+
+          // Copy the service account key into the .dbt directory
+          sh 'cp "$SERVICE_ACCOUNT_KEY" $WORKSPACE/.dbt/bigquery_service_account_key.json'
+
+          // Create profiles.yml with BigQuery configuration
+          sh """
+            cat > $WORKSPACE/profiles.yml <<EOL
+cc_bigquery_datawarehouse:
+  target: qa
   outputs:
+    prod:
+      type: bigquery
+      method: service-account  
+      project: panoply-0ef-a098d410468d
+      dataset: ANALYTICS
+      threads: 8
+      keyfile: /root/.dbt/bigquery_service_account_key.json
+      OPTIONAL_CONFIG: VALUE
     qa:
       type: bigquery
-      method: service-account
-      project: your-bigquery-project-id
-      dataset: your_dataset_name
-      threads: 16
+      method: service-account  
+      project: panoply-0ef-a098d410468d
+      dataset: qa
+      threads: 8
       keyfile: /root/.dbt/bigquery_service_account_key.json
       timeout_seconds: 300
-      location: US
-      priority: interactive
-      retries: 1
-      maximum_bytes_billed: 100000000000
-  target: qa
+      OPTIONAL_CONFIG: VALUE
 EOL
-      """
+          """
 
-      // Create Dockerfile to include profiles.yml and credentials
-      sh """
-        cat > $WORKSPACE/Dockerfile.crowdcow_datawarehouse <<EOL
-FROM crowdcow_datawarehouse
+          // Create Dockerfile to include profiles.yml and credentials
+          sh """
+            cat > $WORKSPACE/Dockerfile.crowdcow_datawarehouse_bigquery <<EOL
+FROM crowdcow_datawarehouse_bigquery
 COPY profiles.yml /root/.dbt/profiles.yml
 COPY .dbt /root/.dbt/
 EOL
-      """
+          """
 
-      // Build the final Docker image for the dbt run
-      sh "docker build -f $WORKSPACE/Dockerfile.crowdcow_datawarehouse -t crowdcow_datawarehouse_dbt_run ."
+          // Build the final Docker image for the dbt run
+          sh "docker build -f Dockerfile.crowdcow_datawarehouse_bigquery -t crowdcow_datawarehouse_dbt_run ."
+        }
+      }
+    }
+
+    stage('RUN') {
+      steps {
+        sh '''
+        docker run \
+        --rm \
+        -e GOOGLE_APPLICATION_CREDENTIALS=/root/.dbt/bigquery_service_account_key.json \
+        crowdcow_datawarehouse_dbt_run \
+        ./jenkins_bin/jenkins_run.sh
+        '''
+      }
     }
   }
+
 }
+
