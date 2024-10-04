@@ -3,6 +3,7 @@ with
 membership as ( select * from {{ ref('stg_cc__subscriptions') }} where user_id is not null )
 ,membership_promo as ( select * from {{ ref('stg_cc__subscription_promotions') }} )
 ,promotion as ( select * from {{ ref('stg_cc__promotions') }} where dbt_valid_to is null and promotion_source = 'PROMOTION' )
+,promotions_promotions as ( select * from {{ ref('stg_cc__promotions_promotions') }})
 
 ,get_membership_history as (
     select distinct
@@ -38,20 +39,22 @@ membership as ( select * from {{ ref('stg_cc__subscriptions') }} where user_id i
     select
         calc_membership_tenure.*
         ,get_promotion_history.current_promotion_id
-        ,promotion.promotion_type as current_promotion_type
+        ,coalesce(promotion.promotion_type,promotions_promotions.name) as current_promotion_type
     from calc_membership_tenure
         left join get_promotion_history on calc_membership_tenure.current_membership_id = get_promotion_history.subscription_id
         left join promotion on get_promotion_history.current_promotion_id = promotion.promotion_id
+        left join promotions_promotions on get_promotion_history.current_promotion_id = promotions_promotions.id
 )
 
 ,get_first_membership_promotion as (
     select
         get_current_membership_promotion.*
         ,get_promotion_history.first_promotion_id
-        ,promotion.promotion_type as first_promotion_type
+        ,coalesce(promotion.promotion_type,promotions_promotions.name) as first_promotion_type
     from get_current_membership_promotion
         left join get_promotion_history on get_current_membership_promotion.first_membership_id = get_promotion_history.subscription_id
         left join promotion on get_promotion_history.first_promotion_id = promotion.promotion_id
+        left join promotions_promotions on get_promotion_history.first_promotion_id = promotions_promotions.id
 )
 
 select

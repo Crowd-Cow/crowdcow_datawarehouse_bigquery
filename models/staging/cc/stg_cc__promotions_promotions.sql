@@ -11,7 +11,7 @@ source as ( select * from {{ source('cc', 'promotions_promotions') }}  )
         must_be_claimed,
         ends_at,
         created_at,
-        name,
+        {{ clean_strings('name') }} as name,
         must_be_applied_by_user,
         token
     FROM source
