@@ -21,7 +21,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,farm.farm_name
         ,farm.is_active as is_active_farm
         ,farm.category
-        ,farm.sub_category
+        ,case when  sku.sku_vendor_id in (272, 223, 296) then 'DOMESTIC PASTURE RAISED' else farm.sub_category end as sub_category
         ,cut.cut_name
         ,sku.sku_name
         ,sku.sku_weight
