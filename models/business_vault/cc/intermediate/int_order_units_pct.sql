@@ -11,6 +11,7 @@ order_item_details as ( select * from {{ ref('order_item_details') }} )
         ,order_item_details.total_sku_weight
         ,order_item_details.sku_net_product_revenue
         ,if(not order_item_details.is_single_sku_bid_item,'BUNDLE',sku.category) as modified_category
+        ,sku.farm_name
     from order_item_details
         left join sku on order_item_details.sku_key = sku.sku_key
 )
@@ -34,6 +35,7 @@ order_item_details as ( select * from {{ ref('order_item_details') }} )
         ,sum(if(modified_category = 'TURKEY',sku_quantity,0)) as turkey_units
         ,sum(if(modified_category = 'WAGYU',sku_quantity,0)) as wagyu_units
         ,sum(if(modified_category = 'BUNDLE',sku_quantity,0)) as bundle_units
+        ,sum(if(farm_name = 'BLACKWING TURKEY',sku_quantity,0)) as blackwing_turkey_units
         ,sum(sku_quantity) as total_units
         ,sum(total_sku_weight) as total_product_weight
         

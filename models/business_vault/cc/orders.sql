@@ -19,6 +19,9 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,reward as ( select * from {{ ref('int_order_rewards') }} )
 ,charges as (select * from {{ ref('stg_stripe__charges') }} )
 ,payment_method_card as (select * from {{ ref('stg_stripe__payment_method_card') }} )
+,shipping_options as (select * from {{ ref('stg_cc__shipping_options') }} )
+,shipment_plans as (select * from {{ ref('stg_cc__shipment_plans')}} )
+,user_membership as ( select * from {{ ref('stg_cc__subscriptions') }} where user_id is not null)
 
 ,payment_methods as (
     select order_id
@@ -29,6 +32,14 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         left join payment_method_card on charges.payment_method_id = payment_method_card.payment_method_id
 )
 
+,order_shipment_option as (
+    select 
+        order_id
+        ,order_shipping_option_name
+        ,shipment_plans.transit_days
+    from shipment_plans
+    left join shipping_options on shipment_plans.shipping_option_id = shipping_options.shipping_option_id
+)
 
 ,order_joins as (
     select
@@ -114,6 +125,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.is_rastellis
         ,orders.is_qvc
         ,orders.is_seabear
+        ,orders.is_backyard_butchers
         ,flags.has_free_shipping
         ,flags.is_ala_carte_order
         ,flags.is_membership_order
@@ -192,6 +204,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,coalesce(units.wagyu_units) as wagyu_units
         ,coalesce(units.bundle_units) as bundle_units
         ,coalesce(units.total_units) as total_units
+        ,if(units.blackwing_turkey_units>0,TRUE,FALSE) as contains_turkey
         ,coalesce(units.total_product_weight) as total_product_weight
         ,coalesce(units.pct_beef) as pct_beef
         ,coalesce(units.pct_bison) as pct_bison
@@ -311,6 +324,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,order_reschedule.new_scheduled_fulfillment_date
         ,if(order_reschedule.is_customer_reschedule and old_scheduled_fulfillment_date < new_scheduled_fulfillment_date and date_diff(order_reschedule.new_scheduled_fulfillment_date,order_reschedule.old_scheduled_fulfillment_date, day) >= 14, true,false) as is_customer_impactful_reschedule
         ,order_promo_redeemed.redeemed_at_utc as promo_redeemed_at_utc
+        ,order_shipment_option.transit_days as plan_transit_days
         
     from orders
         left join order_revenue on orders.order_id = order_revenue.order_id
@@ -324,19 +338,56 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         left join order_failure on orders.order_id = order_failure.order_id
         left join reward on orders.order_id = reward.order_id
         left join payment_methods on orders.order_id = payment_methods.order_id
+        left join order_shipment_option on orders.order_id = order_shipment_option.order_id 
     
     /**** Removing these order types because they are just shell orders that provide no data value ****/
     /**** Children orders contain all the necessary information for revenue, addresses, dates, etc for the order ****/
     where orders.order_type not in ('BULK ORDER','BULK GIFT')
 )
+,membership_status_at_order as (
+    select  distinct
+        order_joins.order_id
+        ,if(user_membership.user_id is null and order_joins.subscription_id is null, false, true) as uncancelled_member_at_order_time
+    from order_joins
+    left join user_membership on order_joins.user_id = user_membership.user_id and user_membership.subscription_created_at_utc < order_joins.order_paid_at_utc and (user_membership.subscription_cancelled_at_utc is null or user_membership.subscription_cancelled_at_utc > order_joins.order_paid_at_utc) and order_joins.subscription_id is null
+)
 
 ,calc_margin as (
     select
-        *
+        order_joins.*
         ,net_product_revenue - product_cost as product_profit
         ,net_revenue - product_cost - shipment_cost - packaging_cost - payment_processing_cost
             - coolant_cost - care_cost - fc_labor_cost - poseidon_fulfillment_cost - inbound_shipping_cost as gross_profit
+        ,membership_status_at_order.uncancelled_member_at_order_time
     from order_joins
+    left join membership_status_at_order on membership_status_at_order.order_id = order_joins.order_id
+)
+,order_bucket as (
+    select 
+    calc_margin.*
+    ,case
+         when not paid_order_rank = 1 and not is_ala_carte_order and not is_gift_card_order and not is_bulk_gift_order and not is_gift_order and not contains_turkey then 'Subscription Orders'
+         when not paid_order_rank = 1 and not is_ala_carte_order and not is_gift_card_order and not is_bulk_gift_order and not is_gift_order and contains_turkey then 'Subscription Orders With BW Turkey'
+         when not paid_order_rank = 1 and is_ala_carte_order and not is_gift_card_order and not is_bulk_gift_order and not is_gift_order and contains_turkey and uncancelled_member_at_order_time then 'Subscription Customer | ALC Orders With BW Turkey'
+         when not paid_order_rank = 1 and is_ala_carte_order and not is_gift_card_order and not is_bulk_gift_order and is_gift_order and not contains_turkey and uncancelled_member_at_order_time then 'Subscription Customer | ALC Consumer Gift Order'
+         when not paid_order_rank = 1 and not is_ala_carte_order and not is_gift_card_order and is_bulk_gift_order and not is_gift_order and not contains_turkey then 'Corp Gift Order'
+         when not paid_order_rank = 1 and is_ala_carte_order and not is_gift_card_order and not is_bulk_gift_order and is_gift_order and contains_turkey and uncancelled_member_at_order_time then 'Subscription Customer | ALC Consumer Gift Order With BW Turkey'
+         when not paid_order_rank = 1 and is_ala_carte_order and is_gift_card_order and not is_bulk_gift_order and not is_gift_order and not contains_turkey and uncancelled_member_at_order_time then 'Subscription Customer | ALC Gift Card Order'
+         when not paid_order_rank = 1 and is_ala_carte_order and not is_gift_card_order and not is_bulk_gift_order and not is_gift_order and not contains_turkey and uncancelled_member_at_order_time then 'Subscription Customer | ALC Orders'
+         when paid_order_rank = 1 and not is_ala_carte_order and not is_gift_card_order and not is_bulk_gift_order and not is_gift_order and not contains_turkey then 'New Subscription Orders'
+         when paid_order_rank = 1 and not is_ala_carte_order and not is_gift_card_order and not is_bulk_gift_order and not is_gift_order and contains_turkey then 'New Subscription Orders With BW Turkey'
+         when not paid_order_rank = 1 and is_ala_carte_order and not is_gift_card_order and not is_bulk_gift_order and not is_gift_order and not contains_turkey then 'ALC Orders'
+         when not paid_order_rank = 1 and is_ala_carte_order and not is_gift_card_order and not is_bulk_gift_order and not is_gift_order and contains_turkey and not uncancelled_member_at_order_time then 'ALC Orders With BW Turkey'
+         when not paid_order_rank = 1 and is_ala_carte_order and not is_gift_card_order and not is_bulk_gift_order and is_gift_order and not contains_turkey and not uncancelled_member_at_order_time then 'ALC Consumer Gift Order'
+         when not paid_order_rank = 1 and is_ala_carte_order and not is_gift_card_order and not is_bulk_gift_order and is_gift_order and contains_turkey and not uncancelled_member_at_order_time then 'ALC Consumer Gift Order With BW Turkey'
+         when not paid_order_rank = 1 and is_ala_carte_order and is_gift_card_order and not is_bulk_gift_order and not is_gift_order and not contains_turkey and not uncancelled_member_at_order_time then 'ALC Gift Card Order'
+         when paid_order_rank = 1 and is_ala_carte_order and not is_gift_card_order and not is_bulk_gift_order and not is_gift_order and not contains_turkey then 'New ALC Orders'
+         when paid_order_rank = 1 and is_ala_carte_order and not is_gift_card_order and not is_bulk_gift_order and not is_gift_order and contains_turkey then 'New ALC Orders With BW Turkey'
+         when paid_order_rank = 1 and is_ala_carte_order and not is_gift_card_order and not is_bulk_gift_order and is_gift_order and not contains_turkey and not uncancelled_member_at_order_time then 'New ALC Consumer Gift Order'
+         when paid_order_rank = 1 and is_ala_carte_order and not is_gift_card_order and not is_bulk_gift_order and is_gift_order and contains_turkey and not uncancelled_member_at_order_time then 'New ALC Consumer Gift Order With BW Turkey'
+         when paid_order_rank = 1 and is_ala_carte_order and is_gift_card_order and not is_bulk_gift_order and not is_gift_order and not contains_turkey and not uncancelled_member_at_order_time then 'New ALC Gift Card Order'
+    else null end as order_bucket
+    from calc_margin
 )
 
-select * from calc_margin
+select * from order_bucket

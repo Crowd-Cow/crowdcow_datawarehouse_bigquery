@@ -7486,3 +7486,63 @@ sources:
             description: updated_at
           - name: created_at 
             description: created_at
+
+      - name: shipping_options
+        description: shipping_options
+
+        columns: 
+          - name: id 
+            description: id 
+          - name: name 
+            description: name
+          - name: service
+            description: service 
+          - name: created_at
+            description: created_at
+          - name: updated_at
+            description: updated_at
+          - name: carrier
+            description: carrier
+          - name: transit_days
+            description: transit_days
+
+
+      - name: shipment_plans
+        description: shipment_plans 
+
+        columns: 
+          - name: id 
+            description: id 
+          - name: updated_at 
+            description: updated_at
+          - name: scheduled_fulfillment_date
+            description: scheduled_fulfillment_date 
+          - name: created_at
+            description: created_at
+          - name: scheduled_arrival_date
+            description: scheduled_arrival_date
+          - name: shipping_service
+            description: shipping_service
+          - name: transit_days
+            description: transit_days
+          - name: order_id
+            description: order_id
+          - name: shipping_option_id
+            description: shipping_option_id
+      
+      - name: promotions_promo_codes
+          
+      - name: promotions_subscription_enrollments
+        description: promotions_subscription_enrollments
+
+        columns:
+          - name: id
+            description: id
+          - name: created_at
+            description: created_at
+          - name: updated_at
+            description: updated_at
+          - name: promotion_id
+            description: promotion_id
+          - name: subscription_id
+            description: subscription_id
