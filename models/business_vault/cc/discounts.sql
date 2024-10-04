@@ -37,7 +37,9 @@ SELECT
     CASE
         WHEN discounts.offset = 0 THEN 'MEMBERSHIP 5%'
         WHEN discounts.offset = 1 THEN 'MERCHANDISING DISCOUNT'
-        WHEN discounts.offset = 2 AND promotion_id IN (18, 20, 22, 35, 37) AND promotion_source = 'PROMOTION' THEN 'MEMBERSHIP FREE PROTEIN PROMOTIONS'
+        when (discounts.offset = 2 and promotion_id in (18,20,22,35,37) and promotion_source = 'PROMOTION' )
+                or (discounts.offset = 2 and promotion_id in (259, 285, 286, 287, 299, 300, 301) and promotion_source = 'PROMOTIONS::PROMOTION' ) 
+                  then 'MEMBERSHIP FREE PROTEIN PROMOTIONS'
         WHEN discounts.offset = 2 AND promotion_id IS NOT NULL THEN 'OTHER ITEM LEVEL PROMOTIONS'
     END AS business_group,
     CASE
