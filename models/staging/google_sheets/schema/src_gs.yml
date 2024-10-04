@@ -2,8 +2,7 @@ version: 2
 
 sources:
   - name: google_sheets
-    database: raw
-    schema: google_sheets
+    schema: raw_google_sheets
 
     tables:
       - name: ccpa_requests
@@ -152,7 +151,7 @@ sources:
           - name: vendor_id
             description: Vendor ID
 
-      - name: standard_sku_cost
+      - name: sku_standard_cost
         description: Manual SKU cost adjustment to provide a standard SKU cost for finance
         columns:
           - name: _row
@@ -212,7 +211,7 @@ sources:
           - name: lot
             description: lot of cut that customer mentioned in detraction
 
-      - name: inventory_classification_master_v_2
+      - name: inventory_classification_master_v2
         description: Classifies cuts as discontinued, seasonal, etc
         columns:
           - name: _row
@@ -236,7 +235,7 @@ sources:
           - name: inventory_classification
             description: Inventory classification for the cut (e.g. Discontinued, seasonal, etc.)
 
-      - name: product_master_v_2
+      - name: product_master_v2
         description: product_master version 2
         columns:
           - name: cut_id

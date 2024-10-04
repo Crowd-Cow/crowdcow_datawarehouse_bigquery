@@ -2,14 +2,14 @@ with
 
 dates as (
     select
-        to_timestamp(calendar_date) as calendar_date
-        ,to_timestamp(calendar_date_week) as calendar_date_week
-        ,to_timestamp(calendar_date_month) as calendar_date_month
+        date(calendar_date) as calendar_date
+        ,date(calendar_date_week) as calendar_date_week
+        ,date(calendar_date_month) as calendar_date_month
         ,fiscal_week_num
         ,fiscal_month
         ,fiscal_year
     from {{ ref('retail_calendar') }}
-    where calendar_date <= sysdate()::date
+    where calendar_date <= current_date()
 )
 
 ,membership as ( select * from {{ ref('memberships') }} )
@@ -27,11 +27,11 @@ dates as (
         ,membership.subscription_id
         ,membership.user_id
         ,membership.subscription_created_at_utc as membership_date
-        ,membership.subscription_created_at_utc::date as membership_created
-        ,membership.subscription_cancelled_at_utc::date as membership_cancelled
+        ,cast(membership.subscription_created_at_utc as date) as membership_created
+        ,cast(membership.subscription_cancelled_at_utc as date) as membership_cancelled
         ,1 as membership_change
     from dates
-        inner join membership on dates.calendar_date = membership.subscription_created_at_utc::date
+        inner join membership on dates.calendar_date = cast(membership.subscription_created_at_utc as date)
     
     union all
     
@@ -46,11 +46,11 @@ dates as (
         ,cancelled_membership.subscription_id
         ,cancelled_membership.user_id
         ,cancelled_membership.subscription_cancelled_at_utc as membership_date
-        ,cancelled_membership.subscription_created_at_utc::date as membership_created
-        ,cancelled_membership.subscription_cancelled_at_utc::date as membership_cancelled
+        ,cast(cancelled_membership.subscription_created_at_utc as date) as membership_created
+        ,cast(cancelled_membership.subscription_cancelled_at_utc as date) as membership_cancelled
         ,- 1 as membership_change
     from dates
-        inner join cancelled_membership on dates.calendar_date = cancelled_membership.subscription_cancelled_at_utc::date
+        inner join cancelled_membership on dates.calendar_date = cast(cancelled_membership.subscription_cancelled_at_utc as date)
     
 )
 

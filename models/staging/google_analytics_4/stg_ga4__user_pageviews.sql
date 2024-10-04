@@ -1,16 +1,16 @@
-with
+with 
 
-user_pageviews as ( select * from {{ source('google_analytics_4', 'user_pageviews') }} )
+user_pageviews as ( select * from {{ source('google_analytics_4', 'user_page_views') }} )
 
 select
-date::date as date
-,{{ clean_strings('page_path') }} as page_path
-,new_users
-,user_engagement_duration
-,sessions - engaged_sessions as bounces
-,engaged_sessions 
+cast(date as date) as date
+,{{ clean_strings('pagepath') }} as page_path
+,newusers as new_users
+,userengagementduration as user_engagement_duration
+,sessions - engagedsessions as bounces
+,engagedsessions as engaged_sessions
 ,sessions as entrances
-,total_users as users
-,screen_page_views as pageviews
-,{{ clean_strings('device_category') }} as device_type
+,totalusers as users
+,screenpageviews as pageviews
+,{{ clean_strings('platformdevicecategory') }} as device_type
 from user_pageviews

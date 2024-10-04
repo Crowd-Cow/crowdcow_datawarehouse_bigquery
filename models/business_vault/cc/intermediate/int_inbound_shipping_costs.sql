@@ -26,7 +26,7 @@ purchase_order as ( select * from {{ ref('stg_shipwell__purchase_orders') }} )
     select
         *
         ,sum(total_lot_weight) over(partition by shipment_id) as total_shipment_weight
-        ,div0(shipment_amount,total_shipment_weight) as lot_cost_per_pound
+        ,SAFE_DIVIDE(shipment_amount,sum(total_lot_weight) over(partition by shipment_id)) as lot_cost_per_pound
     from get_shipment_amount
 )
 

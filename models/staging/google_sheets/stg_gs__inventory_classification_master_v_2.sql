@@ -1,6 +1,6 @@
 with
 
-source as ( select * from {{ source('google_sheets', 'inventory_classification_master_v_2') }} )
+source as ( select * from {{ source('google_sheets', 'inventory_classification_master_v2') }} )
 
 ,renamed as (
     select

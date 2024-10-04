@@ -1,3 +1,6 @@
+{{ config(
+  enabled=false
+) }}
 with 
 
 /**** Google Ads changed their API in April 2022. This Staging model cmobines the old historical API with the new API. ****/

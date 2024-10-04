@@ -24,7 +24,7 @@ receivable as ( select * from {{ ref('pipeline_receivables') }} )
     where not receivable.is_destroyed
         and not receivable.is_order_removed
         and not receivable.is_rastellis
-        and receivable.created_at_utc >= dateadd('month',-6,sysdate())
+        and receivable.created_at_utc >= TIMESTAMP(DATE_SUB(DATE(CURRENT_TIMESTAMP()), INTERVAL 6 MONTH))
         
 )
 
@@ -41,7 +41,7 @@ receivable as ( select * from {{ ref('pipeline_receivables') }} )
     select
         sku_vendor_id as brand_id
         ,sku_vendor_name as brand
-        ,floor(div0(1200,average_sku_weight)) as min_order_qty
+        ,floor(safe_divide(1200,average_sku_weight)) as min_order_qty
         ,5000 as cost_to_ship
     from get_avg_sku_weight
     where sku_vendor_id is not null

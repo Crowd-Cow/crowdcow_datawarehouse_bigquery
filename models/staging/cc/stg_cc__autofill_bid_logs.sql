@@ -12,15 +12,15 @@ renamed as (
         ,created_at as created_at_utc
         ,quantity as autofill_quantity
         ,updated_at as updated_at_utc
-        ,product_permutation_id as autofill_product_permutation_id
+        --,product_permutation_id as autofill_product_permutation_id
         ,{{ clean_strings('reason') }} as reason
-        ,{{ clean_strings('target_sku') }} as target_sku_name
+        --, clean_strings('target_sku') }} as target_sku_name
         ,bid_id
         ,target_quantity
         ,sku_id as autofill_sku_id
         ,{{ clean_strings('name') }} as autofill_sku_name
         ,target_sku_id
-        ,target_product_permutation_id
+        --,target_product_permutation_id
 
     from source
 

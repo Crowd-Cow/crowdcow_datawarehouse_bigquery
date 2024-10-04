@@ -1,3 +1,6 @@
+{{ config(
+  enabled=false
+) }}
 with
 
 source as ( select * from {{ source('tiktok_ads', 'adgroup_report_daily') }} )

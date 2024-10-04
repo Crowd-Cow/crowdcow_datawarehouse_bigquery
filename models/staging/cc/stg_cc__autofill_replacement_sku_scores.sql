@@ -1,6 +1,6 @@
 with
 
-source as (select * from {{ ref('autofill_replacement_sku_scores_ss') }} where not _fivetran_deleted )
+source as (select * from {{ ref('autofill_replacement_sku_scores_ss') }} where __deleted is null )
 
 ,renamed as (
     select

@@ -1,6 +1,6 @@
 with 
 
-tracking_detail as ( select * from raw.cc_cc.tracking_details where not _fivetran_deleted)
+tracking_detail as ( select * from raw_mysql.tracking_details )
 
 ,renamed as (
 
@@ -10,7 +10,7 @@ tracking_detail as ( select * from raw.cc_cc.tracking_details where not _fivetra
     ,country
     ,upper(trim( message )) as message
     ,upper(trim( source )) as carrier
-    ,upper(trim( raw_json )) as full_json
+    ,raw_json as full_json
     ,upper(trim( exception_type )) as extension_type
     ,upper(trim( city )) as city
     ,upper(trim( state )) as state

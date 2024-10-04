@@ -1,39 +1,21 @@
 with 
 
-source as ( select * from {{ ref('skus_ss') }} ) --where not _fivetran_deleted )
- ,raw_data as (select * from  {{ source('cc', 'skus') }} ) --where not _fivetran_deleted)
-
---The sku_snapshot CTE has been hardcoded to correct specific discrepancies identified within the snapshot table.
-,sku_snapshot as (
-    select 
-        source.* 
-    ,case 
-        when coalesce(source.replenishment_code,'') != coalesce(raw_data.replenishment_code,'') and source.dbt_valid_to is null 
-            then raw_data.replenishment_code else source.replenishment_code end as adjusted_replenishment_code
-    ,case 
-        when source._fivetran_deleted != raw_data._fivetran_deleted and source.dbt_valid_to is null 
-            then raw_data._fivetran_deleted else source._fivetran_deleted end as adjusted_fivetran_deleted
-    ,case
-        when source._fivetran_deleted != raw_data._fivetran_deleted and source.dbt_valid_to is null 
-            then raw_data.updated_at else source.dbt_valid_to end as _adjusted_dbt_valid_to
-    from source
-    left join raw_data on raw_data.id = source.id 
-)
+source as ( select * from {{ ref('skus_ss') }} ) --where not __deleted ) 
 
 ,renamed as (
 
     select
         id as sku_id
         ,dbt_scd_id as sku_key
-        ,non_member_promotion_start_at as non_member_promotion_start_at_utc
+        --,non_member_promotion_start_at as non_member_promotion_start_at_utc
         ,{{ cents_to_usd('average_cost_in_cents') }} as owned_sku_cost_usd
         ,promotion_start_at as promotion_start_at_utc
         ,{{ clean_strings('vendor_funded_discount_name') }} as vendor_funded_discount_name
-        ,sku_code
+        --,sku_code
         ,{{ cents_to_usd('vendor_funded_discount_cents') }} as vendor_funded_discount_usd
-        ,non_member_promotion_discount
-        ,member_only_promotion_discount
-        ,member_only_promotion_start_at as member_only_promotion_start_at_utc
+        --,non_member_promotion_discount
+        --,member_only_promotion_discount
+        --,member_only_promotion_start_at as member_only_promotion_start_at_utc
         ,updated_at as updated_at_utc
         ,{{ cents_to_usd('platform_fee_in_cents') }} as platform_fee_usd
         ,{{ clean_strings('name') }} as sku_name
@@ -54,10 +36,10 @@ source as ( select * from {{ ref('skus_ss') }} ) --where not _fivetran_deleted )
         ,weight as sku_weight
         ,{{ cents_to_usd('standard_price_in_cents') }} as standard_price_usd
         ,{{ cents_to_usd('promotional_price_in_cents') }} as promotional_price_usd
-        ,member_only_promotion_end_at as member_only_promotion_end_at_utc
+        --,member_only_promotion_end_at as member_only_promotion_end_at_utc
         ,sku_plan_entry_id
         ,reservation_window_days
-        ,non_member_promotion_end_at as non_member_promotion_end_at_utc
+        --,non_member_promotion_end_at as non_member_promotion_end_at_utc
         ,bulk_receivable as is_bulk_receivable
         ,is_presellable
         ,virtual_inventory as is_virtual_inventory
@@ -71,10 +53,10 @@ source as ( select * from {{ ref('skus_ss') }} ) --where not _fivetran_deleted )
         ,{{ convert_percent('non_member_discount_percent') }} as non_member_discount_percent
         ,non_member_discount_start_at as non_member_discount_start_at_utc
         ,{{ convert_percent('partial_member_discount_percent') }} as partial_member_discount_percent
-        ,{{ clean_strings('adjusted_replenishment_code') }} as replenishment_code
+        ,{{ clean_strings('replenishment_code') }} as replenishment_code
         ,{{ clean_strings('vendor_product_code') }} as vendor_product_code
         ,vendor_case_pack_quantity as vendor_case_pack_quantity
-        ,_adjusted_dbt_valid_to as dbt_valid_to
+        ,dbt_valid_to
         ,dbt_valid_from
         
         ,case
@@ -82,10 +64,9 @@ source as ( select * from {{ ref('skus_ss') }} ) --where not _fivetran_deleted )
             else dbt_valid_from
          end as adjusted_dbt_valid_from
 
-        ,coalesce(_adjusted_dbt_valid_to,'2999-01-01') as adjusted_dbt_valid_to
+        ,coalesce(dbt_valid_to,'2999-01-01') as adjusted_dbt_valid_to
 
-    from sku_snapshot
-    where not adjusted_fivetran_deleted
+    from source
 
 )
 

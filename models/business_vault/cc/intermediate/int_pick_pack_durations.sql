@@ -27,14 +27,14 @@ packing_action as (select * from {{ ref('stg_cc__packing_actions') }} )
         user_id
         ,order_id
         ,action
-        ,created_at_utc::date as action_date
+        ,date(created_at_utc) as action_date
         ,min(created_at_utc) as action_started_at_utc
         ,max(created_at_utc) as action_ended_at_utc
         ,count(*) as item_count
         ,count(distinct sku_id) as sku_count
-        ,datediff(minute,action_started_at_utc,action_ended_at_utc)/60 as hour_duration
-        ,datediff(minute,action_started_at_utc,action_ended_at_utc) as minute_duration
-        ,datediff(second,action_started_at_utc,action_ended_at_utc) as second_duration
+        ,TIMESTAMP_DIFF(max(created_at_utc), min(created_at_utc), SECOND) / 3600 AS hour_duration
+        ,TIMESTAMP_DIFF(max(created_at_utc), min(created_at_utc), SECOND) / 60 AS minute_duration
+        ,TIMESTAMP_DIFF(max(created_at_utc), min(created_at_utc), SECOND) AS second_duration
     from pick_pack
     where action in ('ADD_TO_BOX','REMOVED_FROM_BOX','PACKED_ITEM')
     group by 1,2,3,4

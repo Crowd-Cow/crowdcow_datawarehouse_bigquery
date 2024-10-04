@@ -3,8 +3,8 @@ version: 2
 sources:
 
   - name: forecast
-    database: raw
-    schema: crowdcow_forecasting
+   ##database: raw
+    schema: raw_crowdcow_forecasting
     tables:
       - name: fc_cat_subcat_cut_daily_forecasts
         description: Inventory forecast at the farm category and sub category level. Forecast is run weekly and has a horizon of 100 days

@@ -1,3 +1,6 @@
+{{ config(
+  enabled=false
+) }}
 with 
 
 campaign_stats as (select * from {{ ref('stg_tiktok__campaign_report_daily')}})

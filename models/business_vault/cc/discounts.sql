@@ -6,62 +6,57 @@ credit as ( select * from {{ ref('credits') }} )
 ,promotions_claims as ( select distinct promotions_promotion_id, order_id, promo_code from {{ ref('stg_cc__promotions_claims') }} where claimed_at_utc is not null and unclaimed_at_utc is null )
 
 ,union_discounts as (
-    select
-        'CREDITS' as discount_source
-        ,credit_id as discount_id
-        ,promotion_id
-        ,promotion_source
-        ,order_id
-        ,credit_business_group as business_group
-        ,credit_financial_account as financial_account
-        ,credit_description
-        ,awarded_cow_cash_message
-        ,credit_discount_usd as discount_usd
-        ,created_at_utc
-        ,updated_at_utc
-    from credit
-    where order_id is not null --this will select only order level credits. Item level credits are added in the item discounts below under the "OTHER ITEM LEVEL PROMOTIONS" business_group
+SELECT
+    'CREDITS' AS discount_source,
+    credit_id AS discount_id,
+    promotion_id,
+    promotion_source,
+    order_id,
+    credit_business_group AS business_group,
+    credit_financial_account AS financial_account,
+    credit_description,
+    awarded_cow_cash_message,
+    credit_discount_usd AS discount_usd,
+    created_at_utc,
+    updated_at_utc
+FROM
+    credit
+WHERE
+    order_id IS NOT NULL
 
-    union all 
+UNION ALL
 
-    select
-        'ITEM DISCOUNTS' as discount_source
-        ,bid_id as discount_id
-    
-        ,case
-            when discounts.index = 2 then promotion_id else null
-         end as promotion_id
-
-        ,promotion_source
-    
-        ,order_id
-
-        ,case
-            when discounts.index = 0 then 'MEMBERSHIP 5%'
-            when discounts.index = 1 then 'MERCHANDISING DISCOUNT'
-            when discounts.index = 2 and promotion_id in (18,20,22,35,37) and promotion_source = 'PROMOTION' then 'MEMBERSHIP FREE PROTEIN PROMOTIONS'
-            when discounts.index = 2 and promotion_id is not null then 'OTHER ITEM LEVEL PROMOTIONS'
-         end as business_group
-
-        ,case
-            when discounts.index = 0 then '41303 - SUBSCRIPTION REWARDS'
-            when discounts.index = 1 then '41300 - MERCH DISCOUNTS - RETAIL'
-            when discounts.index = 2 and promotion_id is not null then '41301 - NEW CUSTOMER SUBSCRIPTIONS'
-         end as financial_account
-
-        ,null::text as credit_description
-        ,null::text as awarded_cow_cash_message
-        ,round(discounts.value,2) as discount_usd
-        ,created_at_utc
-        ,updated_at_utc
-    from order_item,
-        lateral flatten(
-        array_construct(
-            order_item.item_member_discount
-            ,order_item.item_merch_discount
-            ,order_item.item_free_protein_discount + order_item.item_promotion_discount
-        )
-    ) as discounts
+SELECT
+    'ITEM DISCOUNTS' AS discount_source,
+    bid_id AS discount_id,
+    CASE
+        WHEN discounts.offset = 2 THEN promotion_id ELSE NULL
+    END AS promotion_id,
+    promotion_source,
+    order_id,
+    CASE
+        WHEN discounts.offset = 0 THEN 'MEMBERSHIP 5%'
+        WHEN discounts.offset = 1 THEN 'MERCHANDISING DISCOUNT'
+        WHEN discounts.offset = 2 AND promotion_id IN (18, 20, 22, 35, 37) AND promotion_source = 'PROMOTION' THEN 'MEMBERSHIP FREE PROTEIN PROMOTIONS'
+        WHEN discounts.offset = 2 AND promotion_id IS NOT NULL THEN 'OTHER ITEM LEVEL PROMOTIONS'
+    END AS business_group,
+    CASE
+        WHEN discounts.offset = 0 THEN '41303 - SUBSCRIPTION REWARDS'
+        WHEN discounts.offset = 1 THEN '41300 - MERCH DISCOUNTS - RETAIL'
+        WHEN discounts.offset = 2 AND promotion_id IS NOT NULL THEN '41301 - NEW CUSTOMER SUBSCRIPTIONS'
+    END AS financial_account,
+    NULL AS credit_description,
+    NULL AS awarded_cow_cash_message,
+    ROUND(discounts.value, 2) AS discount_usd,
+    created_at_utc,
+    updated_at_utc
+FROM
+    order_item,
+    UNNEST(ARRAY[
+        STRUCT(order_item.item_member_discount AS value, 0 AS offset),
+        STRUCT(order_item.item_merch_discount AS value, 1 AS offset),
+        STRUCT(order_item.item_free_protein_discount + order_item.item_promotion_discount AS value, 2 AS offset)
+    ]) AS discounts
 )
 
 ,add_promotion_type as (

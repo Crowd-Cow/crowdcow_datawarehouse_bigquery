@@ -3,8 +3,7 @@ version: 2
 sources:
 
   - name: s3
-    database: raw
-    schema: s3
+    schema: raw_s3
     tables:
       - name: fc_labor_hours
         description: Monthly Fulfillment Center labor hours worked by task. The data comes from a report downloaded from Rippling

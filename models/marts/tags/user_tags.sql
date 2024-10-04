@@ -1,26 +1,3 @@
-{{
-    config(
-        post_hook = [
-            "copy into @USER_SEGMENTATION_TAGS/users/user_tags.csv from (
-                    select 
-                        row_number() over(order by created_at_utc,user_id) as id
-                        ,tag_key as key
-                        ,tag_value as value
-                        ,user_id
-                        ,tag_purpose as purpose
-                        ,created_at_utc as created_at
-                        ,updated_at_utc as updated_at 
-                    from {{ this }}
-                )
-                single = true
-                overwrite = true
-                header = true
-                max_file_size = 4900000000
-                file_format='csv_with_headers';"
-        ]
-    )
-}}
-
 with
 
 employee as (
@@ -167,10 +144,7 @@ employee as (
     {{ generate_tag('users','user_id','hot_lead','user_segment', 'null') }}
     where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and hot_lead
 )
-,hot_lead as (
-    {{ generate_tag('users','user_id','hot_lead','user_segment', 'null') }}
-    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and hot_lead
-)
+
 ,warm_lead as (
     {{ generate_tag('users','user_id','warm_lead','user_segment', 'null') }}
     where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and warm_lead

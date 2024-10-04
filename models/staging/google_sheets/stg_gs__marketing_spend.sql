@@ -5,7 +5,7 @@ source as ( select * from {{ source('google_sheets', 'marketing_spend') }} )
 ,renamed as (
     select
         channel
-        ,to_date(week,'mm/dd/yyyy') as week
+        ,date(week) AS week
         ,spend
     from source
 )

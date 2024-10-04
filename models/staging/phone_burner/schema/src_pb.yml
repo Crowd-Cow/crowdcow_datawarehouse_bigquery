@@ -3,10 +3,9 @@ version: 2
 sources:
 
 - name: phone_burner
-  database: raw
-  schema: phone_burner
+  schema: raw_phoneburner
   tables:
-    - name: contacts
+    - name: phoneburner
       description: Contact records for Phone Burner to do customer outreach
       columns:
         - name: user_id
@@ -104,3 +103,6 @@ sources:
 
         - name: _fivetran_synced
           description: Timestamp for when the record was synced by fivetran. Timestamp is UTC
+
+          
+    - name: phoneburner_custom_fields

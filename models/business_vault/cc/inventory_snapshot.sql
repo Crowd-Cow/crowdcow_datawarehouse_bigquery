@@ -7,7 +7,7 @@
 with
 
 /*** Only starting with dates after 2021-10-28 since that is when we started fully snapshotting the `sku_boxes` data in the new model ***/
-dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} where calendar_date >= '2021-10-28' and calendar_date < sysdate()::date + 1 )
+dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} where calendar_date >= '2021-10-28' and calendar_date < current_date() + interval 1 day )
 ,sku_box as ( select * from {{ ref('stg_cc__sku_boxes') }} )
 ,fc_location as ( select * from {{ ref('stg_cc__fc_locations') }} )
 ,fc as ( select * from {{ ref('fcs') }} )
@@ -20,6 +20,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
 ,sku_reservations as (select * from {{ ref('sku_reservations') }} where dbt_valid_to is null )
 
 ,inventory_snapshot as (
+    select * from (
     select
         sku_box_id
         ,sku_box_key
@@ -44,11 +45,12 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,moved_to_picking_at_utc
         ,best_by_date
         ,pack_date
-        ,dbt_valid_from::date as dbt_valid_from
-        ,coalesce(dbt_valid_to::date,sysdate()::date + 1) as dbt_valid_to
-        ,row_number() over(partition by sku_box_id, dbt_valid_from::date order by dbt_valid_from desc) as rn
+        ,cast(dbt_valid_from as date) as dbt_valid_from
+        ,coalesce(cast(dbt_valid_to as date),current_date() + interval 1 day) as dbt_valid_to
+        ,row_number() over(partition by sku_box_id, cast(dbt_valid_from as date) order by dbt_valid_from desc) as rn
     from sku_box
-    qualify rn = 1
+    )
+    where rn = 1
 )
 
 ,daily_sku_boxes as (
@@ -89,10 +91,10 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,fc_location.location_type
         ,fc_location.location_name
         
-        ,zeroifnull(case 
+        ,coalesce(case 
             when fc_location.is_sellable then daily_sku_boxes.quantity_available
             else 0 
-         end) as quantity_sellable
+         end,0) as quantity_sellable
         
         ,ifnull(fc_location.is_sellable,FALSE) as is_sellable
     from daily_sku_boxes
@@ -150,11 +152,11 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
 
         /*** Get various join keys to be able to grab information at the time of snapshot date ****/
         left join fc on sku_box_locations.fc_id = fc.fc_id
-            and sku_box_locations.snapshot_date >= fc.adjusted_dbt_valid_from
-            and sku_box_locations.snapshot_date < fc.adjusted_dbt_valid_to
+                    and sku_box_locations.snapshot_date >= cast(fc.adjusted_dbt_valid_from as date)
+                    and sku_box_locations.snapshot_date < cast(fc.adjusted_dbt_valid_to as date)
         left join sku on sku_box_locations.sku_id = sku.sku_id
-            and sku_box_locations.snapshot_date >= sku.adjusted_dbt_valid_from
-            and sku_box_locations.snapshot_date < sku.adjusted_dbt_valid_to
+                  and sku_box_locations.snapshot_date >= cast(sku.adjusted_dbt_valid_from as date)
+                  and sku_box_locations.snapshot_date < cast(sku.adjusted_dbt_valid_to as date)
         left join sku_reservations_aggregation on sku_box_locations.sku_id = sku_reservations_aggregation.sku_id
             and sku_box_locations.fc_id = sku_reservations_aggregation.fc_id
         
@@ -199,7 +201,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,quantity_sellable
         ,quantity_sellable * sku_price_usd as potential_revenue_sellable
         ,quantity_sellable * sku_cost_usd as sku_cost_sellable
-        ,snapshot_date - lot_delivered_at_utc::date as days_from_delivery
+        ,snapshot_date - cast(lot_delivered_at_utc as date) as days_from_delivery
         ,is_sellable
         ,is_destroyed
         ,is_marketplace
@@ -214,7 +216,7 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,lot_delivered_at_utc
         ,best_by_date
         ,pack_date
-        ,coalesce(best_by_date,dateadd(day,365,pack_date)) as proxy_bbd
+        ,coalesce(best_by_date,date_add(pack_date, interval 365 day)) as proxy_bbd
     from inventory_joins
 )
 

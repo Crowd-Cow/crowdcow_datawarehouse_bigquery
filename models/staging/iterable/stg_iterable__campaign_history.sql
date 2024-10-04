@@ -1,22 +1,22 @@
 with
 
-campaign_hist as ( select * from {{ source('iterable', 'campaign_history') }} )
+campaign_hist as ( select * from {{ source('iterable', 'campaigns') }} )
 
 ,renamed as (
     select
-        id as campaign_id
-        ,updated_at as updated_at_utc
-        ,template_id
-        ,recurring_campaign_id
-        ,{{ clean_strings('campaign_state') }} as campaign_state
-        ,created_at as created_at_utc
-        ,{{ clean_strings('created_by_user_id') }} as created_by_user_id
-        ,coalesce(ended_at,created_at) as ended_at_utc
-        ,{{ clean_strings('name') }} as campaign_name
-        ,send_size
-        ,{{ clean_strings('type') }} as campaign_type
+        id AS campaign_id,
+        updatedat AS updated_at_utc,
+        templateid AS template_id,
+        --recurring_campaign_id,
+        {{ clean_strings('campaignstate') }} AS campaign_state,
+        createdat AS created_at_utc,
+        {{ clean_strings('createdbyuserid') }} AS created_by_user_id,
+        COALESCE(endedat, createdat) AS ended_at_utc,
+        {{ clean_strings('name') }} AS campaign_name,
+        sendsize as send_size,
+        {{ clean_strings('type') }} AS campaign_type,
+        ROW_NUMBER() OVER(PARTITION BY id ORDER BY updatedat DESC) AS row_num
     from campaign_hist
-    qualify row_number() over(partition by id order by updated_at desc) = 1
 )
 
 select * from renamed

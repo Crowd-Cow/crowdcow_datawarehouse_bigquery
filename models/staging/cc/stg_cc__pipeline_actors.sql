@@ -1,6 +1,6 @@
 with
 
-source as ( select * from {{ source('cc', 'pipeline_actors') }} where not _fivetran_deleted )
+source as ( select * from {{ source('cc', 'pipeline_actors') }}  )
 
 ,renamed as (
     select

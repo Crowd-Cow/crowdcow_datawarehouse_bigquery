@@ -1,12 +1,12 @@
 # Name your project! Project names should contain only lowercase characters
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
-name: "cc_datawarehouse"
+name: "cc_bigquery_datawarehouse"
 version: "1.0.0"
 config-version: 2
 
 # This setting configures which "profile" dbt uses for this project.
-profile: "cc_datawarehouse"
+profile: "cc_bigquery_datawarehouse"
 
 # These configurations specify where dbt should look for different types of files.
 # The `source-paths` config, for example, states that models in this project can be
@@ -31,26 +31,27 @@ clean-targets: # directories to be removed by `dbt clean`
 # as tables. These settings can be overridden in the individual model files
 # using the `{{ config(...) }}` macro.
 models:
-  cc_datawarehouse:
+  cc_bigquery_datawarehouse:
     staging:
+      +schema: "{{ target.dataset }}_staging"
       +materialized: view
       reference:
         +materialized: table
     business_vault:
       +materialized: table
       cc:
-        +schema: business_vault
+        +schema: "{{ target.dataset }}_business_vault"
       rastellis:
-        +schema: rastellis
+        +schema: "{{ target.dataset }}_business_vault_rastellis"
     marts:
       +materialized: table
-      +schema: datawarehouse
+      +schema: "{{ target.dataset }}_business_vault_datawarehouse"
       cargill:
         +materialized: view
-        +schema: cargill
+        +schema: "{{ target.dataset }}_business_vault_cargill"
       fountain9:
         +materialized: view
-        +schema: fountain9
+        +schema: "{{ target.dataset }}_business_vault_fountain9"
 
 tests:
   +store_failures: true

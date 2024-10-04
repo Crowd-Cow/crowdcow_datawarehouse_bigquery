@@ -15,21 +15,21 @@ visits as ( select * from {{ ref('visit_classification') }} )
 
 ,visit_activity as (
     select 
-        visit_id
-        ,count(distinct case when event_name = 'SUBSCRIBED' then subscription_id end) as subscribes
-        ,count(distinct case when event_name = 'UNSUBSCRIBED' then subscription_id end) as unsubscribes
-        ,count_if(event_name = 'SIGN_UP') as sign_ups
-        ,count_if(event_name = 'ORDER_COMPLETE') as order_completes
-        ,count_if(category = 'PRODUCT' and action = 'VIEW-IMPRESSION') as pcp_impressions
-        ,count_if(category = 'PRODUCT' and action = 'IMPRESSION-CLICK') as pcp_impression_clicks
-        ,count_if(category = 'PRODUCT' and action = 'PAGE-INTERACTION' and label = 'CLICKED-ADD-TO-CART') as pdp_add_to_carts
-        ,count_if(event_name = 'VIEWED_PRODUCT') as viewed_pdps
-        ,count_if(event_sequence_number = 1 and event_name = 'PAGE_VIEW' and parse_url(url):path::text in ('','L')) as homepage_views
-        ,count_if(event_name = 'CLICK' and label in ('GET STARTED','CLAIM OFFER') and on_page_path like '%/LANDING%') as landing_offer_claim
-        ,count_if(event_name = 'CLICK' and label = 'SKIP' and on_page_path like '%/LANDING%') as landing_offer_skiped
-        ,count( distinct case when event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' and experiments:"exp-cc-home_page_redirect"::STRING = 'experimental' then visit_id end) as home_page_redirect_experimental
-        ,count( distinct case when event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' and experiments:"exp-cc-home_page_redirect"::STRING = 'control' then visit_id end) as home_page_redirect_control
-        ,count(*) as event_count
+        visit_id,
+        COUNT(DISTINCT IF(event_name = 'SUBSCRIBED', subscription_id, NULL)) AS subscribes,
+        COUNT(DISTINCT IF(event_name = 'UNSUBSCRIBED', subscription_id, NULL)) AS unsubscribes,
+        COUNTIF(event_name = 'SIGN_UP') AS sign_ups,
+        COUNTIF(event_name = 'ORDER_COMPLETE') AS order_completes,
+        COUNTIF(category = 'PRODUCT' AND action = 'VIEW-IMPRESSION') AS pcp_impressions,
+        COUNTIF(category = 'PRODUCT' AND action = 'IMPRESSION-CLICK') AS pcp_impression_clicks,
+        COUNTIF(category = 'PRODUCT' AND action = 'PAGE-INTERACTION' AND label = 'CLICKED-ADD-TO-CART') AS pdp_add_to_carts,
+        COUNTIF(event_name = 'VIEWED_PRODUCT') AS viewed_pdps,
+        COUNTIF(event_sequence_number = 1 AND event_name = 'PAGE_VIEW' AND REGEXP_CONTAINS(url, r'^$|^L$')) AS homepage_views,
+        COUNTIF(event_name = 'CLICK' AND label IN ('GET STARTED', 'CLAIM OFFER') AND on_page_path LIKE '%/LANDING%') AS landing_offer_claim,
+        COUNTIF(event_name = 'CLICK' AND label = 'SKIP' AND on_page_path LIKE '%/LANDING%') AS landing_offer_skipped,
+        COUNT(DISTINCT IF(event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' AND JSON_EXTRACT_SCALAR(experiments, '$.exp-cc-home_page_redirect') = 'experimental', visit_id, NULL)) AS home_page_redirect_experimental,
+        COUNT(DISTINCT IF(event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' AND JSON_EXTRACT_SCALAR(experiments, '$.exp-cc-home_page_redirect') = 'control', visit_id, NULL)) AS home_page_redirect_control,
+        COUNT(*) AS event_count
     from events
     group by 1
 )
@@ -61,21 +61,21 @@ visits as ( select * from {{ ref('visit_classification') }} )
             or visit_clean_urls.visit_user_agent like any ('%BOT%','%CRAWL%','%LIBRATO%','%TWILIOPROXY%','%YAHOOMAILPROXY%','%SCOUTURLMONITOR%','%FULLCONTACT%','%IMGIX%','%BUCK%')
             or (visit_clean_urls.visit_ip is null and visit_clean_urls.visit_user_agent is null) as is_bot
         ,visit_clean_urls.visit_ip in ('66.171.181.219', '127.0.0.1') or (user_orders.user_id is not null and user_orders.user_type in ('EMPLOYEE','INTERNAL')) as is_internal_traffic
-        ,iff(ip_detail.is_server and user_orders.first_completed_order_date is null,TRUE,FALSE) as is_server        
-        ,user_orders.user_id is not null and user_orders.customer_cohort_date < visit_clean_urls.started_at_utc as has_previous_order
-        ,user_orders.user_id is not null and user_orders.first_completed_order_date < visit_clean_urls.started_at_utc as has_previous_completed_order
-        ,user_membership.user_id is not null and user_membership.first_membership_created_date < visit_clean_urls.started_at_utc as has_previous_subscription
-        ,user_orders.user_id is not null and user_orders.created_at_utc < visit_clean_urls.started_at_utc as had_account_created
-        ,user_orders.last_paid_order_date < DATEADD('day', -365, CURRENT_DATE()) OR user_orders.last_paid_order_date IS NULL or has_previous_completed_order is null  as  no_orders_12_months
+        ,if(ip_detail.is_server and user_orders.first_completed_order_date is null,TRUE,FALSE) as is_server        
+        ,user_orders.user_id is not null and user_orders.customer_cohort_date < cast(visit_clean_urls.started_at_utc as date)  as has_previous_order
+        ,user_orders.user_id is not null and user_orders.first_completed_order_date < cast(visit_clean_urls.started_at_utc as timestamp) as has_previous_completed_order
+        ,user_membership.user_id is not null and user_membership.first_membership_created_date < cast(visit_clean_urls.started_at_utc as timestamp) as has_previous_subscription
+        ,user_orders.user_id is not null and user_orders.created_at_utc < cast(visit_clean_urls.started_at_utc as timestamp) as had_account_created
+        ,user_orders.last_paid_order_date < DATE_SUB(current_date(), INTERVAL 365 DAY) OR user_orders.last_paid_order_date IS NULL or (user_orders.user_id is not null and user_orders.first_completed_order_date < cast(visit_clean_urls.started_at_utc as timestamp)) is null  as  no_orders_12_months
         ,CASE
             WHEN 
-                (user_orders.last_paid_order_date < DATEADD('day', -365, CURRENT_DATE()) OR user_orders.last_paid_order_date IS NULL or visit_clean_urls.user_id is null)
+                (user_orders.last_paid_order_date < DATE_SUB(current_date(), INTERVAL 365 DAY) OR user_orders.last_paid_order_date IS NULL or visit_clean_urls.user_id is null)
                 and user_membership.total_uncancelled_memberships <= 0 or user_membership.total_uncancelled_memberships is null 
                 AND (
-                    contains(visit_clean_urls.visit_landing_page_path,'JAPANESE') 
-                    OR contains(visit_clean_urls.visit_landing_page_path,'WAGYU')
-                    OR contains(visit_clean_urls.visit_landing_page_path,'TURKEY')
-                    OR contains(visit_clean_urls.visit_landing_page_path,'GIFT')
+                    REGEXP_CONTAINS(visit_clean_urls.visit_landing_page_path,'JAPANESE') 
+                    OR REGEXP_CONTAINS(visit_clean_urls.visit_landing_page_path,'WAGYU')
+                    OR REGEXP_CONTAINS(visit_clean_urls.visit_landing_page_path,'TURKEY')
+                    OR REGEXP_CONTAINS(visit_clean_urls.visit_landing_page_path,'GIFT')
                     OR visit_clean_urls.utm_content = 'ALCNONSUB'
                 )
             THEN 'ALC PROSPECT'
@@ -84,7 +84,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
             THEN 'ACTIVE SUBSCRIBER'
             
             WHEN 
-                (user_orders.last_paid_order_date < DATEADD('day', -365, CURRENT_DATE()) OR user_orders.last_paid_order_date IS NULL  or visit_clean_urls.user_id is null)
+                (user_orders.last_paid_order_date < DATE_SUB(current_date(), INTERVAL 365 DAY) OR user_orders.last_paid_order_date IS NULL  or visit_clean_urls.user_id is null)
                 AND user_membership.total_uncancelled_memberships <= 0 or user_membership.total_uncancelled_memberships is null 
             THEN 'SUBSCRIBER PROSPECT'
             
@@ -99,15 +99,15 @@ visits as ( select * from {{ ref('visit_classification') }} )
             when visit_activity.home_page_redirect_control > 0 then 'CONTROL'
         else null end as home_page_redirect 
         ,visit_clean_urls.is_homepage_landing and (visit_activity.visit_id is null or (visit_activity.homepage_views = 1 and visit_activity.event_count = 1)) as did_bounce_homepage
-        ,zeroifnull(visit_activity.pcp_impressions) as pcp_impressions_count
-        ,zeroifnull(visit_activity.pcp_impression_clicks) as pcp_impression_clicks_count
-        ,zeroifnull(visit_activity.pdp_add_to_carts) as pdp_product_add_to_cart_count
-        ,zeroifnull(visit_activity.viewed_pdps) as pdp_views_count
+        ,coalesce(visit_activity.pcp_impressions) as pcp_impressions_count
+        ,coalesce(visit_activity.pcp_impression_clicks) as pcp_impression_clicks_count
+        ,coalesce(visit_activity.pdp_add_to_carts) as pdp_product_add_to_cart_count
+        ,coalesce(visit_activity.viewed_pdps) as pdp_views_count
         ,case 
-            when landing_offer_claim = 0 and landing_offer_skiped = 0 then null
-            when landing_offer_claim > landing_offer_skiped then 'CLAIM' 
-            when landing_offer_claim > 0 and landing_offer_skiped > 0 then 'CLAIM'
-            when landing_offer_claim = 0 and landing_offer_skiped > 0 then 'SKIPPED'
+            when landing_offer_claim = 0 and landing_offer_skipped = 0 then null
+            when landing_offer_claim > landing_offer_skipped then 'CLAIM' 
+            when landing_offer_claim > 0 and landing_offer_skipped > 0 then 'CLAIM'
+            when landing_offer_claim = 0 and landing_offer_skipped > 0 then 'SKIPPED'
             else null end as landing_offer
     from visit_clean_urls
         left join suspicious_ips on visit_clean_urls.visit_ip = suspicious_ips.visit_ip

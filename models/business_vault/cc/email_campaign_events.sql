@@ -1,3 +1,6 @@
+{{ config(
+  enabled=false
+) }}
 {{
   config(
     snowflake_warehouse = 'TRANSFORMING_M'
@@ -61,8 +64,8 @@ event as ( select * from {{ ref('stg_iterable__events') }} )
         ,count_if(event_name = 'EMAILSEND') as send_count
         ,count_if(event_name = 'EMAILOPEN') as open_count
         ,count_if(event_name = 'EMAILCLICK') as click_count
-        ,count(distinct iff(event_name = 'EMAILCLICK',user_id,null)) as unique_click_count
-        ,count(distinct iff(event_name = 'EMAILOPEN',user_id,null)) as unique_open_count
+        ,count(distinct if(event_name = 'EMAILCLICK',user_id,null)) as unique_click_count
+        ,count(distinct if(event_name = 'EMAILOPEN',user_id,null)) as unique_open_count
         ,count_if(event_name = 'EMAILBOUNCE') as bounce_count
     from join_events_campaigns
     group by 1,2,3,4,5,6,7,8,9,10,11

@@ -1,3 +1,6 @@
+{{ config(
+  enabled=false
+) }}
 with
 
 user_pageviews as ( select * from {{ source('google_analytics', 'user_pageviews') }} )

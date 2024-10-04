@@ -22,15 +22,15 @@ source as ( select * from {{ ref('fc_cat_subcat_cut_daily_forecast_ss') }} where
     select
         forecast_id
         ,item_id
-        ,split_part(item_id,'--',1)::int as fc_id
-        ,{{ clean_strings("split_part(item_id,'--',2)") }} as category
+        ,SAFE_CAST(split(item_id,'--')[OFFSET(0)] as INT64) as fc_id
+        ,{{ clean_strings("split(item_id,'--')[OFFSET(1)]") }} as category
 
         ,case
-            when split_part(item_id,'--',3) = 'na' then null
-            else {{ clean_strings("split_part(item_id,'--',3)") }}
+            when split(item_id,'--')[OFFSET(2)] = 'na' then null
+            else {{ clean_strings("split(item_id,'--')[OFFSET(2)]") }}
          end as sub_category
 
-        ,split_part(item_id,'--',4)::int as cut_id
+        ,SAFE_CAST(split(item_id,'--')[OFFSET(3)] as INT64) as cut_id
         ,date as forecast_date
         ,p10
         ,p50

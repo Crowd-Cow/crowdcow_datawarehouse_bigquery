@@ -1,6 +1,6 @@
 {% macro convert_percent(column_name, precision=2) %}
-  case
-    when {{ column_name }} > 1 then (round({{ column_name }}::float / 100.0, {{ precision }}))
-    else {{ column_name }}
-  end
+  CASE
+    WHEN {{ column_name }} > 1 THEN ROUND(CAST({{ column_name }} AS FLOAT64) / 100, {{ precision }})
+    ELSE {{ column_name }}
+  END
 {% endmacro %}

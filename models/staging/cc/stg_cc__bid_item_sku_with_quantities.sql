@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ ref('bid_item_sku_with_quantities_ss') }} where not _fivetran_deleted
+    select * from {{ ref('bid_item_sku_with_quantities_ss') }} 
 
 ),
 
