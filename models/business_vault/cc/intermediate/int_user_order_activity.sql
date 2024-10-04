@@ -269,9 +269,11 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,coalesce(first_completed_order_date is null and cast(user.created_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 15 DAY), FALSE ) as hot_lead
         ,coalesce(first_completed_order_date is null and cast(user.created_at_utc as date) <= DATE_SUB(current_date(),INTERVAL 15 DAY) and cast(user.created_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 45 DAY), FALSE ) as warm_lead
         ,coalesce(first_completed_order_date is null and cast(user.created_at_utc as date) <= DATE_SUB(current_date(),INTERVAL 45 DAY), FALSE ) as cold_lead
-        ,coalesce(cast(user_percentiles.last_paid_order_date as date) >= DATE_SUB(current_date(),INTERVAL 90 DAY), FALSE) as recent_purchaser
-        ,coalesce(cast(user_percentiles.last_paid_order_date as date) < DATE_SUB(current_date(),INTERVAL 90 DAY) and cast(user_percentiles.last_paid_order_date as date) >= DATE_SUB(current_date(),INTERVAL 60 DAY), FALSE) as lapsed_purchaser
-        ,coalesce(cast(user_percentiles.last_paid_order_date as date) < DATE_SUB(current_date(),INTERVAL 180 DAY), FALSE) as dormant_purchaser
+        ,coalesce(user_percentiles.last_paid_order_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 90 DAY), FALSE) AS recent_purchaser
+        ,coalesce(user_percentiles.last_paid_order_date < DATE_SUB(CURRENT_DATE(), INTERVAL 90 DAY) 
+             AND user_percentiles.last_paid_order_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 180 DAY), FALSE) AS lapsed_purchaser
+        ,coalesce(user_percentiles.last_paid_order_date < DATE_SUB(CURRENT_DATE(), INTERVAL 180 DAY) 
+             AND user_percentiles.last_paid_order_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 365 DAY), FALSE) AS dormant_purchaser
         ,beef_revenue
         ,bison_revenue
         ,chicken_revenue

@@ -18,6 +18,12 @@ user as ( select * from {{ ref('users') }} )
         ,user.last_90_days_paid_order_count > 0 as is_standard_customer
         ,user.last_90_days_paid_order_count > 0 and user.is_purchasing_customer as is_active_non_member_90_day
         ,user.is_active_member_90_day and not is_cancelled_member as is_active_member_90_day
+        ,user.recent_purchaser as is_recent_customer
+        ,user.lapsed_purchaser as is_lapsed_customer
+        ,user.dormant_purchaser as is_dormant_customer
+        ,user.lifetime_paid_order_count > 0 and user.twelve_month_purchase_count = 0 as is_inactive_customer
+        ,user.twelve_month_purchase_count >= 4 as is_frequent_customer
+        ,user.lifetime_net_revenue > 0 and user.lifetime_net_revenue_percentile > 80 as is_top_spender_customer
         ,vip.user_id is not null as is_vip_customer
     from user
         left join vip on user.user_id = vip.user_id
@@ -40,6 +46,12 @@ user as ( select * from {{ ref('users') }} )
         ,is_vip_customer
         ,is_active_non_member_90_day
         ,is_active_member_90_day
+        ,is_recent_customer
+        ,is_lapsed_customer
+        ,is_dormant_customer
+        ,is_inactive_customer
+        ,is_frequent_customer
+        ,is_top_spender_customer
     from user_list
 )
 
@@ -59,6 +71,12 @@ user as ( select * from {{ ref('users') }} )
         ,is_vip_customer
         ,is_active_non_member_90_day
         ,is_active_member_90_day
+        ,is_recent_customer
+        ,is_lapsed_customer
+        ,is_dormant_customer
+        ,is_inactive_customer
+        ,is_frequent_customer
+        ,is_top_spender_customer
     from prep_user_fields
 )
 
