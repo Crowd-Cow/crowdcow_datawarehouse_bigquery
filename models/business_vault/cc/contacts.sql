@@ -7,7 +7,7 @@ contact as ( select * from {{ ref('stg_pb__contacts') }} )
         phone_burner_user_id
         ,notes
         ,owner_id
-        ,if(owner_id = 778572808,'STEPHANIE GRACE','DANIEL ALEJANDRE') as owner_name
+        ,iff(owner_id = '778572808','STEPHANIE GRACE','DANIEL ALEJANDRE') as owner_name
         ,latitude
         ,longitude
         ,primary_address_line_1

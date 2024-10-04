@@ -9,26 +9,16 @@ with
 visits as ( select * from {{ ref('visit_classification') }} )
 ,visit_flags as ( select * from {{ ref('int_visit_flags') }} )
 
-,SessionStartFlags AS (
-  SELECT
-    *,
-    CASE
-      WHEN TIMESTAMP_DIFF(started_at_utc, LAG(started_at_utc) OVER (PARTITION BY visit_ip ORDER BY started_at_utc), MINUTE) >= 30 OR LAG(started_at_utc) OVER (PARTITION BY visit_ip ORDER BY started_at_utc) IS NULL THEN 1
-      ELSE 0
-    END AS new_session_start_flag
-  FROM
-    visits
-)
-
-, get_ip_session AS (
-  SELECT
-    *,
-    /** Assign a sequential session number to the same IP address if the visits are within 30 minutes of each other **/
+,get_ip_session as (
+    select
+        *
+        
+        /** Assign a sequential session number to the same IP address if the visits are within 30 minutes of each other **/
         /** For example: the first visit for IP address 127.0.0.1 gets a session number of 0. If the second visit for the same IP address is within 30 minutes, the session number stays 0. **/
         /** If the next visit for the same IP address is more than 30 minutes from the previous visit, the session number increments to 1 **/
-    SUM(new_session_start_flag) OVER (PARTITION BY visit_ip ORDER BY started_at_utc) AS ip_session_number
-  FROM
-    SessionStartFlags
+        ,conditional_true_event(datediff(min, lag(started_at_utc) over (partition by visit_ip order by started_at_utc), started_at_utc) >= 30) over(partition by visit_ip order by started_at_utc) as ip_session_number
+
+    from visits
 )
 
 ,joined_visits as (
@@ -40,9 +30,9 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,get_ip_session.visit_token
         ,get_ip_session.visitor_token
         ,get_ip_session.visit_browser
-        --,get_ip_session.visit_city
-        --,get_ip_session.visit_region
-        --,get_ip_session.visit_country
+        ,get_ip_session.visit_city
+        ,get_ip_session.visit_region
+        ,get_ip_session.visit_country
         ,get_ip_session.visit_ip
 
         /** Combine the IP address with the sequential session number to create a unique session ID for that IP address **/
@@ -55,7 +45,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,get_ip_session.visit_user_agent
         ,get_ip_session.visit_referrer
         ,get_ip_session.visit_referring_domain
-        --,get_ip_session.visit_search_keyword
+        ,get_ip_session.visit_search_keyword
         ,get_ip_session.visit_landing_page
         ,get_ip_session.visit_landing_page_path
         ,get_ip_session.utm_content

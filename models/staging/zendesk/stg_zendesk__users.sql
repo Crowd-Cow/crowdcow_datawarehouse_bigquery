@@ -1,6 +1,6 @@
 with
 
-source as ( select * from {{ source('zendesk', 'users') }} )
+source as ( select * from {{ source('zendesk', 'user') }} )
 
 ,renamed as (
     select

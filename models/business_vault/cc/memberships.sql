@@ -6,7 +6,7 @@ memberships as (select * from {{ ref('stg_cc__subscriptions') }})
 ,order_count as (
     select
         subscription_id
-        ,countif(not is_cancelled_order and is_paid_order and is_membership_order and DATE_DIFF(CURRENT_DATE(), CAST(order_paid_at_utc AS DATE), DAY) <= 90) as total_active_order_count
+        ,count_if(not is_cancelled_order and is_paid_order and is_membership_order and sysdate()::date - order_paid_at_utc::date <= 90) as total_active_order_count
     from orders
     group by 1
 )
@@ -25,7 +25,7 @@ select
     ,subscription_token
     ,subscription_renew_period_type
     ,subscription_cancelled_reason
-    ,DATE_DIFF(COALESCE(subscription_cancelled_at_utc, CURRENT_TIMESTAMP()),subscription_created_at_utc,DAY) as membership_tenure
+    ,datediff(day,subscription_created_at_utc,coalesce(subscription_cancelled_at_utc,sysdate())) as membership_tenure
     ,is_uncancelled_membership
     ,is_active_membership
     ,subscription_created_at_utc

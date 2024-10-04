@@ -3,7 +3,8 @@ version: 2
 sources:
 
   - name: cc
-    schema: raw_mysql
+    database: raw
+    schema: cc_cc
     tables:
       - name: _sdc_rejected
         description: _sdc_rejected

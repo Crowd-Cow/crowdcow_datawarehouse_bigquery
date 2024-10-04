@@ -24,7 +24,7 @@ vendor_tags as ( select * from {{ ref('stg_cc__vendor_tags') }} where dbt_valid_
     from farm_vendor_tags
         left join vendor_tags on farm_vendor_tags.vendor_tag_id = vendor_tags.vendor_tag_id
     where vendor_tag_key = 'EDM'
-        and vendor_tag_value is not null
+        and vendor_tag_value
 )
 
 ,farm_joins as (

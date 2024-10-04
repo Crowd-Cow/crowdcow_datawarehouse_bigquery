@@ -74,43 +74,43 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.billing_state
         ,orders.billing_postal_code
         ,order_shipment.shipment_postage_carrier
-        ,coalesce(order_revenue.gross_product_revenue) as gross_product_revenue
-        ,coalesce(order_revenue.membership_discount) as membership_discount
-        ,coalesce(order_revenue.merch_discount) as merch_discount
-        ,coalesce(order_revenue.moolah_item_discount) as moolah_item_discount
-        ,coalesce(order_revenue.moolah_order_discount) as moolah_order_discount
-        ,coalesce(order_revenue.free_protein_promotion) as free_protein_promotion
-        ,coalesce(order_revenue.item_promotion) as item_promotion
-        ,coalesce(order_revenue.net_product_revenue) as net_product_revenue
+        ,zeroifnull(order_revenue.gross_product_revenue) as gross_product_revenue
+        ,zeroifnull(order_revenue.membership_discount) as membership_discount
+        ,zeroifnull(order_revenue.merch_discount) as merch_discount
+        ,zeroifnull(order_revenue.moolah_item_discount) as moolah_item_discount
+        ,zeroifnull(order_revenue.moolah_order_discount) as moolah_order_discount
+        ,zeroifnull(order_revenue.free_protein_promotion) as free_protein_promotion
+        ,zeroifnull(order_revenue.item_promotion) as item_promotion
+        ,zeroifnull(order_revenue.net_product_revenue) as net_product_revenue
         ,orders.order_shipping_fee_usd as shipping_revenue
         ,orders.order_expedited_shipping_fee_usd as expedited_shipping_revenue
-        ,coalesce(order_revenue.free_shipping_discount) as free_shipping_discount
-        ,coalesce(order_revenue.gross_revenue) as gross_revenue
-        ,coalesce(order_revenue.new_member_discount) as new_member_discount
-        ,coalesce(order_revenue.refund_amount) as refund_amount
-        ,coalesce(order_revenue.gift_redemption) as gift_redemption
-        ,coalesce(order_revenue.other_discount) as other_discount
-        ,coalesce(order_revenue.net_revenue) as net_revenue
-        ,coalesce(order_cost.product_cost) as product_cost
-        ,coalesce(order_cost.shipment_cost) as shipment_cost
-        ,coalesce(order_cost.order_coolant_cost) as coolant_cost
-        ,coalesce(order_cost.order_packaging_cost) as packaging_cost
-        ,coalesce(order_cost.order_care_cost) as care_cost
-        ,coalesce(order_cost.order_picking_cost) as picking_cost
-        ,coalesce(order_cost.order_packing_cost) as packing_cost
-        ,coalesce(order_cost.order_box_making_cost) as box_making_cost
-        ,coalesce(order_cost.order_fc_other_cost) as fc_other_cost
-        ,coalesce(order_cost.order_fc_labor_cost) as fc_labor_cost
-        ,coalesce(order_cost.poseidon_fulfillment_cost) as poseidon_fulfillment_cost
-        ,coalesce(order_cost.inbound_shipping_cost) as inbound_shipping_cost
-        ,if(orders.stripe_charge_id is not null,order_revenue.net_revenue * 0.0274,0) as payment_processing_cost
+        ,zeroifnull(order_revenue.free_shipping_discount) as free_shipping_discount
+        ,zeroifnull(order_revenue.gross_revenue) as gross_revenue
+        ,zeroifnull(order_revenue.new_member_discount) as new_member_discount
+        ,zeroifnull(order_revenue.refund_amount) as refund_amount
+        ,zeroifnull(order_revenue.gift_redemption) as gift_redemption
+        ,zeroifnull(order_revenue.other_discount) as other_discount
+        ,zeroifnull(order_revenue.net_revenue) as net_revenue
+        ,zeroifnull(order_cost.product_cost) as product_cost
+        ,zeroifnull(order_cost.shipment_cost) as shipment_cost
+        ,zeroifnull(order_cost.order_coolant_cost) as coolant_cost
+        ,zeroifnull(order_cost.order_packaging_cost) as packaging_cost
+        ,zeroifnull(order_cost.order_care_cost) as care_cost
+        ,zeroifnull(order_cost.order_picking_cost) as picking_cost
+        ,zeroifnull(order_cost.order_packing_cost) as packing_cost
+        ,zeroifnull(order_cost.order_box_making_cost) as box_making_cost
+        ,zeroifnull(order_cost.order_fc_other_cost) as fc_other_cost
+        ,zeroifnull(order_cost.order_fc_labor_cost) as fc_labor_cost
+        ,zeroifnull(order_cost.poseidon_fulfillment_cost) as poseidon_fulfillment_cost
+        ,zeroifnull(order_cost.inbound_shipping_cost) as inbound_shipping_cost
+        ,iff(orders.stripe_charge_id is not null,order_revenue.net_revenue * 0.0274,0) as payment_processing_cost
         ,orders.coolant_weight_in_pounds
         ,orders.order_additional_coolant_weight_in_pounds
         ,orders.order_bids_count
-        ,coalesce(order_shipment.shipment_count) as shipment_count
+        ,zeroifnull(order_shipment.shipment_count) as shipment_count
         ,order_shipment.delivery_days_late
         ,order_shipment.shipment_tracking_code_list
-        ,coalesce(order_reschedule.reschedule_count) as reschedule_count
+        ,zeroifnull(order_reschedule.reschedule_count) as reschedule_count
         ,orders.is_rastellis
         ,orders.is_qvc
         ,orders.is_seabear
@@ -174,120 +174,109 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,ranks.completed_moolah_order_rank
         ,ranks.paid_moolah_order_rank
         ,ranks.cancelled_moolah_order_rank
-        ,coalesce(units.beef_units) as beef_units
-        ,coalesce(units.bison_units) as bison_units
-        ,coalesce(units.chicken_units) as chicken_units
-        ,coalesce(units.desserts_units) as desserts_units 
-        ,coalesce(units.duck_units) as duck_units
-        ,coalesce(units.game_meat_units) as game_meat_units
-        ,coalesce(units.japanese_wagyu_units) as japanese_wagyu_units
-        ,coalesce(units.lamb_units) as lamb_units
-        ,coalesce(units.pet_food_units) as pet_food_units
-        ,coalesce(units.plant_based_proteins_units) as plant_based_proteins_units
-        ,coalesce(units.pork_units) as pork_units
-        ,coalesce(units.salts_seasonings_units) as salts_seasonings_units
-        ,coalesce(units.seafood_units) as seafood_units
-        ,coalesce(units.starters_sides_units) as starters_sides_units
-        ,coalesce(units.turkey_units) as turkey_units
-        ,coalesce(units.wagyu_units) as wagyu_units
-        ,coalesce(units.bundle_units) as bundle_units
-        ,coalesce(units.total_units) as total_units
-        ,coalesce(units.total_product_weight) as total_product_weight
-        ,coalesce(units.pct_beef) as pct_beef
-        ,coalesce(units.pct_bison) as pct_bison
-        ,coalesce(units.pct_chicken) as pct_chicken
-        ,coalesce(units.pct_desserts) as pct_desserts
-        ,coalesce(units.pct_duck) as pct_duck
-        ,coalesce(units.pct_game_meat) as pct_game_meat
-        ,coalesce(units.pct_japanese_wagyu) as pct_japanese_wagyu
-        ,coalesce(units.pct_lamb) as pct_lamb
-        ,coalesce(units.pct_pet_food) as pct_pet_food
-        ,coalesce(units.pct_plant_based_proteins) as pct_plant_based_proteins
-        ,coalesce(units.pct_pork) as pct_pork
-        ,coalesce(units.pct_salts_seasonings) as pct_salts_seasonings 
-        ,coalesce(units.pct_seafood) as pct_seafood
-        ,coalesce(units.pct_starters_sides) as pct_starters_sides
-        ,coalesce(units.pct_turkey) as pct_turkey
-        ,coalesce(units.pct_wagyu) as pct_wagyu
-        ,coalesce(units.pct_bundle) as pct_bundle
-        ,coalesce(reward.jwagyu_reward_spend) as jwagyu_reward_spend
-        ,coalesce(reward.moolah_points) as total_moolah_balance_change
-        ,coalesce(reward.total_moolah_redeemed) as total_moolah_redeemed
-        ,coalesce(reward.total_awarded_moolah) as total_awarded_moolah
-        ,coalesce(reward.moolah_available_for_order) as moolah_available_for_order
+        ,zeroifnull(units.beef_units) as beef_units
+        ,zeroifnull(units.bison_units) as bison_units
+        ,zeroifnull(units.chicken_units) as chicken_units
+        ,zeroifnull(units.desserts_units) as desserts_units 
+        ,zeroifnull(units.duck_units) as duck_units
+        ,zeroifnull(units.game_meat_units) as game_meat_units
+        ,zeroifnull(units.japanese_wagyu_units) as japanese_wagyu_units
+        ,zeroifnull(units.lamb_units) as lamb_units
+        ,zeroifnull(units.pet_food_units) as pet_food_units
+        ,zeroifnull(units.plant_based_proteins_units) as plant_based_proteins_units
+        ,zeroifnull(units.pork_units) as pork_units
+        ,zeroifnull(units.salts_seasonings_units) as salts_seasonings_units
+        ,zeroifnull(units.seafood_units) as seafood_units
+        ,zeroifnull(units.starters_sides_units) as starters_sides_units
+        ,zeroifnull(units.turkey_units) as turkey_units
+        ,zeroifnull(units.wagyu_units) as wagyu_units
+        ,zeroifnull(units.bundle_units) as bundle_units
+        ,zeroifnull(units.total_units) as total_units
+        ,zeroifnull(units.total_product_weight) as total_product_weight
+        ,zeroifnull(units.pct_beef) as pct_beef
+        ,zeroifnull(units.pct_bison) as pct_bison
+        ,zeroifnull(units.pct_chicken) as pct_chicken
+        ,zeroifnull(units.pct_desserts) as pct_desserts
+        ,zeroifnull(units.pct_duck) as pct_duck
+        ,zeroifnull(units.pct_game_meat) as pct_game_meat
+        ,zeroifnull(units.pct_japanese_wagyu) as pct_japanese_wagyu
+        ,zeroifnull(units.pct_lamb) as pct_lamb
+        ,zeroifnull(units.pct_pet_food) as pct_pet_food
+        ,zeroifnull(units.pct_plant_based_proteins) as pct_plant_based_proteins
+        ,zeroifnull(units.pct_pork) as pct_pork
+        ,zeroifnull(units.pct_salts_seasonings) as pct_salts_seasonings 
+        ,zeroifnull(units.pct_seafood) as pct_seafood
+        ,zeroifnull(units.pct_starters_sides) as pct_starters_sides
+        ,zeroifnull(units.pct_turkey) as pct_turkey
+        ,zeroifnull(units.pct_wagyu) as pct_wagyu
+        ,zeroifnull(units.pct_bundle) as pct_bundle
+        ,zeroifnull(reward.jwagyu_reward_spend) as jwagyu_reward_spend
+        ,zeroifnull(reward.moolah_points) as total_moolah_balance_change
+        ,zeroifnull(reward.total_moolah_redeemed) as total_moolah_redeemed
+        ,zeroifnull(reward.total_awarded_moolah) as total_awarded_moolah
+        ,zeroifnull(reward.moolah_available_for_order) as moolah_available_for_order
 
         
-        ,IF(
-        units.beef_units > 0,
-        SUM(CASE WHEN units.beef_units > 0 THEN 1 ELSE 0 END) OVER (PARTITION BY orders.user_id ORDER BY orders.order_id ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW),
-        NULL
-        ) AS beef_item_rank
-
-        ,IF(
-        units.bison_units > 0,
-        SUM(CASE WHEN units.bison_units > 0 THEN 1 ELSE 0 END) OVER (PARTITION BY orders.user_id ORDER BY orders.order_id ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW),
-        NULL
-        ) AS bison_item_rank
-
-        ,IF(
-        units.chicken_units > 0,
-        SUM(CASE WHEN units.chicken_units > 0 THEN 1 ELSE 0 END) OVER (PARTITION BY orders.user_id ORDER BY orders.order_id ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW),
-        NULL
-        ) AS chicken_item_rank
-
-        ,IF(
-        units.desserts_units > 0,
-        SUM(CASE WHEN units.desserts_units > 0 THEN 1 ELSE 0 END) OVER (PARTITION BY orders.user_id ORDER BY orders.order_id ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW),
-        NULL
-        ) AS desserts_item_rank
-
-        ,IF(
-        units.japanese_wagyu_units > 0,
-        SUM(CASE WHEN units.japanese_wagyu_units > 0 THEN 1 ELSE 0 END) OVER (PARTITION BY orders.user_id ORDER BY orders.order_id ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW),
-        NULL
-        ) AS japanese_wagyu_item_rank
-
-        ,IF(
-        units.lamb_units > 0,
-        SUM(CASE WHEN units.lamb_units > 0 THEN 1 ELSE 0 END) OVER (PARTITION BY orders.user_id ORDER BY orders.order_id ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW),
-        NULL
-        ) AS lamb_item_rank
-
-        ,IF(
-        units.pork_units > 0,
-        SUM(CASE WHEN units.pork_units > 0 THEN 1 ELSE 0 END) OVER (PARTITION BY orders.user_id ORDER BY orders.order_id ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW),
-        NULL
-        ) AS pork_item_rank
-
-        ,IF(
-        units.seafood_units > 0,
-        SUM(CASE WHEN units.seafood_units > 0 THEN 1 ELSE 0 END) OVER (PARTITION BY orders.user_id ORDER BY orders.order_id ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW),
-        NULL
-        ) AS seafood_item_rank
-
-        ,IF(
-        units.starters_sides_units > 0,
-        SUM(CASE WHEN units.starters_sides_units > 0 THEN 1 ELSE 0 END) OVER (PARTITION BY orders.user_id ORDER BY orders.order_id ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW),
-        NULL
-        ) AS starters_sides_item_rank
-
-        ,IF(
-        units.turkey_units > 0,
-        SUM(CASE WHEN units.turkey_units > 0 THEN 1 ELSE 0 END) OVER (PARTITION BY orders.user_id ORDER BY orders.order_id ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW),
-        NULL
-        ) AS turkey_item_rank
-
-        ,IF(
-        units.wagyu_units > 0,
-        SUM(CASE WHEN units.wagyu_units > 0 THEN 1 ELSE 0 END) OVER (PARTITION BY orders.user_id ORDER BY orders.order_id ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW),
-        NULL
-        ) AS wagyu_item_rank
-
-        ,IF(
-        units.bundle_units > 0,
-        SUM(CASE WHEN units.bundle_units > 0 THEN 1 ELSE 0 END) OVER (PARTITION BY orders.user_id ORDER BY orders.order_id ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW),
-        NULL
-        ) AS bundle_item_rank
+        ,iff(
+            units.beef_units > 0
+            ,conditional_true_event(units.beef_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as beef_item_rank
+        ,iff(
+            units.bison_units > 0
+            ,conditional_true_event(units.bison_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as bison_item_rank
+        ,iff(
+            units.chicken_units > 0
+            ,conditional_true_event(units.chicken_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as chicken_item_rank
+        ,iff(
+            units.desserts_units > 0
+            ,conditional_true_event(units.desserts_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as desserts_item_rank
+        ,iff(
+            units.japanese_wagyu_units > 0
+            ,conditional_true_event(units.japanese_wagyu_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as japanese_wagyu_item_rank
+        ,iff(
+            units.lamb_units > 0
+            ,conditional_true_event(units.lamb_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as lamb_item_rank
+        ,iff(
+            units.pork_units > 0
+            ,conditional_true_event(units.pork_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as pork_item_rank
+        ,iff(
+            units.seafood_units > 0
+            ,conditional_true_event(units.seafood_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as seafood_item_rank
+        ,iff(
+            units.starters_sides_units > 0
+            ,conditional_true_event(units.starters_sides_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as starters_sides_item_rank
+        ,iff(
+            units.turkey_units > 0
+            ,conditional_true_event(units.turkey_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as turkey_item_rank
+        ,iff(
+            units.wagyu_units > 0
+            ,conditional_true_event(units.wagyu_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as wagyu_item_rank
+        ,iff(
+            units.bundle_units > 0
+            ,conditional_true_event(units.bundle_units > 0) over(partition by orders.user_id order by orders.order_id)
+            ,null
+        ) as bundle_item_rank
 
         ,orders.order_created_at_utc
         ,orders.order_updated_at_utc
@@ -309,7 +298,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,order_reschedule.occurred_at_utc as order_reschedule_occurred_at_utc
         ,order_reschedule.old_scheduled_fulfillment_date
         ,order_reschedule.new_scheduled_fulfillment_date
-        ,if(order_reschedule.is_customer_reschedule and old_scheduled_fulfillment_date < new_scheduled_fulfillment_date and date_diff(order_reschedule.new_scheduled_fulfillment_date,order_reschedule.old_scheduled_fulfillment_date, day) >= 14, true,false) as is_customer_impactful_reschedule
+        ,iff(order_reschedule.is_customer_reschedule and old_scheduled_fulfillment_date < new_scheduled_fulfillment_date and datediff('day',order_reschedule.old_scheduled_fulfillment_date,order_reschedule.new_scheduled_fulfillment_date) >= 14, true,false) as is_customer_impactful_reschedule
         ,order_promo_redeemed.redeemed_at_utc as promo_redeemed_at_utc
         
     from orders
@@ -319,7 +308,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         left join ranks on orders.order_id = ranks.order_id
         left join units on orders.order_id = units.order_id
         left join order_shipment on orders.order_id = order_shipment.order_id
-        left join order_reschedule on cast(orders.order_id as string) = order_reschedule.order_id
+        left join order_reschedule on orders.order_id = order_reschedule.order_id
         left join order_promo_redeemed on orders.order_id = order_promo_redeemed.order_id
         left join order_failure on orders.order_id = order_failure.order_id
         left join reward on orders.order_id = reward.order_id

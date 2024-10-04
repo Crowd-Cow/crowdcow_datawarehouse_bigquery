@@ -33,8 +33,8 @@ packaging_costs as (select * from {{ ref('stg_gs__fc_care_packaging_costs') }} w
         ,sum(get_box_id.cost_usd) as order_packaging_cost
     from shipment_details
         join get_box_id on coalesce(shipment_details.scanned_box_type_id,shipment_details.box_type_id) = get_box_id.box_id
-            and date_trunc(shipment_details.shipped_at_utc, MONTH) >= get_box_id.month_of_costs
-            and date_trunc(shipment_details.shipped_at_utc, MONTH) < get_box_id.leading_month
+            and date_trunc('month', shipment_details.shipped_at_utc) >= get_box_id.month_of_costs
+            and date_trunc('month', shipment_details.shipped_at_utc) < get_box_id.leading_month
     group by 1
 )
     

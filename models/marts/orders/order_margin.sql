@@ -12,7 +12,7 @@ shipped_orders as ( select * from {{ ref('orders') }} where has_shipped and orde
         ,order_delivery_state
         ,product_profit
         ,gross_profit
-        ,if(net_revenue < 0,0,net_revenue) as net_revenue
+        ,iff(net_revenue < 0,0,net_revenue) as net_revenue
         ,-membership_discount as membership_discount
         ,-merch_discount as merch_discount
         ,-free_protein_promotion as free_protein_promotion

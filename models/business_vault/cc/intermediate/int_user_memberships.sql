@@ -7,14 +7,14 @@ membership as ( select * from {{ ref('stg_cc__subscriptions') }} where user_id i
 ,get_membership_history as (
     select distinct
         user_id
-        ,FIRST_VALUE(subscription_created_at_utc) OVER (PARTITION BY user_id ORDER BY subscription_created_at_utc) AS first_membership_created_date
-        ,LAST_VALUE(subscription_created_at_utc) OVER (PARTITION BY user_id ORDER BY subscription_created_at_utc RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS most_recent_membership_created_date
-        ,LAST_VALUE(subscription_cancelled_at_utc) OVER (PARTITION BY user_id ORDER BY subscription_created_at_utc RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS most_recent_membership_cancelled_date
-        ,FIRST_VALUE(subscription_id) OVER (PARTITION BY user_id ORDER BY subscription_created_at_utc) AS first_membership_id
-        ,LAST_VALUE(subscription_id) OVER (PARTITION BY user_id ORDER BY subscription_created_at_utc RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS current_membership_id
-        ,LAST_VALUE(subscription_renew_period_type) OVER (PARTITION BY user_id ORDER BY subscription_created_at_utc RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS current_renew_period
-        ,COUNT(subscription_id) OVER (PARTITION BY user_id) AS total_membership_count
-        ,COUNTIF(NOT cast(is_uncancelled_membership as bool)) OVER (PARTITION BY user_id) AS total_cancelled_membership_count
+        ,first_value(subscription_created_at_utc) over(partition by user_id order by subscription_created_at_utc) as first_membership_created_date
+        ,last_value(subscription_created_at_utc) over(partition by user_id order by subscription_created_at_utc) as most_recent_membership_created_date
+        ,last_value(subscription_cancelled_at_utc) over(partition by user_id order by subscription_created_at_utc) as most_recent_membership_cancelled_date
+        ,first_value(subscription_id) over(partition by user_id order by subscription_created_at_utc) as first_membership_id
+        ,last_value(subscription_id) over(partition by user_id order by subscription_created_at_utc) as current_membership_id
+        ,last_value(subscription_renew_period_type) over(partition by user_id order by subscription_created_at_utc) as current_renew_period
+        ,count(subscription_id) over(partition by user_id) as total_membership_count
+        ,count(iff(not is_uncancelled_membership,subscription_id,null)) over(partition by user_id) as total_cancelled_membership_count
     from membership
 )
 
@@ -22,15 +22,14 @@ membership as ( select * from {{ ref('stg_cc__subscriptions') }} where user_id i
     select distinct
         subscription_id
         ,first_value(coalesce(promotion_selection_id,promotion_id)) over(partition by subscription_id order by created_at_utc) as first_promotion_id
-        ,last_value(coalesce(promotion_selection_id,promotion_id)) over(partition by subscription_id order by created_at_utc RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as current_promotion_id
+        ,last_value(coalesce(promotion_selection_id,promotion_id)) over(partition by subscription_id order by created_at_utc) as current_promotion_id
     from membership_promo
 )
 
 ,calc_membership_tenure as (
     select
         *
-        ,DATE_DIFF(COALESCE(CAST(most_recent_membership_cancelled_date AS DATE), CURRENT_DATE()),CAST(first_membership_created_date AS DATE),MONTH) AS membership_tenure_months
-
+        ,datediff(month,first_membership_created_date,coalesce(most_recent_membership_cancelled_date,sysdate())) as membership_tenure_months
     from get_membership_history
 )
 

@@ -39,7 +39,7 @@ order_item as ( select * from {{ ref('order_item_details') }})
 
 ,item_revenue as (
     select
-        cast(order_fc.order_paid_at_utc as date) as order_paid_date
+        order_fc.order_paid_at_utc::date as order_paid_date
         ,order_fc.fc_name
         ,order_item_skus.category
         ,order_item_skus.sub_category
@@ -57,6 +57,6 @@ order_item as ( select * from {{ ref('order_item_details') }})
 
 select
     *
-    ,round(safe_divide(gross_revenue,quantity_sold),2) as avgerage_list_price
-    ,round(safe_divide(net_revenue,quantity_sold),2) as average_effective_price
+    ,round(div0(gross_revenue,quantity_sold),2) as avgerage_list_price
+    ,round(div0(net_revenue,quantity_sold),2) as average_effective_price
 from item_revenue

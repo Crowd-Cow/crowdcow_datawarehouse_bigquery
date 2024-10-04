@@ -124,7 +124,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,shipping_flags.shipped_at_utc is not null as has_shipped
         ,shipping_flags.delivered_at_utc is not null as has_been_delivered
         ,shipping_flags.lost_at_utc is not null as has_been_lost
-        ,coalesce(fulfillment_risk.is_fulfillment_risk,0) as is_fulfillment_risk
+        ,coalesce(fulfillment_risk.is_fulfillment_risk,FALSE) as is_fulfillment_risk
         ,order_reschedule.order_id is not null as is_rescheduled
         ,orders.order_type = 'RFG' as is_rastellis
         ,orders.order_type = 'QVC' as is_qvc
@@ -151,7 +151,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         left join has_shipping_credit on orders.order_id = has_shipping_credit.order_id
         left join shipping_flags on orders.order_id = shipping_flags.order_id
         left join fulfillment_risk on orders.order_id = fulfillment_risk.order_id
-        left join order_reschedule on cast(orders.order_id as string) = order_reschedule.order_id
+        left join order_reschedule on orders.order_id = order_reschedule.order_id
         left join placed_by_uncancelled_member on orders.order_id = placed_by_uncancelled_member.order_id
         left join user on orders.user_id = user.user_id
         left join distinct_stuck_order_flag on orders.order_id = distinct_stuck_order_flag.order_id

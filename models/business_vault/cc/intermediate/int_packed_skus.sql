@@ -44,12 +44,12 @@ order_packed_sku as ( select * from {{ ref('stg_cc__order_packed_skus') }} )
         ,bid.promotion_source
         ,bid.bid_item_name
         ,bid.created_at_utc as bid_created_at_utc
-        ,coalesce(bid.bid_list_price_usd) as bid_list_price_usd
-        ,coalesce(bid.bid_gross_product_revenue) as bid_gross_product_revenue
-        ,coalesce(bid.item_member_discount) as item_member_discount
-        ,coalesce(bid.item_merch_discount) as item_merch_discount
-        ,coalesce(bid.item_free_protein_discount) as item_free_protein_discount
-        ,coalesce(bid.item_promotion_discount) as item_promotion_discount
+        ,zeroifnull(bid.bid_list_price_usd) as bid_list_price_usd
+        ,zeroifnull(bid.bid_gross_product_revenue) as bid_gross_product_revenue
+        ,zeroifnull(bid.item_member_discount) as item_member_discount
+        ,zeroifnull(bid.item_merch_discount) as item_merch_discount
+        ,zeroifnull(bid.item_free_protein_discount) as item_free_protein_discount
+        ,zeroifnull(bid.item_promotion_discount) as item_promotion_discount
         ,coalesce(bid_item_sku.is_single_sku_bid_item,TRUE) as is_single_sku_bid_item
         ,coalesce(bid.created_at_utc,order_packed_items.created_at_utc) as item_created_at_utc
         ,order_packed_items.created_at_utc as packed_created_at_utc

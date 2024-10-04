@@ -5,6 +5,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
 ,farm as ( select * from {{ ref('farms') }} )
 ,sku_vendor as ( select * from {{ ref('stg_cc__sku_vendors') }} )
 ,ais as ( select * from {{ ref('stg_gs__always_in_stock') }} )
+,inventory_classification as ( select * from {{ ref('stg_gs__inventory_classification') }} )
 ,standard_sku_cost as ( select * from {{ ref('stg_gs__standard_sku_cost') }} )
 
 ,sku_joins as (
@@ -97,7 +98,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
          end as sku_weight
         
         /** Accounts for $0 cost SKUs by taking the average cost for all snapshots of a sku if the cost was entered as $0 in Inventory Finances **/
-        ,coalesce(
+        ,zeroifnull(
             case
                 when sku_joins.owned_sku_cost_usd = 0 then avg(nullif(sku_joins.owned_sku_cost_usd,0)) over(partition by sku_joins.sku_id) 
                 else sku_joins.owned_sku_cost_usd
@@ -105,7 +106,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ) as owned_sku_cost_usd
 
         ,sku_joins.marketplace_cost_usd
-        ,if(sku_joins.is_marketplace,sku_joins.marketplace_cost_usd,sku_joins.owned_sku_cost_usd) as sku_cost_usd
+        ,iff(sku_joins.is_marketplace,sku_joins.marketplace_cost_usd,sku_joins.owned_sku_cost_usd) as sku_cost_usd
         ,sku_joins.platform_fee_usd
         ,sku_joins.fulfillment_fee_usd
         ,sku_joins.payment_processing_fee_usd
@@ -129,7 +130,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku_joins.is_marketplace
         ,sku_joins.is_rastellis
         ,coalesce(ais.is_always_in_stock,FALSE) as is_always_in_stock
-        ,sku_joins.replenishment_code as inventory_classification
+        ,inventory_classification.inventory_classification
         ,sku_joins.sku_vendor_name
         ,sku_joins.vendor_funded_discount_start_at_utc
         ,sku_joins.vendor_funded_discount_end_at_utc
@@ -148,6 +149,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku_joins.adjusted_dbt_valid_to
     from sku_joins
         left join ais on sku_joins.ais_id = ais.ais_id
+        left join inventory_classification on sku_joins.inventory_classification_id = inventory_classification.inventory_classification_id
 )
 
 ,add_standard_cost as (
@@ -210,7 +212,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,add_inventory_classification.dbt_valid_to
         ,add_inventory_classification.adjusted_dbt_valid_from
         ,add_inventory_classification.adjusted_dbt_valid_to
-        ,coalesce(cast(standard_sku_cost.standard_cost_added_date as date), cast(add_inventory_classification.dbt_valid_from as date)) as standard_cost_added_date
+        ,coalesce(standard_sku_cost.standard_cost_added_date,add_inventory_classification.dbt_valid_from::date) as standard_cost_added_date
     from add_inventory_classification
         left Join standard_sku_cost on add_inventory_classification.sku_id = standard_sku_cost.sku_id
             and add_inventory_classification.dbt_valid_to is null

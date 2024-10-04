@@ -1,6 +1,6 @@
 with
 
-sub_promo as ( select * from {{ source('cc', 'subscription_promotions') }} )
+sub_promo as ( select * from {{ source('cc', 'subscription_promotions') }} where not _fivetran_deleted)
 
 ,renamed as (
     select

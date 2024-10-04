@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ source('cc', 'cow_cash_entries') }} 
+    select * from {{ source('cc', 'cow_cash_entries') }} where not _fivetran_deleted
 
 ),
 
@@ -18,7 +18,7 @@ renamed as (
         ,frauded_at as frauded_at_utc
         ,{{ clean_strings('entry_type') }} as entry_type
         ,gift_card_id
-        --,finance_reporting_type
+        ,finance_reporting_type
         ,updated_at as updated_at_utc
         ,cow_cash_entry_source_id
         ,order_id

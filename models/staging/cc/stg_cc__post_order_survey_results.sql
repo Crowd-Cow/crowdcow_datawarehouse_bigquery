@@ -1,6 +1,6 @@
 with 
 
-source as ( select * from {{ source('cc', 'post_order_survey_results') }}  )
+source as ( select * from {{ source('cc', 'post_order_survey_results') }} where not _fivetran_deleted )
 
 ,renamed as (
 
@@ -34,7 +34,7 @@ source as ( select * from {{ source('cc', 'post_order_survey_results') }}  )
         ,{{ clean_strings('how_first_heard') }} as how_first_heard
         ,rank_of_welfare
         ,{{ clean_strings('income') }} as income
-        ,coalesce(leaked = 1,FALSE) as did_leak
+        ,ifnull(leaked,FALSE) as did_leak
 
     from source
     qualify row_number() over(partition by order_id order by updated_at desc) = 1

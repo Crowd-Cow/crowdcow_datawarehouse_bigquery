@@ -43,7 +43,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
     select 
         referrer_user_id as user_id 
         ,count(distinct referee_user_id) as referrals_sent
-        ,count( distinct if(purchased_at_utc is not null, referee_user_id,null)) as referrals_redeemed
+        ,count( distinct iff(purchased_at_utc is not null, referee_user_id,null)) as referrals_redeemed
     from referrals 
     group by 1
 )
@@ -81,7 +81,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,ifnull(user_membership.is_current_promotion_ffl,False) as is_current_promotion_ffl
         ,ifnull(user_membership.is_first_promotion_ffl,False) as is_first_promotion_ffl
         ,user_order_activity.order_user_id is null as is_lead
-        ,user_order_activity.user_id is not null and user_order_activity.total_paid_ala_carte_order_count > 0 and coalesce(user_membership.total_membership_count) = 0 as is_purchasing_customer
+        ,user_order_activity.user_id is not null and user_order_activity.total_paid_ala_carte_order_count > 0 and zeroifnull(user_membership.total_membership_count) = 0 as is_purchasing_customer
         ,user_order_activity.user_id is not null and user_order_activity.total_paid_membership_order_count > 0 as is_purchasing_member
         ,user_order_activity.user_id is not null and user_order_activity.last_90_days_paid_membership_order_count > 0 and user_membership.total_uncancelled_memberships > 0 as is_active_member_90_day
         ,case
@@ -98,7 +98,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_visits.first_visit_id
 
         ,case
-            when DATE_DIFF(cast(user_order_activity.first_completed_order_date as date), cast(users.created_at_utc as date), DAY) <= 10 and user_visits.first_visit_id is not null then user_visits.first_visit_id
+            when user_order_activity.first_completed_order_date::date - users.created_at_utc::date <= 10 and user_visits.first_visit_id is not null then user_visits.first_visit_id
             else user_order_activity.first_completed_order_visit_id
          end as attributed_visit_id
 
@@ -108,38 +108,38 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,postal_code.city_name
         ,coalesce(user_order_activity.is_rastellis,FALSE) as is_rastellis
         ,coalesce(user_order_activity.is_qvc,FALSE) as is_qvc
-        ,coalesce(user_order_activity.lifetime_net_revenue) as lifetime_net_revenue
-        ,coalesce(user_order_activity.lifetime_net_product_revenue) as lifetime_net_product_revenue
-        ,coalesce(user_order_activity.lifetime_paid_order_count) as lifetime_paid_order_count
-        ,coalesce(user_order_activity.total_completed_unpaid_uncancelled_orders) as total_completed_unpaid_uncancelled_orders
-        ,coalesce(user_order_activity.total_paid_ala_carte_order_count) as total_paid_ala_carte_order_count
-        ,coalesce(user_order_activity.total_paid_membership_order_count) as total_paid_membership_order_count
-        ,coalesce(user_order_activity.last_90_days_paid_membership_order_count) as last_90_days_paid_membership_order_count
-        ,coalesce(user_order_activity.total_paid_gift_order_count) as total_paid_gift_order_count
-        ,coalesce(user_order_activity.six_month_net_revenue) as six_month_net_revenue
-        ,coalesce(user_order_activity.six_month_gross_profit) as six_month_gross_profit
-        ,coalesce(user_order_activity.twelve_month_net_revenue) as twelve_month_net_revenue
-        ,coalesce(user_order_activity.six_month_paid_order_count) as six_month_paid_order_count
-        ,coalesce(user_order_activity.twelve_month_purchase_count) as twelve_month_purchase_count
-        ,coalesce(user_order_activity.last_30_days_paid_order_count) as last_30_days_paid_order_count
-        ,coalesce(user_order_activity.last_60_days_paid_order_count) as last_60_days_paid_order_count
-        ,coalesce(user_order_activity.last_90_days_paid_order_count) as last_90_days_paid_order_count
-        ,coalesce(user_order_activity.last_120_days_paid_order_count) as last_120_days_paid_order_count
-        ,coalesce(user_order_activity.last_180_days_paid_order_count) as last_180_days_paid_order_count
-        ,coalesce(user_order_activity.recent_delivered_order_count) as recent_delivered_order_count
-        ,coalesce(user_order_activity.six_month_net_revenue_percentile) as six_month_net_revenue_percentile
-        ,coalesce(user_order_activity.six_month_gross_profit_percentile) as six_month_gross_profit_percentile
-        ,coalesce(user_order_activity.twelve_month_net_revenue_percentile) as twelve_month_net_revenue_percentile
-        ,coalesce(user_order_activity.lifetime_net_revenue_percentile) as lifetime_net_revenue_percentile
-        ,coalesce(user_order_activity.lifetime_paid_order_count_percentile) as lifetime_paid_order_count_percentile
-        ,coalesce(user_order_activity.total_california_orders) as total_california_orders
-        ,coalesce(user_order_activity.user_average_order_value) as user_average_order_value
-        ,coalesce(user_order_activity.twelve_month_japanese_wagyu_revenue)as twelve_month_japanese_wagyu_revenue
-        ,coalesce(user_order_activity.lifetime_japanese_wagyu_revenue) as lifetime_japanese_wagyu_revenue
-        ,coalesce(user_order_activity.japanese_buyers_club_revenue) as japanese_buyers_club_revenue
-        ,coalesce(user_order_activity.moolah_points) as moolah_points
-        ,coalesce(user_order_activity.lifetime_awarded_moolah) as lifetime_awarded_moolah
-        ,coalesce(user_order_activity.redeemed_moolah_points) as redeemed_moolah_points
+        ,zeroifnull(user_order_activity.lifetime_net_revenue) as lifetime_net_revenue
+        ,zeroifnull(user_order_activity.lifetime_net_product_revenue) as lifetime_net_product_revenue
+        ,zeroifnull(user_order_activity.lifetime_paid_order_count) as lifetime_paid_order_count
+        ,zeroifnull(user_order_activity.total_completed_unpaid_uncancelled_orders) as total_completed_unpaid_uncancelled_orders
+        ,zeroifnull(user_order_activity.total_paid_ala_carte_order_count) as total_paid_ala_carte_order_count
+        ,zeroifnull(user_order_activity.total_paid_membership_order_count) as total_paid_membership_order_count
+        ,zeroifnull(user_order_activity.last_90_days_paid_membership_order_count) as last_90_days_paid_membership_order_count
+        ,zeroifnull(user_order_activity.total_paid_gift_order_count) as total_paid_gift_order_count
+        ,zeroifnull(user_order_activity.six_month_net_revenue) as six_month_net_revenue
+        ,zeroifnull(user_order_activity.six_month_gross_profit) as six_month_gross_profit
+        ,zeroifnull(user_order_activity.twelve_month_net_revenue) as twelve_month_net_revenue
+        ,zeroifnull(user_order_activity.six_month_paid_order_count) as six_month_paid_order_count
+        ,zeroifnull(user_order_activity.twelve_month_purchase_count) as twelve_month_purchase_count
+        ,zeroifnull(user_order_activity.last_30_days_paid_order_count) as last_30_days_paid_order_count
+        ,zeroifnull(user_order_activity.last_60_days_paid_order_count) as last_60_days_paid_order_count
+        ,zeroifnull(user_order_activity.last_90_days_paid_order_count) as last_90_days_paid_order_count
+        ,zeroifnull(user_order_activity.last_120_days_paid_order_count) as last_120_days_paid_order_count
+        ,zeroifnull(user_order_activity.last_180_days_paid_order_count) as last_180_days_paid_order_count
+        ,zeroifnull(user_order_activity.recent_delivered_order_count) as recent_delivered_order_count
+        ,zeroifnull(user_order_activity.six_month_net_revenue_percentile) as six_month_net_revenue_percentile
+        ,zeroifnull(user_order_activity.six_month_gross_profit_percentile) as six_month_gross_profit_percentile
+        ,zeroifnull(user_order_activity.twelve_month_net_revenue_percentile) as twelve_month_net_revenue_percentile
+        ,zeroifnull(user_order_activity.lifetime_net_revenue_percentile) as lifetime_net_revenue_percentile
+        ,zeroifnull(user_order_activity.lifetime_paid_order_count_percentile) as lifetime_paid_order_count_percentile
+        ,zeroifnull(user_order_activity.total_california_orders) as total_california_orders
+        ,zeroifnull(user_order_activity.user_average_order_value) as user_average_order_value
+        ,zeroifnull(user_order_activity.twelve_month_japanese_wagyu_revenue)as twelve_month_japanese_wagyu_revenue
+        ,zeroifnull(user_order_activity.lifetime_japanese_wagyu_revenue) as lifetime_japanese_wagyu_revenue
+        ,zeroifnull(user_order_activity.japanese_buyers_club_revenue) as japanese_buyers_club_revenue
+        ,zeroifnull(user_order_activity.moolah_points) as moolah_points
+        ,zeroifnull(user_order_activity.lifetime_awarded_moolah) as lifetime_awarded_moolah
+        ,zeroifnull(user_order_activity.redeemed_moolah_points) as redeemed_moolah_points
         ,user_order_activity.last_paid_membership_order_date
         ,user_order_activity.last_paid_ala_carte_order_date
         ,user_order_activity.last_paid_order_date
@@ -181,7 +181,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.last_14_days_impacful_customer_reschedules
         ,user_referrals.referrals_sent
         ,user_referrals.referrals_redeemed
-        ,if(redemption_user_id is not null, true, false) as has_redeemed_gift_card
+        ,iff(redemption_user_id is not null, true, false) as has_redeemed_gift_card
 
     from users
         left join user_membership on users.user_id = user_membership.user_id
@@ -189,7 +189,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         left join phone_number on users.phone_number_id = phone_number.phone_number_id
         left join ccpa_users on users.user_token = ccpa_users.user_token
         left join user_visits on users.user_id = user_visits.user_id
-        left join postal_code on users.user_zip = cast(postal_code.postal_code as string)
+        left join postal_code on users.user_zip = postal_code.postal_code
         left join identity on users.user_id = identity.user_id
         left join user_contacts on users.user_token = user_contacts.user_token
         left join user_referrals on users.user_id = user_referrals.user_id
@@ -230,9 +230,9 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_cow_cash_balance_usd
         ,user_support_status
         ,customer_cohort_date
-        ,date_diff(customer_cohort_date,current_date, MONTH) as customer_cohort_tenure_months
+        ,datediff(month,customer_cohort_date,sysdate()) as customer_cohort_tenure_months
         ,membership_cohort_date
-        ,date_diff(membership_cohort_date,current_date, MONTH) as membership_cohort_tenure_months
+        ,datediff(month,membership_cohort_date,sysdate()) as membership_cohort_tenure_months
         ,first_promotion_type
         ,current_promotion_type
         ,current_renew_period
@@ -282,23 +282,23 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         
         ,nullif(
             greatest(
-                coalesce(unsubscribed_all_at_utc,'1970-01-01')
-                ,coalesce(email_subscribed_often_at_utc,'1970-01-01')
-                ,coalesce(email_subscribed_weekly_at_utc,'1970-01-01')
+                nvl(unsubscribed_all_at_utc,'1970-01-01')
+                ,nvl(email_subscribed_often_at_utc,'1970-01-01')
+                ,nvl(email_subscribed_weekly_at_utc,'1970-01-01')
             )
         ,'1970-01-01') as last_email_preference_date
         
         ,case
             when greatest(
-                    coalesce(unsubscribed_all_at_utc,'1970-01-01')
-                    ,coalesce(email_subscribed_often_at_utc,'1970-01-01')
-                    ,coalesce(email_subscribed_weekly_at_utc,'1970-01-01')
+                    nvl(unsubscribed_all_at_utc,'1970-01-01')
+                    ,nvl(email_subscribed_often_at_utc,'1970-01-01')
+                    ,nvl(email_subscribed_weekly_at_utc,'1970-01-01')
                 ) = unsubscribed_all_at_utc 
             then 'UNSUBSCRIBED ALL'
             when greatest(
-                    coalesce(unsubscribed_all_at_utc,'1970-01-01')
-                    ,coalesce(email_subscribed_often_at_utc,'1970-01-01')
-                    ,coalesce(email_subscribed_weekly_at_utc,'1970-01-01')
+                    nvl(unsubscribed_all_at_utc,'1970-01-01')
+                    ,nvl(email_subscribed_often_at_utc,'1970-01-01')
+                    ,nvl(email_subscribed_weekly_at_utc,'1970-01-01')
                 ) = email_subscribed_often_at_utc 
                 or (
                     unsubscribed_all_at_utc is null 
@@ -308,9 +308,9 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
                 )
             then 'OFTEN'
             when greatest(
-                    coalesce(unsubscribed_all_at_utc,'1970-01-01')
-                    ,coalesce(email_subscribed_often_at_utc,'1970-01-01')
-                    ,coalesce(email_subscribed_weekly_at_utc,'1970-01-01')
+                    nvl(unsubscribed_all_at_utc,'1970-01-01')
+                    ,nvl(email_subscribed_often_at_utc,'1970-01-01')
+                    ,nvl(email_subscribed_weekly_at_utc,'1970-01-01')
                 ) = email_subscribed_weekly_at_utc 
             then 'WEEKLY'
             else 'NO SETTING'
@@ -331,7 +331,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,does_allow_sms
         ,has_opted_in_to_emails
         ,last_call_at_utc is not null as has_phone_burner_contact
-        ,cast(most_recent_membership_created_date as date) >= cast(last_call_at_utc as date) as did_create_membership_after_call
+        ,most_recent_membership_created_date::date >= last_call_at_utc::date as did_create_membership_after_call
         ,last_sign_in_at_utc
         ,last_call_at_utc
         ,first_membership_created_date
@@ -339,7 +339,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,most_recent_membership_cancelled_date
         ,last_paid_membership_order_date
         ,last_paid_ala_carte_order_date
-        ,cast(last_paid_order_date as date) as last_paid_order_date
+        ,last_paid_order_date::date as last_paid_order_date
         ,most_recent_paid_order_token
         ,most_recent_order_promotion_id
         ,most_recent_order_id
@@ -355,7 +355,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,dormant_purchaser
         ,coalesce(total_paid_ala_carte_order_count > 0 and not is_member, FALSE) as alc_customer
         ,coalesce(total_paid_ala_carte_order_count = 1 and not is_member, FALSE) as new_alc 
-        ,coalesce(total_paid_ala_carte_order_count = 1 and (lifetime_japanese_wagyu_revenue/if(lifetime_net_product_revenue = 0,1,lifetime_net_product_revenue)) > 0.5 and not is_member, FALSE) as new_alc_wagyu
+        ,coalesce(total_paid_ala_carte_order_count = 1 and (lifetime_japanese_wagyu_revenue/iff(lifetime_net_product_revenue = 0,1,lifetime_net_product_revenue)) > 0.5 and not is_member, FALSE) as new_alc_wagyu
         ,coalesce(recent_purchaser and not is_member, FALSE) as recent_alc
         ,coalesce(lapsed_purchaser and not is_member, FALSE) as lapsed_alc
         ,coalesce(dormant_purchaser and not is_member, FALSE) as dormant_alc
@@ -363,15 +363,15 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,coalesce(total_paid_membership_order_count = 1 and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-1-WEEK','RENEW-PERIOD-2-WEEKS','RENEW-PERIOD-3-WEEKS','RENEW-PERIOD-4-WEEKS','RENEW-PERIOD-MONTHLY'), FALSE ) as new_subscriber_4_weeks
         ,coalesce(total_paid_membership_order_count = 1 and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-6-WEEKS','RENEW-PERIOD-8-WEEKS'), FALSE ) as new_subscriber_5_8_weeks
         ,coalesce(total_paid_membership_order_count = 1 and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-12-WEEKS'), FALSE ) as new_subscriber_12_weeks
-        ,coalesce(last_paid_membership_order_date >= DATE_SUB(current_date(), INTERVAL 45 DAY) and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-1-WEEK','RENEW-PERIOD-2-WEEKS','RENEW-PERIOD-3-WEEKS','RENEW-PERIOD-4-WEEKS','RENEW-PERIOD-MONTHLY'), FALSE ) as active_subscriber_4_weeks
-        ,coalesce(last_paid_membership_order_date >= DATE_SUB(current_date(), INTERVAL 70 DAY) and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-6-WEEKS','RENEW-PERIOD-8-WEEKS'), FALSE ) as active_subscriber_5_8_weeks
-        ,coalesce(last_paid_membership_order_date >= DATE_SUB(current_date(), INTERVAL 100 DAY) and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-12-WEEKS'), FALSE ) as active_subscriber_12_weeks
-        ,coalesce(last_paid_membership_order_date <= DATE_SUB(current_date(), INTERVAL 45 DAY) and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-1-WEEK','RENEW-PERIOD-2-WEEKS','RENEW-PERIOD-3-WEEKS','RENEW-PERIOD-4-WEEKS','RENEW-PERIOD-MONTHLY'), FALSE ) as lapsed_subscriber_4_weeks
-        ,coalesce(last_paid_membership_order_date <= DATE_SUB(current_date(), INTERVAL 70 DAY) and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-6-WEEKS','RENEW-PERIOD-8-WEEKS'), FALSE ) as lapsed_subscriber_5_8_weeks
-        ,coalesce(last_paid_membership_order_date <= DATE_SUB(current_date(), INTERVAL 100 DAY) and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-12-WEEKS'), FALSE ) as lapsed_subscriber_12_weeks
-        ,coalesce( last_paid_order_date >= cast(most_recent_membership_cancelled_date as date) and is_cancelled_member and cast(most_recent_membership_cancelled_date as date) >= DATE_SUB(current_date(), INTERVAL 90 DAY), FALSE ) as active_cancelled_subscriber 
-        ,coalesce( last_paid_order_date <= cast(most_recent_membership_cancelled_date as date) and is_cancelled_member and cast(most_recent_membership_cancelled_date as date) >= DATE_SUB(current_date(), INTERVAL 90 DAY), FALSE ) as recent_cancelled_subscriber 
-        ,coalesce( last_paid_order_date <= cast(most_recent_membership_cancelled_date as date) and is_cancelled_member and cast(most_recent_membership_cancelled_date as date) < DATE_SUB(current_date(), INTERVAL 90 DAY), FALSE ) as lapsed_cancelled_subscriber 
+        ,coalesce(last_paid_membership_order_date >= dateadd('day',-42,sysdate()) and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-1-WEEK','RENEW-PERIOD-2-WEEKS','RENEW-PERIOD-3-WEEKS','RENEW-PERIOD-4-WEEKS','RENEW-PERIOD-MONTHLY'), FALSE ) as active_subscriber_4_weeks
+        ,coalesce(last_paid_membership_order_date >= dateadd('day',-70,sysdate()) and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-6-WEEKS','RENEW-PERIOD-8-WEEKS'), FALSE ) as active_subscriber_5_8_weeks
+        ,coalesce(last_paid_membership_order_date >= dateadd('day',-100,sysdate()) and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-12-WEEKS'), FALSE ) as active_subscriber_12_weeks
+        ,coalesce(last_paid_membership_order_date <= dateadd('day',-42,sysdate()) and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-1-WEEK','RENEW-PERIOD-2-WEEKS','RENEW-PERIOD-3-WEEKS','RENEW-PERIOD-4-WEEKS','RENEW-PERIOD-MONTHLY'), FALSE ) as lapsed_subscriber_4_weeks
+        ,coalesce(last_paid_membership_order_date <= dateadd('day',-70,sysdate()) and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-6-WEEKS','RENEW-PERIOD-8-WEEKS'), FALSE ) as lapsed_subscriber_5_8_weeks
+        ,coalesce(last_paid_membership_order_date <= dateadd('day',-100,sysdate()) and is_member and not is_cancelled_member and current_renew_period in ('RENEW-PERIOD-12-WEEKS'), FALSE ) as lapsed_subscriber_12_weeks
+        ,coalesce( last_paid_order_date >= most_recent_membership_cancelled_date and is_cancelled_member and most_recent_membership_cancelled_date >= dateadd('day',-90,sysdate()), FALSE ) as active_cancelled_subscriber 
+        ,coalesce( last_paid_order_date <= most_recent_membership_cancelled_date and is_cancelled_member and most_recent_membership_cancelled_date >= dateadd('day',-90,sysdate()), FALSE ) as recent_cancelled_subscriber 
+        ,coalesce( last_paid_order_date <= most_recent_membership_cancelled_date and is_cancelled_member and most_recent_membership_cancelled_date < dateadd('day',-90,sysdate()), FALSE ) as lapsed_cancelled_subscriber 
         ,beef_revenue
         ,bison_revenue
         ,chicken_revenue
@@ -383,19 +383,19 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,wagyu_revenue
         ,bundle_revenue
         ,seafood_revenue
-        ,cast(most_recent_beef_order_date as date) as most_recent_beef_order_date    
-        ,cast(most_recent_bison_order_date as date) as most_recent_bison_order_date  
-        ,cast(most_recent_chicken_order_date as date) as most_recent_chicken_order_date 
-        ,cast(most_recent_japanse_wagyu_order_date as date) as most_recent_japanse_wagyu_order_date 
-        ,cast(most_recent_lamb_order_date as date) as most_recent_lamb_order_date 
-        ,cast(most_recent_pork_order_date as date) as most_recent_pork_order_date 
-        ,cast(most_recent_seafood_order_date as date) as most_recent_seafood_order_date 
-        ,cast(most_recent_sides_order_date as date) as most_recent_sides_order_date 
-        ,cast(most_recent_turkey_order_date as date) as most_recent_turkey_order_date 
-        ,cast(most_recent_wagyu_order_date as date) as most_recent_wagyu_order_date 
-        ,cast(most_recent_bundle_order_date as date) as most_recent_bundle_order_date 
+        ,most_recent_beef_order_date::date as most_recent_beef_order_date    
+        ,most_recent_bison_order_date::date as most_recent_bison_order_date  
+        ,most_recent_chicken_order_date::date as most_recent_chicken_order_date 
+        ,most_recent_japanse_wagyu_order_date::date as most_recent_japanse_wagyu_order_date 
+        ,most_recent_lamb_order_date::date as most_recent_lamb_order_date 
+        ,most_recent_pork_order_date::date as most_recent_pork_order_date 
+        ,most_recent_seafood_order_date::date as most_recent_seafood_order_date 
+        ,most_recent_sides_order_date::date as most_recent_sides_order_date 
+        ,most_recent_turkey_order_date::date as most_recent_turkey_order_date 
+        ,most_recent_wagyu_order_date::date as most_recent_wagyu_order_date 
+        ,most_recent_bundle_order_date::date as most_recent_bundle_order_date 
         ,last_paid_order_value
-        ,cast(last_paid_moolah_order_date as date) as last_paid_moolah_order_date
+        ,last_paid_moolah_order_date::date as last_paid_moolah_order_date
         ,last_14_days_impacful_customer_reschedules
         ,referrals_sent
         ,referrals_redeemed

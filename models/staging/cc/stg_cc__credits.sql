@@ -1,6 +1,7 @@
 with source as (
 
-    select * from {{ source('cc', 'credits') }} where __deleted is null
+    select * from {{ source('cc', 'credits') }} where not _fivetran_deleted
+
 ),
 
 renamed as (
@@ -8,9 +9,9 @@ renamed as (
     select
         id as credit_id
         ,promotion_id
-        --,bid_item_id
+        ,bid_item_id
         ,cow_cash_entry_source_id
-        ,if(promotion_id is not null and promotion_type is null,'PROMOTION',{{ clean_strings('promotion_type') }} ) as promotion_source -- default to old promotion table source if type is null
+        ,iff(promotion_id is not null and promotion_type is null,'PROMOTION',{{ clean_strings('promotion_type') }} ) as promotion_source -- default to old promotion table source if type is null
         ,{{ cents_to_usd('discount_in_cents') }} as credit_discount_usd
         ,created_at as created_at_utc
         ,user_id

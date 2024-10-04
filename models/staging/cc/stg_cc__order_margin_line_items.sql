@@ -1,11 +1,6 @@
-{{
-    config(
-        enabled=false
-    )
-}}
 with source as (
 
-    select * from {{ source('cc', 'order_margin_line_items') }} 
+    select * from {{ source('cc', 'order_margin_line_items') }} where not _fivetran_deleted
 
 ),
 

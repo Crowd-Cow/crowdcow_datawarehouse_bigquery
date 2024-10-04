@@ -3,9 +3,10 @@ version: 2
 sources:
 
   - name: acumatica
-    schema: raw_s3
+    database: raw
+    schema: acumatica
     tables:
-      - name: acumatica_bills
+      - name: bills
         description: Bills and adjustments in Acumatica. Contains invoice information
 
         columns:
@@ -83,6 +84,3 @@ sources:
 
           - name: _fivetran_synced
             description: Timestamp for when the record was synced by Fivetran
-      
-      - name: acumatica_bills_details
-        description: Bills and adjustments in Acumatica. Contains invoice information

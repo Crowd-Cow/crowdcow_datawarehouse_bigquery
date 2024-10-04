@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ source('cc', 'gift_cards') }} 
+    select * from {{ source('cc', 'gift_cards') }} where not _fivetran_deleted
 
 ),
 
@@ -24,7 +24,7 @@ renamed as (
         ,{{ clean_strings('image_url') }} as image_url
         ,{{ clean_strings('code') }} as gift_card_code
         ,updated_at as updated_at_utc
-        --,sold_at as sold_at_utc
+        ,sold_at as sold_at_utc
 
     from source
 

@@ -3,9 +3,10 @@ version: 2
 sources:
 
   - name: zendesk
-    schema: raw_zendesk
+    database: raw
+    schema: zendesk
     tables:
-      - name: satisfaction_ratings
+      - name: satisfaction_rating
         description: Zendesk satisfaction rating
         columns:
           - name: id
@@ -33,7 +34,7 @@ sources:
           - name: _fivetran_synced
             description: _fivetran_synced
       
-      - name: users
+      - name: user
         description: Zendesk user
         columns:
           - name: id
@@ -121,7 +122,7 @@ sources:
           - name: custom_instagram_account
             description: custom_instagram_account
 
-      - name: tickets
+      - name: ticket
         description: Zendesk tickets
         columns:
           - name: id
@@ -256,14 +257,3 @@ sources:
             description: system_email_id
           - name: system_eml_redacted
             description: system_eml_redacted
-
-
-      - name: tickets_custom_fields
-        description: Zendesk tickets custom fields
-        columns:
-          - name: id
-            description: id
-          - name: url
-            description: url
-
-      - name: tickets_followup_ids

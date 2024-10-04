@@ -1,6 +1,3 @@
-{{ config(
-  enabled=false
-) }}
 with
 
 incoming_traffic as ( select * from {{ source('google_analytics', 'incoming_traffic') }} )

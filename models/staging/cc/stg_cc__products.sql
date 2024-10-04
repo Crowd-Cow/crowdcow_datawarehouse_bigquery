@@ -1,7 +1,7 @@
 
 with source as (
 
-  select * from  {{ ref('products_ss') }} 
+  select * from  {{ ref('products_ss') }} where not _fivetran_deleted
 
 ),
 
@@ -34,10 +34,10 @@ renamed as (
   ,{{ cents_to_usd('max_product_bundle_value_in_cents') }} as max_product_bundle_value_in_usd
   ,fc_id
   ,{{ clean_strings('internal_note') }} as product_internal_note
-  --,loyalty_reward_order_number
-  --,loyalty_reward_apply_window_days
-  --,loyalty_reward_daily_rate
-  --, clean_strings('loyalty_reward_message') }} as loyalty_reward_message
+  ,loyalty_reward_order_number
+  ,loyalty_reward_apply_window_days
+  ,loyalty_reward_daily_rate
+  ,{{ clean_strings('loyalty_reward_message') }} as loyalty_reward_message
   ,{{ clean_strings('automated_highlight_text_type') }} as automated_highlight_text_type
   ,always_available as is_always_available
   ,alacarte as is_alacarte

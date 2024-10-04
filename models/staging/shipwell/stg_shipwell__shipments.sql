@@ -1,12 +1,12 @@
 with
 
-source as ( select * from {{ source('shipwell', 'shipwell_shipments') }} )
+source as ( select * from {{ source('shipwell', 'shipments') }} )
 
 ,renamed as (
     select
         id as shipment_id
         ,reference_id
-        ,CAST(JSON_EXTRACT_SCALAR(current_carrier, '$.name') AS STRING) AS current_carrier_name
+        ,current_carrier:name::text as current_carrier_name
         ,{{ clean_strings('state') }} as shipment_status
         ,total_miles
         ,created_at as created_at_utc
@@ -15,5 +15,3 @@ source as ( select * from {{ source('shipwell', 'shipwell_shipments') }} )
 )
 
 select * from renamed
-
-

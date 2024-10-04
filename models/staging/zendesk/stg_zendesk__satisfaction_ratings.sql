@@ -1,6 +1,6 @@
 with
 
-source as ( select * from {{ source('zendesk', 'satisfaction_ratings') }} )
+source as ( select * from {{ source('zendesk', 'satisfaction_rating') }} )
 
 ,renamed as (
     select
@@ -9,7 +9,7 @@ source as ( select * from {{ source('zendesk', 'satisfaction_ratings') }} )
         ,assignee_id
         ,group_id
         ,requester_id
-        ,cast(ticket_id as string) as ticket_id
+        ,ticket_id::text as ticket_id
         ,{{ clean_strings('score') }} as csat_score
         ,created_at as created_at_utc
         ,updated_at as updated_at_utc

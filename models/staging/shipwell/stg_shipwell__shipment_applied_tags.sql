@@ -1,14 +1,13 @@
 with
 
-source as ( select * from {{ source('shipwell', 'shipwell_shipments') }} )
+source as ( select * from {{ source('shipwell', 'shipments') }} )
 
 ,renamed as (
-    SELECT 
-        source.id AS shipment_id,
-        CAST(JSON_EXTRACT_SCALAR(tag, '$') AS STRING) AS tag_id
-    FROM 
-        source,
-        UNNEST(JSON_EXTRACT_ARRAY(source.metadata.tags)) AS tag
+    select
+        id as shipment_id
+        ,tag.value::text as tag_id
+    from source,
+        lateral flatten( input => metadata, path => 'tags' ) tag
 )
 
 select * from renamed

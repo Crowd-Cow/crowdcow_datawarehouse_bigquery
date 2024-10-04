@@ -1,6 +1,6 @@
 with source as (
 
-  select * from  {{ ref('bid_items_ss') }} 
+  select * from  {{ ref('bid_items_ss') }} where not _fivetran_deleted
 
 ),
 
@@ -32,13 +32,13 @@ renamed as (
     ,{{ clean_strings('highlight_text') }} as highlight_text
     ,stackable as is_stackable
     ,new_customers_only as is_new_customers_only
-    --,bid_item_group_id
+    ,bid_item_group_id
     ,limit_one_per_order as limit_one_per_order
     ,valid_price as is_valid_price
     ,{{ clean_strings('skus_with_quantities_hash') }} as skus_with_quantities_hash
-    --,product_permutation_id
-    --,automated_highlight_text_type
-    --,always_available as is_always_available
+    ,product_permutation_id
+    ,automated_highlight_text_type
+    ,always_available as is_always_available
     ,dbt_valid_to
     ,dbt_valid_from
     ,case

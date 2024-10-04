@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ ref('cuts_ss') }}
+    select * from {{ ref('cuts_ss') }} where not _fivetran_deleted
 
 ),
 
@@ -9,7 +9,7 @@ renamed as (
     select
         id as cut_id
         ,dbt_scd_id as cut_key
-        --,sort_order
+        ,sort_order
         ,{{ clean_strings('product_subtype') }} as product_subtype
         ,hard_scan_weight_min
         ,{{ clean_strings('pretty_name') }} as cut_pretty_name

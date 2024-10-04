@@ -11,9 +11,9 @@ purchasing_user as ( select * from {{ ref('users') }} where customer_cohort_date
         ,user_id
         ,order_paid_at_utc
         ,product_profit
-        ,safe_divide(product_profit,gross_product_revenue) as product_margin
+        ,div0(product_profit,gross_product_revenue) as product_margin
         ,gross_profit
-        ,safe_divide(gross_profit,net_revenue) as gross_margin
+        ,div0(gross_profit,net_revenue) as gross_margin
         ,net_revenue
         
         ,round(
@@ -30,19 +30,7 @@ purchasing_user as ( select * from {{ ref('users') }} where customer_cohort_date
             + other_discount
         ,2) as adjusted_net_revenue
         
-        ,round(
-            gross_product_revenue 
-            + membership_discount 
-            + merch_discount
-            + free_protein_promotion
-            + item_promotion
-            + shipping_revenue 
-            + free_shipping_discount
-            {# + new_member_discount #}
-            + refund_amount
-            + gift_redemption
-            + other_discount
-        ,2) 
+        ,adjusted_net_revenue 
             - product_cost 
             - shipment_cost 
             - packaging_cost 
@@ -61,12 +49,12 @@ select
     ,calc_margin.order_id
     ,calc_margin.is_rastellis
     ,calc_margin.is_qvc
-    ,DATE_DIFF(date(order_paid_at_utc), date(customer_cohort_date), MONTH) AS customer_cohort_months
-    ,DATE_DIFF(date(order_paid_at_utc), date(customer_cohort_date), DAY) AS customer_cohort_days
-    ,DATE_DIFF(CURRENT_DATE(), date(customer_cohort_date), MONTH) AS customer_cohort_tenure_months
-    ,DATE_DIFF(CURRENT_DATE(), date(membership_cohort_date), MONTH) AS membership_cohort_tenure_months
-    ,IF(date(order_paid_at_utc) >= date(membership_cohort_date), DATE_DIFF(date(order_paid_at_utc), date(membership_cohort_date), MONTH), NULL) AS membership_cohort_months
-    ,IF(date(order_paid_at_utc) >= date(membership_cohort_date), DATE_DIFF(date(order_paid_at_utc), date(membership_cohort_date), DAY), NULL) AS membership_cohort_days
+    ,datediff(month,customer_cohort_date,order_paid_at_utc) as customer_cohort_months
+    ,datediff(day,customer_cohort_date,order_paid_at_utc) as customer_cohort_days
+    ,datediff(month,customer_cohort_date,sysdate()) as customer_cohort_tenure_months
+    ,datediff(month,membership_cohort_date,sysdate()) as membership_cohort_tenure_months
+    ,iff(order_paid_at_utc >= membership_cohort_date,datediff(month,membership_cohort_date,order_paid_at_utc),null) as membership_cohort_months
+    ,iff(order_paid_at_utc >= membership_cohort_date,datediff(day,membership_cohort_date,order_paid_at_utc),null) as membership_cohort_days
     ,calc_margin.product_profit
     ,calc_margin.product_margin
     ,calc_margin.gross_profit

@@ -3,9 +3,10 @@ version: 2
 sources:
 
   - name: stripe
-    schema: raw_stripe
+    database: raw
+    schema: stripe
     tables:
-      - name: stripe_refunds
+      - name: refund
         description: Refund transactions to customer payment method via Stripe
         columns:
           - name: id
@@ -56,7 +57,7 @@ sources:
           - name: _fivetran_synced
             description: Timestamp for when the record was synced by Fivetran to the `raw` database in Snowflake
 
-      - name: stripe_charges
+      - name: charge
         description: Charge transactions to a customer's card via Sripe
         columns:
           - name: id
@@ -260,7 +261,7 @@ sources:
           - name: rule_predicate
             description: rule_predicate
 
-      - name: stripe_payment_methods
+      - name: payment_method_card
         description: Details of the payment method chosen
         columns:
           - name: id

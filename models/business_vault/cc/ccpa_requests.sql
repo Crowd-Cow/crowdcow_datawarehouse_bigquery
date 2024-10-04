@@ -10,11 +10,11 @@ ccpa as (select * from {{ ref('stg_gs__ccpa_requests') }})
         ,ccpa.last_name
         ,ccpa.email
         
-        ,CASE
-            WHEN REGEXP_CONTAINS(ccpa.admin_link, r'CROWDCOW.COM/ADMIN/') THEN LOWER(SPLIT(ccpa.admin_link, '/')[OFFSET(4)])
-            WHEN ccpa.email IS NOT NULL THEN users.user_token
-            ELSE NULL
-        END AS user_token
+        ,case 
+            when ccpa.admin_link like '%CROWDCOW.COM/ADMIN/%' then lower(split_part(admin_link,'/',5))
+            when ccpa.email is not null then users.user_token
+            else null 
+         end as user_token
         
         ,ccpa.date_received
     from ccpa

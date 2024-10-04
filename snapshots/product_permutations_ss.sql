@@ -2,7 +2,6 @@
 
 {{
    config(
-       enabled=false,
        target_schema='snapshots',
        unique_key='id',
 

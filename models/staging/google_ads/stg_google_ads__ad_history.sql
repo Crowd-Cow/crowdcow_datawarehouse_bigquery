@@ -1,6 +1,3 @@
-{{ config(
-  enabled=false
-) }}
 with 
 
 source as ( select * from {{ source('google_ads', 'ad_history') }} )

@@ -16,7 +16,7 @@ select distinct
     ,batch_size
     ,case_weight
     ,is_primary_vendor
-    ,active_solidus_inactive
+    ,active_inactive
     ,allocation_in_percentage
 from source
     

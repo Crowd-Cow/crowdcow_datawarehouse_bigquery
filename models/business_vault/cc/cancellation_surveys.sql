@@ -2,7 +2,6 @@ with
 
 cancel_events as ( select * from {{ ref('stg_cc__events') }} where event_name = 'BRIGHTBACK_CANCEL' )
 
-
 select
     event_id
     ,visit_id
@@ -17,10 +16,10 @@ select
     ,feedback
     ,selected_reason
     ,sentiment
-    ,IF(
-        feedback IS NOT NULL,
-        {{ process_text('feedback') }},
-        NULL
-    ) AS clean_feedback
+    ,iff(
+        feedback is not null
+        ,datascience.process_text(feedback)
+        ,null
+    ) as clean_feedback
 from cancel_events 
 qualify row_number() over ( partition by brightback_id order by occurred_at_utc desc ) = 1

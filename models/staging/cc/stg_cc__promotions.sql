@@ -1,7 +1,7 @@
 with 
 
-promotion as ( select * from {{ ref('promotions_ss') }} )
-,promotion_promotion as ( select * from {{ ref('promotions_promotions_ss') }}  )
+promotion as ( select * from {{ ref('promotions_ss') }} where not _fivetran_deleted )
+,promotion_promotion as ( select * from {{ ref('promotions_promotions_ss') }} where not _fivetran_deleted )
 ,promotion_code as (
     select
         configurable_id as promotion_id
@@ -18,16 +18,16 @@ promotion as ( select * from {{ ref('promotions_ss') }} )
     'PROMOTION' as promotion_source
     ,id
     ,updated_at
-    ,timestamp(null) as starts_at
-    ,INT64(null) as claimable_window_in_days
-    ,INT64(null) as must_be_claimed
-    ,timestamp(null) as ends_at
+    ,null::timestamp as starts_at
+    ,null::int as claimable_window_in_days
+    ,null::boolean as must_be_claimed
+    ,null::timestamp as ends_at
     ,promotion_type
     ,created_at
     ,always_available
     ,must_be_assigned_to_user
     ,must_be_assigned_to_order
-    ,INT64(null) must_be_applied_by_user
+    ,null::boolean must_be_applied_by_user
     ,dbt_scd_id
     ,dbt_updated_at
     ,dbt_valid_from
@@ -46,9 +46,9 @@ select
     ,ends_at
     ,name as promotion_type
     ,created_at
-    ,INT64(null) as always_available
-    ,INT64(null) as must_be_assigned_to_user
-    ,INT64(null) as must_be_assigned_to_order
+    ,null::boolean as always_available
+    ,null::boolean as must_be_assigned_to_user
+    ,null::boolean as must_be_assigned_to_order
     ,must_be_claimed
     ,dbt_scd_id
     ,dbt_updated_at

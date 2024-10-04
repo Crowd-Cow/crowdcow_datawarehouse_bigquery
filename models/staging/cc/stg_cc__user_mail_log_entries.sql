@@ -1,6 +1,6 @@
 with
 
-source as ( select * from {{ source('cc', 'user_mail_log_entries') }}  )
+source as ( select * from {{ source('cc', 'user_mail_log_entries') }} where not _fivetran_deleted )
 
 ,renamed as (
     select  

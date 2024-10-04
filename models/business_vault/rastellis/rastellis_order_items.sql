@@ -1,4 +1,5 @@
 with
+
 packed_sku as ( select * from {{ ref('int_packed_skus') }} )
 ,vendor as ( select * from {{ ref('stg_cc__sku_vendors') }} )
 ,sku as ( select * from {{ ref('skus') }} )

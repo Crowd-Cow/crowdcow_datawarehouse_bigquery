@@ -1,6 +1,6 @@
 with
 
-source as ( select * from {{ source('cc','referrals') }} )
+source as ( select * from {{ source('cc','referrals') }} where not _fivetran_deleted )
 
 
 ,referrals as (

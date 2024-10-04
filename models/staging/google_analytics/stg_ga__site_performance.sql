@@ -1,6 +1,3 @@
-{{ config(
-  enabled=false
-) }}
 with
 
 site_performance as ( select * from {{ source('google_analytics', 'site_performance') }} )

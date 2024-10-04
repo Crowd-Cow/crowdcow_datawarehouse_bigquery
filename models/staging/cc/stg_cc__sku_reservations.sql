@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ ref('sku_reservations_ss') }} 
+    select * from {{ ref('sku_reservations_ss') }} where not _fivetran_deleted
 
 ),
 
@@ -9,7 +9,7 @@ renamed as (
     select
         id as sku_reservation_id
         ,dbt_scd_id as sku_reservation_key
-        --,reservation_group_id
+        ,reservation_group_id
         ,quantity as sku_reservation_quantity
         ,{{ cents_to_usd('price_in_cents') }} as price_usd
         ,{{ cents_to_usd('cost_in_cents') }} as cost_usd
@@ -26,7 +26,7 @@ renamed as (
         ,sku_id
         ,original_quantity
         ,fc_id
-        --,sku_reservation_pool_id
+        ,sku_reservation_pool_id
         ,dbt_valid_to
         ,dbt_valid_from
         ,case

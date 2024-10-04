@@ -1,6 +1,6 @@
 with
 
-source as ( select * from {{ source('google_sheets', 'sku_standard_cost') }} )
+source as ( select * from {{ source('google_sheets', 'standard_sku_cost') }} )
 
 ,renamed as (
     select

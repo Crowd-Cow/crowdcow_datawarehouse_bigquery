@@ -1,6 +1,6 @@
 with 
 
-source as ( select * from {{ source('cc', 'orders') }} where id not in (2871732, 3120849) ) -- and not _fivetran_deleted )
+source as ( select * from {{ source('cc', 'orders') }} where not _fivetran_deleted and id not in (2871732, 3120849) )
 ,postal_code as ( select * from {{ ref('stg_cc__postal_codes') }} )
 
 ,renamed as (
@@ -19,7 +19,7 @@ source as ( select * from {{ source('cc', 'orders') }} where id not in (2871732,
     ,gift_recipient_id
     ,phone_number_id
     ,packer_id
-    --,bid_id
+    ,bid_id
     ,event_id as order_event_id -- As found in cc.events, not an Ahoy Event
     ,{{ clean_strings('session_id') }} as order_session_id
     ,created_by_user_id as order_created_by_user_id
@@ -53,9 +53,9 @@ source as ( select * from {{ source('cc', 'orders') }} where id not in (2871732,
     ,{{ cents_to_usd('expedited_shipping_fee_cents') }} as order_expedited_shipping_fee_usd
     ,notes_updated_at as order_notes_updated_at_utc
     ,scheduled_arrival_date as order_scheduled_arrival_date_utc
-    ,TIMESTAMP(DATETIME(scheduled_arrival_date,'America/Los_Angeles')) as order_scheduled_arrival_date_pt
+    ,convert_timezone('UTC','America/Los_Angeles',scheduled_arrival_date) as order_scheduled_arrival_date_pt
     ,print_prepick_label_last_attempted_at as order_print_prepick_label_last_attempted_at_utc
-    --, clean_strings('force_postage_carrier')  as order_force_postage_carrier 
+    ,{{ clean_strings('force_postage_carrier') }} as order_force_postage_carrier 
     ,scheduled_fulfillment_date as order_scheduled_fulfillment_date_utc
     ,{{ cents_to_usd('total_price_cents') }} as order_total_price_usd
     ,picked_at as order_picked_at_utc
@@ -106,7 +106,7 @@ source as ( select * from {{ source('cc', 'orders') }} where id not in (2871732,
     ,postal_code.county_name as order_delivery_county_name
     ,total_weight_in_pounds as order_total_weight_in_pounds
     ,delivery_longitude as order_delivery_longitude
-    --,updated_payment_info_at as order_updated_payment_info_at_utc
+    ,updated_payment_info_at as order_updated_payment_info_at_utc
     ,delivery_elevation as order_delivery_elevation
     ,set_aside_at as order_set_at_utc
     ,scheduled_fulfillment_date_override_by_user_id as order_scheduled_fulfillment_date_override_by_user_id
@@ -139,14 +139,14 @@ source as ( select * from {{ source('cc', 'orders') }} where id not in (2871732,
     ,stripe_card_fingerprint -- Not converting to uppercase because the difference between upper and lower is significant in this fingerprint (ex. l3wrJ08V0t1SSecS)
     ,{{ clean_strings('stripe_failure_code') }} as stripe_failure_code
     ,{{ clean_strings('stripe_card_funding') }} as stripe_card_funding
-    ,cast(stripe_card_last4 as INT64) as stripe_card_last4
+    ,stripe_card_last4::int as stripe_card_last4
     ,third_party_internal_identifier
     ,third_party_customer_identifier
     ,gel_pack_count
 
   from source
-    left join postal_code on LEFT(source.delivery_postal_code, 5) =cast(postal_code.postal_code as string)
-    left join postal_code as billing_postal_code on left(source.stripe_card_zip,5) = cast(billing_postal_code.postal_code as string)
+    left join postal_code on left(source.delivery_postal_code,5) = postal_code.postal_code
+    left join postal_code as billing_postal_code on left(source.stripe_card_zip,5) = billing_postal_code.postal_code
 
 )
 

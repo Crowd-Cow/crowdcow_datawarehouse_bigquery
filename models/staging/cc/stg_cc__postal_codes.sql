@@ -1,7 +1,7 @@
 with 
 
-postal_code as ( select * from {{ source('cc', 'postal_codes') }} ) 
-,lookups as ( select * from {{ source('cc', 'postal_code_lookup') }} )
+postal_code as ( select * from {{ source('cc', 'postal_codes') }} where not _fivetran_deleted )
+,lookup as ( select * from {{ source('cc', 'postal_code_lookup') }} )
 
 ,renamed as (
 
@@ -10,7 +10,7 @@ postal_code as ( select * from {{ source('cc', 'postal_codes') }} )
         ,{{ clean_strings('postal_code.area_name') }} as area_name
         ,postal_code.population
         ,{{ clean_strings('postal_code.state_name') }} as state_name
-        ,{{ clean_strings('lookups.county_name') }} as county_name
+        ,{{ clean_strings('lookup.county_name') }} as county_name
         ,postal_code.dma_id
         ,postal_code.latitude
         ,postal_code.longitude
@@ -20,7 +20,7 @@ postal_code as ( select * from {{ source('cc', 'postal_codes') }} )
         ,{{ clean_strings('postal_code.time_zone_name') }} as time_zone_name
         ,postal_code.updated_at as updated_at_utc
         ,coalesce(
-            {{ clean_strings('lookups.state_code') }}
+            {{ clean_strings('lookup.state_code') }}
             ,{{ clean_strings('postal_code.state_code') }}
         ) as state_code
         ,{{ cents_to_usd('postal_code.median_income_cents') }} as median_income
@@ -29,7 +29,7 @@ postal_code as ( select * from {{ source('cc', 'postal_codes') }} )
         ,{{ clean_strings('postal_code.po_name') }} as po_name
 
     from postal_code
-        left join lookups on postal_code.postal_code = lookups.postal_code
+        left join lookup on postal_code.postal_code = lookup.postal_code
 
 )
 

@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ source('stripe', 'stripe_refunds') }}
+    select * from {{ source('stripe', 'refund') }}
 
 ),
 
@@ -14,8 +14,8 @@ renamed as (
         ,{{ clean_strings('reason') }} as refund_reason
         ,receipt_number
         ,{{ clean_strings('status') }} as refund_status
-        ,balance_transaction as stripe_balance_transaction_id
-        ,charge as stripe_charge_id
+        ,balance_transaction_id as stripe_balance_transaction_id
+        ,charge_id as stripe_charge_id
 
     from source
 

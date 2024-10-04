@@ -13,12 +13,12 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} where not is_rastel
         ,fc.fc_name
         ,ifnull(sku.category,'NONE') as category
         ,ifnull(sku.sub_category,'NONE') as sub_category
-        ,if(inventory.quantity < 0,0,inventory.quantity) as quantity
-        ,if(inventory.quantity_available < 0,0,inventory.quantity_available) as quantity_available
+        ,iff(inventory.quantity < 0,0,inventory.quantity) as quantity
+        ,iff(inventory.quantity_available < 0,0,inventory.quantity_available) as quantity_available
     from inventory
         left join sku on inventory.sku_key = sku.sku_key
         left join fc on inventory.fc_key = fc.fc_key
-    where snapshot_date <= current_date() + interval 1 day
+    where snapshot_date <= sysdate()::date - 1
 )
 
 select

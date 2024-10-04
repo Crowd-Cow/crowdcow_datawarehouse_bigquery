@@ -1,6 +1,6 @@
 with
 
-tag as ( select * from {{ source('cc', 'tags') }} where __deleted is null)
+tag as ( select * from {{ source('cc', 'tags') }} where not _fivetran_deleted)
 
 select
     id as tag_id

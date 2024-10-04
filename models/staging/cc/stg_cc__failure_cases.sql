@@ -1,6 +1,6 @@
 with 
 
-source as ( select * from {{ source('cc', 'failure_cases') }}  )
+source as ( select * from {{ source('cc', 'failure_cases') }} where not _fivetran_deleted )
 
 ,renamed as (
 
@@ -8,7 +8,7 @@ source as ( select * from {{ source('cc', 'failure_cases') }}  )
         id as failure_case_id
         ,reported_by_user_id
         ,entered_by_user_id
-        ,coalesce(charge_back_amount,0) as charge_back_amount
+        ,zeroifnull(charge_back_amount) as charge_back_amount
         ,{{ clean_strings('category') }} as category
         ,{{ clean_strings('specifics') }} as specifics
         ,archived_at as archived_at_utc
@@ -19,12 +19,12 @@ source as ( select * from {{ source('cc', 'failure_cases') }}  )
         ,customer_id as user_id
         ,reported_at as reported_at_utc
         ,{{ clean_strings('link_to_zendesk_ticket') }} as link_to_zendesk_ticket
-        ,coalesce(refund_amount,0) as refund_amount
+        ,zeroifnull(refund_amount) as refund_amount
         ,failure_occured_at as failure_occured_at_utc
         ,created_at as created_at_utc
         ,shipped_at as shipped_at_utc
         ,{{ clean_strings('notes') }} as notes
-        ,coalesce({{ cents_to_usd('credit_amount') }},0) as credit_amount
+        ,zeroifnull({{ cents_to_usd('credit_amount') }} ) as credit_amount
         ,updated_at as updated_at_utc
         ,{{ clean_strings('farm_name') }} as farm_name
     from source

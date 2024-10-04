@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ source('cc', 'pipeline_orders') }}  
+    select * from {{ source('cc', 'pipeline_orders') }} where not _fivetran_deleted 
 
 ),
 
@@ -8,12 +8,12 @@ renamed as (
 
     select
         id as pipeline_order_id
-        --,special_instructions_changed
+        ,special_instructions_changed
         ,events_completed_at as events_completed_at_utc
         ,inventory_owner_id
         ,expected_pounds
         ,box_count
-        --,pipeline_actor_id
+        ,pipeline_actor_id
         ,last_updated_by
         ,lot_number
         ,processor_loss_pounds
@@ -36,7 +36,7 @@ renamed as (
         ,{{ clean_strings('admin_notes') }} as admin_notes
         ,{{ clean_strings('pipeline_order_type') }} as pipeline_order_type
         ,created_at as created_at_utc
-        --,boxed_beef_processor_id
+        ,boxed_beef_processor_id
         ,{{ clean_strings('packer_bol_url') }} as packer_bol_url
         ,{{ cents_to_usd('potential_revenue_cents') }} as potential_revenue_usd
         ,processor_total_shipment_weight
@@ -44,7 +44,7 @@ renamed as (
         ,processor_delivery_scheduled as is_processor_delivery_scheduled
         ,debut_lot as is_debut_lot
         ,marketplace as is_marketplace
-        ,if(removed=1,true,false) as is_removed
+        ,removed as is_removed
         ,fc_delivery_scheduled as is_fc_delivery_scheduled
 
     from source

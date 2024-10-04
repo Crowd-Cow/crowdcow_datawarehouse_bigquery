@@ -3,10 +3,10 @@ version: 2
 sources:
 
   - name: iterable
-    ##database: raw
-    schema: raw_iterable
+    database: raw
+    schema: iterable
     tables:
-      - name: events
+      - name: event
         description: Iterable events for things like email sends, clicks, opens, etc
 
         columns:
@@ -64,7 +64,7 @@ sources:
           - name: is_custom_event
             description: Boolean indicating if the event is a custom event sent by Crowd Cow to Iterable
 
-      - name: campaigns
+      - name: campaign_history
         description: History of changes to a campaign in Iterable
 
         columns:
@@ -104,7 +104,7 @@ sources:
           - name: _fivetran_synced
             description: Timestamp for when the record was synced by Fivetran
 
-      - name: users
+      - name: user_history
         description: History of changes to a user within Iterable
 
         columns:
@@ -153,7 +153,7 @@ sources:
           - name: additional_properties
             description: JSON object that stores additional properties about the user
             
-      - name: users_emaillistids
+      - name: stg_iterable__user_list
         description: "Staging model for Iterable user lists"
 
         columns:

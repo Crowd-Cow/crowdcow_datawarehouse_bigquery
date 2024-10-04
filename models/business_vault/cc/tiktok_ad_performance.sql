@@ -1,6 +1,3 @@
-{{ config(
-  enabled=false
-) }}
 with 
 
 ad_stats as (select * from {{ ref('stg_tiktok__ad_report_daily')}})

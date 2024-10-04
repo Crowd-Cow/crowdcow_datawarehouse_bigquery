@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ source('cc', 'subscriptions') }} 
+    select * from {{ source('cc', 'subscriptions') }} where not _fivetran_deleted
 
 ),
 
@@ -15,7 +15,7 @@ renamed as (
         ,{{ clean_strings('delivery_street_address_2') }} as delivery_street_address_2
         ,{{ clean_strings('delivery_city') }} as delivery_city
         ,{{ clean_strings('delivery_state') }} as delivery_state
-        ,delivery_postal_code as delivery_postal_code
+        ,{{ clean_strings('delivery_postal_code') }} as delivery_postal_code
         ,reward_frequency as subscription_reward_frequency
         ,cancelled_at as subscription_cancelled_at_utc
         ,user_id
@@ -31,7 +31,7 @@ renamed as (
         ,{{ clean_strings('stripe_card_id') }} as stripe_card_id
         ,phone_number_id
         ,renews_at as subscription_renews_at_utc
-        ,if(active=1,true,false) as is_uncancelled_membership
+        ,active as is_uncancelled_membership
 
     from source
 

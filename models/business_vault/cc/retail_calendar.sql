@@ -11,7 +11,7 @@ date_spine as ( select * from {{ ref('stg_reference__date_spine') }} )
         ,static_fiscal_calendar.fiscal_year
         ,static_fiscal_calendar.fiscal_month as fiscal_month
     from date_spine
-        left join static_fiscal_calendar on date_spine.calendar_date = cast(static_fiscal_calendar.calendar_date as date)
+        left join static_fiscal_calendar on date_spine.calendar_date = static_fiscal_calendar.calendar_date
 )
 
 

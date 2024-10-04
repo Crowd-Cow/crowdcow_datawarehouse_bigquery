@@ -19,7 +19,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,sum(discount_usd) as total_discount_amount_usd
         
         /**** Breakdown the total credit for an order into various credit categories for financial reporting in Looker ****/
-        ,countif(business_group = 'FREE SHIPPING') as free_shipping_credit_count
+        ,count_if(business_group = 'FREE SHIPPING') as free_shipping_credit_count
         ,sum(case when revenue_waterfall_bucket = 'FREE SHIPPING DISCOUNT' then discount_usd end) as free_shipping_discount
         ,sum(case when revenue_waterfall_bucket = 'MEMBERSHIP DISCOUNT' then discount_usd end) as membership_discount
         ,sum(case when revenue_waterfall_bucket = 'MERCH DISCOUNT' then discount_usd end) as merch_discount
@@ -40,20 +40,20 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         orders.order_id
         ,orders.order_type
         ,parent_order_id
-        ,coalesce(orders.order_shipping_fee_usd,0) as shipping_revenue
-        ,coalesce(bid_amounts.gross_product_revenue, 0) as gross_product_revenue
-        ,coalesce(discount_amounts.free_shipping_credit_count, 0) as free_shipping_credit_count
-        ,coalesce(discount_amounts.free_shipping_discount, 0) * -1 as free_shipping_discount
-        ,coalesce(discount_amounts.membership_discount, 0) * -1 as membership_discount
-        ,coalesce(discount_amounts.merch_discount, 0) * -1 as merch_discount
-        ,coalesce(discount_amounts.free_protein_promotion, 0) * -1 as free_protein_promotion
-        ,coalesce(discount_amounts.item_promotion, 0) * -1 as item_promotion
-        ,coalesce(discount_amounts.moolah_item_discount, 0)*-1 as moolah_item_discount
-        ,coalesce(discount_amounts.moolah_order_discount, 0)*-1 as moolah_order_discount
-        ,coalesce(discount_amounts.new_member_discount, 0) * -1 as new_member_discount
-        ,coalesce(discount_amounts.gift_redemption, 0) * -1 as gift_redemption
-        ,coalesce(discount_amounts.other_discount, 0) * -1 as other_discount
-        ,coalesce(refund.refund_amount_usd, 0) * -1 as refund_amount
+        ,orders.order_shipping_fee_usd as shipping_revenue
+        ,zeroifnull(bid_amounts.gross_product_revenue) as gross_product_revenue
+        ,zeroifnull(discount_amounts.free_shipping_credit_count) as free_shipping_credit_count
+        ,zeroifnull(discount_amounts.free_shipping_discount) * -1 as free_shipping_discount
+        ,zeroifnull(discount_amounts.membership_discount) * -1 as membership_discount
+        ,zeroifnull(discount_amounts.merch_discount) * -1 as merch_discount
+        ,zeroifnull(discount_amounts.free_protein_promotion) * -1 as free_protein_promotion
+        ,zeroifnull(discount_amounts.item_promotion) * -1 as item_promotion
+        ,zeroifnull(discount_amounts.moolah_item_discount)*-1 as moolah_item_discount
+        ,zeroifnull(discount_amounts.moolah_order_discount)*-1 as moolah_order_discount
+        ,zeroifnull(discount_amounts.new_member_discount) * -1 as new_member_discount
+        ,zeroifnull(discount_amounts.gift_redemption) * -1 as gift_redemption
+        ,zeroifnull(discount_amounts.other_discount) * -1 as other_discount
+        ,zeroifnull(refund.refund_amount_usd) * -1 as refund_amount
     from orders
         left join bid_amounts on orders.order_id = bid_amounts.order_id
         left join discount_amounts on orders.order_id = discount_amounts.order_id

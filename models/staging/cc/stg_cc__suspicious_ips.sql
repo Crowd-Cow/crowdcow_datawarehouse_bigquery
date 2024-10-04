@@ -11,7 +11,7 @@ daily_ip_visits as (
     from visits
         left join orders on visits.visit_id = orders.visit_id
     where orders.visit_id is null
-        and DATE(visits.started_at_utc) >= DATE_ADD(CURRENT_DATE(), INTERVAL -10 DAY)
+        and date(visits.started_at_utc) >= dateadd('day',-10,date(sysdate()))
         and visits.visit_ip is not null
     group by 1,2
 ),

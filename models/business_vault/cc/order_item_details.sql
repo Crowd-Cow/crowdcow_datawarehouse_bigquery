@@ -47,10 +47,10 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
         ,ordered_items.sku_key as bid_sku_key
 
         /*** The SKU box and lot information for an order item is not known until the order is packed. ***/
-        ,cast(null as int64 )as sku_box_id
-        ,cast(null as string) as sku_box_key
-        ,cast(null as int64 )as sku_owner_id
-        ,cast(null as string) as lot_number
+        ,null::int as sku_box_id
+        ,null::text as sku_box_key
+        ,null::int as sku_owner_id
+        ,null::text as lot_number
 
         ,ordered_items.fc_id
         ,ordered_items.fc_key
@@ -71,7 +71,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
         ,ordered_items.created_at_utc
         ,ordered_items.bid_created_at_utc
         ,ordered_items.updated_at_utc
-        ,cast(null as timestamp) as packed_created_at_utc      
+        ,null::timestamp as packed_created_at_utc      
 
     from ordered_items left join get_packed_orders on ordered_items.order_id = get_packed_orders.order_id 
         and ordered_items.bid_id = get_packed_orders.bid_id 
@@ -103,7 +103,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
 ,get_sku_financials as (
     select
         get_owner_details.*
-        ,if(sku_price_usd = 0 and bid_list_price_usd > 0 and is_single_sku_bid_item,bid_list_price_usd,sku_price_usd) as sku_price_usd
+        ,iff(sku_price_usd = 0 and bid_list_price_usd > 0 and is_single_sku_bid_item,bid_list_price_usd,sku_price_usd) as sku_price_usd
 
         ,case
             when get_owner_details.is_marketplace and nullif(get_lot_cost_per_unit.cost_per_unit_usd,0) is null then coalesce(nullif(sku.marketplace_cost_usd,0),sku.owned_sku_cost_usd)
@@ -124,11 +124,11 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
         get_sku_financials.*
     
         ,case
-            when safe_divide(sku_price_usd * sku_quantity,bid_gross_product_revenue) > 1
+            when div0(sku_price_usd * sku_quantity,bid_gross_product_revenue) > 1
                 or sku_id is null
                 or (was_manually_changed and sku_quantity = 0) then 1
             when sku_quantity = 0 then 0
-            else safe_divide(sku_price_usd * sku_quantity,bid_gross_product_revenue)
+            else div0(sku_price_usd * sku_quantity,bid_gross_product_revenue)
          end as sku_price_proportion
     
     from get_sku_financials

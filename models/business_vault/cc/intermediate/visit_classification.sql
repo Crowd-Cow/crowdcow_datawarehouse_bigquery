@@ -26,7 +26,7 @@ base_visits as (
         partner_id
         ,partner_path
         ,row_number() over(partition by partner_path order by created_at_utc desc) as rn
-    from {{ ref('stg_cc__partners') }}
+    from staging.stg_cc__partners
     qualify rn = 1
 )
 
@@ -48,7 +48,7 @@ base_visits as (
         ,visit_landing_page_host
         ,visit_referring_domain
         ,visit_referrer
-        --,visit_search_keyword
+        ,visit_search_keyword
         ,visit_browser
         ,visit_ip
         ,visit_device_type
@@ -59,9 +59,9 @@ base_visits as (
         ,utm_campaign
         ,utm_content
         ,utm_term
-        --,visit_city
-        --,visit_country
-        --,visit_region
+        ,visit_city
+        ,visit_country
+        ,visit_region
         ,is_wall_displayed
         ,started_at_utc
         ,updated_at_utc
@@ -79,7 +79,7 @@ base_visits as (
         ,visits.visit_landing_page_path
         ,visits.visit_referring_domain
         ,visits.visit_referrer
-        --,visits.visit_search_keyword
+        ,visits.visit_search_keyword
         ,visits.visit_browser
         ,visits.visit_ip
         ,visits.visit_device_type
@@ -90,28 +90,23 @@ base_visits as (
         ,visits.utm_campaign
         ,visits.utm_content
         ,visits.utm_term
-        ,REGEXP_EXTRACT(visits.visit_landing_page, r'\?(.*)') AS parsed_landing_page
-        ,JSON_EXTRACT_SCALAR(visits.visit_landing_page, '$.UTM_MEDIUM') AS landing_utm_medium
-        ,JSON_EXTRACT_SCALAR(visits.visit_landing_page, '$.UTM_SOURCE') AS landing_utm_source
-        ,JSON_EXTRACT_SCALAR(visits.visit_landing_page, '$.UTM_CAMPAIGN') AS landing_utm_campaign
-        ,JSON_EXTRACT_SCALAR(visits.visit_landing_page, '$.UTM_ADSET') AS landing_utm_adset
-        ,JSON_EXTRACT_SCALAR(visits.visit_landing_page, '$.GCLID') AS gclid
-
+        ,parse_url(visits.visit_landing_page) as parsed_landing_page
+        ,parsed_landing_page:parameters:UTM_MEDIUM::text as landing_utm_medium
+        ,parsed_landing_page:parameters:UTM_SOURCE::text as landing_utm_source
+        ,parsed_landing_page:parameters:UTM_CAMPAIGN::text as landing_utm_campaign
+        ,parsed_landing_page:parameters:UTM_ADSET::text as landing_utm_adset
+        ,parsed_landing_page:parameters:GCLID::text as gclid
         ,ambassador_paths.partner_path as ambassador_path
         ,most_current_partner_path.partner_id
-        --,visits.visit_city
-        --,visits.visit_country
-        --,visits.visit_region
+        ,visits.visit_city
+        ,visits.visit_country
+        ,visits.visit_region
         ,visits.is_wall_displayed
         ,visits.started_at_utc
         ,visits.updated_at_utc
-    FROM visits
-    LEFT JOIN ambassador_paths 
-        ON REGEXP_EXTRACT(visits.visit_landing_page, r'^https?://[^/]+(/[^?#]*)') = ambassador_paths.partner_path
-    LEFT JOIN most_current_partner_path 
-        ON REGEXP_EXTRACT(visits.visit_landing_page, r'^https?://[^/]+(/[^?#]*)') = most_current_partner_path.partner_path
-
-
+    from visits
+        left join ambassador_paths on parse_url(visits.visit_landing_page):path::text = ambassador_paths.partner_path
+        left join most_current_partner_path on parse_url(visits.visit_landing_page):path::text = most_current_partner_path.partner_path
 )
 
 ,combine_elements_extract_user_token as (
@@ -125,22 +120,14 @@ base_visits as (
         ,coalesce(visit_landing_page_path,'') as visit_landing_page_path
 
         /** Extract user token from the landing page URL **/
-         ,LOWER(
-                CASE
-                    WHEN visit_landing_page_path LIKE '/L_U%' THEN 
-                        SPLIT(visit_landing_page_path, '/')[OFFSET(2)]
-                    ELSE 
-                        COALESCE(
-                            JSON_EXTRACT_SCALAR(parsed_landing_page, '$.C'),
-                            JSON_EXTRACT_SCALAR(parsed_landing_page, '$.USER_TOKEN')
-                        )
-                END
-                ) AS visit_landing_page_user_token
-
+        ,lower(case
+            when visit_landing_page_path like '/L_U%' then split_part(visit_landing_page_path,'/',3)
+            else coalesce(object_pick(parsed_landing_page:parameters,'C'):C::text,object_pick(parsed_landing_page:parameters,'USER_TOKEN'):USER_TOKEN::text)
+         end) as visit_landing_page_user_token
 
         ,coalesce(visit_referring_domain,'') as visit_referring_domain
         ,visit_referrer
-        --,coalesce(visit_search_keyword,'') as visit_search_keyword
+        ,coalesce(visit_search_keyword,'') as visit_search_keyword
         ,visit_browser
         ,visit_ip
         ,visit_device_type
@@ -155,9 +142,9 @@ base_visits as (
         ,gclid
         ,coalesce(ambassador_path,'') as ambassador_path
         ,partner_id
-        --,visit_city
-        --,visit_country
-        --,visit_region
+        ,visit_city
+        ,visit_country
+        ,visit_region
         ,is_wall_displayed
         ,started_at_utc
         ,updated_at_utc
@@ -175,7 +162,7 @@ base_visits as (
         ,visit_landing_page_user_token
         ,visit_referring_domain
         ,visit_referrer
-        --,visit_search_keyword
+        ,visit_search_keyword
         ,visit_browser
         ,visit_ip
         ,visit_device_type
@@ -190,9 +177,9 @@ base_visits as (
         ,gclid
         ,ambassador_path
         ,partner_id
-        --,visit_city
-        --,visit_country
-        --,visit_region
+        ,visit_city
+        ,visit_country
+        ,visit_region
         ,is_wall_displayed
         ,started_at_utc
         ,updated_at_utc 
@@ -266,7 +253,7 @@ base_visits as (
         ,visit_landing_page_user_token
         ,visit_referring_domain
         ,visit_referrer
-        --,visit_search_keyword
+        ,visit_search_keyword
         ,visit_browser
         ,visit_ip
         ,visit_device_type
@@ -294,12 +281,12 @@ base_visits as (
          end as channel
 
         ,sub_channel
-        ,STRING(null) as visit_attributed_source
+        ,null::text as visit_attributed_source
         ,ambassador_path
         ,partner_id
-        --,visit_city
-        --,visit_country
-        --,visit_region
+        ,visit_city
+        ,visit_country
+        ,visit_region
         ,is_paid_referrer
         ,is_social_platform_referrer
         ,is_wall_displayed

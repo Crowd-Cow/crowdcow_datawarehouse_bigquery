@@ -1,6 +1,3 @@
-{{ config(
-  enabled=false
-) }}
 with 
 
 source as ( select * from {{ source('facebook_ads', 'basic_campaign_report_by_day') }} )

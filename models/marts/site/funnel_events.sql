@@ -1,6 +1,3 @@
-{{ config(
-  enabled=false
-) }}
 with
 
 event_groupings as ( select * from {{ ref('events') }} )

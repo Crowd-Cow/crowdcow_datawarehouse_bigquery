@@ -1,6 +1,6 @@
 with
 
-source as ( select * from {{ ref('product_quantity_availables_ss') }})
+source as ( select * from {{ ref('product_quantity_availables_ss') }} where not _fivetran_deleted )
 
 ,renamed as (
     select

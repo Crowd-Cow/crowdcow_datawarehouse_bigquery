@@ -9,9 +9,9 @@ with
 bids as ( select * from {{ ref('stg_cc__bids') }} )
 ,bid_items as (select * from {{ ref('stg_cc__bid_items') }} )
 
--- The system allows for multiple item level credit for the same item which causes duplicate order items when joining to credits ***/
--- This doesn't allow us to accurately show which promos were applied to which item since the rest of the financial info (revenue, discounts, costs, etc) 
--- are at the item level and not the item/credit level. For now, we are taking the total amount of item credits for an item and the highest value credit as the one that was applied to the item ***/
+/*** The system allows for multiple item level credit for the same item which causes duplicate order items when joining to credits ***/
+/*** This doesn't allow us to accurately show which promos were applied to which item since the rest of the financial info (revenue, discounts, costs, etc) 
+/*** are at the item level and not the item/credit level. For now, we are taking the total amount of item credits for an item and the highest value credit as the one that was applied to the item ***/
 ,item_credits as ( 
     select distinct
         bid_id
@@ -28,7 +28,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,bids.bid_id
         ,bids.bid_item_id
 
-        ,if(
+        ,iff(
             item_credits.promotion_id is not null
             ,item_credits.promotion_id
             ,bids.promotion_id
@@ -56,7 +56,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,coalesce(bids.item_price_usd, bids.bid_price_paid_usd) as bid_price_paid_usd
         ,coalesce(bids.bid_non_member_price_usd,bids.item_price_usd) as bid_non_member_price_usd
         ,coalesce(bids.bid_member_price_usd,bids.item_price_usd) as bid_member_price_usd
-        ,coalesce(item_credits.credit_discount_usd,0) as bid_item_credit_usd
+        ,zeroifnull(item_credits.credit_discount_usd) as bid_item_credit_usd
         ,bids.is_fulfillment_at_risk
         ,bids.bid_quantity
         ,bids.created_at_utc
