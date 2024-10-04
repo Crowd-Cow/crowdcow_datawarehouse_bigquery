@@ -13,6 +13,7 @@ renamed as (
         ,shipment_id
         ,barcode
         ,order_id
+        ,scanned_weight as scanned_weight
         ,{{ clean_strings( 'input_method' ) }} as input_method
         ,{{ clean_strings( 'action' ) }} as action
         ,{{ clean_strings( 'name') }} as details
