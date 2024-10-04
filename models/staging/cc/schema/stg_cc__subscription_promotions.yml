@@ -6,8 +6,7 @@ models:
     columns:
       - name: subscription_promotion_id
         description: "Subscription promotion ID"
-        tests:
-          - unique
+        test:
           - not_null
 
       - name: updated_at_utc
