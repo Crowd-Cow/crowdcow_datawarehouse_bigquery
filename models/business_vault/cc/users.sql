@@ -95,8 +95,10 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.membership_cohort_date
         ,user_order_activity.first_completed_order_date
         ,user_order_activity.first_completed_order_visit_id
+        ,user_order_activity.acquisition_promotion_id
+        ,user_order_activity.acquisition_promotion_source
+        ,user_order_activity.acquisition_promotion_name
         ,user_visits.first_visit_id
-
         ,case
             when DATE_DIFF(cast(user_order_activity.first_completed_order_date as date), cast(users.created_at_utc as date), DAY) <= 10 and user_visits.first_visit_id is not null then user_visits.first_visit_id
             else user_order_activity.first_completed_order_visit_id
@@ -234,6 +236,9 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,membership_cohort_date
         ,date_diff(membership_cohort_date,current_date, MONTH) as membership_cohort_tenure_months
         ,first_promotion_type
+        ,acquisition_promotion_id
+        ,acquisition_promotion_source
+        ,acquisition_promotion_name
         ,current_promotion_type
         ,current_renew_period
         ,total_membership_count

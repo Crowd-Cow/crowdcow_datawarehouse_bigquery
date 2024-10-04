@@ -1,7 +1,7 @@
 with 
 
-promotion as ( select * from {{ ref('promotions_ss') }} )
-,promotion_promotion as ( select * from {{ ref('promotions_promotions_ss') }}  )
+promotion as ( select * from {{ ref('promotions_ss') }}  )
+,promotion_promotion as ( select * from {{ ref('promotions_promotions_ss') }}   )
 ,promotion_code as (
     select
         configurable_id as promotion_id
@@ -11,6 +11,7 @@ promotion as ( select * from {{ ref('promotions_ss') }} )
     from {{ ref('stg_cc__promotions_configurations') }}
     where promotion_configuration_key in ('PROMO_CODE','REWARDS_PROGRAM')
     and configurable_type = 'PROMOTIONS::PROMOTION'
+    and promotion_configuration_value <> 'GIFT4DAD2023'
 )
 
 ,union_promotions as (
@@ -86,8 +87,6 @@ from promotion_promotion
     from union_promotions
         left join promotion_code on union_promotions.id = promotion_code.promotion_id
             and union_promotions.promotion_source = promotion_code.promotion_source
-    WHERE 
-        promo_code != 'GIFT4DAD2023' 
 )
 
 select * from renamed

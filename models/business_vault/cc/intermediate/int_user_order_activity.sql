@@ -11,6 +11,9 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
 ,order_item_units as ( select * from {{ ref('int_order_units_pct') }} )
 ,reward as ( select * from {{ ref('stg_cc__reward_points') }} )
 ,discounts as (select * from {{ ref('discounts') }})
+,promotions as (select * from {{ ref('promotions')  }})
+,promotions_promotions as (select * from {{ ref('promotions_promotions') }})
+
 
 ,user_order_activity as (
     select
@@ -45,6 +48,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,max(if(is_paid_order and not is_cancelled_order and is_membership_order,cast(order_paid_at_utc as date),null)) as last_paid_membership_order_date
         ,max(if(is_paid_order and not is_cancelled_order and is_ala_carte_order,cast(order_paid_at_utc as date),null)) as last_paid_ala_carte_order_date
         ,max(if(is_paid_order and not is_cancelled_order,cast(order_paid_at_utc as date),null)) as last_paid_order_date
+        ,min(if(completed_order_rank = 1,order_id,null)) as first_completed_order_id
         ,min(if(completed_order_rank = 1,order_checkout_completed_at_utc,null)) as first_completed_order_date
         ,min(if(completed_order_rank = 1,visit_id,null)) as first_completed_order_visit_id
         ,max(if(is_paid_order and not is_cancelled_order,order_token,null)) as most_recent_order
@@ -134,6 +138,21 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,avg(days_to_next_paid_ala_carte_order) as average_ala_carte_order_frequency_days
     from order_frequency
     group by 1
+)
+
+,promotion_rank as (
+    select 
+        order_id,
+        discounts.promotion_id,
+        discounts.promotion_source,
+        case when discounts.promotion_source = 'PROMOTION' then promotions.promotion_type else promotions_promotions.name end as promotion_name, 
+        discount_usd,
+        ROW_NUMBER() OVER (PARTITION BY order_id ORDER BY discount_usd DESC) AS rank
+    from discounts
+    left join promotions on discounts.promotion_id = promotions.promotion_id and discounts.promotion_source = 'PROMOTION' 
+    left join promotions_promotions on discounts.promotion_id = promotions_promotions.id and discounts.promotion_source = 'PROMOTIONS::PROMOTION'
+    where discounts.promotion_id is not null
+    and discounts.promotion_id not in (3,10,14,275,104,226) --removing free shipping and in-cart specials
 )
 
 ,user_order_item_activity as (
@@ -237,10 +256,14 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,user_percentiles.last_paid_membership_order_date
         ,user_percentiles.last_paid_ala_carte_order_date
         ,user_percentiles.last_paid_order_date
+        ,user_percentiles.first_completed_order_id
         ,user_percentiles.first_completed_order_date
         ,user_percentiles.first_completed_order_visit_id
         ,user_percentiles.most_recent_order_promotion_id
         ,user_percentiles.most_recent_order_id
+        ,promotion_rank.promotion_id as acquisition_promotion_id
+        ,promotion_rank.promotion_source as acquisition_promotion_source
+        ,promotion_rank.promotion_name as acquisition_promotion_name
         ,coalesce(first_completed_order_date is not null, FALSE) as purchaser
         ,coalesce(first_completed_order_date is null, FALSE) as all_leads 
         ,coalesce(first_completed_order_date is null and cast(user.created_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 15 DAY), FALSE ) as hot_lead
@@ -281,6 +304,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         left join user_order_item_activity on user.user_id = user_order_item_activity.user_id
         left join user_reward_activity on user.user_id = user_reward_activity.user_id
         left join last_paid_order_info on user.user_id = last_paid_order_info.user_id
+        left join promotion_rank on user_percentiles.first_completed_order_id = promotion_rank.order_id and promotion_rank.rank = 1
 )
 
 select * from user_activity_joins
