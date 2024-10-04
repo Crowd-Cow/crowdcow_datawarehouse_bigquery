@@ -12,12 +12,17 @@ pipeline {
 
     stage('Setup dbt profile') {
       steps {
-        // Use withCredentials to securely handle the BigQuery service account key file
         withCredentials([file(credentialsId: 'BigQueryServiceAccountKeyFile', variable: 'SERVICE_ACCOUNT_KEY')]) {
+
+          // Create the .dbt directory in the workspace
+          sh 'mkdir -p $WORKSPACE/.dbt'
+
+          // Copy the service account key into the .dbt directory
+          sh 'cp "$SERVICE_ACCOUNT_KEY" $WORKSPACE/.dbt/bigquery_service_account_key.json'
 
           // Create profiles.yml with BigQuery configuration
           sh """
-            cat > profiles.yml <<EOL
+            cat > $WORKSPACE/profiles.yml <<EOL
 cc_bigquery_datawarehouse:
   target: qa
   outputs:
@@ -41,15 +46,9 @@ cc_bigquery_datawarehouse:
 EOL
           """
 
-          // Create the .dbt directory and copy the service account key
-          sh """
-            mkdir -p .dbt
-            cp "$SERVICE_ACCOUNT_KEY" .dbt/bigquery_service_account_key.json
-          """
-
           // Create Dockerfile to include profiles.yml and credentials
           sh """
-            cat > Dockerfile.crowdcow_datawarehouse_bigquery <<EOL
+            cat > $WORKSPACE/Dockerfile.crowdcow_datawarehouse_bigquery <<EOL
 FROM crowdcow_datawarehouse_bigquery
 COPY profiles.yml /root/.dbt/profiles.yml
 COPY .dbt /root/.dbt/
@@ -76,3 +75,4 @@ EOL
   }
 
 }
+
