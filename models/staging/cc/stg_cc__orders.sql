@@ -83,7 +83,7 @@ source as ( select * from {{ source('cc', 'orders') }} where id not in (2871732,
     ,last_changed_at as order_last_changed_at_utc
     ,checkout_completed_at as order_checkout_completed_at_utc
     ,{{ clean_strings('order_type') }} as order_type
-    ,order_type = 'RFG' as is_rastellis
+    ,order_type in ('RFG','RFG_SHOP_DOT_COM') as is_rastellis
     ,order_type = 'QVC' as is_qvc
     ,order_type = 'SEABEAR' as is_seabear
     ,order_type = 'BACKYARD_BUTCHERS' as is_backyard_butchers
