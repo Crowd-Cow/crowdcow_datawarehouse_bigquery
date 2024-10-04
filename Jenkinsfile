@@ -1,12 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        // Remove Snowflake credentials
-        // Reference the BigQuery service account key file
-        // No need to set BIGQUERY_SERVICE_ACCOUNT_KEY here since we're using 'withCredentials'
-    }
-
     stages {
         stage('Checkout and Build Image') {
             steps {
