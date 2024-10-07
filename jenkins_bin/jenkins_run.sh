@@ -9,9 +9,9 @@ pwd
 echo "Listing all files in /tmp:"
 ls -la /tmp/
 
-echo "Listing /tmp/service-account-key.json inside the container:"
-ls -l /tmp/service-account-key.json
-file /tmp/service-account-key.json
+echo "Listing /tmp/service-account-key.jsonfile inside the container:"
+ls -l /tmp/service-account-key.jsonfile
+file /tmp/service-account-key.jsonfile
 
 dbt seed --target qa 
 dbt snapshot 
