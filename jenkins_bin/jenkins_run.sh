@@ -3,8 +3,15 @@
 # exit when any command fails
 set -e
 
-echo "Listing service_account.json inside the container:"
-ls -l /usr/src/app/service_account.json
+echo "Current directory:"
+pwd
+
+echo "Listing all files in /tmp:"
+ls -la /tmp/
+
+echo "Listing /tmp/service_account.json inside the container:"
+ls -l /tmp/service_account.json
+file /tmp/service_account.json
 
 dbt seed --target qa 
 dbt snapshot 
