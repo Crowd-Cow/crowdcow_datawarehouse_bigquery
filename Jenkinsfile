@@ -20,21 +20,21 @@ cc_bigquery_datawarehouse:
   outputs:
     qa:
       type: bigquery
-      method: service-account-json
+      method: service-account
       project: panoply-0ef-a098d410468d
       dataset: qa
       threads: 16
-      keyfile_json: "{{ env_var('BIGQUERY_SERVICE_ACCOUNT_KEY') }}"
+      keyfile: /root/.dbt/bigquery_service_account_key.json
       timeout_seconds: 300
       location: US
       priority: interactive
     prod:
       type: bigquery
-      method: service-account-json
+      method: service-account
       project: panoply-0ef-a098d410468d
       dataset: ANALYTICS
       threads: 16
-      keyfile_json: "{{ env_var('BIGQUERY_SERVICE_ACCOUNT_KEY') }}"
+      keyfile: /root/.dbt/bigquery_service_account_key.json
       timeout_seconds: 300
       location: US
       priority: interactive
