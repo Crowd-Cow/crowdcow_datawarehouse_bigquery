@@ -21,7 +21,7 @@ pipeline {
                 // Create profiles.yml with BigQuery configuration
                 sh '''
                 cat > profiles.yml <<EOL
-cc_datawarehouse:
+cc_bigquery_datawarehouse:
   outputs:
     qa:
       type: bigquery
