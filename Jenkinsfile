@@ -63,13 +63,13 @@ pipeline {
           // Adjust permissions if necessary
           sh 'chmod 644 ./service-account-key.json'
 
-          sh """
+          sh '''
           docker run \
           --rm \
           -v "${WORKSPACE}/service-account-key.json:/tmp/service-account-key.json" \
           crowdcow_datawarehouse_dbt_run \
-          /bin/bash -c "rm -rf /tmp/service-account-key.json && ./jenkins_bin/jenkins_run.sh"
-          """
+          ./jenkins_bin/jenkins_run.sh
+          '''
 
           sh 'rm ./service-account-key.json'
         }
