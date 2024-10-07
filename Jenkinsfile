@@ -34,7 +34,6 @@ pipeline {
                   keyfile: /app/service_account.json
                   OPTIONAL_CONFIG: VALUE
               target: qa
-            EOL
           """
         }
       }
@@ -46,7 +45,6 @@ pipeline {
           cat > Dockerfile.crowdcow_datawarehouse <<EOL
           FROM crowdcow_datawarehouse
           COPY profiles.yml /root/.dbt/profiles.yml
-          EOL
         """
 
         sh "docker build -f Dockerfile.crowdcow_datawarehouse -t crowdcow_datawarehouse_dbt_run ."
