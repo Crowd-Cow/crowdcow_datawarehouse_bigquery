@@ -3,6 +3,9 @@
 # exit when any command fails
 set -e
 
+echo "Listing service_account.json inside the container:"
+ls -l /usr/src/app/service_account.json
+
 dbt seed --target qa 
 dbt snapshot 
 dbt run --target qa 

@@ -54,15 +54,22 @@ pipeline {
     stage('RUN') {
       steps {
         withCredentials([file(credentialsId: 'BigQueryServiceAccountKeyFile', variable: 'BIGQUERY_SERVICE_ACCOUNT_KEY')]) {
+          sh 'echo "Jenkins workspace: $(pwd)"'
+          sh 'ls -l $BIGQUERY_SERVICE_ACCOUNT_KEY'  // Verify the credential file
           sh 'cp $BIGQUERY_SERVICE_ACCOUNT_KEY ./service_account.json'
+          sh 'ls -l ./service_account.json'  // Verify the copied file
+          sh 'file ./service_account.json'   // Check if it's a file
 
-          sh '''
+          // Adjust permissions if necessary
+          sh 'chmod 644 ./service_account.json'
+
+          sh """
           docker run \
           --rm \
-          -v $(pwd)/service_account.json:/usr/src/app/service_account.json \
+          -v ${WORKSPACE}/service_account.json:/usr/src/app/service_account.json \
           crowdcow_datawarehouse_dbt_run \
           ./jenkins_bin/jenkins_run.sh
-          '''
+          """
 
           sh 'rm ./service_account.json'
         }
