@@ -23,7 +23,7 @@ pipeline {
                   project: panoply-0ef-a098d410468d
                   dataset: ANALYTICS
                   threads: 8
-                  keyfile: /tmp/service_account.json
+                  keyfile: /tmp/service-account-key.json
                   OPTIONAL_CONFIG: VALUE
                 qa:
                   type: bigquery
@@ -31,7 +31,7 @@ pipeline {
                   project: panoply-0ef-a098d410468d
                   dataset: qa
                   threads: 8
-                  keyfile: /tmp/service_account.json
+                  keyfile: /tmp/service-account-key.json
                   OPTIONAL_CONFIG: VALUE
               target: qa
           """
@@ -56,22 +56,22 @@ pipeline {
         withCredentials([file(credentialsId: 'BigQueryServiceAccountKeyFile', variable: 'BIGQUERY_SERVICE_ACCOUNT_KEY')]) {
           sh 'echo "Jenkins workspace: $(pwd)"'
           sh 'ls -l $BIGQUERY_SERVICE_ACCOUNT_KEY'  // Verify the credential file
-          sh 'cp $BIGQUERY_SERVICE_ACCOUNT_KEY ./service_account.json'
-          sh 'ls -l ./service_account.json'  // Verify the copied file
-          sh 'file ./service_account.json'   // Check if it's a file
+          sh 'cp $BIGQUERY_SERVICE_ACCOUNT_KEY ./service-account-key.json'
+          sh 'ls -l ./service-account-key.json'  // Verify the copied file
+          sh 'file ./service-account-key.json'   // Check if it's a file
 
           // Adjust permissions if necessary
-          sh 'chmod 644 ./service_account.json'
+          sh 'chmod 644 ./service-account-key.json'
 
           sh """
           docker run \
           --rm \
-          -v ${WORKSPACE}/service_account.json:/tmp/service_account.json \
+          -v ${WORKSPACE}/service-account-key.json:/tmp/service-account-key.json \
           crowdcow_datawarehouse_dbt_run \
           ./jenkins_bin/jenkins_run.sh
           """
 
-          sh 'rm ./service_account.json'
+          sh 'rm ./service-account-key.json'
         }
       }
     }
@@ -79,7 +79,7 @@ pipeline {
 
   post {
     cleanup {
-      sh 'rm -f ./service_account.json profiles.yml Dockerfile.crowdcow_datawarehouse'
+      sh 'rm -f ./service-account-key.json profiles.yml Dockerfile.crowdcow_datawarehouse'
     }
   }
 }
