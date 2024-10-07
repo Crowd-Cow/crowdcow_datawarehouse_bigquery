@@ -3,15 +3,19 @@
 # exit when any command fails
 set -e
 
-echo "Current directory:"
-pwd
+export KEYFILE_PATH=/tmp/service-account-key.json
 
-echo "Listing all files in /tmp:"
-ls -la /tmp/
+# Create the directory for the keyfile, not the keyfile path itself
+mkdir -p $(dirname "$KEYFILE_PATH")
 
-echo "Listing /tmp/service-account-key.jsonfile inside the container:"
-ls -l /tmp/service-account-key.jsonfile
-file /tmp/service-account-key.jsonfile
+echo "Contents of /tmp before dbt run:"
+ls -l /tmp
+
+# Verify the keyfile inside the container
+echo "Checking keyfile at $KEYFILE_PATH"
+ls -l "$KEYFILE_PATH"
+file "$KEYFILE_PATH"
+
 
 dbt seed --target qa 
 dbt snapshot 
