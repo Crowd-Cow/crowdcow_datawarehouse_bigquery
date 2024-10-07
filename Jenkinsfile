@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        // Access the BigQuery service account key as an environment variable
-        BIGQUERY_SERVICE_ACCOUNT_KEY = credentials('BigQueryServiceAccountKey')
-    }
-
     stages {
         stage('Checkout and Build Image') {
             steps {
@@ -61,17 +56,18 @@ EOL
         }
 
         stage('RUN') {
-            steps {
-                // Run the dbt commands inside the Docker container
-                sh '''
-                docker run \
-                --rm \
-                -e BIGQUERY_SERVICE_ACCOUNT_KEY="$BIGQUERY_SERVICE_ACCOUNT_KEY" \
-                crowdcow_datawarehouse_dbt_run \
-                ./jenkins_bin/jenkins_run.sh
-                '''
+          steps {
+            withCredentials([file(credentialsId: 'BigQueryServiceAccountKeyFile', variable: 'SERVICE_ACCOUNT_KEY')]) {
+              sh """
+              docker run \\
+              --rm \\
+              -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/bigquery_service_account_key.json \\
+              -v "$SERVICE_ACCOUNT_KEY":/tmp/bigquery_service_account_key.json:ro \\
+              crowdcow_datawarehouse_dbt_run \\
+              ./jenkins_bin/jenkins_run.sh
+              """
             }
+          }
         }
-    }
-
+  }
 }
