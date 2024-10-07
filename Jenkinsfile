@@ -23,7 +23,7 @@ pipeline {
                   project: panoply-0ef-a098d410468d
                   dataset: ANALYTICS
                   threads: 8
-                  keyfile: /usr/src/app/service_account.json
+                  keyfile: /tmp/service_account.json
                   OPTIONAL_CONFIG: VALUE
                 qa:
                   type: bigquery
@@ -31,7 +31,7 @@ pipeline {
                   project: panoply-0ef-a098d410468d
                   dataset: qa
                   threads: 8
-                  keyfile: /usr/src/app/service_account.json
+                  keyfile: /tmp/service_account.json
                   OPTIONAL_CONFIG: VALUE
               target: qa
           """
@@ -66,7 +66,7 @@ pipeline {
           sh """
           docker run \
           --rm \
-          -v ${WORKSPACE}/service_account.json:/usr/src/app/service_account.json \
+          -v ${WORKSPACE}/service_account.json:/tmp/service_account.json \
           crowdcow_datawarehouse_dbt_run \
           ./jenkins_bin/jenkins_run.sh
           """
