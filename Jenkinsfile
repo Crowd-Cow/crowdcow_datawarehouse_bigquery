@@ -66,7 +66,7 @@ pipeline {
           sh """
           docker run \
           --rm \
-          -v ${WORKSPACE}/service-account-key.json:/tmp/service-account-key.json \
+          -v "${WORKSPACE}/service-account-key.json:/tmp/service-account-key.json" \
           crowdcow_datawarehouse_dbt_run \
           ./jenkins_bin/jenkins_run.sh
           """
