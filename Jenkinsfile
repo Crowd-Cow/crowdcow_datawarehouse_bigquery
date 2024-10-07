@@ -15,7 +15,7 @@ pipeline {
         withCredentials([file(credentialsId: 'BigQueryServiceAccountKeyFile', variable: 'BIGQUERY_SERVICE_ACCOUNT_KEY')]) {
           sh """
             cat > profiles.yml <<EOL
-            cc_datawarehouse:
+            cc_bigquery_datawarehouse:
               outputs:
                 prod:
                   type: bigquery
