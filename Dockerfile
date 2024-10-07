@@ -16,7 +16,4 @@ RUN cd /usr/src/app
 
 COPY . .
 
-# Set environment variables
-ENV DBT_PROFILES_DIR=/root/.dbt/
-
 RUN dbt deps

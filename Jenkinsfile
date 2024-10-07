@@ -1,73 +1,83 @@
 pipeline {
-    agent any
+  agent any
 
-    stages {
-        stage('Checkout and Build Image') {
-            steps {
-                checkout scm
+  stages {
+    stage('Checkout and Build Base Image') {
+      steps {
+        checkout scm
 
-                // Build the base Docker image
-                sh "docker build -t crowdcow_datawarehouse ."
-            }
+        sh "docker build -t crowdcow_datawarehouse ."
+      }
+    }
+
+    stage('Setup dbt Profile') {
+      steps {
+        withCredentials([file(credentialsId: 'BigQueryServiceAccountKey', variable: 'BIGQUERY_SERVICE_ACCOUNT_KEY')]) {
+          sh """
+            cat > profiles.yml <<EOL
+            cc_datawarehouse:
+              outputs:
+                prod:
+                  type: bigquery
+                  method: service-account  
+                  project: panoply-0ef-a098d410468d
+                  dataset: ANALYTICS
+                  threads: 8
+                  keyfile: /app/service_account.json
+                  OPTIONAL_CONFIG: VALUE
+                qa:
+                  type: bigquery
+                  method: service-account  
+                  project: panoply-0ef-a098d410468d
+                  dataset: qa
+                  threads: 8
+                  keyfile: /app/service_account.json
+                  OPTIONAL_CONFIG: VALUE
+              target: qa
+            EOL
+          """
         }
+      }
+    }
 
-        stage('Setup dbt profile') {
-            steps {
-                // Create profiles.yml with BigQuery configuration
-                sh '''
-                cat > profiles.yml <<EOL
-cc_bigquery_datawarehouse:
-  outputs:
-    qa:
-      type: bigquery
-      method: service-account
-      project: panoply-0ef-a098d410468d
-      dataset: qa
-      threads: 16
-      keyfile: /root/.dbt/bigquery_service_account_key.json
-      timeout_seconds: 300
-      location: US
-      priority: interactive
-    prod:
-      type: bigquery
-      method: service-account
-      project: panoply-0ef-a098d410468d
-      dataset: ANALYTICS
-      threads: 16
-      keyfile: /root/.dbt/bigquery_service_account_key.json
-      timeout_seconds: 300
-      location: US
-      priority: interactive
-  target: qa
-EOL
-                '''
+    stage('Build Run Image') {
+      steps {
+        sh """
+          cat > Dockerfile.crowdcow_datawarehouse <<EOL
+          FROM crowdcow_datawarehouse
+          COPY profiles.yml /root/.dbt/profiles.yml
+          EOL
+        """
 
-                // Create Dockerfile to include profiles.yml
-                sh '''
-                cat > Dockerfile.crowdcow_datawarehouse <<EOL
-FROM crowdcow_datawarehouse
-COPY profiles.yml /root/.dbt/profiles.yml
-EOL
-                '''
+        sh "docker build -f Dockerfile.crowdcow_datawarehouse -t crowdcow_datawarehouse_dbt_run ."
+      }
+    }
 
-                // Build the final Docker image for the dbt run
-                sh "docker build -f Dockerfile.crowdcow_datawarehouse -t crowdcow_datawarehouse_dbt_run ."
-            }
+    stage('RUN') {
+      steps {
+        withCredentials([file(credentialsId: 'BigQueryServiceAccountKey', variable: 'BIGQUERY_SERVICE_ACCOUNT_KEY')]) {
+          sh 'cp $BIGQUERY_SERVICE_ACCOUNT_KEY ./service_account.json'
+
+          sh '''
+          docker run \
+          --rm \
+          -v $(pwd)/service_account.json:/app/service_account.json \
+          crowdcow_datawarehouse_dbt_run \
+          ./jenkins_bin/jenkins_run.sh
+          '''
+
+          sh 'rm ./service_account.json'
         }
+      }
+    }
+  }
 
-        stage('RUN') {
-          steps {
-            withCredentials([file(credentialsId: 'BigQueryServiceAccountKeyFile', variable: 'SERVICE_ACCOUNT_KEY')]) {
-              sh """
-              docker run \\
-              --rm \\
-              -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/bigquery_service_account_key.json \\
-              -v "$SERVICE_ACCOUNT_KEY":/tmp/bigquery_service_account_key.json:ro \\
-              crowdcow_datawarehouse_dbt_run \\
-              ./jenkins_bin/jenkins_run.sh
-              """
-            }
-          }
-        }
+  post {
+    cleanup {
+      sh 'rm -f ./service_account.json profiles.yml Dockerfile.crowdcow_datawarehouse'
+    }
+    failure {
+      slackSend channel: '#jenkins-alerts', message: ":red_circle: ${currentBuild.projectName} ${currentBuild.displayName}: ${currentBuild.result}"
+    }
   }
 }
