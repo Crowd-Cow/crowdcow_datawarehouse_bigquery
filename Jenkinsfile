@@ -12,7 +12,7 @@ pipeline {
 
     stage('Setup dbt Profile') {
       steps {
-        withCredentials([file(credentialsId: 'BigQueryServiceAccountKey', variable: 'BIGQUERY_SERVICE_ACCOUNT_KEY')]) {
+        withCredentials([file(credentialsId: 'BigQueryServiceAccountKeyFile', variable: 'BIGQUERY_SERVICE_ACCOUNT_KEY')]) {
           sh """
             cat > profiles.yml <<EOL
             cc_datawarehouse:
@@ -55,7 +55,7 @@ pipeline {
 
     stage('RUN') {
       steps {
-        withCredentials([file(credentialsId: 'BigQueryServiceAccountKey', variable: 'BIGQUERY_SERVICE_ACCOUNT_KEY')]) {
+        withCredentials([file(credentialsId: 'BigQueryServiceAccountKeyFile', variable: 'BIGQUERY_SERVICE_ACCOUNT_KEY')]) {
           sh 'cp $BIGQUERY_SERVICE_ACCOUNT_KEY ./service_account.json'
 
           sh '''
@@ -75,9 +75,6 @@ pipeline {
   post {
     cleanup {
       sh 'rm -f ./service_account.json profiles.yml Dockerfile.crowdcow_datawarehouse'
-    }
-    failure {
-      slackSend channel: '#jenkins-alerts', message: ":red_circle: ${currentBuild.projectName} ${currentBuild.displayName}: ${currentBuild.result}"
     }
   }
 }
