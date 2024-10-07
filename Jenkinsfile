@@ -54,32 +54,33 @@ pipeline {
     stage('RUN') {
       steps {
         withCredentials([file(credentialsId: 'BigQueryServiceAccountKeyFile', variable: 'BIGQUERY_SERVICE_ACCOUNT_KEY')]) {
-          sh 'echo "Jenkins workspace: $(pwd)"'
-          sh 'ls -l $BIGQUERY_SERVICE_ACCOUNT_KEY'  // Verify the credential file
-          sh 'cp $BIGQUERY_SERVICE_ACCOUNT_KEY ./service-account-key.json'
-          sh 'ls -l ./service-account-key.json'  // Verify the copied file
-          sh 'file ./service-account-key.json'   // Check if it's a file
+          script {
+            // Start the container in detached mode
+            sh '''
+            docker run -d --name dbt_run_container \
+              crowdcow_datawarehouse_dbt_run \
+              sleep infinity
+            '''
 
-          // Adjust permissions if necessary
-          sh 'chmod 644 ./service-account-key.json'
+            // Copy the service account key into the container
+            sh '''
+            docker cp $BIGQUERY_SERVICE_ACCOUNT_KEY dbt_run_container:/tmp/service-account-key.json
+            '''
 
-          sh '''
-          docker run \
-          --rm \
-          -v "${WORKSPACE}/service-account-key.json:/tmp/service-account-key.json" \
-          crowdcow_datawarehouse_dbt_run \
-          ./jenkins_bin/jenkins_run.sh
-          '''
+            // Execute your script inside the container
+            sh '''
+            docker exec dbt_run_container /bin/bash -c "./jenkins_bin/jenkins_run.sh"
+            '''
 
-          sh 'rm ./service-account-key.json'
+            // Stop and remove the container
+            sh '''
+            docker stop dbt_run_container
+            docker rm dbt_run_container
+            '''
+          }
         }
       }
     }
   }
 
-  post {
-    cleanup {
-      sh 'rm -f ./service-account-key.json profiles.yml Dockerfile.crowdcow_datawarehouse'
-    }
-  }
 }
