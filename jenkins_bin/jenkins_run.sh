@@ -8,4 +8,4 @@ dbt snapshot
 dbt run --target qa 
 dbt test --target qa
 dbt run --target prod  
-dbt test --target qa
+dbt test --target prod
