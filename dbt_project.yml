@@ -42,16 +42,16 @@ models:
       cc:
         +schema: "{{ target.dataset }}_business_vault"
       rastellis:
-        +schema: "{{ target.dataset }}_business_vault_rastellis"
+        +schema: "{{ target.dataset }}_rastellis"
     marts:
       +materialized: table
-      +schema: "{{ target.dataset }}_business_vault_datawarehouse"
+      +schema: "{{ target.dataset }}_datawarehouse"
       cargill:
         +materialized: view
-        +schema: "{{ target.dataset }}_business_vault_cargill"
+        +schema: "{{ target.dataset }}_cargill"
       fountain9:
         +materialized: view
-        +schema: "{{ target.dataset }}_business_vault_fountain9"
+        +schema: "{{ target.dataset }}_fountain9"
 
 tests:
   +store_failures: true

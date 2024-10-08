@@ -5,7 +5,7 @@ source as ( select * from {{ ref('skus_ss') }} ) --where not __deleted )
 ,renamed as (
 
     select
-        id as sku_id
+        cast(id as int64) as sku_id
         ,dbt_scd_id as sku_key
         --,non_member_promotion_start_at as non_member_promotion_start_at_utc
         ,{{ cents_to_usd('average_cost_in_cents') }} as owned_sku_cost_usd

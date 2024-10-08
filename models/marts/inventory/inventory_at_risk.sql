@@ -1,3 +1,8 @@
+{{
+    config(
+        enabled=false
+    )
+}}
 with
 
 inventory as ( select * from {{ ref('inventory_snapshot') }} )

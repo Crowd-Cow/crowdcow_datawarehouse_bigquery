@@ -82,5 +82,9 @@ pipeline {
       }
     }
   }
-
+  post {
+    failure {
+      slackSend channel: '#jenkins-alerts', message: ":red_circle: ${currentBuild.projectName} ${currentBuild.displayName}: ${currentBuild.result}"
+    }
+  }
 }
