@@ -14,6 +14,9 @@ pipeline {
       steps {
         withCredentials([file(credentialsId: 'BigQueryServiceAccountKeyFile', variable: 'BIGQUERY_SERVICE_ACCOUNT_KEY')]) {
           sh """
+            # Remove existing profiles.yml if it exists
+            rm -f profiles.yml
+
             cat > profiles.yml <<EOL
             cc_bigquery_datawarehouse:
               outputs:
@@ -42,6 +45,8 @@ pipeline {
     stage('Build Run Image') {
       steps {
         sh """
+           # Remove existing Dockerfile if it exists
+          rm -f Dockerfile.crowdcow_datawarehouse
           cat > Dockerfile.crowdcow_datawarehouse <<EOL
           FROM crowdcow_datawarehouse
           COPY profiles.yml /root/.dbt/profiles.yml
@@ -86,9 +91,16 @@ pipeline {
       }
     }
   }
-  //post {
-  //  failure {
+  post {
+    always {
+      // Clean up the workspace and remove any residual files or containers
+      sh '''
+      docker rm -f dbt_run_container || true
+      rm -f profiles.yml Dockerfile.crowdcow_datawarehouse
+      '''
+    }
+  // failure {
   //    slackSend channel: '#jenkins-alerts', message: ":red_circle: ${currentBuild.projectName} ${currentBuild.displayName}: ${currentBuild.result}"
-  //  }
-  //}
+  // }
+  }
 }
