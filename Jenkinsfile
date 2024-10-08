@@ -21,8 +21,8 @@ pipeline {
                   type: bigquery
                   method: service-account  
                   project: panoply-0ef-a098d410468d
-                  dataset: ANALYTICS
-                  threads: 8
+                  dataset: analytics
+                  threads: 16
                   keyfile: /tmp/service-account-key.json
                   OPTIONAL_CONFIG: VALUE
                 qa:
@@ -30,7 +30,7 @@ pipeline {
                   method: service-account  
                   project: panoply-0ef-a098d410468d
                   dataset: qa
-                  threads: 8
+                  threads: 16
                   keyfile: /tmp/service-account-key.json
                   OPTIONAL_CONFIG: VALUE
               target: qa
