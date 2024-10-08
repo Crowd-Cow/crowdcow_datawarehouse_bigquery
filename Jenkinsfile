@@ -55,6 +55,10 @@ pipeline {
       steps {
         withCredentials([file(credentialsId: 'BigQueryServiceAccountKeyFile', variable: 'BIGQUERY_SERVICE_ACCOUNT_KEY')]) {
           script {
+            // Remove existing container if it exists
+            sh '''
+            docker rm -f dbt_run_container || true
+            '''
             // Start the container in detached mode
             sh '''
             docker run -d --name dbt_run_container \
@@ -82,9 +86,9 @@ pipeline {
       }
     }
   }
-  post {
-    failure {
-      slackSend channel: '#jenkins-alerts', message: ":red_circle: ${currentBuild.projectName} ${currentBuild.displayName}: ${currentBuild.result}"
-    }
-  }
+  //post {
+  //  failure {
+  //    slackSend channel: '#jenkins-alerts', message: ":red_circle: ${currentBuild.projectName} ${currentBuild.displayName}: ${currentBuild.result}"
+  //  }
+  //}
 }
