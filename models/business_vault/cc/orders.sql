@@ -324,6 +324,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,order_reschedule.new_scheduled_fulfillment_date
         ,if(order_reschedule.is_customer_reschedule and old_scheduled_fulfillment_date < new_scheduled_fulfillment_date and date_diff(order_reschedule.new_scheduled_fulfillment_date,order_reschedule.old_scheduled_fulfillment_date, day) >= 14, true,false) as is_customer_impactful_reschedule
         ,order_promo_redeemed.redeemed_at_utc as promo_redeemed_at_utc
+        ,order_shipment_option.order_shipping_option_name
         ,order_shipment_option.transit_days as plan_transit_days
         
     from orders
