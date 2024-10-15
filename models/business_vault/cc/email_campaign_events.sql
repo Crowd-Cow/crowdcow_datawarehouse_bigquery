@@ -1,7 +1,8 @@
 {{
-  config(
-    snowflake_warehouse = 'TRANSFORMING_M'
-  )
+    config(
+        partition_by = {'field': 'ended_at_utc', 'data_type': 'timestamp'},
+        cluster_by = ['user_email','campaign_id','ended_at_utc']
+    )
 }}
 
 with

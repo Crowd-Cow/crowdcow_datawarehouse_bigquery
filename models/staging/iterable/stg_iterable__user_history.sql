@@ -23,4 +23,4 @@ user_hist as ( select * from {{ source('iterable', 'users') }} )
     from user_hist
 )
 
-select * from renamed
+select * from renamed where row_num = 1
