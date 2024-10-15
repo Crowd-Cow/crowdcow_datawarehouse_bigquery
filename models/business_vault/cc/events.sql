@@ -1,8 +1,14 @@
+{% set partitions_to_replace = [
+  'timestamp(current_date)',
+  'timestamp(date_sub(current_date, interval 1 day))'
+] %}
 {{
   config(
         materialized = 'incremental',
-        unique_key = 'event_id',
-        snowflake_warehouse = 'TRANSFORMING_M'
+        partition_by = {'field': 'occurred_at_utc', 'data_type': 'timestamp'},
+        cluster_by = ['visit_id','user_id','event_name'],
+        incremental_strategy = 'insert_overwrite',
+        partitions = partitions_to_replace
     )
 }}
 
@@ -14,7 +20,7 @@ events as (
     from {{ ref('stg_cc__events') }}   
 
     {% if is_incremental() %}
-      where occurred_at_utc >= coalesce((select max(occurred_at_utc) from {{ this }}), '1900-01-01')
+      where timestamp_trunc(occurred_at_utc, day) in ({{ partitions_to_replace | join(',') }})
     {% endif %}
 )
 
