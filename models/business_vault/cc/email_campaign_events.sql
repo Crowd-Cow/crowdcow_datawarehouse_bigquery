@@ -1,7 +1,7 @@
 {{
     config(
-        partition_by = {'field': 'ended_at_utc', 'data_type': 'timestamp'},
-        cluster_by = ['user_email','campaign_id','ended_at_utc']
+        partition_by = {'field': 'created_at_utc', 'data_type': 'timestamp'},
+        cluster_by = ['user_email','campaign_id','created_at_utc']
     )
 }}
 
@@ -34,8 +34,8 @@ event as ( select * from {{ ref('stg_iterable__events') }} )
         ,campaign.created_by_user_id
         ,campaign.send_size
         ,campaign.campaign_type
+        ,event.email_order_id
         ,event.created_at_utc
-        
         ,case
             when campaign.campaign_type = 'TRIGGERED' then event.created_at_utc
             else campaign.ended_at_utc
@@ -59,6 +59,7 @@ event as ( select * from {{ ref('stg_iterable__events') }} )
         ,send_size
         ,campaign_type
         ,ended_at_utc
+        ,email_order_id
         ,countif(event_name = 'EMAILSEND') as send_count
         ,countif(event_name = 'EMAILOPEN') as open_count
         ,countif(event_name = 'EMAILCLICK') as click_count
@@ -66,7 +67,7 @@ event as ( select * from {{ ref('stg_iterable__events') }} )
         ,count(distinct if(event_name = 'EMAILOPEN',user_id,null)) as unique_open_count
         ,countif(event_name = 'EMAILBOUNCE') as bounce_count
     from join_events_campaigns
-    group by 1,2,3,4,5,6,7,8,9,10,11
+    group by 1,2,3,4,5,6,7,8,9,10,11,12
 )
 
 select * from aggregate_campaigns

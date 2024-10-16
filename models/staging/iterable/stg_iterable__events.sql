@@ -1,3 +1,5 @@
+{{ config(materialized='view')}}
+
 with
 
 events as ( select * from {{ source('iterable', 'events') }} )
@@ -19,6 +21,7 @@ events as ( select * from {{ source('iterable', 'events') }} )
         ,{{ clean_strings('useragent') }} as user_agent
         ,{{ clean_strings('useragentdevice') }} as user_agent_device
         ,transactionaldata as transactional_data
+        ,CAST(JSON_EXTRACT_SCALAR(transactionaldata, '$.order.order_id') AS INT64) as email_order_id
         --,additional_properties
         --,is_custom_event
     from events
