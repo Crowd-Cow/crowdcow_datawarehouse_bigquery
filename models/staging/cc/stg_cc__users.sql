@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ ref('users_ss') }}  where __deleted is null
+    select * from {{ ref('users_ss') }}  where __deleted is null and (_fivetran_deleted is null or _fivetran_deleted = false)
 
 ),
 
