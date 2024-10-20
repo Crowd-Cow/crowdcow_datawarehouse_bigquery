@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ source('cc', 'handwritten_notes') }} 
+    select * from {{ source('cc', 'handwritten_notes') }} where __deleted is null
 
 ),
 

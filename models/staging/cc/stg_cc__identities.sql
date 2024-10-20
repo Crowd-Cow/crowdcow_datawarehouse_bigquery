@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ source('cc', 'identities') }}
+    select * from {{ source('cc', 'identities') }} where __deleted is null
 
 ),
 

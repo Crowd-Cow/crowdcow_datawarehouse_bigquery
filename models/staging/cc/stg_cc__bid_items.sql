@@ -1,6 +1,6 @@
 with source as (
 
-  select * from  {{ ref('bid_items_ss') }} 
+  select * from  {{ ref('bid_items_ss') }}  where  (_fivetran_deleted is null or _fivetran_deleted = false)
 
 ),
 

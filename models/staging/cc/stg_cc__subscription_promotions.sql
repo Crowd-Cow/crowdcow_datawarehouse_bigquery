@@ -1,6 +1,6 @@
 with
 
-sub_promo as ( select * from {{ source('cc', 'subscription_promotions') }} )
+sub_promo as ( select * from {{ source('cc', 'subscription_promotions') }} where __deleted is null )
 ,new_sub_promo as ( select * from {{ source('cc', 'promotions_subscription_enrollments') }} where __deleted is null)
 
 ,renamed as (

@@ -1,6 +1,6 @@
 with 
 
-tracking_detail as ( select * from raw_mysql.tracking_details )
+tracking_detail as ( select * from {{ source('cc', 'tracking_details') }} where __deleted is null)
 
 ,renamed as (
 

@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ source('cc','first_box_flow_sessions') }} 
+    select * from {{ source('cc','first_box_flow_sessions') }} where __deleted is null
 
 ),
 

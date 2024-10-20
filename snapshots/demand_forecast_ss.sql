@@ -6,7 +6,7 @@
        unique_key='id',
 
        strategy='check',
-       check_cols = 'all'
+       check_cols = ['id','date', 'fc_id', 'fc_name', 'category', 'sub_category', 'cut_id', 'cut_name', 'inventory_classification', 'predicted_quantity']
    )
 }}
 

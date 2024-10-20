@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ ref('vendor_tags_ss') }} 
+    select * from {{ ref('vendor_tags_ss') }}  where (_fivetran_deleted is null or _fivetran_deleted = false)
 
 ),
 

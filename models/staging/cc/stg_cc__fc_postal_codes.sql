@@ -1,6 +1,6 @@
 with
 
-source as ( select * from {{ source('cc', 'fc_postal_codes') }}  )
+source as ( select * from {{ source('cc', 'fc_postal_codes') }} where __deleted is null  )
 
 ,renamed as (
   select

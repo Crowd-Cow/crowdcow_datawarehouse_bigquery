@@ -1,7 +1,7 @@
 
 with source as (
 
-    select * from {{ ref('product_variants_ss') }} 
+    select * from {{ ref('product_variants_ss') }}  
 
 ),
 

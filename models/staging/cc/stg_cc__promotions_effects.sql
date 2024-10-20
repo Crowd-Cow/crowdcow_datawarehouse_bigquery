@@ -1,6 +1,6 @@
 with
 
-source as ( select * from {{ source('cc', 'promotions_effects') }}   )
+source as ( select * from {{ source('cc', 'promotions_effects') }} where __deleted is null  )
 
 ,promotions_effects as (
     select

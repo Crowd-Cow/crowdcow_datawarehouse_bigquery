@@ -1,6 +1,6 @@
 with
 
-source as ( select * from {{ ref('offsite_storages_ss') }}  )
+source as ( select * from {{ ref('offsite_storages_ss') }}   )
 
 ,renamed as (
     select

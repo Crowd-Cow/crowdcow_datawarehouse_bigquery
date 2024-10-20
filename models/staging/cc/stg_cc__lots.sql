@@ -1,6 +1,6 @@
 with
 
-lot as ( select * from {{ ref('lots_ss') }} )
+lot as ( select * from {{ ref('lots_ss') }}  where  (_fivetran_deleted is null or _fivetran_deleted = false) )
 
 ,renamed as (
     select

@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ ref('sku_reservations_ss') }} 
+    select * from {{ ref('sku_reservations_ss') }}   where __deleted is null 
 
 ),
 

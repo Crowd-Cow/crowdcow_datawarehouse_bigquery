@@ -1,6 +1,6 @@
 with 
 
-source as ( select * from {{ ref('skus_ss') }} ) --where not __deleted ) 
+source as ( select * from {{ ref('skus_ss') }} where _fivetran_deleted is null or _fivetran_deleted = false )
 
 ,renamed as (
 

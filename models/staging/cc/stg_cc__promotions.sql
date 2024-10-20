@@ -1,7 +1,7 @@
 with 
 
-promotion as ( select * from {{ ref('promotions_ss') }}  )
-,promotion_promotion as ( select * from {{ ref('promotions_promotions_ss') }}   )
+promotion as ( select * from {{ ref('promotions_ss') }}  where  (_fivetran_deleted is null or _fivetran_deleted = false)  )
+,promotion_promotion as ( select * from {{ ref('promotions_promotions_ss') }}  where  (_fivetran_deleted is null or _fivetran_deleted = false)   )
 ,promotion_code as (
     select
         configurable_id as promotion_id
