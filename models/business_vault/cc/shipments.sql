@@ -105,7 +105,7 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
             DATE_DIFF(DATE(CAST(get_order_delivery_address.delivered_at_pt AS TIMESTAMP)), DATE(CAST(get_order_delivery_address.original_est_delivery_date_pt AS TIMESTAMP)), DAY),
             0
         ) AS delivery_days_late,
-
+        DATE(get_order_delivery_address.delivered_at_pt)  > DATE(order_scheduled_arrival_date_pt) as is_promised_delivery_late,
         IF(
             DATE(CAST(get_order_delivery_address.delivered_at_pt AS TIMESTAMP)) > DATE(CAST(get_order_delivery_address.order_scheduled_arrival_date_pt AS TIMESTAMP)) OR DATE(CAST(get_order_delivery_address.delivered_at_pt AS TIMESTAMP)) IS NULL,
             DATE_DIFF(DATE(CAST(get_order_delivery_address.delivered_at_pt AS TIMESTAMP)), DATE(CAST(get_order_delivery_address.order_scheduled_arrival_date_pt AS TIMESTAMP)), DAY),
