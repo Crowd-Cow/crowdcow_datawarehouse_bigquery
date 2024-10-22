@@ -25,7 +25,7 @@ pipeline {
                   method: service-account  
                   project: panoply-0ef-a098d410468d
                   dataset: analytics
-                  threads: 4
+                  threads: 8
                   keyfile: /tmp/service-account-key.json
                   OPTIONAL_CONFIG: VALUE
                 qa:
@@ -33,7 +33,7 @@ pipeline {
                   method: service-account  
                   project: panoply-0ef-a098d410468d
                   dataset: qa
-                  threads: 4
+                  threads: 8
                   keyfile: /tmp/service-account-key.json
                   OPTIONAL_CONFIG: VALUE
               target: qa

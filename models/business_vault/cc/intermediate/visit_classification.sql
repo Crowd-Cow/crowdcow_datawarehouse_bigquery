@@ -1,8 +1,9 @@
 {{
   config(
         materialized = 'incremental',
-        unique_key = 'visit_id',
-        snowflake_warehouse = 'TRANSFORMING_M'
+        partition_by = {"field": "started_at_utc", "data_type": "timestamp" },
+        incremental_strategy = 'insert_overwrite',
+        cluster_by = ["visit_id","user_id"]
     )
 }}
 
@@ -91,12 +92,11 @@ base_visits as (
         ,visits.utm_content
         ,visits.utm_term
         ,REGEXP_EXTRACT(visits.visit_landing_page, r'\?(.*)') AS parsed_landing_page
-        ,JSON_EXTRACT_SCALAR(visits.visit_landing_page, '$.UTM_MEDIUM') AS landing_utm_medium
-        ,JSON_EXTRACT_SCALAR(visits.visit_landing_page, '$.UTM_SOURCE') AS landing_utm_source
-        ,JSON_EXTRACT_SCALAR(visits.visit_landing_page, '$.UTM_CAMPAIGN') AS landing_utm_campaign
-        ,JSON_EXTRACT_SCALAR(visits.visit_landing_page, '$.UTM_ADSET') AS landing_utm_adset
-        ,JSON_EXTRACT_SCALAR(visits.visit_landing_page, '$.GCLID') AS gclid
-
+        ,REGEXP_EXTRACT(visits.visit_landing_page, '[?&]UTM_MEDIUM=([^&]*)') AS landing_utm_medium
+        ,REGEXP_EXTRACT(visits.visit_landing_page, '[?&]UTM_SOURCE=([^&]*)') AS landing_utm_source
+        ,REGEXP_EXTRACT(visits.visit_landing_page, '[?&]UTM_CAMPAIGN=([^&]*)') AS landing_utm_campaign
+        ,REGEXP_EXTRACT(visits.visit_landing_page, '[?&]UTM_ADSET=([^&]*)') AS landing_utm_adset
+        ,REGEXP_EXTRACT(visits.visit_landing_page, '[?&]GCLID=([^&]*)') AS gclid
         ,ambassador_paths.partner_path as ambassador_path
         ,most_current_partner_path.partner_id
         --,visits.visit_city
@@ -128,11 +128,11 @@ base_visits as (
          ,LOWER(
                 CASE
                     WHEN visit_landing_page_path LIKE '/L_U%' THEN 
-                        SPLIT(visit_landing_page_path, '/')[OFFSET(2)]
+                        REGEXP_EXTRACT(visit_landing_page_path, '/L/([A-Z0-9]+)')
                     ELSE 
                         COALESCE(
-                            JSON_EXTRACT_SCALAR(parsed_landing_page, '$.C'),
-                            JSON_EXTRACT_SCALAR(parsed_landing_page, '$.USER_TOKEN')
+                             REGEXP_EXTRACT(visit_landing_page, '[?&]C=([^&]*)')
+                            ,REGEXP_EXTRACT(visit_landing_page, '[?&]USER_TOKEN=([^&]*)')
                         )
                 END
                 ) AS visit_landing_page_user_token

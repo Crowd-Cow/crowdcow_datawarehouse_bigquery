@@ -1,6 +1,7 @@
 {{
   config(
-        snowflake_warehouse = 'TRANSFORMING_M'
+        partition_by = {"field": "started_at_utc", "data_type": "timestamp" },
+        cluster_by = ["visit_id","user_id"]
     )
 }}
 

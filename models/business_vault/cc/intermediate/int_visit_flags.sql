@@ -1,6 +1,6 @@
 {{
   config(
-        snowflake_warehouse = 'TRANSFORMING_M'
+        cluster_by = ["visit_id","user_id"]
     )
 }}
 
