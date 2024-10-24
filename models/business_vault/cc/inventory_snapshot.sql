@@ -1,15 +1,31 @@
-{{
+{% set partitions_to_replace = [
+  'datetime(current_date)',
+  'datetime(date_sub(current_date, interval 1 day))'
+] %}
+{{ 
     config(
-        snowflake_warehouse = 'TRANSFORMING_M'
-        ,enabled = false
+        materialized='incremental',
+        partition_by={
+            "field": "snapshot_date",
+            "data_type": "timestamp"
+            },
+        cluster_by = ['inventory_snapshot_id','sku_box_id'],
+        incremental_strategy = 'insert_overwrite',
+        partitions = partitions_to_replace
     )
 }}
 
 with
 
 /*** Only starting with dates after 2021-10-28 since that is when we started fully snapshotting the `sku_boxes` data in the new model ***/
-dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} where calendar_date >= '2021-10-28' and calendar_date < current_date() + interval 1 day )
-,sku_box as ( select * from {{ ref('stg_cc__sku_boxes') }} )
+dates as ( 
+    select calendar_date 
+    from {{ ref('stg_reference__date_spine') }} --where calendar_date >= '2021-10-28' and calendar_date < current_date + 1
+    {% if is_incremental() %}
+      where datetime_trunc(calendar_date, day) in ({{ partitions_to_replace | join(',') }})
+    {% endif %} 
+    )
+,sku_box as ( select * from {{ ref('int_sku_boxes') }} )
 ,fc_location as ( select * from {{ ref('stg_cc__fc_locations') }} )
 ,fc as ( select * from {{ ref('fcs') }} )
 ,sku as ( select * from {{ ref('skus') }} )
@@ -18,10 +34,9 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
 ,receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
 ,pipeline_order as ( select * from {{ ref('stg_cc__pipeline_orders') }} )
 ,fbq_item as ( select distinct sku_id from {{ ref('int_bid_item_skus') }} where is_fbq_item )
-,sku_reservations as (select * from {{ ref('sku_reservations') }} where dbt_valid_to is null )
+,sku_reservations as (select * from {{ ref('stg_cc__sku_reservations') }} where dbt_valid_to is null )
 
 ,inventory_snapshot as (
-    select * from (
     select
         sku_box_id
         ,sku_box_key
@@ -35,9 +50,9 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,max_weight
         ,quantity
         ,quantity_reserved
-        ,quantity - quantity_reserved as quantity_available
+        ,quantity_available
         ,quantity_quarantined
-        ,fc_location_parent_id as fc_location_id
+        ,fc_location_id
         ,created_at_utc
         ,updated_at_utc
         ,marked_not_for_sale_at_utc
@@ -46,13 +61,11 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
         ,moved_to_picking_at_utc
         ,best_by_date
         ,pack_date
-        ,cast(dbt_valid_from as date) as dbt_valid_from
-        ,coalesce(cast(dbt_valid_to as date),current_date() + interval 1 day) as dbt_valid_to
-        ,row_number() over(partition by sku_box_id, cast(dbt_valid_from as date) order by dbt_valid_from desc) as rn
+        ,dbt_valid_from
+        ,dbt_valid_to
     from sku_box
     )
-    where rn = 1
-)
+
 
 ,daily_sku_boxes as (
     select
@@ -221,4 +234,4 @@ dates as ( select calendar_date from {{ ref('stg_reference__date_spine') }} wher
     from inventory_joins
 )
 
-select * from add_sku_metrics
+select * from add_sku_metrics 
