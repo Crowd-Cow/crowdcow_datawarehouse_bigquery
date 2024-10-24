@@ -7,5 +7,5 @@ dbt seed --target qa
 dbt snapshot 
 dbt run --target qa 
 dbt test --target qa
-dbt run --target prod  
-dbt test --target prod
+dbt clone --select models/ --state target/ --target prod --target-path target_clone --full-refresh
+dbt clone --select models/ --state target/ --target dev --target-path target_clone --full-refresh
