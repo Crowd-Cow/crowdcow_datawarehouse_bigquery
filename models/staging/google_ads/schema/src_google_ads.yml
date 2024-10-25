@@ -7,7 +7,7 @@ sources:
   schema: raw_google_ads
   
   tables:
-    - name: campaign_history
+    - name: googleads_campaign
       description: Google Ads campaign history
       columns:
         - name: id
