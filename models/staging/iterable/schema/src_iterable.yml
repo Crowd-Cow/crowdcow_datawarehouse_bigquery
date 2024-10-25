@@ -6,6 +6,7 @@ sources:
     ##database: raw
     schema: raw_iterable
     tables:
+      - name: journeys
       - name: events
         description: Iterable events for things like email sends, clicks, opens, etc
 

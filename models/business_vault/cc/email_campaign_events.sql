@@ -33,6 +33,8 @@ event as ( select * from {{ ref('stg_iterable__events') }} )
         ,event.event_name
         ,campaign.created_by_user_id
         ,campaign.send_size
+        ,campaign.workflow_id
+        ,campaign.workflow_name
         ,campaign.campaign_type
         ,event.created_at_utc
         
@@ -57,6 +59,8 @@ event as ( select * from {{ ref('stg_iterable__events') }} )
         ,campaign_state
         ,created_by_user_id
         ,send_size
+        ,workflow_id
+        ,workflow_name
         ,campaign_type
         ,ended_at_utc
         ,countif(event_name = 'EMAILSEND') as send_count
@@ -66,7 +70,7 @@ event as ( select * from {{ ref('stg_iterable__events') }} )
         ,count(distinct if(event_name = 'EMAILOPEN',user_id,null)) as unique_open_count
         ,countif(event_name = 'EMAILBOUNCE') as bounce_count
     from join_events_campaigns
-    group by 1,2,3,4,5,6,7,8,9,10,11
+    group by 1,2,3,4,5,6,7,8,9,10,11,12,13
 )
 
 select * from aggregate_campaigns

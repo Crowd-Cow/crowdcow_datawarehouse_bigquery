@@ -25,6 +25,7 @@ reschedule as ( select * from {{ ref('events') }} where event_name = 'ORDER_RESC
         ,old_scheduled_fulfillment_date
         ,new_scheduled_fulfillment_date
         ,occurred_at_utc
+        ,upper(token) as token
     from reschedule
 )
 
