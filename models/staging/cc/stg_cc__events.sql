@@ -37,7 +37,7 @@ events as (
    SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.properties.id') AS STRING) AS event_properties_id,
    LOWER(COALESCE(SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.product_id') AS STRING), SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.properties.product_token') AS STRING))) AS product_token,
    SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.bid_item_id') AS INT64) AS bid_item_id,
-   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.event_id') AS STRING) AS token,
+   SAFE_CAST(JSON_VALUE(event_json, '$."$event_id"') AS STRING) AS token,
    COALESCE(SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.name') AS STRING), SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.properties.name') AS STRING)) AS name,
    SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.properties.page_section') AS STRING) AS page_section,
    SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.properties.modal_name') AS STRING) AS modal_name,
