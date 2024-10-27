@@ -13,16 +13,7 @@
 }}
 
 with
-
-event as ( 
-        select 
-            * 
-        from {{ ref('stg_iterable__events') }} 
-        {% if is_incremental() %}
-        where timestamp_trunc(created_at_utc, day) in ({{ partitions_to_replace | join(',') }})
-        {% endif %}
-        )
-,campaign as ( select * From {{ ref('stg_iterable__campaign_history') }} )
+ campaign as ( select * From {{ ref('stg_iterable__campaign_history') }} )
 ,user as ( select * from {{ ref('stg_iterable__user_history') }} )
 ,cc_user as ( select distinct user_token, user_id from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
 
@@ -57,9 +48,13 @@ event as (
             else campaign.ended_at_utc
         end as ended_at_utc
 
-    from event
+    from {{ ref('stg_iterable__events') }} as event
         left join campaign on event.campaign_id = campaign.campaign_id
         left join get_user_id on event.user_email = get_user_id.user_email
+
+    {% if is_incremental() %}
+        where timestamp_trunc(ended_at_utc, day) in ({{ partitions_to_replace | join(',') }})
+    {% endif %}
 )
 
 ,aggregate_campaigns as (
