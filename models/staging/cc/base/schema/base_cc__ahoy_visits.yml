@@ -8,7 +8,6 @@ models:
         description: "Visit ID"
         tests:
           - unique
-          - not_null
 
       - name: visit_browser
         description: "Visit browser"

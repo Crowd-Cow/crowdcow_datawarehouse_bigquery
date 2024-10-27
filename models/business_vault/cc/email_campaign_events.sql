@@ -1,16 +1,30 @@
+{% set partitions_to_replace = [
+  'timestamp(current_date)',
+  'timestamp(date_sub(current_date, interval 1 day))'
+] %}
 {{
-    config(
-        partition_by = {'field': 'ended_at_utc', 'data_type': 'timestamp'},
-        cluster_by = ['user_email','campaign_id','ended_at_utc']
+  config(
+        materialized = 'incremental',
+         partition_by = {'field': 'ended_at_utc', 'data_type': 'timestamp'},
+        cluster_by = ['email_campaign_id'],
+        incremental_strategy = 'insert_overwrite',
+        partitions = partitions_to_replace
     )
 }}
 
 with
 
-event as ( select * from {{ ref('stg_iterable__events') }} )
+event as ( 
+        select 
+            * 
+        from {{ ref('stg_iterable__events') }} 
+        {% if is_incremental() %}
+        where timestamp_trunc(created_at_utc, day) in ({{ partitions_to_replace | join(',') }})
+        {% endif %}
+        )
 ,campaign as ( select * From {{ ref('stg_iterable__campaign_history') }} )
 ,user as ( select * from {{ ref('stg_iterable__user_history') }} )
-,cc_user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
+,cc_user as ( select distinct user_token, user_id from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
 
 ,get_user_id as (
     select 

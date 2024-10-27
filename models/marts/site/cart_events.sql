@@ -1,6 +1,42 @@
+{% set partitions_to_replace = [
+  'timestamp(current_date)',
+  'timestamp(date_sub(current_date, interval 1 day))'
+] %}
+{{
+  config(
+        materialized = 'incremental',
+        partition_by = {'field': 'occurred_at_utc', 'data_type': 'timestamp'},
+        cluster_by = ['visit_id','user_id','event_name'],
+        incremental_strategy = 'insert_overwrite',
+        partitions = partitions_to_replace
+    )
+}}
 with
 
-cart_events as ( select * from {{ ref('events') }} where event_name in ('ORDER_ADD_TO_CART','ORDER_REMOVE_FROM_CART','VIEWED_PRODUCT','PRODUCT_CARD_VIEWED','PRODUCT_CARD_QUICK_ADD_TO_CART') )
+cart_events as ( 
+    select 
+     event_id
+        ,visit_id
+        ,user_id
+        ,occurred_at_utc
+        ,event_name
+        ,on_page_path
+        ,page_section
+        ,price 
+        ,quantity
+        ,order_id   
+        ,bid_item_id
+        ,product_token
+        ,title 
+        ,name 
+        ,quantity_sellable
+        ,event_properties_id
+    from {{ ref('events') }}
+    where event_name in ('ORDER_ADD_TO_CART','ORDER_REMOVE_FROM_CART','VIEWED_PRODUCT','PRODUCT_CARD_VIEWED','PRODUCT_CARD_QUICK_ADD_TO_CART')
+{% if is_incremental() %}
+     and timestamp_trunc(occurred_at_utc, day) in ({{ partitions_to_replace | join(',') }})
+  {% endif %}
+  )
 ,bid_item as ( select * from {{ ref('bid_items') }} where dbt_valid_to is null )
 ,product as ( select * from {{ ref('products') }} )
 

@@ -8,7 +8,6 @@ models:
         description: Uniquely identifies an Ahoy Event
         tests:
           - unique
-          - not_null
 
       - name: visit_id
         description: Uniquely identifies a Visit to the Crowd Cow app

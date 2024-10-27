@@ -1,8 +1,3 @@
-{{
-  config(
-    snowflake_warehouse = 'TRANSFORMING_M'
-    )
-}}
 
 with
 
@@ -10,13 +5,25 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
 ,user_order_activity as ( select * from {{ ref('int_user_order_activity') }} )
 ,user_membership as ( select * from {{ ref('int_user_memberships') }} )
 ,phone_number as ( select * from {{ ref('stg_cc__phone_numbers') }} )
-,ccpa_users as ( select distinct  user_token from {{ ref('ccpa_requests') }} )
-,visit as ( select * from {{ ref('base_cc__ahoy_visits') }} )
+,visit as ( select user_id, visit_id, started_at_utc from {{ ref('visit_classification') }} order by started_at_utc asc )
 ,postal_code as ( select * from {{ ref('stg_cc__postal_codes') }} )
 ,identity as ( select * from {{ ref('int_recent_user_identities') }} )
 ,contact as ( select * from {{ ref('contacts') }} )
 ,referrals as ( select * from {{ ref('referrals') }})
 ,gift_card_transaction_history as ( select * from {{ ref('gift_card_transaction_history') }} )
+,ccpa as (select * from {{ ref('stg_gs__ccpa_requests') }}) 
+
+,ccpa_users as (
+    select 
+        DISTINCT
+        CASE
+            WHEN REGEXP_CONTAINS(ccpa.admin_link, r'CROWDCOW.COM/ADMIN/') THEN LOWER(SPLIT(ccpa.admin_link, '/')[OFFSET(4)])
+            WHEN ccpa.email IS NOT NULL THEN users.user_token
+            ELSE NULL
+        END AS user_token
+    from ccpa
+        left join users on ccpa.email = users.user_email
+)
 
 ,user_contacts as (
     select 

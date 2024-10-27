@@ -1,8 +1,12 @@
-
+{{
+    config(
+        enabled=false
+    )
+}}
 with 
 
 ccpa as (select * from {{ ref('stg_gs__ccpa_requests') }})
-,users as (select * from {{ ref('stg_cc__users') }})
+,users as (select user_token, user_email from {{ ref('stg_cc__users') }})
 
 ,ccpa_users as (
     select 

@@ -1,6 +1,38 @@
+{% set partitions_to_replace = [
+  'timestamp(current_date)',
+  'timestamp(date_sub(current_date, interval 1 day))'
+] %}
+{{
+  config(
+        materialized = 'incremental',
+        partition_by = {'field': 'occurred_at_utc', 'data_type': 'timestamp'},
+        cluster_by = ['event_id','visit_id','user_id','order_id'],
+        incremental_strategy = 'insert_overwrite',
+        partitions = partitions_to_replace
+    )
+}}
 with
 
-reschedule as ( select * from {{ ref('events') }} where event_name = 'ORDER_RESCHEDULED')
+reschedule as ( 
+    select 
+        event_id
+        ,visit_id
+        ,user_id
+        ,order_id
+        ,user_making_change_id
+        ,reason
+        ,old_scheduled_arrival_date
+        ,new_scheduled_arrival_date
+        ,old_scheduled_fulfillment_date
+        ,new_scheduled_fulfillment_date
+        ,occurred_at_utc
+        ,token
+    from {{ ref('events') }} 
+    where event_name = 'ORDER_RESCHEDULED'
+    {% if is_incremental() %}
+     and timestamp_trunc(occurred_at_utc, day) in ({{ partitions_to_replace | join(',') }})
+    {% endif %}
+    )
 
 ,transform_event as (
     select

@@ -11,7 +11,8 @@
             },
         cluster_by = ['inventory_snapshot_id','sku_box_id'],
         incremental_strategy = 'insert_overwrite',
-        partitions = partitions_to_replace
+        partitions = partitions_to_replace,
+        full_refresh = false
     )
 }}
 

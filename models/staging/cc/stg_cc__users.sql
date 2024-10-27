@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ ref('users_ss') }}  where __deleted is null and (_fivetran_deleted is null or _fivetran_deleted = false)
+    select * from {{  source('cc', 'users') }}  where __deleted is null
 
 ),
 
@@ -118,14 +118,14 @@ renamed as (
         ,banned_from_referrals as user_is_banned_from_referrals
         ,was_email_lead
         ,if(opted_in_to_emails=1,true,false) as has_opted_in_to_emails
-        ,dbt_valid_to 
-        ,dbt_valid_from
+        ,null as dbt_valid_to 
+        /*,dbt_valid_from
         ,dbt_scd_id as user_key
         ,case
             when dbt_valid_from = first_value(dbt_valid_from) over(partition by id order by dbt_valid_from) then '1970-01-01'
             else dbt_valid_from
         end as adjusted_dbt_valid_from
-        ,coalesce(dbt_valid_to,'2999-01-01') as adjusted_dbt_valid_to
+        ,coalesce(dbt_valid_to,'2999-01-01') as adjusted_dbt_valid_to */
     from source
 
 )
