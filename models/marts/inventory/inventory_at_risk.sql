@@ -3,7 +3,7 @@ with
 
 inventory as ( 
     select 
-        snapshot_date
+        date(snapshot_date) as snapshot_date
         ,fc_id
         ,quantity
         ,potential_revenue
@@ -31,7 +31,7 @@ inventory as (
         ,sku.cut_name
         ,sku.inventory_classification
         ,coalesce(sku.is_always_in_stock,FALSE) as is_always_in_stock
-        ,{{ dbt_utils.surrogate_key(['inventory.snapshot_date','sku.category','sku.sub_category','sku.cut_id','inventory.fc_id']) }} as join_key
+        ,{{ dbt_utils.surrogate_key(['date(inventory.snapshot_date)','sku.category','sku.sub_category','sku.cut_id','inventory.fc_id']) }} as join_key
         ,sum(inventory.quantity) as quantity
         ,sum(inventory.potential_revenue) as potential_revenue
         ,sum(inventory.quantity_reserved) as quantity_reserved

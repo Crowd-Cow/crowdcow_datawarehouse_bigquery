@@ -43,30 +43,33 @@ bid_log as ( select * from {{ ref('stg_cc__autofill_bid_logs') }} )
     select
         *
 
-        ,last_value(autofill_type || '|' || reason)  --concatenating two fields to make the "if" logic easier
-            over(partition by order_id,target_sku_id 
-                order by created_at_utc,autofill_bid_log_id) as last_autofill_reason
-
-        ,last_value(autofill_bid_log_id) 
-            over(partition by order_id,target_sku_id 
-                order by created_at_utc,autofill_bid_log_id) as last_autofill_bid_log_id
-
-        ,if(
-            autofill_bid_log_id = last_value(autofill_bid_log_id) over(partition by order_id,target_sku_id order by created_at_utc,autofill_bid_log_id)
-                and last_value(autofill_type || '|' || reason) over(partition by order_id,target_sku_id order by created_at_utc,autofill_bid_log_id) in ('REMOVAL|REMOVAL')
-            ,autofill_quantity
-            ,0
-        ) as net_autofill_quantity
-        
-        ,if(
-            autofill_bid_log_id = last_value(autofill_bid_log_id) over(partition by order_id,target_sku_id order by created_at_utc,autofill_bid_log_id)
-                and last_value(autofill_type || '|' || reason) over(partition by order_id,target_sku_id order by created_at_utc,autofill_bid_log_id) in ('REMOVAL|REMOVAL')
-            ,autofill_sku_gross_product_revenue
-            ,0
-        ) as net_autofill_gross_product_revenue
-
+        ,LAST_VALUE(CONCAT(autofill_type, '|', reason)) OVER (
+            PARTITION BY order_id, target_sku_id 
+            ORDER BY created_at_utc ASC, autofill_bid_log_id ASC
+            RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+        ) AS last_autofill_reason,
+        LAST_VALUE(autofill_bid_log_id) OVER (
+            PARTITION BY order_id, target_sku_id 
+            ORDER BY created_at_utc ASC, autofill_bid_log_id ASC
+            RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+        ) AS last_autofill_bid_log_id
     from autofill_joins
 )
 
-select * from get_final_sku_autofill_action
+select 
+    *
+      ,IF(
+            autofill_bid_log_id = last_autofill_bid_log_id AND
+            last_autofill_reason = 'REMOVAL|REMOVAL',
+            autofill_quantity,
+            0
+        ) AS net_autofill_quantity,
+
+        IF(
+            autofill_bid_log_id = last_autofill_bid_log_id AND
+            last_autofill_reason = 'REMOVAL|REMOVAL',
+            autofill_sku_gross_product_revenue,
+            0
+        ) AS net_autofill_gross_product_revenue
+ from get_final_sku_autofill_action
     

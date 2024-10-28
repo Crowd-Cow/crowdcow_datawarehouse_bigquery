@@ -8,7 +8,7 @@ aws as ( select * from {{ ref('stg_forecasting__cat_subcat_daily') }} where fore
 ,union_forecasts as (
     select
         forecast_id
-        ,forecast_date
+        ,date(forecast_date) as forecast_date
         ,fc_id
         ,category
         ,sub_category
@@ -20,8 +20,8 @@ aws as ( select * from {{ ref('stg_forecasting__cat_subcat_daily') }} where fore
 
     select
         forecast_id
-        ,forecast_date
-        ,fc_id
+        ,date(forecast_date) as forecast_date
+        ,fc_id 
         ,category
         ,sub_category
         ,cut_id
