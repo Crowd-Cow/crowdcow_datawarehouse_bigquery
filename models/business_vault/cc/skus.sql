@@ -5,6 +5,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
 ,farm as ( select * from {{ ref('farms') }} )
 ,sku_vendor as ( select * from {{ ref('stg_cc__sku_vendors') }} )
 ,ais as ( select * from {{ ref('stg_gs__always_in_stock') }} )
+,inventory_classification as ( select * from {{ ref('stg_gs__inventory_classification') }} )
 ,standard_sku_cost as ( select * from {{ ref('stg_gs__standard_sku_cost') }} )
 
 ,sku_joins as (
@@ -129,7 +130,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku_joins.is_marketplace
         ,sku_joins.is_rastellis
         ,coalesce(ais.is_always_in_stock,FALSE) as is_always_in_stock
-        ,sku_joins.replenishment_code as inventory_classification
+        ,inventory_classification.inventory_classification as inventory_classification
         ,sku_joins.sku_vendor_name
         ,sku_joins.vendor_funded_discount_start_at_utc
         ,sku_joins.vendor_funded_discount_end_at_utc
@@ -148,6 +149,7 @@ sku as ( select * from {{ ref('stg_cc__skus') }} )
         ,sku_joins.adjusted_dbt_valid_to
     from sku_joins
         left join ais on sku_joins.ais_id = ais.ais_id
+        left join inventory_classification on sku_joins.inventory_classification_id = inventory_classification.inventory_classification_id
 )
 
 ,add_standard_cost as (

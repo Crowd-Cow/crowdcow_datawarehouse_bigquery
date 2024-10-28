@@ -1,11 +1,19 @@
-{{
-    config(
-        enabled=false
-    )
-}}
+
 with
 
-inventory as ( select * from {{ ref('inventory_snapshot') }} )
+inventory as ( 
+    select 
+        snapshot_date
+        ,fc_id
+        ,quantity
+        ,potential_revenue
+        ,quantity_reserved
+        ,quantity_sellable
+        ,sku_cost
+        ,sku_key
+        ,fc_key
+        ,is_destroyed
+    from {{ ref('inventory_snapshot') }} )
 ,forecast as ( select * from {{ ref('demand_forecast') }} )
 ,sku as ( select * from {{ ref('skus') }} )
 ,fc as ( select * from {{ ref('fcs') }} )
@@ -13,7 +21,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
 
 ,inventory_aggregation_sku as (
     select
-        inventory.snapshot_date
+        inventory.snapshot_date 
         ,inventory.fc_id
         ,fc.fc_name
         ,sku.category
@@ -33,7 +41,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         left join sku on inventory.sku_key = sku.sku_key
         left join fc on inventory.fc_key = fc.fc_key
     where not inventory.is_destroyed
-    group by 1,2,3,4,5,6,7,8,9,10
+    group by inventory.snapshot_date,2,3,4,5,6,7,8,9,10
 )
 
 ,first_available_pipeline_order as (
@@ -121,7 +129,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
         ,sub_category
         ,cut_id
         ,fc_id
-        ,{{ dbt_utils.surrogate_key(['forecast_date','category','sub_category','cut_id','fc_id']) }} as join_key
+        ,{{ dbt_utils.surrogate_key(['date(forecast_date)','category','sub_category','cut_id','fc_id']) }} as join_key
         ,forecasted_sales
         ,avg(forecasted_sales) 
             over(
@@ -164,10 +172,24 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} )
     ,safe_divide(quantity_sellable,avg_forecasted_weekly_units) as wos
     ,safe_divide(quantity,avg_forecasted_weekly_units) as est_wos_total
     ,safe_divide(quantity_reserved,quantity_sellable) as pct_reserved
-    ,CURRENT_DATE()
-        + cast((safe_divide(quantity_sellable,avg_forecasted_weekly_units) 
-        * 7 
-        * (1 - safe_divide(quantity_reserved,quantity_sellable))) as int) as est_oos_date
+    ,DATE_ADD(
+  CURRENT_DATE(),
+  INTERVAL CAST(
+    CASE
+      WHEN
+        quantity_sellable IS NULL OR quantity_sellable <= 0 OR
+        avg_forecasted_weekly_units IS NULL OR avg_forecasted_weekly_units <= 0 OR
+        quantity_reserved IS NULL OR quantity_reserved < 0 OR
+        quantity_reserved >= quantity_sellable
+      THEN NULL
+      ELSE
+        SAFE_MULTIPLY(
+          SAFE_DIVIDE(quantity_sellable, avg_forecasted_weekly_units),
+          7 * (1 - SAFE_DIVIDE(quantity_reserved, quantity_sellable))
+        )
+    END AS INT64
+  ) DAY
+) AS est_oos_date
     from join_forecast
 )
 
