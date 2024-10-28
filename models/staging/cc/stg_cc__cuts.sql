@@ -29,7 +29,7 @@ renamed as (
         ,{{ clean_strings('rounding_rule') }} as rounding_rule
         ,{{ clean_strings('generic_description_override') }} as generic_description_override
         ,popular_cut as is_popular_cut
-        ,in_use as is_in_use
+        ,cast(if(in_use=1,true,false) as bool) as is_in_use
         ,portion_cut as is_portion_cut
         ,yield_cut as is_yield_cut
         ,named_weight_cut as is_named_weight_cut

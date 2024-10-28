@@ -11,8 +11,16 @@
 }}
 
 select 
-    {{ dbt_utils.surrogate_key(['date','fc_id','category','sub_category','cut_id']) }} as id
-    ,* 
+    {{ dbt_utils.surrogate_key(['date(date)','fc_id','category','sub_category','cut_id']) }} as id
+    ,date
+    ,fc_id
+    ,fc_name
+    ,category
+    ,sub_category
+    ,cut_id
+    ,cut_name
+    ,inventory_classification
+    ,predicted_quantity
 from {{ source('demand_forecast', 'prediction_report') }}
 
 {% endsnapshot %}

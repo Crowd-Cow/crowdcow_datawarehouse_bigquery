@@ -51,7 +51,7 @@ renamed as (
         , is_zero_antibiotics
         , is_zero_hormones
         , is_closed_herd
-        , active as is_active
+        , cast(if(active=1,true,false) as bool) as is_active
         , is_organic
         , is_non_gmo
         , dbt_valid_to
