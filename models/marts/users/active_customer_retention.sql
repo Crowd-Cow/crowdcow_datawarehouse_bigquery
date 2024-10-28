@@ -16,10 +16,10 @@ with fiscal_calendar as (select * from {{ ref('retail_calendar') }} where fiscal
               fiscal_year,
               fiscal_week_num,
               timestamp(calendar_date) as calendar_date,
-              timestamp(DATE_SUB(current_date(), INTERVAL 180 DAY)) AS date_180_days_ago,
-              timestamp(DATE_SUB(current_date(), INTERVAL 90 DAY)) AS date_90_days_ago
+              timestamp(DATE_SUB(calendar_date, INTERVAL 180 DAY)) AS date_180_days_ago,
+              timestamp(DATE_SUB(calendar_date, INTERVAL 90 DAY)) AS date_90_days_ago
           FROM fiscal_calendar
-          WHERE calendar_date <= CURRENT_DATE
+          WHERE calendar_date <= CURRENT_DATE()
 )
 
 SELECT
