@@ -39,7 +39,7 @@ reschedule as (
         event_id
         ,visit_id
         ,user_id
-        ,order_id
+        ,cast(order_id as int64) as order_id
         ,user_making_change_id
 
         ,case

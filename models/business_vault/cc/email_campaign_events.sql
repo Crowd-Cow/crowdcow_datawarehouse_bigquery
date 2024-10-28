@@ -1,19 +1,14 @@
-{% set partitions_to_replace = [
-  'timestamp(current_date)',
-  'timestamp(date_sub(current_date, interval 1 day))'
-] %}
 {{
   config(
-        materialized = 'incremental',
-         partition_by = {'field': 'ended_at_utc', 'data_type': 'timestamp'},
+        partition_by = {'field': 'ended_at_utc', 'data_type': 'timestamp'},
         cluster_by = ['email_campaign_id'],
-        incremental_strategy = 'insert_overwrite',
-        partitions = partitions_to_replace
     )
 }}
 
 with
- campaign as ( select * From {{ ref('stg_iterable__campaign_history') }} )
+
+event as ( select * from {{ ref('stg_iterable__events') }} )
+,campaign as ( select * From {{ ref('stg_iterable__campaign_history') }} )
 ,user as ( select * from {{ ref('stg_iterable__user_history') }} )
 ,cc_user as ( select distinct user_token, user_id from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
 
@@ -48,13 +43,9 @@ with
             else campaign.ended_at_utc
         end as ended_at_utc
 
-    from {{ ref('stg_iterable__events') }} as event
+    from event
         left join campaign on event.campaign_id = campaign.campaign_id
         left join get_user_id on event.user_email = get_user_id.user_email
-
-    {% if is_incremental() %}
-        where timestamp_trunc(ended_at_utc, day) in ({{ partitions_to_replace | join(',') }})
-    {% endif %}
 )
 
 ,aggregate_campaigns as (
