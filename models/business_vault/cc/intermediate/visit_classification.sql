@@ -1,9 +1,14 @@
+{% set partitions_to_replace = [
+  'timestamp(current_date)',
+  'timestamp(date_sub(current_date, interval 1 day))'
+] %}
 {{
   config(
         materialized = 'incremental',
         partition_by = {"field": "started_at_utc", "data_type": "timestamp" },
         incremental_strategy = 'insert_overwrite',
-        cluster_by = ["visit_id","user_id"]
+        cluster_by = ["visit_id","user_id"],
+        partitions = partitions_to_replace
     )
 }}
 
@@ -12,9 +17,8 @@ with
 base_visits as ( 
     select * 
     from {{ ref('base_cc__ahoy_visits') }} 
-    
     {% if is_incremental() %}
-      where started_at_utc >= coalesce((select max(started_at_utc) from {{ this }}), '1900-01-01')
+      where timestamp_trunc(started_at_utc, day) in ({{ partitions_to_replace | join(',') }})
     {% endif %}
 
 )
