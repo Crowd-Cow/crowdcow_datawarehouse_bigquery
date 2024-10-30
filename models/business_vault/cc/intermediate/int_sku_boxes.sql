@@ -26,9 +26,11 @@ with sku_box as ( select * from {{ ref('stg_cc__sku_boxes') }} )
         ,best_by_date
         ,pack_date
         ,cast(dbt_valid_from as date) as dbt_valid_from
-        ,coalesce(cast(dbt_valid_to as date),current_date() + interval 1 day) as dbt_valid_to
+        ,COALESCE(CAST(dbt_valid_to AS DATE), DATE_ADD(CURRENT_DATE(), INTERVAL 1 DAY)) AS dbt_valid_to
+        ,row_number() over(partition by sku_box_id, cast(dbt_valid_from as date) order by dbt_valid_from desc) as rn
     from sku_box
-    qualify row_number() over(partition by sku_box_id, cast(dbt_valid_from as date) order by dbt_valid_from desc) = 1
+    where quantity > 0
+
     )
-select * from inventory_snapshot where quantity > 0
+select * from inventory_snapshot where rn = 1 
     
