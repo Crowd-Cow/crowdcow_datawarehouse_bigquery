@@ -1,8 +1,3 @@
-{{
-    config(
-        enabled=false
-    )
-}}
 with
 
 inventory as ( select * from {{ ref('inventory_snapshot') }} where not is_rastellis or is_rastellis is null )
@@ -23,7 +18,7 @@ inventory as ( select * from {{ ref('inventory_snapshot') }} where not is_rastel
     from inventory
         left join sku on inventory.sku_key = sku.sku_key
         left join fc on inventory.fc_key = fc.fc_key
-    where snapshot_date <= current_date() + interval 1 day
+    where snapshot_date <= DATE_ADD(CURRENT_DATE(), INTERVAL 1 DAY)
 )
 
 select
