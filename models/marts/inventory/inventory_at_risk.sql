@@ -34,7 +34,7 @@ inventory as (
         ,{{ dbt_utils.surrogate_key(['date(inventory.snapshot_date)','sku.category','sku.sub_category','sku.cut_id','inventory.fc_id']) }} as join_key
         ,sum(inventory.quantity) as quantity
         ,sum(inventory.potential_revenue) as potential_revenue
-        ,sum(inventory.quantity_reserved) as quantity_reserved
+        ,max(inventory.quantity_reserved) as quantity_reserved
         ,sum(inventory.quantity_sellable) as quantity_sellable
         ,sum(inventory.sku_cost) as sku_cost
     from inventory
@@ -115,7 +115,7 @@ inventory as (
         ,next_order_lot_number
         ,sum(quantity) as quantity
         ,sum(potential_revenue) as potential_revenue
-        ,sum(quantity_reserved) as quantity_reserved
+        ,max(quantity_reserved) as quantity_reserved
         ,sum(quantity_sellable) as quantity_sellable
         ,sum(sku_cost) as sku_cost
     from add_next_order 
@@ -173,23 +173,12 @@ inventory as (
     ,safe_divide(quantity,avg_forecasted_weekly_units) as est_wos_total
     ,safe_divide(quantity_reserved,quantity_sellable) as pct_reserved
     ,DATE_ADD(
-  CURRENT_DATE(),
-  INTERVAL CAST(
-    CASE
-      WHEN
-        quantity_sellable IS NULL OR quantity_sellable <= 0 OR
-        avg_forecasted_weekly_units IS NULL OR avg_forecasted_weekly_units <= 0 OR
-        quantity_reserved IS NULL OR quantity_reserved < 0 OR
-        quantity_reserved >= quantity_sellable
-      THEN NULL
-      ELSE
-        SAFE_MULTIPLY(
-          SAFE_DIVIDE(quantity_sellable, avg_forecasted_weekly_units),
-          7 * (1 - SAFE_DIVIDE(quantity_reserved, quantity_sellable))
-        )
-    END AS INT64
-  ) DAY
-) AS est_oos_date
+        CURRENT_DATE(),
+        INTERVAL CAST(
+            SAFE_DIVIDE(quantity_sellable, avg_forecasted_weekly_units) * 7 * (1 - SAFE_DIVIDE(quantity_reserved, quantity_sellable))
+            AS INT64
+        ) DAY
+        ) AS est_oos_date
     from join_forecast
 )
 

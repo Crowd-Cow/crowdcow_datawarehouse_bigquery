@@ -35,7 +35,7 @@ dates as (
 ,receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
 ,pipeline_order as ( select * from {{ ref('stg_cc__pipeline_orders') }} )
 ,fbq_item as ( select distinct sku_id from {{ ref('int_bid_item_skus') }} where is_fbq_item )
-,sku_reservations as (select * from {{ ref('stg_cc__sku_reservations') }} where dbt_valid_to is null )
+,sku_reservations as (select * from {{ ref('stg_cc__sku_reservations') }} where sku_reservation_quantity > 0  )
 
 ,inventory_snapshot as (
     select
@@ -131,9 +131,11 @@ dates as (
     select
         sku_id
         ,fc_id
+        ,date(adjusted_dbt_valid_to) as adjusted_dbt_valid_to
+        ,date(dbt_valid_from) as dbt_valid_from
         ,sum(sku_reservation_quantity) as sku_reservation_quantity
     from sku_reservations 
-    group by 1,2
+    group by 1,2,3,4
 
 )
 ,inventory_joins as (
@@ -157,7 +159,7 @@ dates as (
         ,sku_vendor.is_rastellis
         ,fbq_item.sku_id is not null as is_configured_for_fbq
         ,lot.delivered_at_utc as lot_delivered_at_utc
-        ,sku_reservations_aggregation.sku_reservation_quantity /** As this is reservation qqt is not box level there is the need to select the right aggregation in Looker**/
+        ,sum(sku_reservation_quantity)  as sku_reservation_quantity  /** As this is reservation qqt is not box level there is the need to select the right aggregation in Looker**/
     from sku_box_locations
         left join sku_vendor on sku_box_locations.owner_id = sku_vendor.sku_vendor_id
         left join lot on sku_box_locations.lot_id = lot.lot_id
@@ -173,8 +175,10 @@ dates as (
                   and sku_box_locations.snapshot_date >= cast(sku.adjusted_dbt_valid_from as date)
                   and sku_box_locations.snapshot_date < cast(sku.adjusted_dbt_valid_to as date)
         left join sku_reservations_aggregation on sku_box_locations.sku_id = sku_reservations_aggregation.sku_id
-            and sku_box_locations.fc_id = sku_reservations_aggregation.fc_id
-        
+                  and sku_box_locations.fc_id = sku_reservations_aggregation.fc_id
+                  and sku_box_locations.snapshot_date >= cast(sku_reservations_aggregation.dbt_valid_from as date)
+                  and sku_box_locations.snapshot_date < cast(sku_reservations_aggregation.adjusted_dbt_valid_to as date)
+    group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39
 )
 
 ,add_sku_metrics as (
