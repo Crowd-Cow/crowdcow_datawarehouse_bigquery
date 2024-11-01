@@ -25,6 +25,7 @@ user as ( select * from {{ ref('users') }} )
         ,user.twelve_month_purchase_count >= 4 as is_frequent_customer
         ,user.lifetime_net_revenue > 0 and user.lifetime_net_revenue_percentile > 80 as is_top_spender_customer
         ,vip.user_id is not null as is_vip_customer
+        ,user.twelve_month_purchase_count > 0 as has_orders_last_12_months
     from user
         left join vip on user.user_id = vip.user_id
     where user_type in ('CUSTOMER','EMPLOYEE')
@@ -52,18 +53,19 @@ user as ( select * from {{ ref('users') }} )
         ,is_inactive_customer
         ,is_frequent_customer
         ,is_top_spender_customer
+        ,has_orders_last_12_months
     from user_list
 )
 
 ,validate_email_phone as (
     select
-        IF(REGEXP_CONTAINS(email, r'^[a-z0-9!._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$'), email, NULL) AS email
+        IF(REGEXP_CONTAINS(email, r'^[a-z0-9!._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$'), email, NULL) AS email
         ,first_name
         ,last_name
         ,country
         ,state
         ,zip
-        ,if(regexp_contains(phone_number,'\\([0-9]{3}\\) [0-9]{3}-[0-9]{4}'),'1 ' || phone_number,null) as phone_number
+        ,IF(REGEXP_CONTAINS(phone_number, r'^\\([0-9]{3}\\) [0-9]{3}-[0-9]{4}$'), CONCAT('1 ', phone_number), NULL) AS phone_number
         ,is_customer_lead
         ,is_lead_and_registered_user
         ,is_customer
