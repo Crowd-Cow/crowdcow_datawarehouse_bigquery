@@ -400,9 +400,15 @@ employee as (
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and referrals_redeemed > 0
 )
 ,has_redeemed_gift_card as (
-    {{ generate_tag('users','user_id','has_redeemed_gift_card','user_data_point','null') }}
+    {{ generate_tag('users','user_id','has_redeemed_gift_card','user_segment','null') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and has_redeemed_gift_card 
 )
+
+,vip_important_relationship as (
+    {{ generate_tag('users','user_id','vip_important_relationship','user_segment','null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and has_redeemed_gc_vip_referral 
+)
+
 ,new_customer as (
     {{ generate_tag('users','user_id','new_customer','user_segment', 'null') }}
     where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and lifetime_paid_order_count > 0 and lifetime_paid_order_count <= 3 
@@ -604,6 +610,8 @@ union all
 select * from has_redeemed_gift_card
 union all
 select * from new_customer
+union all
+select * from vip_important_relationship
 
 
 

@@ -62,6 +62,15 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
     where redemption_user_id is not null 
 )
 
+,user_gift_card_redemption_vip_affiliate as (
+    select 
+        distinct
+        redemption_user_id
+    from gift_card_transaction_history
+    where redemption_user_id is not null 
+    and batch_uuid = 'PBIBOPVNEN'
+)
+
 ,user_joins as (
     select
         users.*
@@ -190,7 +199,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.last_14_days_impacful_customer_reschedules
         ,user_referrals.referrals_sent
         ,user_referrals.referrals_redeemed
-        ,if(redemption_user_id is not null, true, false) as has_redeemed_gift_card
+        ,if(user_gift_card_transaction_history.redemption_user_id is not null, true, false) as has_redeemed_gift_card
+        ,if(user_gift_card_redemption_vip_affiliate.redemption_user_id is not null, true, false) as has_redeemed_gc_vip_referral
 
     from users
         left join user_membership on users.user_id = user_membership.user_id
@@ -203,6 +213,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         left join user_contacts on users.user_token = user_contacts.user_token
         left join user_referrals on users.user_id = user_referrals.user_id
         left join user_gift_card_transaction_history on users.user_id = user_gift_card_transaction_history.redemption_user_id 
+        left join user_gift_card_redemption_vip_affiliate on users.user_id = user_gift_card_redemption_vip_affiliate.redemption_user_id 
 )
 
 ,final as (
@@ -412,6 +423,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,referrals_sent
         ,referrals_redeemed
         ,has_redeemed_gift_card
+        ,has_redeemed_gc_vip_referral
 
 
     from user_joins

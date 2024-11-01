@@ -13,6 +13,7 @@ gift_card as ( select * from {{ ref('gift_cards') }} )
         ,gift_card.order_id
         ,'GIFT CARD PURCHASE' as entry_type
         ,gift_card.gift_card_amount_usd as amount_usd
+        ,gift_card.batch_uuid
         ,gift_card.created_at_utc
         ,gift_card.updated_at_utc
     from gift_card
@@ -27,16 +28,18 @@ gift_card as ( select * from {{ ref('gift_cards') }} )
     union all
     
     select
-        gift_card_id
+        gift_card_redemption.gift_card_id
         ,null as gift_info_id
         ,null as purchase_user_id
-        ,user_id as redemption_user_id
-        ,order_id
+        ,gift_card_redemption.user_id as redemption_user_id
+        ,gift_card_redemption.order_id
         ,'GIFT CARD REDEMPTION' as entry_type
         ,-credit_discount_usd as amount_usd
-        ,created_at_utc
-        ,updated_at_utc
+        ,gift_card_purchase.batch_uuid as batch_uuid
+        ,gift_card_redemption.created_at_utc
+        ,gift_card_redemption.updated_at_utc
     from gift_card_redemption
+    left join gift_card_purchase on gift_card_purchase.gift_card_id = gift_card_redemption.gift_card_id
 )
 
 ,calc_gift_card_balance as (
