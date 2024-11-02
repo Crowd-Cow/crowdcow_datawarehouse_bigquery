@@ -65,7 +65,7 @@ user as ( select * from {{ ref('users') }} )
         ,country
         ,state
         ,zip
-        ,IF(REGEXP_CONTAINS(phone_number, r'^\\([0-9]{3}\\) [0-9]{3}-[0-9]{4}$'), CONCAT('1 ', phone_number), NULL) AS phone_number
+        ,IF(REGEXP_CONTAINS(phone_number, r'\([0-9]{3}\) [0-9]{3}-[0-9]{4}'), CONCAT('1 ', phone_number), NULL) AS phone_number
         ,is_customer_lead
         ,is_lead_and_registered_user
         ,is_customer
@@ -79,6 +79,7 @@ user as ( select * from {{ ref('users') }} )
         ,is_inactive_customer
         ,is_frequent_customer
         ,is_top_spender_customer
+        ,has_orders_last_12_months
     from prep_user_fields
 )
 
