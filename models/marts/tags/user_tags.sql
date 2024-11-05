@@ -415,7 +415,7 @@ employee as (
 )
 
 
-
+,union_tags as (
 select * from employee
 union all
 select * from recent_delivery
@@ -613,7 +613,12 @@ select * from new_customer
 union all
 select * from vip_important_relationship
 
+)
 
+select 
+row_number() over(order by created_at_utc,user_id) as id,
+*
+from union_tags
 
 
 
