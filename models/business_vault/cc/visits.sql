@@ -14,7 +14,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
   SELECT
     *,
     CASE
-      WHEN TIMESTAMP_DIFF(started_at_utc, LAG(started_at_utc) OVER (PARTITION BY visit_ip ORDER BY started_at_utc), MINUTE) >= 30 OR LAG(started_at_utc) OVER (PARTITION BY visit_ip ORDER BY started_at_utc) IS NULL THEN 1
+      WHEN TIMESTAMP_DIFF(started_at_utc, LAG(started_at_utc) OVER (PARTITION BY visit_ip ORDER BY started_at_utc), MINUTE) >= 420 OR LAG(started_at_utc) OVER (PARTITION BY visit_ip ORDER BY started_at_utc) IS NULL THEN 1
       ELSE 0
     END AS new_session_start_flag
   FROM

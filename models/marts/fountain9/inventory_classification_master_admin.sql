@@ -10,7 +10,7 @@ with
             cuts.cut_name,
             CONCAT(skus.category, skus.sub_category, cuts.cut_name) AS combo,
             --,skus.inventory_classification,
-            skus.replenishment_code
+            skus.replenishment_code as inventory_classification
         FROM skus
         LEFT JOIN cuts ON skus.cut_id = cuts.cut_id
         WHERE 
