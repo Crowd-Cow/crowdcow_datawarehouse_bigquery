@@ -1,6 +1,18 @@
 with 
 
 source as ( select * from {{ ref('skus_ss') }} where _fivetran_deleted is null or _fivetran_deleted = false )
+,raw_data as ( select * from {{ source('cc', 'skus') }} where __deleted is null  )
+
+--The sku_snapshot CTE has been hardcoded to correct specific discrepancies identified within the snapshot table.
+,sku_snapshot as (
+    select source.*
+    ,case 
+        when coalesce(source.replenishment_code,'') != coalesce(raw_data.replenishment_code,'') and source.dbt_valid_to is null 
+            then raw_data.replenishment_code else source.replenishment_code end as adjusted_replenishment_code
+    ,case when raw_data.id is null and source.dbt_valid_to is null then true else false end as deleted
+    from source
+    left join raw_mysql.skus as raw_data on raw_data.id = source.id
+)
 
 ,renamed as (
 
@@ -53,7 +65,7 @@ source as ( select * from {{ ref('skus_ss') }} where _fivetran_deleted is null o
         ,{{ convert_percent('non_member_discount_percent') }} as non_member_discount_percent
         ,non_member_discount_start_at as non_member_discount_start_at_utc
         ,{{ convert_percent('partial_member_discount_percent') }} as partial_member_discount_percent
-        ,{{ clean_strings('replenishment_code') }} as replenishment_code
+        ,{{ clean_strings('adjusted_replenishment_code') }} as replenishment_code
         ,{{ clean_strings('vendor_product_code') }} as vendor_product_code
         ,vendor_case_pack_quantity as vendor_case_pack_quantity
         ,dbt_valid_to
@@ -66,7 +78,8 @@ source as ( select * from {{ ref('skus_ss') }} where _fivetran_deleted is null o
 
         ,coalesce(dbt_valid_to,'2999-01-01') as adjusted_dbt_valid_to
 
-    from source
+    from sku_snapshot
+    where not deleted
 
 )
 
