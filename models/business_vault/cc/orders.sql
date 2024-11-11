@@ -158,6 +158,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,flags.is_order_charged
         ,flags.is_bids_fulfillment_at_risk
         ,flags.has_gift_card_redemption
+        ,flags.is_reactivation
         ,ranks.overall_order_rank
         ,ranks.completed_order_rank
         ,ranks.paid_order_rank
