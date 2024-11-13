@@ -161,6 +161,9 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.last_paid_membership_order_date
         ,user_order_activity.last_paid_ala_carte_order_date
         ,user_order_activity.last_paid_order_date
+        ,user_order_activity.last_paid_membership_order_delivered_date
+        ,user_order_activity.last_paid_ala_carte_order_delivered_date
+        ,user_order_activity.last_paid_order_delivered_date
         ,user_order_activity.most_recent_paid_order_token
         ,user_order_activity.most_recent_order_promotion_id
         ,user_order_activity.most_recent_order_id
@@ -363,6 +366,9 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,last_paid_membership_order_date
         ,last_paid_ala_carte_order_date
         ,cast(last_paid_order_date as date) as last_paid_order_date
+        ,last_paid_membership_order_delivered_date
+        ,last_paid_ala_carte_order_delivered_date
+        ,last_paid_order_delivered_date
         ,most_recent_paid_order_token
         ,most_recent_order_promotion_id
         ,most_recent_order_id

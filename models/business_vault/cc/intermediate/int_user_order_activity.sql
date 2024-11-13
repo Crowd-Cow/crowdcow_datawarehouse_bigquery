@@ -46,8 +46,11 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,min(if(is_paid_order and not is_cancelled_order,cast(order_paid_at_utc as date),null)) as customer_cohort_date
         ,min(if(is_paid_order and not is_cancelled_order and is_membership_order,cast(order_paid_at_utc as date),null)) as membership_cohort_date
         ,max(if(is_paid_order and not is_cancelled_order and is_membership_order,cast(order_paid_at_utc as date),null)) as last_paid_membership_order_date
+        ,max(if(is_paid_order and not is_cancelled_order and is_membership_order,cast(delivered_at_utc as date),null)) as last_paid_membership_order_delivered_date
         ,max(if(is_paid_order and not is_cancelled_order and is_ala_carte_order,cast(order_paid_at_utc as date),null)) as last_paid_ala_carte_order_date
+        ,max(if(is_paid_order and not is_cancelled_order and is_ala_carte_order,cast(delivered_at_utc as date),null)) as last_paid_ala_carte_order_delivered_date
         ,max(if(is_paid_order and not is_cancelled_order,cast(order_paid_at_utc as date),null)) as last_paid_order_date
+        ,max(if(is_paid_order and not is_cancelled_order,cast(delivered_at_utc as date),null)) as last_paid_order_delivered_date
         ,min(if(completed_order_rank = 1,order_id,null)) as first_completed_order_id
         ,min(if(completed_order_rank = 1,order_checkout_completed_at_utc,null)) as first_completed_order_date
         ,min(if(completed_order_rank = 1,visit_id,null)) as first_completed_order_visit_id
@@ -256,6 +259,9 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,user_percentiles.last_paid_membership_order_date
         ,user_percentiles.last_paid_ala_carte_order_date
         ,user_percentiles.last_paid_order_date
+        ,user_percentiles.last_paid_membership_order_delivered_date
+        ,user_percentiles.last_paid_ala_carte_order_delivered_date
+        ,user_percentiles.last_paid_order_delivered_date
         ,user_percentiles.first_completed_order_id
         ,user_percentiles.first_completed_order_date
         ,user_percentiles.first_completed_order_visit_id
