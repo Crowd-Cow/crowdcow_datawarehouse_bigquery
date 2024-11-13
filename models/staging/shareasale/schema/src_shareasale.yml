@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+
+  - name: shareasale
+    schema: raw_shareasale
+    tables:
+      - name: transaction_details
+        
+      
+      - name: affiliate_list
+         
