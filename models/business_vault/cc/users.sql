@@ -109,6 +109,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.average_ala_carte_order_frequency_days
         ,user_order_activity.customer_cohort_date
         ,user_order_activity.membership_cohort_date
+        ,user_order_activity.customer_reactivation_date
         ,user_order_activity.first_completed_order_date
         ,user_order_activity.first_completed_order_visit_id
         ,user_order_activity.acquisition_promotion_id
@@ -256,6 +257,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,date_diff(customer_cohort_date,current_date, MONTH) as customer_cohort_tenure_months
         ,membership_cohort_date
         ,date_diff(membership_cohort_date,current_date, MONTH) as membership_cohort_tenure_months
+        ,customer_reactivation_date
+        ,date_diff(customer_reactivation_date,current_date, MONTH) as customer_reactivation_tenure_months
         ,first_promotion_type
         ,acquisition_promotion_id
         ,acquisition_promotion_source

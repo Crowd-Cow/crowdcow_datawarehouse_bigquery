@@ -45,6 +45,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,countif(has_been_delivered and cast(delivered_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 7 DAY)) as recent_delivered_order_count
         ,min(if(is_paid_order and not is_cancelled_order,cast(order_paid_at_utc as date),null)) as customer_cohort_date
         ,min(if(is_paid_order and not is_cancelled_order and is_membership_order,cast(order_paid_at_utc as date),null)) as membership_cohort_date
+        ,max(if(is_paid_order and not is_cancelled_order and is_reactivation,cast(order_paid_at_utc as date),null)) as customer_reactivation_date
         ,max(if(is_paid_order and not is_cancelled_order and is_membership_order,cast(order_paid_at_utc as date),null)) as last_paid_membership_order_date
         ,max(if(is_paid_order and not is_cancelled_order and is_membership_order,cast(delivered_at_utc as date),null)) as last_paid_membership_order_delivered_date
         ,max(if(is_paid_order and not is_cancelled_order and is_ala_carte_order,cast(order_paid_at_utc as date),null)) as last_paid_ala_carte_order_date
@@ -256,6 +257,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,coalesce(user_percentiles.is_qvc,FALSE) as is_qvc
         ,user_percentiles.customer_cohort_date
         ,user_percentiles.membership_cohort_date
+        ,user_percentiles.customer_reactivation_date
         ,user_percentiles.last_paid_membership_order_date
         ,user_percentiles.last_paid_ala_carte_order_date
         ,user_percentiles.last_paid_order_date

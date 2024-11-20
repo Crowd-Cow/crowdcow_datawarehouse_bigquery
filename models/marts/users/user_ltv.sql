@@ -67,6 +67,10 @@ select
     ,DATE_DIFF(CURRENT_DATE(), date(membership_cohort_date), MONTH) AS membership_cohort_tenure_months
     ,IF(date(order_paid_at_utc) >= date(membership_cohort_date), DATE_DIFF(date(order_paid_at_utc), date(membership_cohort_date), MONTH), NULL) AS membership_cohort_months
     ,IF(date(order_paid_at_utc) >= date(membership_cohort_date), DATE_DIFF(date(order_paid_at_utc), date(membership_cohort_date), DAY), NULL) AS membership_cohort_days
+    ,DATE_DIFF(date(order_paid_at_utc), date(customer_reactivation_date), MONTH) AS customer_reactivation_months
+    ,DATE_DIFF(date(order_paid_at_utc), date(customer_reactivation_date), DAY) AS customer_reactivation_days
+    ,DATE_DIFF(CURRENT_DATE(), date(customer_reactivation_date), MONTH) AS customer_reactivation_tenure_months
+    ,DATE_DIFF(CURRENT_DATE(), date(customer_reactivation_date), DAY) AS customer_reactivation_tenure_days
     ,calc_margin.product_profit
     ,calc_margin.product_margin
     ,calc_margin.gross_profit
