@@ -51,6 +51,8 @@ visits as ( select * from {{ ref('visit_classification') }} )
         COUNT(DISTINCT CASE WHEN event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' AND JSON_EXTRACT_SCALAR(experiments, '$.exp-cc-hp_redirect_2') = 'control'  THEN visit_id END) AS hp_redirect_2_control, 
         COUNT(DISTINCT CASE WHEN event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' AND JSON_EXTRACT_SCALAR(experiments, '$.exp-cc-express_checkout') = 'control'  THEN visit_id END) AS express_checkout_control,
         COUNT(DISTINCT CASE WHEN event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' AND JSON_EXTRACT_SCALAR(experiments, '$.exp-cc-express_checkout') = 'experimental'  THEN visit_id END) AS express_checkout_experimental, 
+        COUNT(DISTINCT CASE WHEN event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' AND JSON_EXTRACT_SCALAR(experiments, '$.exp-cc-taste_of_crowd_cow_redirect') = 'control'  THEN visit_id END) AS tocc_redirect_control,
+        COUNT(DISTINCT CASE WHEN event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' AND JSON_EXTRACT_SCALAR(experiments, '$.exp-cc-taste_of_crowd_cow_redirect') = 'experimental'  THEN visit_id END) AS tocc_redirect_experimental, 
         COUNT(*) AS event_count
     from events
     group by 1
@@ -123,6 +125,10 @@ visits as ( select * from {{ ref('visit_classification') }} )
             when visit_activity.express_checkout_experimental > 0  then 'EXPERIMENTAL1.0'   
             when visit_activity.express_checkout_control > 0 then 'CONTROL1.0' 
         else null end as express_checkout 
+        ,case 
+            when visit_activity.tocc_redirect_experimental > 0  then 'EXPERIMENTAL1.0'   
+            when visit_activity.tocc_redirect_control > 0 then 'CONTROL1.0' 
+        else null end as tocc_redirect
         ,visit_clean_urls.is_homepage_landing and (visit_activity.visit_id is null or (visit_activity.homepage_views = 1 and visit_activity.event_count = 1)) as did_bounce_homepage
         ,coalesce(visit_activity.pcp_impressions) as pcp_impressions_count
         ,coalesce(visit_activity.pcp_impression_clicks) as pcp_impression_clicks_count
