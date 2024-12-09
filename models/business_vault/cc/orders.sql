@@ -205,6 +205,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,coalesce(units.wagyu_units) as wagyu_units
         ,coalesce(units.bundle_units) as bundle_units
         ,coalesce(units.total_units) as total_units
+        ,coalesce(units.total_bid_quantity) as bid_quantity
         ,if(units.blackwing_turkey_units>0,TRUE,FALSE) as contains_turkey
         ,coalesce(units.total_product_weight) as total_product_weight
         ,coalesce(units.pct_beef) as pct_beef

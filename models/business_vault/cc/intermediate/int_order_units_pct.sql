@@ -82,4 +82,24 @@ order_item_details as ( select * from {{ ref('order_item_details') }} )
     from units_by_category
 )
 
-select * from pct_category
+,bids_units as (
+        select
+        order_id,
+        bid_id,
+        bid_quantity,
+        sum(bid_quantity) over (partition by order_id, bid_id) as  total_bid_quantity
+        from order_item_details
+        group by 1,2,3
+)
+
+,grouped as (
+    select order_id,
+    sum(total_bid_quantity) as total_bid_quantity
+    from bids_units
+    group by 1
+)
+ 
+select pct_category.* 
+,grouped.total_bid_quantity
+from pct_category
+left join grouped on pct_category.order_id = grouped.order_id
