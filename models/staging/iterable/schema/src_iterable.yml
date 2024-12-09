@@ -169,3 +169,6 @@ sources:
 
           - name: list_id
             description: "A list of email list IDs a user is part of"
+
+      - name: campaigns_listids
+      - name: iterable_lists 

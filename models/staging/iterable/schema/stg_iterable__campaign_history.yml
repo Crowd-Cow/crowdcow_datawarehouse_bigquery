@@ -7,6 +7,8 @@ models:
     columns:
       - name: campaign_id
         description: Campaign ID
+        data_tests:
+          - unique
 
       - name: updated_at_utc
         description: Timestamp for when the campaign record was updated
