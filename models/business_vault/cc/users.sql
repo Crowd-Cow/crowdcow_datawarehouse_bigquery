@@ -12,6 +12,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
 ,referrals as ( select * from {{ ref('referrals') }})
 ,gift_card_transaction_history as ( select * from {{ ref('gift_card_transaction_history') }} )
 ,ccpa as (select * from {{ ref('stg_gs__ccpa_requests') }}) 
+,fb_split as (select * from {{ ref('stg_reference__fb_split') }} where user_token is not null)
 
 ,ccpa_users as (
     select 
@@ -205,6 +206,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_referrals.referrals_redeemed
         ,if(user_gift_card_transaction_history.redemption_user_id is not null, true, false) as has_redeemed_gift_card
         ,if(user_gift_card_redemption_vip_affiliate.redemption_user_id is not null, true, false) as has_redeemed_gc_vip_referral
+        ,fb_split.fb_test
 
     from users
         left join user_membership on users.user_id = user_membership.user_id
@@ -218,6 +220,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         left join user_referrals on users.user_id = user_referrals.user_id
         left join user_gift_card_transaction_history on users.user_id = user_gift_card_transaction_history.redemption_user_id 
         left join user_gift_card_redemption_vip_affiliate on users.user_id = user_gift_card_redemption_vip_affiliate.redemption_user_id 
+        left join fb_split on users.user_token = fb_split.user_token
 )
 
 ,final as (
@@ -433,6 +436,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,referrals_redeemed
         ,has_redeemed_gift_card
         ,has_redeemed_gc_vip_referral
+        ,fb_test
 
 
     from user_joins
