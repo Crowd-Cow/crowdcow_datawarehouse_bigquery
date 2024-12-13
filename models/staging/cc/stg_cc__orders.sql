@@ -1,6 +1,6 @@
 with 
 
-source as ( select * from {{ source('cc', 'orders') }} where id not in (2871732, 3120849) ) -- and not _fivetran_deleted )
+source as ( select * from {{ source('cc', 'orders') }} where id not in (2871732, 3120849, 3400781) ) -- and not _fivetran_deleted )
 ,postal_code as ( select * from {{ ref('stg_cc__postal_codes') }} )
 
 ,renamed as (

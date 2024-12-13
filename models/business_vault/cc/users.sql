@@ -98,7 +98,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,ifnull(user_membership.is_current_promotion_ffl,False) as is_current_promotion_ffl
         ,ifnull(user_membership.is_first_promotion_ffl,False) as is_first_promotion_ffl
         ,user_order_activity.order_user_id is null as is_lead
-        ,user_order_activity.user_id is not null and user_order_activity.total_paid_ala_carte_order_count > 0 and coalesce(user_membership.total_membership_count) = 0 as is_purchasing_customer
+        ,user_order_activity.user_id is not null and user_order_activity.total_paid_ala_carte_order_count > 0 and coalesce(user_membership.total_membership_count,0) = 0 as is_purchasing_customer
         ,user_order_activity.user_id is not null and user_order_activity.total_paid_membership_order_count > 0 as is_purchasing_member
         ,user_order_activity.user_id is not null and user_order_activity.last_90_days_paid_membership_order_count > 0 and user_membership.total_uncancelled_memberships > 0 as is_active_member_90_day
         ,case
@@ -128,6 +128,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,postal_code.city_name
         ,coalesce(user_order_activity.is_rastellis,FALSE) as is_rastellis
         ,coalesce(user_order_activity.is_qvc,FALSE) as is_qvc
+        ,coalesce(user_order_activity.is_seabear,FALSE) as is_seabear
+        ,coalesce(user_order_activity.is_backyard_butchers,FALSE) as is_backyard_butchers
         ,coalesce(user_order_activity.lifetime_net_revenue) as lifetime_net_revenue
         ,coalesce(user_order_activity.lifetime_net_product_revenue) as lifetime_net_product_revenue
         ,coalesce(user_order_activity.lifetime_paid_order_count) as lifetime_paid_order_count
@@ -233,6 +235,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
             when user_email like '%@CROWDCOW.COM' and user_email not like 'TEMPORARY%CROWDCOW.COM' then 'INTERNAL'
             when is_rastellis then 'RASTELLIS'
             when is_qvc then 'QVC'
+            when is_seabear then 'SEABEAR'
+            when is_backyard_butchers then 'BYB'
             when user_email like 'TEMPORARY%CROWDCOW.COM' then 'GUEST'
             when user_type = 'C' then 'CUSTOMER'
             when user_type = 'P' then 'PLACEHOLDER'
@@ -360,6 +364,8 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,is_first_promotion_ffl
         ,is_rastellis
         ,is_qvc
+        ,is_seabear
+        ,is_backyard_butchers
         ,does_allow_sms
         ,has_opted_in_to_emails
         ,last_call_at_utc is not null as has_phone_burner_contact
