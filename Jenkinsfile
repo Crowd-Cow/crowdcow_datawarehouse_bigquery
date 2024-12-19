@@ -107,8 +107,8 @@ pipeline {
       rm -f profiles.yml Dockerfile.crowdcow_datawarehouse
       '''
     }
-  // failure {
-  //    slackSend channel: '#jenkins-alerts', message: ":red_circle: ${currentBuild.projectName} ${currentBuild.displayName}: ${currentBuild.result}"
-  // }
+    failure {
+      slackSend channel: '#jenkins-alerts', message: ":red_circle: ${currentBuild.projectName} ${currentBuild.displayName}: ${currentBuild.result}"
+    }
   }
 }
