@@ -368,6 +368,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,is_backyard_butchers
         ,does_allow_sms
         ,has_opted_in_to_emails
+        ,utm_source
         ,last_call_at_utc is not null as has_phone_burner_contact
         ,cast(most_recent_membership_created_date as date) >= cast(last_call_at_utc as date) as did_create_membership_after_call
         ,last_sign_in_at_utc
