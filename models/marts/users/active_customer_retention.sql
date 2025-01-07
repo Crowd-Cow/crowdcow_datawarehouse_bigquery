@@ -120,6 +120,7 @@ revenue_calculations AS (
     SELECT
         c.fiscal_year,
         c.fiscal_week_num,
+        o.order_id,
         o.net_revenue AS total_active_users_revenue,
         CASE
             WHEN is_membership_order THEN o.net_revenue
@@ -128,7 +129,15 @@ revenue_calculations AS (
         CASE
             WHEN is_ala_carte_order THEN o.net_revenue
             ELSE null
-        END AS active_alc_revenue
+        END AS active_alc_revenue,
+        CASE
+            WHEN is_membership_order THEN o.order_id
+            ELSE null
+        END AS active_subscribers_orders,
+        CASE
+            WHEN is_ala_carte_order THEN o.order_id
+            ELSE null
+        END AS active_alc_orders
     FROM
         filtered_orders o
     left join 
@@ -145,10 +154,12 @@ SELECT
     
     af.active_subscribers_180_days,
     rc.active_subscribers_180_days_revenue,
+    rc.active_subscribers_orders,
     af.active_cancelled_subscribers_180_days,
 
     af.active_alc_180_days,
-    rc.active_alc_180_days_revenue
+    rc.active_alc_180_days_revenue,
+    rc.active_alc_orders
 FROM
     aggregated_flags af
 LEFT JOIN (
@@ -157,7 +168,9 @@ LEFT JOIN (
         fiscal_week_num,
         SUM(total_active_users_revenue) AS total_active_users_revenue_last_180_days,
         SUM(active_subscribers_revenue) AS active_subscribers_180_days_revenue,
-        SUM(active_alc_revenue) AS active_alc_180_days_revenue
+        SUM(active_alc_revenue) AS active_alc_180_days_revenue,
+        COUNT(DISTINCT active_subscribers_orders) as active_subscribers_orders,
+        COUNT(DISTINCT active_alc_orders) as active_alc_orders
     FROM
         revenue_calculations
     GROUP BY
