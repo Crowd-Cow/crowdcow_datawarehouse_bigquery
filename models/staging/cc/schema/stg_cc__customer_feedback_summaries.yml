@@ -4,7 +4,7 @@ models:
   - name: stg_cc__customer_feedback_summaries
     description: "Staging model for Customer Feedback Summaries"
     columns:
-      - name: id
+      - name: customer_feedback_summaries_id
         description: "id"
         tests:
           - unique
