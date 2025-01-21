@@ -204,6 +204,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.last_paid_order_value
         ,user_order_activity.last_paid_moolah_order_date
         ,user_order_activity.last_14_days_impacful_customer_reschedules
+        ,user_order_activity.first_paid_alc_order
         ,user_referrals.referrals_sent
         ,user_referrals.referrals_redeemed
         ,if(user_gift_card_transaction_history.redemption_user_id is not null, true, false) as has_redeemed_gift_card
@@ -439,6 +440,10 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,last_paid_order_value
         ,cast(last_paid_moolah_order_date as date) as last_paid_moolah_order_date
         ,last_14_days_impacful_customer_reschedules
+        ,case 
+            when first_paid_alc_order = 1 then  "ALC" 
+            when first_paid_alc_order = 0 then "Subscription"
+            else null end as first_paid_order_type
         ,referrals_sent
         ,referrals_redeemed
         ,has_redeemed_gift_card

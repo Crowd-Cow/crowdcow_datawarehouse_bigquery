@@ -13,6 +13,7 @@ purchasing_user as ( select * from {{ ref('users') }} where customer_cohort_date
         ,product_profit
         ,safe_divide(product_profit,gross_product_revenue) as product_margin
         ,gross_profit
+        ,gross_product_revenue
         ,safe_divide(gross_profit,net_revenue) as gross_margin
         ,net_revenue
         
@@ -73,6 +74,7 @@ select
     ,DATE_DIFF(CURRENT_DATE(), date(customer_reactivation_date), DAY) AS customer_reactivation_tenure_days
     ,calc_margin.product_profit
     ,calc_margin.product_margin
+    ,calc_margin.gross_product_revenue
     ,calc_margin.gross_profit
     ,calc_margin.gross_margin
     ,calc_margin.net_revenue
