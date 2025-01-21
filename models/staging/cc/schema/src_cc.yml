@@ -7546,3 +7546,33 @@ sources:
             description: promotion_id
           - name: subscription_id
             description: subscription_id
+      
+      - name: customer_feedback_summaries 
+        description: AI-processed data for Zendesk and ratings data
+
+        columns:
+          - name: arrived_frozen 
+          - name: butchering_quality       
+          - name: color_appeareance         
+          - name: created_at     
+          - name: cut_id         
+          - name: delivery_issue 
+          - name: feedback_summary_of_id   
+          - name: feedback_summary_of_type
+          - name: id   
+          - name: likelyness_to_reorder    
+          - name: lot_id         
+          - name: order_id       
+          - name: overall_rating 
+          - name: packaging      
+          - name: price_and_value
+          - name: product_age    
+          - name: product_weight 
+          - name: received_wrong_item      
+          - name: review_summary 
+          - name: sku_vendor_id  
+          - name: smell
+          - name: taste
+          - name: texture        
+          - name: updated_at     
+          - name: website_issue            

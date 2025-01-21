@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: stg_cc__customer_feedback_summaries
+    description: "Staging model for Customer Feedback Summaries"
+    columns:
+      - name: id
+        description: "id"
+        tests:
+          - unique
+          - not_null
+      
+      - name: arrived_frozen 
+      - name: butchering_quality       
+      - name: color_appearance         
+      - name: created_at     
+      - name: cut_id         
+      - name: delivery_issue 
+      - name: feedback_summary_of_id   
+      - name: feedback_summary_of_type
+      - name: likelyness_to_reorder    
+      - name: lot_id         
+      - name: order_id       
+      - name: overall_rating 
+      - name: packaging      
+      - name: price_and_value
+      - name: product_age    
+      - name: product_weight 
+      - name: received_wrong_item      
+      - name: review_summary 
+      - name: sku_vendor_id  
+      - name: smell
+      - name: taste
+      - name: texture        
+      - name: updated_at     
+      - name: website_issue 
