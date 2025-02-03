@@ -34,6 +34,8 @@ visits as ( select * from {{ ref('visit_classification') }} )
 ,visit_activity as (
     select 
         visit_id,
+        MIN(occurred_at_utc) as min_ocurred_event,
+        max(occurred_at_utc) as max_ocurred_event,
         COUNT(DISTINCT IF(event_name = 'SUBSCRIBED', subscription_id, NULL)) AS subscribes,
         COUNT(DISTINCT IF(event_name = 'UNSUBSCRIBED', subscription_id, NULL)) AS unsubscribes,
         COUNTIF(event_name = 'SIGN_UP') AS sign_ups,
@@ -45,6 +47,9 @@ visits as ( select * from {{ ref('visit_classification') }} )
         COUNTIF(event_sequence_number = 1 AND event_name = 'PAGE_VIEW' AND REGEXP_CONTAINS(url, r'^$|^L$')) AS homepage_views,
         COUNTIF(event_name = 'CLICK' AND label IN ('GET STARTED', 'CLAIM OFFER') AND on_page_path LIKE '%/LANDING%') AS landing_offer_claim,
         COUNTIF(event_name = 'CLICK' AND label = 'SKIP' AND on_page_path LIKE '%/LANDING%') AS landing_offer_skipped,
+        COUNTIF(event_name = 'ORDER_ADD_TO_CART' or event_name = 'PRODUCT_CARD_QUICK_ADD_TO_CART') as add_to_carts,
+        COUNTIF(event_name = 'ORDER_ENTER_ADDRESS') as begin_checkout,
+        COUNTIF(event_name = 'PAGE_VIEW') as page_views,
         COUNT(DISTINCT IF(event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' AND JSON_EXTRACT_SCALAR(experiments, '$.exp-cc-home_page_redirect') = 'experimental', visit_id, NULL)) AS home_page_redirect_experimental,
         COUNT(DISTINCT IF(event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' AND JSON_EXTRACT_SCALAR(experiments, '$.exp-cc-home_page_redirect') = 'control', visit_id, NULL)) AS home_page_redirect_control,
         COUNT(DISTINCT CASE WHEN event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' AND JSON_EXTRACT_SCALAR(experiments, '$.exp-cc-hp_redirect_2') = 'experimental'  THEN visit_id END) AS hp_redirect_2_experimental,
@@ -141,6 +146,9 @@ visits as ( select * from {{ ref('visit_classification') }} )
             when landing_offer_claim = 0 and landing_offer_skipped > 0 then 'SKIPPED'
             else null end as landing_offer
         ,event_count
+        ,TIMESTAMP_DIFF(max_ocurred_event,min_ocurred_event,second) as session_duration
+        ,if(page_views > 2 or TIMESTAMP_DIFF(max_ocurred_event,min_ocurred_event,second) > 10 or (add_to_carts > 0 or begin_checkout > 0 or order_completes > 0),true,false) as engaged_session
+
     from visit_clean_urls
         left join user_orders on visit_clean_urls.user_id = user_orders.user_id
         left join user_membership on visit_clean_urls.user_id = user_membership.user_id

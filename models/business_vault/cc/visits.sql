@@ -96,6 +96,8 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,visit_flags.home_page_redirect
         ,visit_flags.is_prospect_12_months
         ,visit_flags.segment_definitions
+        ,visit_flags.session_duration
+        ,visit_flags.engaged_session
         ,get_ip_session.started_at_utc
         ,get_ip_session.updated_at_utc
     from get_ip_session
