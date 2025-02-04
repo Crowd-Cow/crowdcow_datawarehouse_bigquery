@@ -19,17 +19,6 @@ visits as ( select * from {{ ref('visit_classification') }} )
     from visits 
     left join users on users.user_id = visits.user_id 
 )
-,active_carts as (
-    select distinct
-    active_user_order.user_id,
-    1 AS one
-    from
-    active_user_order 
-    inner join
-    {{ ref('stg_cc__bids') }} as bids
-    ON
-    bids.order_id = active_user_order.active_order_id
-)
 
 ,visit_activity as (
     select 
@@ -174,7 +163,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
             and (not has_previous_subscription or define_bots.user_id is null)
             and (not(visit_referrer like any ('%ZENDESK%','%ADMIN%','%TRACKING-INFO','%SHIPMENT-IN-TRANSIT')) 
                     or visit_referrer is null)
-            and active_carts.user_id is null as is_prospect
+             as is_prospect
         ,--(not has_previous_completed_order or has_previous_completed_order is null)
              not is_bot
             and not is_internal_traffic
@@ -184,7 +173,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
             and no_orders_12_months
                     or visit_referrer is null) as is_prospect_12_months
     from define_bots
-    left join active_carts on active_carts.user_id = define_bots.user_id
+    
 )
 
 select * from define_prospects
