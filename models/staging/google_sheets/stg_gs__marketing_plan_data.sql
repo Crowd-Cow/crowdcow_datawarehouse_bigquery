@@ -1,3 +1,6 @@
+{{ config(
+  enabled=false
+) }}
 with 
     source as (select * from {{ source('google_sheets', 'marketing_plan_data') }} )
 
@@ -27,6 +30,26 @@ with
 
             ,CAST(pdp_prospect_traffic_conversion_rate as FLOAT64) as pdp_prospect_traffic_conversion_rate
             ,CAST(sem_prospect_traffic_conversion_rate as FLOAT64) as sem_prospect_traffic_conversion_rate
+
+            ,CAST(_90_day_sub_start as INT64) as _90_day_sub_start
+            ,CAST(_90_day_sub_new_first_subscriber as INT64) as _90_day_sub_new_first_subscriber
+            ,CAST(_90_day_sub_new_subscription as INT64) as _90_day_sub_new_subscription
+            ,CAST(_90_day_sub_reactivated as INT64) as _90_day_sub_reactivated
+            ,CAST(_90_day_sub_churn as INT64) as _90_day_sub_churn
+            ,CAST(_90_day_sub_week_end as INT64) as _90_day_sub_week_end 
+            ,CAST(_90_day_sub_forecasted_churn_rate as INT64) as _90_day_sub_forecasted_churn_rate
+            ,CAST(_90_day_sub_forecasted_reactivation_rate as INT64) as _90_day_sub_forecasted_reactivation_rate
+
+            
+            ,CAST(_180_day_alc_week_start as INT64) as _180_day_alc_week_start
+            ,CAST(_180_day_alc_new as INT64) as _180_day_alc_new
+            ,CAST(_180_day_alc_reactivation as INT64) as _180_day_alc_reactivation
+            ,CAST(_180_day_alc_churned_180_days as INT64) as _180_day_alc_churned_180_days
+            ,CAST(_180_day_alc_week_end as INT64) as _180_day_alc_week_end
+            ,CAST(_180_day_alc_forecasted_churn_rate as INT64) as _180_day_alc_forecasted_churn_rate
+            ,CAST(_180_day_alc_forecasted_reactivation_rate as INT64) as _180_day_alc_forecasted_reactivation_rate
+
+            ,CAST(sms_audience_size as INT64) as sms_audience_size
 
 
         FROM source 
