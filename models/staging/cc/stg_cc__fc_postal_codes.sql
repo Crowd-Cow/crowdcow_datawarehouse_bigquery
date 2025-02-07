@@ -11,6 +11,7 @@ source as ( select * from {{ source('cc', 'fc_postal_codes') }} where __deleted 
     ,transit_method
     ,transit_days
     ,updated_at as updated_at_utc
+    ,from_postal_code as from_postal_code
     ,postal_code
     ,priority
     ,add_additional_ice_in_lbs
