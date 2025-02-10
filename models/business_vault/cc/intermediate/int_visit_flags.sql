@@ -39,6 +39,8 @@ visits as ( select * from {{ ref('visit_classification') }} )
         COUNTIF(event_name = 'ORDER_ADD_TO_CART' or event_name = 'PRODUCT_CARD_QUICK_ADD_TO_CART') as add_to_carts,
         COUNTIF(event_name = 'ORDER_ENTER_ADDRESS') as begin_checkout,
         COUNTIF(event_name = 'PAGE_VIEW') as page_views,
+        COUNTIF(event_name = 'CLICK') as clicks,
+        COUNTIF(event_name = 'SCROLL_DEPTH' and SCROLL_DEPTH >= 25 ) as scroll_depth_25,
         COUNT(DISTINCT IF(event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' AND JSON_EXTRACT_SCALAR(experiments, '$.exp-cc-home_page_redirect') = 'experimental', visit_id, NULL)) AS home_page_redirect_experimental,
         COUNT(DISTINCT IF(event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' AND JSON_EXTRACT_SCALAR(experiments, '$.exp-cc-home_page_redirect') = 'control', visit_id, NULL)) AS home_page_redirect_control,
         COUNT(DISTINCT CASE WHEN event_name = 'EXPERIMENT_ASSIGNED_TO_SESSION' AND JSON_EXTRACT_SCALAR(experiments, '$.exp-cc-hp_redirect_2') = 'experimental'  THEN visit_id END) AS hp_redirect_2_experimental,
@@ -136,7 +138,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
             else null end as landing_offer
         ,event_count
         ,TIMESTAMP_DIFF(max_ocurred_event,min_ocurred_event,second) as session_duration
-        ,if(page_views > 2 or TIMESTAMP_DIFF(max_ocurred_event,min_ocurred_event,second) > 10 or (add_to_carts > 0 or begin_checkout > 0 or order_completes > 0),true,false) as engaged_session
+        ,if(page_views >= 2 or clicks >=2 or scroll_depth_25 >= 1 or (add_to_carts > 0 or begin_checkout > 0 or order_completes > 0),true,false) as engaged_session
 
     from visit_clean_urls
         left join user_orders on visit_clean_urls.user_id = user_orders.user_id
