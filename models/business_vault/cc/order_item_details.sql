@@ -57,6 +57,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
         ,ordered_items.promotion_id
         ,ordered_items.promotion_source
         ,ordered_items.bid_item_name
+        ,ordered_items.product_title
         ,ordered_items.bid_quantity
         ,ordered_items.sku_quantity
         ,ordered_items.bid_list_price_usd
@@ -190,6 +191,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
         ,calculate_sku_revenue.promotion_source
         ,calculate_sku_revenue.owner_name
         ,calculate_sku_revenue.bid_item_name
+        ,calculate_sku_revenue.product_title
         ,calculate_sku_revenue.bid_quantity
         ,calculate_sku_revenue.sku_quantity
         ,calculate_sku_revenue.total_sku_weight

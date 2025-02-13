@@ -8,6 +8,7 @@ with
 
 bids as ( select * from {{ ref('stg_cc__bids') }} )
 ,bid_items as (select * from {{ ref('stg_cc__bid_items') }} )
+,products as (select * from {{ ref('stg_cc__products')}} where dbt_valid_to is null )
 
 -- The system allows for multiple item level credit for the same item which causes duplicate order items when joining to credits ***/
 -- This doesn't allow us to accurately show which promos were applied to which item since the rest of the financial info (revenue, discounts, costs, etc) 
@@ -44,6 +45,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,bids.bid_token
         ,bids.product_id
         ,bids.product_name
+        ,products.product_title
         ,bid_items.bid_item_name
         ,bid_items.bid_item_type
         ,bid_items.bid_item_subtype
@@ -68,6 +70,8 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         left join bid_items on bids.bid_item_id = bid_items.bid_item_id
             and bids.created_at_utc >= bid_items.adjusted_dbt_valid_from
             and bids.created_at_utc < bid_items.adjusted_dbt_valid_to
+        left join products on bids.product_id = products.product_id 
+
 )
 
 ,update_promotion_bid_prices as (
@@ -80,6 +84,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,bid_token
         ,product_id
         ,product_name
+        ,product_title
         ,bid_item_name
         ,bid_item_type
         ,bid_item_subtype
@@ -126,6 +131,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,bid_token
         ,product_id
         ,product_name
+        ,product_title
         ,bid_item_name
         ,bid_item_type
         ,bid_item_subtype
@@ -157,6 +163,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,bid_token
         ,product_id
         ,product_name
+        ,product_title
         ,bid_item_name
         ,bid_item_type
         ,bid_item_subtype
