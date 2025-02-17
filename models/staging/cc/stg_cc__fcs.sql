@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ ref('fcs_ss') }} where not _fivetran_deleted
+    select * from {{ ref('fcs_ss') }} where (_fivetran_deleted is null or _fivetran_deleted = false)
 
 ),
 
