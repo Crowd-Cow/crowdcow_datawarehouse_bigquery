@@ -8,7 +8,8 @@
         partition_by = {"field": "started_at_utc", "data_type": "timestamp" },
         incremental_strategy = 'insert_overwrite',
         cluster_by = ["visit_id","user_id"],
-        partitions = partitions_to_replace
+        partitions = partitions_to_replace,
+        on_schema_change = 'sync_all_columns'
     )
 }}
 
@@ -101,6 +102,7 @@ base_visits as (
         ,REGEXP_EXTRACT(visits.visit_landing_page, '[?&]UTM_CAMPAIGN=([^&]*)') AS landing_utm_campaign
         ,REGEXP_EXTRACT(visits.visit_landing_page, '[?&]UTM_ADSET=([^&]*)') AS landing_utm_adset
         ,REGEXP_EXTRACT(visits.visit_landing_page, '[?&]GCLID=([^&]*)') AS gclid
+        ,REGEXP_EXTRACT(visits.visit_landing_page, '[?&]U_TOKEN=([^&]*)') AS u_token
         ,ambassador_paths.partner_path as ambassador_path
         ,most_current_partner_path.partner_id
         --,visits.visit_city
@@ -157,6 +159,7 @@ base_visits as (
         ,utm_content
         ,utm_term
         ,gclid
+        ,u_token
         ,coalesce(ambassador_path,'') as ambassador_path
         ,partner_id
         --,visit_city
@@ -192,6 +195,7 @@ base_visits as (
         ,utm_content
         ,utm_term
         ,gclid
+        ,u_token
         ,ambassador_path
         ,partner_id
         --,visit_city
@@ -283,6 +287,7 @@ base_visits as (
         ,utm_content
         ,utm_term
         ,gclid
+        ,u_token
         
         ,case
             when is_paid_referrer and is_social_platform_referrer then 'SOCIAL'

@@ -66,6 +66,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,get_ip_session.utm_medium
         ,get_ip_session.utm_source
         ,get_ip_session.gclid
+        ,get_ip_session.u_token
         ,get_ip_session.channel
         ,get_ip_session.sub_channel
         ,get_ip_session.visit_attributed_source
