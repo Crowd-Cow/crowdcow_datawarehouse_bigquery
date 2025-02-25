@@ -21,7 +21,7 @@ source as ( select * from {{ source('stripe', 'stripe_charges') }} )
         ,{{ cents_to_usd('application_fee_amount') }} as application_fee_amount
         ,{{ clean_strings('calculated_statement_descriptor') }} calculated_statement_descriptor
         ,captured as is_captured
-        ,created as created_at_utc
+        ,TIMESTAMP_SECONDS(created) as created_at_utc
         ,{{ clean_strings('currency') }} as currency
         ,{{ clean_strings('description') }} as charge_description
         ,null as destination
