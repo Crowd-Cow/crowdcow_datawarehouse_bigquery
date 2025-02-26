@@ -8,7 +8,8 @@
         partition_by = {'field': 'occurred_at_utc', 'data_type': 'timestamp'},
         cluster_by = ['event_id','visit_id','user_id','order_id'],
         incremental_strategy = 'insert_overwrite',
-        partitions = partitions_to_replace
+        partitions = partitions_to_replace,
+        on_schema_change = 'sync_all_columns'
     )
 }}
 with
@@ -58,6 +59,7 @@ reschedule as (
         ,new_scheduled_fulfillment_date
         ,occurred_at_utc
         ,upper(token) as token
+        ,ROW_NUMBER() OVER (PARTITION BY order_id ORDER BY occurred_at_utc ASC) AS reschedule_rank
     from reschedule
 )
 
