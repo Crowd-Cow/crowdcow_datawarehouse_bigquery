@@ -71,7 +71,8 @@ source as ( select * from {{ source('stripe', 'stripe_charges') }} )
         --,rule_id
         --,rule_action
         --,rule_predicate
-
+        ,{{ clean_strings("JSON_EXTRACT_SCALAR(metadata, '$.customer_email')") }} as customer_email
+        ,JSON_EXTRACT_SCALAR(metadata, '$.order_token') as order_token
     from source
 
 )
