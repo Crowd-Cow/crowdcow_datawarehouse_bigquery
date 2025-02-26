@@ -16,20 +16,20 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
 ,distinct_stuck_order_flag as (
     select
         order_id
-        ,if(was_week_out_notification_sent = 1, true, false) as was_week_out_notification_sent
-        ,if(is_all_inventory_reserved = 1, true, false) as is_all_inventory_reserved
-        ,if(does_need_customer_confirmation = 1, true, false) as does_need_customer_confirmation
-        ,if(is_time_to_charge = 1, true, false) as is_time_to_charge
-        ,if(is_payment_failure = 1, true, false) as is_payment_failure
-        ,if(was_referred_to_customer_service = 1, true, false) as was_referred_to_customer_service
-        ,if(is_invalid_postal_code = 1, true, false) as is_invalid_postal_code
-        ,if(can_retry_payment = 1, true, false) as can_retry_payment
-        ,if(is_under_order_minimum = 1, true, false) as is_under_order_minimum
-        ,if(is_order_scheduled_in_past = 1, true, false) as is_order_scheduled_in_past
-        ,if(is_order_missing = 1, true, false) as is_order_missing
-        ,if(is_order_cancelled = 1, true, false) as is_order_cancelled
-        ,if(is_order_charged     = 1, true, false) as is_order_charged    
-        ,if(is_bids_fulfillment_at_risk = 1, true, false) as is_bids_fulfillment_at_risk
+        ,was_week_out_notification_sent
+        ,is_all_inventory_reserved
+        ,does_need_customer_confirmation
+        ,is_time_to_charge
+        ,is_payment_failure
+        ,was_referred_to_customer_service
+        ,is_invalid_postal_code
+        ,can_retry_payment
+        ,is_under_order_minimum
+        ,is_order_scheduled_in_past
+        ,is_order_missing
+        ,is_order_cancelled
+        ,is_order_charged    
+        ,is_bids_fulfillment_at_risk
     from stuck_order_flags
     qualify row_number() over(partition by order_id order by updated_at_utc desc) = 1
 )
