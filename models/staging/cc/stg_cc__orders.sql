@@ -118,7 +118,7 @@ source as ( select * from {{ source('cc', 'orders') }} where id not in (2871732,
     ,ignore_weather_alerts as order_should_ignore_weather_alerts
     ,easypost_requires_signature as order_easypost_requires_signature
     ,use_as_default_address as order_use_as_default_address
-    ,recurring as is_recurring
+    ,if(recurring = 1, true, false) as is_recurring
     ,earliest_to_charge_at as order_earliest_to_charge_at_utc
     ,stripe_card_id -- Not converting to uppercase because the difference between upper and lower is significant in this ID (ex. card_0GO8Q074pVzbTfjzcrzaQJhY)
     ,{{ clean_strings('stripe_card_country') }} as stripe_card_country
