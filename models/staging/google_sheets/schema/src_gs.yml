@@ -353,3 +353,4 @@ sources:
             description: how_much_dry_ice_was_left_in_the_box_please_choose_the_closest_option_from_the_answers_pictographs_below_
 
       - name: q4_forecast
+      - name: daily_cac_manual
