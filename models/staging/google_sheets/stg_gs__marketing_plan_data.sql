@@ -49,7 +49,16 @@ with
             ,CAST(_180_day_alc_forecasted_churn_rate as INT64) as _180_day_alc_forecasted_churn_rate
             ,CAST(_180_day_alc_forecasted_reactivation_rate as INT64) as _180_day_alc_forecasted_reactivation_rate
 
-            ,CAST(sms_audience_size as INT64) as sms_audience_size
+            ,CAST(sms_audience_size_net_of_unsubscribes as INT64) as sms_audience_size
+
+            ,CAST(sales as INT64) as sales_forecast
+
+            ,CAST(new_attentive_leads_emails as INT64) as new_attentive_leads_emails
+            ,CAST(new_customers_from_attentive_leads as INT64) as new_customers_from_attentive_leads
+
+            ,CAST(tocc_sales_to_new_customers_units as INT64) as tocc_sales_to_new_customers_units
+
+
 
 
         FROM source 
