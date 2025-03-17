@@ -26,6 +26,8 @@ with
             ,CAST(existing_member_orders as INT64) as existing_member_orders
             ,CAST(new_alc_orders as INT64) as new_alc_orders
             ,CAST(new_member_orders as INT64) as new_member_orders
+            ,CAST(orders___total_forecast as INT64) as total_orders
+
 
 
             ,CAST(pdp_prospect_traffic_conversion_rate as FLOAT64) as pdp_prospect_traffic_conversion_rate
