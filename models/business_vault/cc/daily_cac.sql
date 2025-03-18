@@ -4,7 +4,7 @@ with orders as (select * from {{ ref('orders') }}
                   AND (NOT (orders.is_seabear) OR (orders.is_seabear) IS NULL)
                   AND (NOT (orders.is_backyard_butchers) OR (orders.is_backyard_butchers) IS NULL))
 ,google_ads as (select * from {{ ref('google_ads_campaign_performance') }} )
-,affiliate as (select * from {{ ref('shareasale_orders') }} )
+,affiliate as (select * from {{ ref('affiliate_orders') }} )
 ,users as (select * from {{ ref('users') }} )
 ,user_attribution as (select * from {{ ref('user_attribution') }} )
 ,discounts as ( select * from {{ ref('discounts') }} )

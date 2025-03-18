@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+
+  - name: impact
+    schema: raw_impact
+    tables:
+      - name: impact_actions
+        
+         

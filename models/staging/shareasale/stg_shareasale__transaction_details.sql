@@ -6,7 +6,7 @@ source as ( select * from {{ source('shareasale', 'transaction_details') }} )
     select
         transID as transaction_id,
         userID as affiliate_id,
-        transdate as transaction_date_utc,
+        timestamp(transdate) as transaction_date_utc,
         transamount as transaction_amount,
         commission as comission,
         ssamount as shareasale_comission,
