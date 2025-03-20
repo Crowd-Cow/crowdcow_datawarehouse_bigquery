@@ -4,7 +4,7 @@ source as ( select * from {{ source('reference_data', 'ip_lookup') }} )
 
 ,renamed as (
     select
-        query as ip_address
+        {{ clean_strings('query') }} as ip_address
         ,zip as postal_code
         ,country
         ,city
