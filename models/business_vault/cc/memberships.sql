@@ -2,6 +2,7 @@ with
 
 memberships as (select * from {{ ref('stg_cc__subscriptions') }})
 ,orders as (select * from {{ ref('orders') }})
+,promotions_subscription_enrollments as ( select * from {{ ref('stg_cc__promotions_subscription_enrollments') }} )
 
 ,order_count as (
     select
@@ -15,8 +16,11 @@ memberships as (select * from {{ ref('stg_cc__subscriptions') }})
     select
         memberships.*
         ,order_count.subscription_id is not null and order_count.total_active_order_count > 0 as is_active_membership
+        ,promotions_subscription_enrollments.promotion_name
+        ,promotions_subscription_enrollments.promotion_notes
     from memberships
         left join order_count on memberships.subscription_id = order_count.subscription_id
+        left join promotions_subscription_enrollments on memberships.subscription_id = promotions_subscription_enrollments.subscription_id
 )
 
 select
@@ -31,4 +35,7 @@ select
     ,subscription_created_at_utc
     ,subscription_cancelled_at_utc
     ,updated_at_utc
+    ,promotion_name
+    ,promotion_notes
+
 from membership_joins

@@ -12,6 +12,7 @@ source as ( select * from {{ source('cc', 'promotions_promotions') }}  )
         ends_at,
         created_at,
         {{ clean_strings('name') }} as name,
+        {{ clean_strings('notes') }} as notes,
         must_be_applied_by_user,
         token
     FROM source
