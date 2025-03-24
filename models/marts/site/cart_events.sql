@@ -8,7 +8,8 @@
         partition_by = {'field': 'occurred_at_utc', 'data_type': 'timestamp'},
         cluster_by = ['visit_id','user_id','event_name'],
         incremental_strategy = 'insert_overwrite',
-        partitions = partitions_to_replace
+        partitions = partitions_to_replace,
+        on_schema_change = 'sync_all_columns'
     )
 }}
 with
@@ -31,6 +32,8 @@ cart_events as (
         ,name 
         ,quantity_sellable
         ,event_properties_id
+        ,pdc_in_stock
+        ,pdp_in_stock
     from {{ ref('events') }}
     where event_name in ('ORDER_ADD_TO_CART','ORDER_REMOVE_FROM_CART','VIEWED_PRODUCT','PRODUCT_CARD_VIEWED','PRODUCT_CARD_QUICK_ADD_TO_CART')
 {% if is_incremental() %}
@@ -58,6 +61,8 @@ cart_events as (
         ,cart_events.title as product_title  
         ,cart_events.name as bid_item_name
         ,cart_events.quantity_sellable
+        ,cart_events.pdc_in_stock
+        ,cart_events.pdp_in_stock
     from cart_events
         left join bid_item on lower(cart_events.event_properties_id) = bid_item.bid_item_token
 )
@@ -82,6 +87,8 @@ cart_events as (
         ,bid_item_name
         ,quantity_sellable
         ,event_name = 'VIEWED_PRODUCT' and quantity_sellable = 0 as is_oos_view
+        ,pdc_in_stock
+        ,pdp_in_stock
     from get_fields
         left join product on get_fields.product_token = product.product_token
             and product.dbt_valid_to is null

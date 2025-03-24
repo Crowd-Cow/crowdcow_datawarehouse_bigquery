@@ -8,7 +8,8 @@
         partition_by = {'field': 'occurred_at_utc', 'data_type': 'timestamp'},
         cluster_by = ['visit_id','user_id','event_name'],
         incremental_strategy = 'insert_overwrite',
-        partitions = partitions_to_replace
+        partitions = partitions_to_replace,
+        on_schema_change = 'sync_all_columns'
     )
 }}
 
@@ -75,6 +76,8 @@ events as (
         ,sentiment
         ,quantity_sellable
         ,event_value
+        ,pdc_in_stock
+        ,pdp_in_stock
     from events
 )
 
