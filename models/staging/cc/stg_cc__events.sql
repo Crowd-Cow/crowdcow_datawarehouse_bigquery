@@ -9,7 +9,7 @@
         cluster_by = ['visit_id','user_id','event_name'],
         incremental_strategy = 'insert_overwrite',
         partitions = partitions_to_replace,
-        on_schema_change = 'sync_all_columns'
+        
     )
 }}
 
