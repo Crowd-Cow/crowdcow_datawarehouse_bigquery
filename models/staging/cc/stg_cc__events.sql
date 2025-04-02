@@ -9,7 +9,7 @@
         cluster_by = ['visit_id','user_id','event_name'],
         incremental_strategy = 'insert_overwrite',
         partitions = partitions_to_replace,
-        
+        on_schema_change = 'sync_all_columns'
     )
 }}
 
@@ -71,7 +71,9 @@ events as (
    SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.product_offer.quantity_sellable') AS INT64) AS quantity_sellable,
    COALESCE(SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.value') AS STRING), SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.properties.value') AS STRING)) AS event_value,
    SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.properties.in_stock') as BOOL) as pdc_in_stock,
-   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.product_offer.in_stock') as BOOL) as pdp_in_stock
+   SAFE_CAST(JSON_EXTRACT_SCALAR(event_json, '$.product_offer.in_stock') as BOOL) as pdp_in_stock,
+   coalesce(JSON_VALUE(event_json, '$.brands[0]'),JSON_EXTRACT_SCALAR(event_json, '$.properties.brand'))  AS brands,
+   JSON_VALUE(event_json, '$.categories[0]') AS categories
   from {{ ref('base_cc__ahoy_events') }}
 
   {% if is_incremental() %}
@@ -133,6 +135,8 @@ events as (
     ,{{ clean_strings('event_value') }} as event_value
     ,pdc_in_stock
     ,pdp_in_stock
+    ,{{ clean_strings('brands') }} as brands
+    ,{{ clean_strings('categories') }} as categories
   from events
 )
 

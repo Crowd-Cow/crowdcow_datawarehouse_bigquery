@@ -34,6 +34,8 @@ cart_events as (
         ,event_properties_id
         ,pdc_in_stock
         ,pdp_in_stock
+        ,brands
+        ,categories
     from {{ ref('events') }}
     where event_name in ('ORDER_ADD_TO_CART','ORDER_REMOVE_FROM_CART','VIEWED_PRODUCT','PRODUCT_CARD_VIEWED','PRODUCT_CARD_QUICK_ADD_TO_CART')
 {% if is_incremental() %}
@@ -63,6 +65,8 @@ cart_events as (
         ,cart_events.quantity_sellable
         ,cart_events.pdc_in_stock
         ,cart_events.pdp_in_stock
+        ,cart_events.brands
+        ,cart_events.categories
     from cart_events
         left join bid_item on lower(cart_events.event_properties_id) = bid_item.bid_item_token
 )
@@ -89,6 +93,8 @@ cart_events as (
         ,event_name = 'VIEWED_PRODUCT' and quantity_sellable = 0 as is_oos_view
         ,pdc_in_stock
         ,pdp_in_stock
+        ,brands
+        ,categories
     from get_fields
         left join product on get_fields.product_token = product.product_token
             and product.dbt_valid_to is null

@@ -78,6 +78,8 @@ events as (
         ,event_value
         ,pdc_in_stock
         ,pdp_in_stock
+        ,brands
+        ,categories
     from events
 )
 
