@@ -85,35 +85,35 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.billing_state
         ,orders.billing_postal_code
         ,order_shipment.shipment_postage_carrier
-        ,coalesce(order_revenue.gross_product_revenue) as gross_product_revenue
-        ,coalesce(order_revenue.membership_discount) as membership_discount
-        ,coalesce(order_revenue.merch_discount) as merch_discount
-        ,coalesce(order_revenue.moolah_item_discount) as moolah_item_discount
-        ,coalesce(order_revenue.moolah_order_discount) as moolah_order_discount
-        ,coalesce(order_revenue.free_protein_promotion) as free_protein_promotion
-        ,coalesce(order_revenue.item_promotion) as item_promotion
-        ,coalesce(order_revenue.net_product_revenue) as net_product_revenue
+        ,coalesce(order_revenue.gross_product_revenue,0) as gross_product_revenue
+        ,coalesce(order_revenue.membership_discount,0) as membership_discount
+        ,coalesce(order_revenue.merch_discount,0) as merch_discount
+        ,coalesce(order_revenue.moolah_item_discount,0) as moolah_item_discount
+        ,coalesce(order_revenue.moolah_order_discount,0) as moolah_order_discount
+        ,coalesce(order_revenue.free_protein_promotion,0) as free_protein_promotion
+        ,coalesce(order_revenue.item_promotion,0) as item_promotion
+        ,coalesce(order_revenue.net_product_revenue,0) as net_product_revenue
         ,orders.order_shipping_fee_usd as shipping_revenue
         ,orders.order_expedited_shipping_fee_usd as expedited_shipping_revenue
-        ,coalesce(order_revenue.free_shipping_discount) as free_shipping_discount
-        ,coalesce(order_revenue.gross_revenue) as gross_revenue
-        ,coalesce(order_revenue.new_member_discount) as new_member_discount
-        ,coalesce(order_revenue.refund_amount) as refund_amount
-        ,coalesce(order_revenue.gift_redemption) as gift_redemption
-        ,coalesce(order_revenue.other_discount) as other_discount
-        ,coalesce(order_revenue.net_revenue) as net_revenue
-        ,coalesce(order_cost.product_cost) as product_cost
-        ,coalesce(order_cost.shipment_cost) as shipment_cost
-        ,coalesce(order_cost.order_coolant_cost) as coolant_cost
-        ,coalesce(order_cost.order_packaging_cost) as packaging_cost
-        ,coalesce(order_cost.order_care_cost) as care_cost
-        ,coalesce(order_cost.order_picking_cost) as picking_cost
-        ,coalesce(order_cost.order_packing_cost) as packing_cost
-        ,coalesce(order_cost.order_box_making_cost) as box_making_cost
-        ,coalesce(order_cost.order_fc_other_cost) as fc_other_cost
-        ,coalesce(order_cost.order_fc_labor_cost) as fc_labor_cost
-        ,coalesce(order_cost.poseidon_fulfillment_cost) as poseidon_fulfillment_cost
-        ,coalesce(order_cost.inbound_shipping_cost) as inbound_shipping_cost
+        ,coalesce(order_revenue.free_shipping_discount,0) as free_shipping_discount
+        ,coalesce(order_revenue.gross_revenue,0) as gross_revenue
+        ,coalesce(order_revenue.new_member_discount,0) as new_member_discount
+        ,coalesce(order_revenue.refund_amount,0) as refund_amount
+        ,coalesce(order_revenue.gift_redemption,0) as gift_redemption
+        ,coalesce(order_revenue.other_discount,0) as other_discount
+        ,coalesce(order_revenue.net_revenue,0) as net_revenue
+        ,coalesce(order_cost.product_cost,0) as product_cost
+        ,coalesce(order_cost.shipment_cost,0) as shipment_cost
+        ,coalesce(order_cost.order_coolant_cost,0) as coolant_cost
+        ,coalesce(order_cost.order_packaging_cost,0) as packaging_cost
+        ,coalesce(order_cost.order_care_cost,0) as care_cost
+        ,coalesce(order_cost.order_picking_cost,0) as picking_cost
+        ,coalesce(order_cost.order_packing_cost,0) as packing_cost
+        ,coalesce(order_cost.order_box_making_cost,0) as box_making_cost
+        ,coalesce(order_cost.order_fc_other_cost,0) as fc_other_cost
+        ,coalesce(order_cost.order_fc_labor_cost,0) as fc_labor_cost
+        ,coalesce(order_cost.poseidon_fulfillment_cost,0) as poseidon_fulfillment_cost
+        ,coalesce(order_cost.inbound_shipping_cost,0) as inbound_shipping_cost
         ,if(orders.stripe_charge_id is not null,order_revenue.net_revenue * 0.0274,0) as payment_processing_cost
         ,orders.coolant_weight_in_pounds
         ,orders.order_additional_coolant_weight_in_pounds

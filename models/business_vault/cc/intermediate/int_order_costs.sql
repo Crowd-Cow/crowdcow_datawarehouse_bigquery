@@ -21,8 +21,8 @@ order_item as ( select * from {{ ref('order_item_details') }} )
             else 0
         end) as poseidon_fulfillment_cost
 
-        ,sum(sku_cost * sku_quantity) as product_cost
-        ,sum(total_sku_weight * inbound_shipment.lot_cost_per_pound) as inbound_shipping_cost
+        ,coalesce(sum(sku_cost * sku_quantity),0) as product_cost
+        ,coalesce(sum(total_sku_weight * inbound_shipment.lot_cost_per_pound),0) as inbound_shipping_cost
         
     from order_item
         left join inbound_shipment on order_item.lot_number = inbound_shipment.lot_number
@@ -40,18 +40,18 @@ order_item as ( select * from {{ ref('order_item_details') }} )
 ,combined_costs as (
     select 
         orders.order_id
-        ,order_coolant_cost
-        ,order_packaging_cost
-        ,order_care_cost
-        ,item_detail_costs.product_cost
-        ,item_detail_costs.poseidon_fulfillment_cost
-        ,item_detail_costs.inbound_shipping_cost
-        ,fc_labor_cost.order_picking_cost
-        ,fc_labor_cost.order_packing_cost
-        ,fc_labor_cost.order_box_making_cost
-        ,fc_labor_cost.order_fc_other_cost
-        ,fc_labor_cost.order_fc_labor_cost
-        ,shipment_costs.shipment_cost
+        ,coalesce(order_coolant_cost, 0 ) as order_coolant_cost
+        ,coalesce(order_packaging_cost, 0 ) as order_packaging_cost
+        ,coalesce(order_care_cost, 0 ) as order_care_cost
+        ,coalesce(item_detail_costs.product_cost, 0 ) as product_cost
+        ,coalesce(item_detail_costs.poseidon_fulfillment_cost, 0 ) as poseidon_fulfillment_cost
+        ,coalesce(item_detail_costs.inbound_shipping_cost, 0 ) as inbound_shipping_cost
+        ,coalesce(fc_labor_cost.order_picking_cost, 0 ) as order_picking_cost
+        ,coalesce(fc_labor_cost.order_packing_cost, 0 ) as order_packing_cost
+        ,coalesce(fc_labor_cost.order_box_making_cost, 0 ) as order_box_making_cost
+        ,coalesce(fc_labor_cost.order_fc_other_cost, 0 ) as order_fc_other_cost
+        ,coalesce(fc_labor_cost.order_fc_labor_cost, 0 ) as order_fc_labor_cost
+        ,coalesce(shipment_costs.shipment_cost, 0 ) as shipment_cost
     from orders
         left join item_detail_costs on orders.order_id = item_detail_costs.order_id
         left join coolant_cost on orders.order_id = coolant_cost.order_id
