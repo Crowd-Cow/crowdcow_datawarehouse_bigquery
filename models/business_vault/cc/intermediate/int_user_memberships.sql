@@ -30,7 +30,7 @@ membership as ( select * from {{ ref('stg_cc__subscriptions') }} where user_id i
 ,calc_membership_tenure as (
     select
         *
-        ,DATE_DIFF(COALESCE(CAST(most_recent_membership_cancelled_date AS DATE), CURRENT_DATE()),CAST(first_membership_created_date AS DATE),MONTH) AS membership_tenure_months
+        ,DATE_DIFF(CAST(first_membership_created_date AS DATE), COALESCE(CAST(most_recent_membership_cancelled_date AS DATE), CURRENT_DATE()),MONTH) AS membership_tenure_months
 
     from get_membership_history
 )

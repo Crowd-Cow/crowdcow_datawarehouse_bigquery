@@ -267,11 +267,11 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_cow_cash_balance_usd
         ,user_support_status
         ,customer_cohort_date
-        ,date_diff(customer_cohort_date,current_date, MONTH) as customer_cohort_tenure_months
+        ,date_diff(current_date(), customer_cohort_date, MONTH) as customer_cohort_tenure_months
         ,membership_cohort_date
-        ,date_diff(membership_cohort_date,current_date, MONTH) as membership_cohort_tenure_months
+        ,date_diff(current_date(), membership_cohort_date, MONTH) as membership_cohort_tenure_months
         ,customer_reactivation_date
-        ,date_diff(customer_reactivation_date,current_date, MONTH) as customer_reactivation_tenure_months
+        ,date_diff(current_date(), customer_reactivation_date, MONTH) as customer_reactivation_tenure_months
         ,first_promotion_type
         ,acquisition_promotion_id
         ,acquisition_promotion_source
