@@ -257,4 +257,4 @@ ordered_item as ( select * from {{ ref('pipeline_receivables') }} where not is_d
 
 select *
 from unioned
-where lot_number <> '0000'
+where lot_number NOT IN ('0000', '0')
