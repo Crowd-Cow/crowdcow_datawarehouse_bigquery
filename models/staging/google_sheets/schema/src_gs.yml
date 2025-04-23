@@ -354,3 +354,4 @@ sources:
 
       - name: q4_forecast
       - name: daily_cac_manual
+      - name: events_reporting_reference_events
