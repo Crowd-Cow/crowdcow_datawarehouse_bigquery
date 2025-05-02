@@ -60,14 +60,14 @@ with fiscal_calendar as (select * from {{ ref('retail_calendar') }} where fiscal
     ------------------ Active ALC Customers 180 --------------- 
 
     countif( ( memberships.user_id is null or (subscription_cancelled_at_utc < week_start_timestamp and subscription_created_at_utc < subscription_cancelled_at_utc ) or subscription_created_at_utc > week_start_timestamp  )
-               and order_paid_at_utc >= TIMESTAMP_SUB(week_start_timestamp, INTERVAL 180 DAY) and order_paid_at_utc < week_start_timestamp
+               and order_paid_at_utc >= TIMESTAMP_SUB(week_start_timestamp, INTERVAL 90 DAY) and order_paid_at_utc < week_start_timestamp
                and is_ala_carte_order
-            ) as week_start_active_alc_180_days,
+            ) as week_start_active_alc_90_days,
 
     countif( ( memberships.user_id is null or (subscription_cancelled_at_utc < week_end_timestamp and subscription_created_at_utc < subscription_cancelled_at_utc )  or subscription_created_at_utc > week_end_timestamp )
-               and order_paid_at_utc >= TIMESTAMP_SUB(week_end_timestamp, INTERVAL 180 DAY) and order_paid_at_utc < week_end_timestamp
+               and order_paid_at_utc >= TIMESTAMP_SUB(week_end_timestamp, INTERVAL 90 DAY) and order_paid_at_utc < week_end_timestamp
                and is_ala_carte_order
-                ) as week_end_active_alc_180_days,
+                ) as week_end_active_alc_90_days,
     
     countif(  o.is_ala_carte_order
                 and o.paid_order_rank = 1
@@ -124,15 +124,15 @@ with fiscal_calendar as (select * from {{ ref('retail_calendar') }} where fiscal
 
 
         ----- ALC ---- 
-        count(distinct if(week_start_active_alc_180_days > 0, final.user_id, null)) as week_start_active_alc_180_days,
-        count(distinct if(week_end_active_alc_180_days > 0, final.user_id, null)) as week_end_active_alc_180_days,
+        count(distinct if(week_start_active_alc_90_days > 0, final.user_id, null)) as week_start_active_alc_90_days,
+        count(distinct if(week_end_active_alc_90_days > 0, final.user_id, null)) as week_end_active_alc_90_days,
         count(distinct if(new_alc_customers > 0 and alc_alc_2_sub = 0, final.user_id, null)) as new_alc_customers,
-        count(distinct if(week_start_active_alc_180_days = 0 and week_end_active_alc_180_days > 0 and new_alc_customers = 0 and alc_alc_2_sub = 0 , final.user_id, null))  as alc_reactivated,
-        (count(distinct if(week_start_active_alc_180_days > 0 and week_end_active_alc_180_days = 0 and alc_alc_2_sub = 0, final.user_id, null)) - count(distinct if(alc_alc_2_sub > 0, final.user_id, null))) * -1  as alc_churned_180_days,
+        count(distinct if(week_start_active_alc_90_days = 0 and week_end_active_alc_90_days > 0 and new_alc_customers = 0 and alc_alc_2_sub = 0 , final.user_id, null))  as alc_reactivated,
+        (count(distinct if(week_start_active_alc_90_days > 0 and week_end_active_alc_90_days = 0 and alc_alc_2_sub = 0, final.user_id, null)) - count(distinct if(alc_alc_2_sub > 0, final.user_id, null))) * -1  as alc_churned_90_days,
         count(distinct if(alc_alc_2_sub > 0, final.user_id, null)) * -1 as alc_alc_2_sub,
 
-        sum(if(week_end_active_alc_180_days > 0, revenue_calculations.total_orders, null)) as total_orders_active_alc_180_days,
-        sum(if(week_end_active_alc_180_days > 0, revenue_calculations.net_revenue, null)) as total_revenue_active_alc_180_days
+        sum(if(week_end_active_alc_90_days > 0, revenue_calculations.total_orders, null)) as total_orders_active_alc_90_days,
+        sum(if(week_end_active_alc_90_days > 0, revenue_calculations.net_revenue, null)) as total_revenue_active_alc_90_days
 
     from final 
     left join revenue_calculations on 
