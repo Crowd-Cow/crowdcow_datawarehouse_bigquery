@@ -207,6 +207,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.last_paid_moolah_order_date
         ,user_order_activity.last_14_days_impacful_customer_reschedules
         ,user_order_activity.first_paid_alc_order
+        ,case when user_order_activity.customer_cohort_date is not null then date_diff(user_order_activity.second_paid_order_date,user_order_activity.customer_cohort_date, DAY) end as days_to_second_purchase
         ,user_referrals.referrals_sent
         ,user_referrals.referrals_redeemed
         ,if(user_gift_card_transaction_history.redemption_user_id is not null, true, false) as has_redeemed_gift_card
@@ -449,6 +450,7 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
             when first_paid_alc_order = 1 then  "ALC" 
             when first_paid_alc_order = 0 then "Subscription"
             else null end as first_paid_order_type
+        ,days_to_second_purchase            
         ,referrals_sent
         ,referrals_redeemed
         ,has_redeemed_gift_card

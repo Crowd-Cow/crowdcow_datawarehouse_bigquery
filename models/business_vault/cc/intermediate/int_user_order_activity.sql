@@ -62,6 +62,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,max(if(is_paid_order and not is_cancelled_order and is_moolah_order,cast(order_paid_at_utc as date),null)) as last_paid_moolah_order_date
         ,countif(is_customer_impactful_reschedule and cast(order_reschedule_occurred_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 14 DAY)) as last_14_days_impacful_customer_reschedules
         ,countif(paid_order_rank = 1 and is_ala_carte_order) as first_paid_alc_order
+        ,min(if(paid_order_rank = 2 and is_paid_order and not is_cancelled_order, cast(order_paid_at_utc as date),null)) as second_paid_order_date
         ,countif(
             not is_gift_order
             and not is_gift_card_order
@@ -312,6 +313,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,last_paid_moolah_order_date
         ,last_14_days_impacful_customer_reschedules
         ,first_paid_alc_order
+        ,second_paid_order_date
         
     from user
         left join user_percentiles on user.user_id = user_percentiles.user_id
