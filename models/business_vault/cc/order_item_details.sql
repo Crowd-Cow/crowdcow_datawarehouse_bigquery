@@ -4,7 +4,7 @@ ordered_items as ( select * from {{ ref('int_ordered_skus') }} )
 ,packed_items as ( select * from {{ ref('int_packed_skus') }} )
 ,vendor as ( select * from {{ ref('stg_cc__sku_vendors') }} )
 ,sku as ( select * from {{ ref('skus') }} )
-,completed_orders as ( select order_id from {{ ref('stg_cc__orders') }} where (order_current_state in ('COMPLETE','FULLY_PACKED','FULLY_PACKED_AS_IS','SHIP_AS_IS') or order_id in (3331204,3335959,3335952,3335958,3359918) ) ) --hardcoded byb orders
+,completed_orders as ( select order_id from {{ ref('stg_cc__orders') }} where (order_current_state in ('COMPLETE','FULLY_PACKED','FULLY_PACKED_AS_IS','SHIP_AS_IS') or order_id in (3331204,3335959,3335952,3335958,3359918,3536280,3536266,3536290,3537158,3536275) ) ) --hardcoded byb orders
 ,non_gift_orders as ( select order_id from {{ ref('int_order_flags') }} where not is_gift_card_order )
 ,receivable as ( select * from {{ ref('stg_cc__pipeline_receivables') }} )
 ,pipeline_order as ( select * from {{ ref('stg_cc__pipeline_orders') }} )
