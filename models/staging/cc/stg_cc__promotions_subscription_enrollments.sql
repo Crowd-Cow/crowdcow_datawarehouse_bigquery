@@ -1,6 +1,6 @@
 with
 
-source as ( select * from {{ source('cc', 'promotions_subscription_enrollments') }} where  __deleted is null and id != 8167)
+source as ( select * from {{ source('cc', 'promotions_subscription_enrollments') }} where  __deleted is null and id not in (8167, 8416))
 ,promotions_promotions as ( select * from {{ ref('stg_cc__promotions_promotions')  }})
 
 ,final as (
