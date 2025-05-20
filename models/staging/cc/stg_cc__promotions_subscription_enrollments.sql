@@ -10,11 +10,12 @@ source as ( select * from {{ source('cc', 'promotions_subscription_enrollments')
         source.subscription_id,
         source.created_at as created_at_utc,
         promotions_promotions.name as promotion_name,
-        promotions_promotions.notes as promotion_notes
+        promotions_promotions.notes as promotion_notes,
+        ROW_NUMBER() over (PARTITION BY source.subscription_id order by source.updated_at desc ) as rn
     from source 
     left join promotions_promotions on promotions_promotions.id = source.promotions_promotion_id
 
 )
 
-select * from final
+select * from final where rn = 1 
 
