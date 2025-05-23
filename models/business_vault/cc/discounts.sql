@@ -38,7 +38,7 @@ SELECT
         WHEN discounts.offset = 0 THEN 'MEMBERSHIP 5%'
         WHEN discounts.offset = 1 THEN 'MERCHANDISING DISCOUNT'
         when (discounts.offset = 2 and promotion_id in (18,20,22,35,37) and promotion_source = 'PROMOTION' )
-                or (discounts.offset = 2 and promotion_id in (259, 285, 286, 287, 299, 300, 301) and promotion_source = 'PROMOTIONS::PROMOTION' ) 
+                or (discounts.offset = 2 and promotion_id in (157,186,219,253,259, 285, 286, 287, 299, 300, 301, 439, 440, 441, 448, 449) and promotion_source = 'PROMOTIONS::PROMOTION' ) 
                   then 'MEMBERSHIP FREE PROTEIN PROMOTIONS'
         WHEN discounts.offset = 2 AND promotion_id IS NOT NULL THEN 'OTHER ITEM LEVEL PROMOTIONS'
     END AS business_group,

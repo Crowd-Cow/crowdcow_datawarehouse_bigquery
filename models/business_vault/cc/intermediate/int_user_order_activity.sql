@@ -33,6 +33,8 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,countif(completed_order_rank = 1 and not is_paid_order and not is_cancelled_order) as total_completed_unpaid_uncancelled_orders
         ,countif(is_gift_order and is_paid_order and not is_cancelled_order) as total_paid_gift_order_count
         ,sum(if(is_paid_order and not is_cancelled_order and cast(order_paid_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 6 MONTH) ,net_revenue,0)) as six_month_net_revenue
+        ,count(distinct if(is_paid_order and not is_cancelled_order and is_membership_order and cast(order_paid_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 6 MONTH) ,order_id,0)) as six_month_membership_orders
+        ,count(distinct if(is_paid_order and not is_cancelled_order and is_membership_order and cast(order_paid_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 12 MONTH) ,order_id,0)) as twelve_month_month_membership_orders
         ,sum(if(is_paid_order and not is_cancelled_order and cast(order_paid_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 6 MONTH) ,gross_profit,0)) as six_month_gross_profit
         ,sum(if(is_paid_order and not is_cancelled_order and cast(order_paid_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 12 MONTH) ,net_revenue,0)) as twelve_month_net_revenue
         ,sum(if(is_paid_order and not is_cancelled_order and cast(order_paid_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 24 MONTH) ,net_revenue,0)) as twentyfour_month_net_revenue
@@ -59,6 +61,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,min(if(completed_order_rank = 1,visit_id,null)) as first_completed_order_visit_id
         ,max(if(is_paid_order and not is_cancelled_order,order_token,null)) as most_recent_order
         ,max(if(is_paid_order and not is_cancelled_order,order_id,null)) as most_recent_order_id
+        ,max(if(is_paid_order and not is_cancelled_order and is_membership_order,order_id,null)) as most_recent_paid_membership_order_id
         ,max(if(is_paid_order and not is_cancelled_order and is_moolah_order,cast(order_paid_at_utc as date),null)) as last_paid_moolah_order_date
         ,countif(is_customer_impactful_reschedule and cast(order_reschedule_occurred_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 14 DAY)) as last_14_days_impacful_customer_reschedules
         ,countif(paid_order_rank = 1 and is_ala_carte_order) as first_paid_alc_order
@@ -116,16 +119,25 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
 
 ,order_frequency as (
     select
-        user_id
-        
-        ,lead(case when paid_order_rank is not null then cast(order_paid_at_utc as date) end,1) 
-            over (partition by user_id order by paid_order_rank)  - cast(order_paid_at_utc as date) as days_to_next_paid_order
-        
-        ,lead(case when paid_membership_order_rank is not null then cast(order_paid_at_utc as date) end,1) 
-            over (partition by user_id order by paid_membership_order_rank)  - cast(order_paid_at_utc as date) as days_to_next_paid_membership_order
-        
-        ,lead(case when paid_ala_carte_order_rank is not null then cast(order_paid_at_utc as date) end,1) 
-            over (partition by user_id order by paid_ala_carte_order_rank)  - cast(order_paid_at_utc as date) as days_to_next_paid_ala_carte_order
+        user_id,
+        DATE_DIFF(
+        LEAD(CAST(order_paid_at_utc AS DATE),1)
+        OVER (PARTITION BY user_id ORDER BY paid_order_rank),
+        CAST(order_paid_at_utc AS DATE),
+        DAY
+        ) AS days_to_next_paid_order,
+        DATE_DIFF(
+        LEAD(CAST(order_paid_at_utc AS DATE),1)
+        OVER (PARTITION BY user_id ORDER BY paid_membership_order_rank),
+        CAST(order_paid_at_utc AS DATE),
+        DAY
+        ) AS days_to_next_paid_membership_order,
+        DATE_DIFF(
+        LEAD(CAST(order_paid_at_utc AS DATE),1)
+        OVER (PARTITION BY user_id ORDER BY paid_ala_carte_order_rank),
+        CAST(order_paid_at_utc AS DATE),
+        DAY
+        ) AS days_to_next_paid_ala_carte_order
     from order_info
 )
 
@@ -135,6 +147,14 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,order_info.net_revenue as last_paid_order_value
     from user_order_activity
     left join order_info on user_order_activity.most_recent_order_id = order_info.order_id
+)
+,last_paid_membership_order_info as (
+    select
+        user_order_activity.user_id as user_id
+        ,order_info.net_revenue as last_membership_orde_paid_order_value
+        ,order_info.has_free_protein_promotion as last_membership_order_has_free_protein_promotion
+    from user_order_activity
+    left join order_info on user_order_activity.most_recent_paid_membership_order_id = order_info.order_id
 )
 
 ,average_order_days as (
@@ -274,6 +294,8 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,user_percentiles.first_completed_order_visit_id
         ,user_percentiles.most_recent_order_promotion_id
         ,user_percentiles.most_recent_order_id
+        ,user_percentiles.six_month_membership_orders
+        ,user_percentiles.twelve_month_month_membership_orders
         ,promotion_rank.promotion_id as acquisition_promotion_id
         ,promotion_rank.promotion_source as acquisition_promotion_source
         ,promotion_rank.promotion_name as acquisition_promotion_name
@@ -314,6 +336,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,last_14_days_impacful_customer_reschedules
         ,first_paid_alc_order
         ,second_paid_order_date
+        ,last_membership_order_has_free_protein_promotion
         
     from user
         left join user_percentiles on user.user_id = user_percentiles.user_id
@@ -322,6 +345,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         left join user_reward_activity on user.user_id = user_reward_activity.user_id
         left join last_paid_order_info on user.user_id = last_paid_order_info.user_id
         left join promotion_rank on user_percentiles.first_completed_order_id = promotion_rank.order_id and promotion_rank.rank = 1
+        left join last_paid_membership_order_info on user.user_id = last_paid_membership_order_info.user_id
 )
 
 select * from user_activity_joins

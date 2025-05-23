@@ -207,6 +207,9 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,user_order_activity.last_paid_moolah_order_date
         ,user_order_activity.last_14_days_impacful_customer_reschedules
         ,user_order_activity.first_paid_alc_order
+        ,user_order_activity.last_membership_order_has_free_protein_promotion
+        ,user_order_activity.six_month_membership_orders
+        ,user_order_activity.twelve_month_month_membership_orders
         ,case when user_order_activity.customer_cohort_date is not null then date_diff(user_order_activity.second_paid_order_date,user_order_activity.customer_cohort_date, DAY) end as days_to_second_purchase
         ,user_referrals.referrals_sent
         ,user_referrals.referrals_redeemed
@@ -458,7 +461,9 @@ users as (select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null)
         ,fb_test
         ,is_server
         ,referral_program
-
+        ,last_membership_order_has_free_protein_promotion
+        ,six_month_membership_orders
+        ,twelve_month_month_membership_orders
     from user_joins
     where not is_ccpa
 )
