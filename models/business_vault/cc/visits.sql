@@ -39,7 +39,11 @@ filtered_ip_detail as (
         filtered_ip_sessions.visit_browser,
         filtered_ip_detail.city as visit_city,
         filtered_ip_detail.region as visit_region,
-        filtered_ip_detail.country as visit_country,
+        case  
+            when (filtered_visit_flags.is_purchasing_visit and filtered_ip_detail.country = 'United States') then 'United States'
+            when (filtered_visit_flags.is_purchasing_visit and filtered_ip_detail.country != 'United States') then 'Purchase Visit - Non United States' 
+            when (filtered_visit_flags.is_purchasing_visit and filtered_ip_detail.country is null) then 'Purchase Visit - Non United States' 
+        else filtered_ip_detail.country end  as visit_country,
         filtered_ip_detail.postal_code as visit_postal_code,
         filtered_ip_sessions.visit_ip,
         filtered_ip_sessions.visit_ip || '-' || filtered_ip_sessions.ip_session_number as visitor_ip_session,
@@ -64,9 +68,10 @@ filtered_ip_detail as (
         filtered_ip_sessions.is_wall_displayed,
         filtered_ip_sessions.is_paid_referrer,
         filtered_ip_sessions.is_social_platform_referrer,
-        filtered_visit_flags.is_bot,
+        --filtered_visit_flags.is_bot,
         filtered_visit_flags.is_internal_traffic,
         filtered_visit_flags.is_server,
+        filtered_visit_flags.is_proxy,
         filtered_visit_flags.is_homepage_landing,
         filtered_visit_flags.is_prospect,
         filtered_visit_flags.has_previous_order,
@@ -90,6 +95,7 @@ filtered_ip_detail as (
         filtered_visit_flags.segment_definitions,
         filtered_visit_flags.session_duration,
         filtered_visit_flags.engaged_session,
+        filtered_visit_flags.is_purchasing_visit,
         filtered_ip_sessions.started_at_utc,
         filtered_ip_sessions.updated_at_utc
     from filtered_ip_sessions 

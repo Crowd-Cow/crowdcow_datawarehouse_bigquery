@@ -12,6 +12,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
 ,visit_activity as ( select * from {{ ref('int_visit_activity') }} )
 ,users as ( select user_id, active_order_id from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
 ,ip_detail as ( select * from {{ ref('stg_reference__ip_lookup') }} )
+,visit_orders as ( select distinct visit_id from  {{ ref('orders') }} where  order_checkout_completed_at_utc is not null)
 
 ,visit_clean_urls as (
     select
@@ -38,6 +39,7 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,visit_clean_urls.is_homepage_landing
         ,visit_clean_urls.visit_ip in ('66.171.181.219', '127.0.0.1') or (user_orders.user_id is not null and user_orders.user_type in ('EMPLOYEE','INTERNAL')) as is_internal_traffic
         ,if(ip_detail.is_server and user_orders.first_completed_order_date is null,TRUE,FALSE) as is_server        
+        ,if(ip_detail.is_proxy and user_orders.first_completed_order_date is null,TRUE,FALSE) as is_proxy
         ,user_orders.user_id is not null and user_orders.customer_cohort_date < cast(visit_clean_urls.started_at_utc as date)  as has_previous_order
         ,user_orders.user_id is not null and user_orders.first_completed_order_date < cast(visit_clean_urls.started_at_utc as timestamp) as has_previous_completed_order
         ,user_membership.user_id is not null and user_membership.first_membership_created_date < cast(visit_clean_urls.started_at_utc as timestamp) as has_previous_subscription
@@ -98,17 +100,19 @@ visits as ( select * from {{ ref('visit_classification') }} )
         ,event_count
         ,TIMESTAMP_DIFF(max_ocurred_event,min_ocurred_event,second) as session_duration
         ,if(page_views >= 2 or clicks >=2 or scroll_depth_25 >= 1 or (add_to_carts > 0 or begin_checkout > 0 or order_completes > 0),true,false) as engaged_session
+        ,if(visit_orders.visit_id is not null, true, false) as is_purchasing_visit
 
     from visit_clean_urls
         left join user_orders on visit_clean_urls.user_id = user_orders.user_id
         left join user_membership on visit_clean_urls.user_id = user_membership.user_id
         left join visit_activity on visit_clean_urls.visit_id = visit_activity.visit_id
         left join ip_detail on visit_clean_urls.visit_ip = ip_detail.ip_address
+        left join visit_orders on visit_clean_urls.visit_id = visit_orders.visit_id
 )
 ,define_bots as (
     select
     add_flags.*
-    ,((event_count <= 1 or event_count is null) and (not has_previous_completed_order or has_previous_completed_order is null) and (not has_previous_subscription or user_id is null)  ) as is_bot
+    --,((event_count <= 1 or event_count is null) and (not has_previous_completed_order or has_previous_completed_order is null) and (not has_previous_subscription or user_id is null)  ) as is_bot
     from add_flags
 )
 
@@ -118,17 +122,19 @@ visits as ( select * from {{ ref('visit_classification') }} )
     select
         define_bots.*
         ,(not has_previous_completed_order or has_previous_completed_order is null)
-            and not is_bot
+            --and not is_bot
             and not is_internal_traffic
             and not is_server
+            and not is_proxy
             and (not has_previous_subscription or define_bots.user_id is null)
             and (not(visit_referrer like any ('%ZENDESK%','%ADMIN%','%TRACKING-INFO','%SHIPMENT-IN-TRANSIT')) 
                     or visit_referrer is null)
              as is_prospect
         ,--(not has_previous_completed_order or has_previous_completed_order is null)
-             not is_bot
-            and not is_internal_traffic
+            -- not is_bot
+            not is_internal_traffic
             and not is_server
+            and not is_proxy
             and (not has_previous_subscription or define_bots.user_id is null)
             and (not(visit_referrer like any ('%ZENDESK%','%ADMIN%','%TRACKING-INFO','%SHIPMENT-IN-TRANSIT')) 
             and no_orders_12_months

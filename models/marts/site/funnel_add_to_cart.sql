@@ -4,7 +4,9 @@ events as ( select visit_id, event_id, event_name, event_sequence_number, on_pag
 ,visits as ( 
     select visit_id, visitor_ip_session
     from {{ ref('visits') }} 
-    where not is_bot
+    where 
+    not is_proxy
+    and not is_server
     and not is_internal_traffic ) 
 
 select 

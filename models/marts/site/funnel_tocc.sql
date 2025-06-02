@@ -6,7 +6,8 @@ events as ( select * from {{ ref('events') }} where occurred_at_utc >= '2024-11-
     from {{ ref('visits') }} 
     where (visit_landing_page_path = '/TOC' or visit_landing_page_path = '/')
     and is_prospect
-    and not is_bot
+    and not is_proxy
+    and not is_server
     and not is_internal_traffic
     and tocc_redirect = 'EXPERIMENTAL1.0' )
 

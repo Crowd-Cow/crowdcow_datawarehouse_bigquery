@@ -21,6 +21,7 @@ source as ( select * from {{ source('reference_data', 'ip_lookup') }} )
         ,region
         ,status
         ,message
+        ,if(proxy = true, true, false) as is_proxy
     from source
 )
 
