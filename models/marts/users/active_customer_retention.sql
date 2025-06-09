@@ -38,6 +38,17 @@ with fiscal_calendar as (select * from {{ ref('retail_calendar') }} where fiscal
     week_start_timestamp as period_start,
     week_end_timestamp as period_end,
     o.user_id,
+    ------------------------ Active subs 180 days -----------------
+    countif(memberships.user_id is not null and subscription_created_at_utc < week_start_timestamp
+               and (subscription_cancelled_at_utc is null or subscription_cancelled_at_utc > week_start_timestamp)
+               and order_paid_at_utc >= TIMESTAMP_SUB(week_start_timestamp, INTERVAL 180 DAY) and order_paid_at_utc < week_start_timestamp
+               and is_membership_order ) as week_start_active_subscribers_180,
+    countif(memberships.user_id is not null and subscription_created_at_utc < week_end_timestamp
+                and (subscription_cancelled_at_utc is null or subscription_cancelled_at_utc > week_end_timestamp)
+                and order_paid_at_utc >= TIMESTAMP_SUB(week_end_timestamp, INTERVAL 180 DAY) and order_paid_at_utc < week_end_timestamp
+                and is_membership_order ) as week_end_active_subscribers_180,
+
+    ------------------------ Active subs 90 days -----------------                
     countif(memberships.user_id is not null and subscription_created_at_utc < week_start_timestamp
                and (subscription_cancelled_at_utc is null or subscription_cancelled_at_utc > week_start_timestamp)
                and order_paid_at_utc >= TIMESTAMP_SUB(week_start_timestamp, INTERVAL 90 DAY) and order_paid_at_utc < week_start_timestamp
@@ -121,6 +132,16 @@ with fiscal_calendar as (select * from {{ ref('retail_calendar') }} where fiscal
     day_start_timestamp as period_start,
     day_end_timestamp as period_end,
     o.user_id,
+    ------------------------ Active subs 180 days -----------------
+    countif(memberships.user_id is not null and subscription_created_at_utc < day_start_timestamp
+               and (subscription_cancelled_at_utc is null or subscription_cancelled_at_utc > day_start_timestamp)
+               and order_paid_at_utc >= TIMESTAMP_SUB(day_start_timestamp, INTERVAL 180 DAY) and order_paid_at_utc < day_start_timestamp
+               and is_membership_order ) as day_start_active_subscribers_180_daily,
+    countif(memberships.user_id is not null and subscription_created_at_utc < day_start_timestamp
+                and (subscription_cancelled_at_utc is null or subscription_cancelled_at_utc > day_start_timestamp)
+                and order_paid_at_utc >= TIMESTAMP_SUB(day_start_timestamp, INTERVAL 180 DAY) and order_paid_at_utc < day_start_timestamp
+                and is_membership_order ) as day_end_active_subscribers_180_daily,
+    ------------------------ Active subs 90 days -----------------
     countif(memberships.user_id is not null and subscription_created_at_utc < day_start_timestamp
                and (subscription_cancelled_at_utc is null or subscription_cancelled_at_utc > day_start_timestamp)
                and order_paid_at_utc >= TIMESTAMP_SUB(day_start_timestamp, INTERVAL 90 DAY) and order_paid_at_utc < day_start_timestamp
@@ -256,6 +277,13 @@ with fiscal_calendar as (select * from {{ ref('retail_calendar') }} where fiscal
         sum(subs_total_orders) as total_orders_active_subscribers_90,
         sum(subs_net_revenue) as total_revenue_active_subscribers_90,
 
+        ------ Subs 180 Days --- 
+        count(distinct if(week_start_active_subscribers_180 > 0, weekly_final.user_id, null)) as week_start_active_subscribers_180,
+        count(distinct if(week_end_active_subscribers_180 > 0, weekly_final.user_id, null)) as week_end_active_subscribers_180,
+        count(distinct if(week_start_active_subscribers_180 = 0 and week_end_active_subscribers_180 > 0 and new_subscriber = 0 and cancelled = 0 and new_first_subscriber = 0, weekly_final.user_id, null)) as subs_reactivated_180,
+        count(distinct if(week_start_active_subscribers_180 > 0 and week_end_active_subscribers_180 = 0 and cancelled = 0, weekly_final.user_id, null)) * -1  as subs_churned_180_days,
+
+
 
         ----- ALC 90 Days ---- 
         count(distinct if(week_start_active_alc_90_days > 0, weekly_final.user_id, null)) as week_start_active_alc_90_days,
@@ -278,6 +306,7 @@ with fiscal_calendar as (select * from {{ ref('retail_calendar') }} where fiscal
 
         sum(alc_total_orders) as total_orders_active_alc_180_days,
         sum(alc_net_revenue) as total_revenue_active_alc_180_days
+
 
     from weekly_final 
     left join revenue_calculations on 
@@ -307,6 +336,14 @@ with fiscal_calendar as (select * from {{ ref('retail_calendar') }} where fiscal
         sum(subs_total_orders_daily) AS total_orders_active_subscribers_90_daily,
         sum(subs_net_revenue_daily) AS total_revenue_active_subscribers_90_daily,
 
+        ---- Subs 180 Days --- 
+    
+        count(distinct if(day_start_active_subscribers_180_daily > 0, df.user_id, null)) as day_start_active_subscribers_180_daily,
+        count(distinct if(day_end_active_subscribers_180_daily > 0, df.user_id, null)) AS day_end_active_subscribers_180_daily,
+        count(distinct if(day_start_active_subscribers_180_daily = 0 and day_end_active_subscribers_180_daily > 0 and new_subscriber_daily = 0 and cancelled_daily = 0 and new_first_subscriber_daily = 0, df.user_id, null)) AS subs_reactivated_daily_180,
+        count(distinct if(day_start_active_subscribers_180_daily > 0 and day_end_active_subscribers_180_daily = 0 and cancelled_daily = 0, df.user_id, null)) * -1 AS subs_churned_180_days_daily,
+
+
         ----- ALC 90 Days ---- 
         count(distinct IF(day_start_active_alc_90_days_daily > 0, df.user_id, NULL)) AS day_start_active_alc_90_days_daily,
         count(distinct IF(day_end_active_alc_90_days_daily > 0, df.user_id, NULL)) AS day_end_active_alc_90_days_daily,
@@ -323,7 +360,7 @@ with fiscal_calendar as (select * from {{ ref('retail_calendar') }} where fiscal
         count(distinct IF(day_end_active_alc_180_days_daily > 0, df.user_id, NULL)) AS day_end_active_alc_180_days_daily,
         count(distinct IF(day_start_active_alc_180_days_daily = 0 and day_end_active_alc_180_days_daily > 0 and new_alc_customers_daily = 0 and alc_alc_2_sub_daily = 0, df.user_id, NULL)) AS alc_reactivated_180_daily,
         (count(distinct IF(day_start_active_alc_180_days_daily > 0 and day_end_active_alc_180_days_daily = 0 and alc_alc_2_sub_daily = 0, df.user_id, NULL)) - count(distinct IF(alc_alc_2_sub_daily > 0, df.user_id, NULL))) * -1 AS alc_churned_180_days_daily,
-
+         
         sum(alc_total_orders_daily) AS total_orders_active_alc_180_days_daily,
         sum(alc_net_revenue_daily) AS total_revenue_active_alc_180_days_daily
 
