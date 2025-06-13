@@ -9,6 +9,39 @@ with orders as (select * from {{ ref('orders') }}
 ,user_attribution as (select * from {{ ref('user_attribution') }} )
 ,discounts as ( select * from {{ ref('discounts') }} )
 ,gs_manual_changes as ( select * from {{ ref('stg_gs__daily_cac_manual')}})
+,meta as ( select * from {{ ref('stg_fb_ads__campaign_report_daily')}})
+,fiscal_calendar as (select * from {{ ref('retail_calendar') }} where fiscal_year > 2022) 
+,daily_calendar AS (
+    SELECT
+        date(calendar_date) AS calendar_date
+    FROM fiscal_calendar
+    WHERE calendar_date <= CURRENT_DATE()
+)
+,channels as (
+    select distinct
+        case
+            when user_attribution.sub_channel = 'USER REFERRAL' then 'USER REFERRAL'
+            when user_attribution.sub_channel = 'NON-USER REFERRAL' then 'NON-USER REFERRAL'
+            when user_attribution.channel is null then 'OTHER'
+        else user_attribution.channel end as attribution_channel
+    from user_attribution
+)
+,date_channel as ( 
+    select 
+        calendar_date,
+        attribution_channel
+    from daily_calendar
+    cross join channels
+)
+
+
+,meta_spend as (
+    select 
+        date_start,
+        sum(spend) as spend
+    from meta
+    group by 1 
+)
 
 ,google_ads_spend as (
     select
@@ -48,7 +81,7 @@ with orders as (select * from {{ ref('orders') }}
 select
      DATE(orders.order_paid_at_utc, 'America/Los_Angeles') as order_paid_at_utc
     ,case
-        when (user_attribution.channel != "SEM" AND user_attribution.channel != "SEO" AND user_attribution.channel != "REFERRAL" AND user_attribution.channel != "AFFILIATE" AND discounts.business_group != "GIFT CARD REDEMPTION" ) AND orders.paid_order_rank = 1 AND orders.stripe_card_brand = "AMERICAN EXPRESS" then "AMEX"
+        --when (user_attribution.channel != "SEM" AND user_attribution.channel != "SEO" AND user_attribution.channel != "REFERRAL" AND user_attribution.channel != "AFFILIATE" AND discounts.business_group != "GIFT CARD REDEMPTION" ) AND orders.paid_order_rank = 1 AND orders.stripe_card_brand = "AMERICAN EXPRESS" then "AMEX"
         when user_attribution.sub_channel = 'USER REFERRAL' then 'USER REFERRAL'
         when user_attribution.sub_channel = 'NON-USER REFERRAL' then 'NON-USER REFERRAL'
         when user_attribution.channel is null then 'OTHER'
@@ -63,6 +96,18 @@ left join discounts ON orders.order_id = discounts.order_id
 group by 1,2
 )
 
+,all_channels as (
+
+    select 
+        calendar_date as order_paid_at_utc,
+        date_channel.attribution_channel,
+        orders_new_paid_customers,
+        orders_new_paid_membership_customers,
+        orders_total_paid_customers
+    from date_channel
+    left join attribution on attribution.order_paid_at_utc =  date_channel.calendar_date and date_channel.attribution_channel = attribution.attribution_channel
+)
+
 --- CTE to Remove/add changes from/to direct 
 ,manual_changes as (
     select
@@ -72,7 +117,7 @@ group by 1,2
         ,amount
         ,new_customers
         ,orders_new_paid_customers as original_new_customers
-    from attribution
+    from all_channels
     left join gs_manual_changes on order_paid_at_utc = gs_manual_changes.date and attribution_channel = gs_manual_changes.channel
 )
 
@@ -89,17 +134,19 @@ select
      ,orders_total_paid_customers
      ,case 
         when include_manual.action = 'REPLACE' then include_manual.amount
-        when include_manual.action = 'ADD' then coalesce(shareasale_orders_total_cost,total_cost_usd,discounts_total_discount_amount*2) + include_manual.amount
-      else coalesce(shareasale_orders_total_cost,total_cost_usd,discounts_total_discount_amount*2) end as spend
+        when include_manual.action = 'ADD' then coalesce(shareasale_orders_total_cost,total_cost_usd,discounts_total_discount_amount*2,meta_spend.spend) + include_manual.amount
+      else coalesce(shareasale_orders_total_cost,total_cost_usd,discounts_total_discount_amount*2,meta_spend.spend) end as spend
      ,shareasale_orders_total_cost as affiliate_spend
      ,total_cost_usd as sem_spend
      ,discounts_total_discount_amount * 2 as referral_spend
-from attribution
+     ,meta_spend.spend as meta_spend
+from all_channels
 left join google_ads_spend on order_paid_at_utc = google_ads_spend.campaign_start_date_utc and attribution_channel = 'SEM'
 left join affiliate_spend on  order_paid_at_utc = affiliate_spend.transaction_date_utc and attribution_channel = 'AFFILIATE'
 left join user_referral on order_paid_at_utc = user_referral.created_at_utc and attribution_channel = 'USER REFERRAL'
 left join manual_changes as include_manual on order_paid_at_utc = include_manual.date and attribution_channel = include_manual.channel
 left join manual_changes as substract_manual on order_paid_at_utc = substract_manual.date and attribution_channel = 'DIRECT' and substract_manual.channel = 'AMEX'
+left join meta_spend on order_paid_at_utc = meta_spend.date_start and attribution_channel = 'SOCIAL'
 )
 
 
@@ -117,6 +164,7 @@ select
      ,final.affiliate_spend
      ,final.sem_spend
      ,final.referral_spend
+     ,final.meta_spend
 from final
 left join final as f on final.order_paid_at_utc = f.order_paid_at_utc  and f.orders_new_paid_customers < 0 and f.attribution_channel = 'DIRECT'
 
