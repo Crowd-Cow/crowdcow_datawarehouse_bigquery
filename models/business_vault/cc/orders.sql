@@ -159,6 +159,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,flags.is_bids_fulfillment_at_risk
         ,flags.has_gift_card_redemption
         ,flags.is_reactivation
+        ,flags.is_reactivation_180_days
         ,if(free_protein_promotion < 0, true, false) as has_free_protein_promotion
         ,ranks.overall_order_rank
         ,ranks.completed_order_rank
