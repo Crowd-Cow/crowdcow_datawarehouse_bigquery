@@ -22,6 +22,7 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
         ,order_delivery.is_qvc
         ,order_delivery.is_seabear
         ,order_delivery.is_backyard_butchers
+        ,order_delivery.is_alaska_home_pack
         ,order_delivery.order_delivery_state
         ,order_delivery.order_delivery_postal_code
         ,order_delivery.coolant_weight_in_pounds
@@ -57,6 +58,7 @@ shipment as ( select * from {{ ref('stg_cc__shipments') }} )
         get_order_delivery_address.is_rastellis,
         get_order_delivery_address.is_qvc,
         get_order_delivery_address.is_backyard_butchers,
+        get_order_delivery_address.is_alaska_home_pack,
         get_order_delivery_address.is_seabear,
         get_order_delivery_address.shipment_tracking_code,
         get_order_delivery_address.shipment_postage_carrier,
