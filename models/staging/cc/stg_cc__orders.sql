@@ -87,6 +87,7 @@ source as ( select * from {{ source('cc', 'orders') }} where id not in (2871732,
     ,order_type = 'QVC' as is_qvc
     ,order_type = 'SEABEAR' as is_seabear
     ,order_type = 'BACKYARD_BUTCHERS' as is_backyard_butchers
+    ,order_type = 'ALASKA_HOME_PACK' as is_alaska_home_pack
     ,{{ clean_strings('where_order_placed') }} as where_order_placed
     ,shipments_computed_at as order_shipments_computed_at_utc
     ,next_box_notified_at as order_next_box_notified_at_utc

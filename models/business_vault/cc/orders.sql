@@ -126,6 +126,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.is_qvc
         ,orders.is_seabear
         ,orders.is_backyard_butchers
+        ,orders.is_alaska_home_pack
         ,flags.has_free_shipping
         ,flags.is_ala_carte_order
         ,flags.is_membership_order
