@@ -194,7 +194,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,round(
             case
                 when (promotion_id in (18,20,22,35,37) and promotion_source = 'PROMOTION') 
-                or (promotion_id in (259, 285, 286, 287, 299, 300, 301) and promotion_source = 'PROMOTIONS::PROMOTION')  then total_order_item_discount
+                or (promotion_id in (157,186,219,253,259, 285, 286, 287, 299, 300, 301, 439, 440, 441, 448, 449) and promotion_source = 'PROMOTIONS::PROMOTION')  then total_order_item_discount
                 else 0
             end
         ,2) as item_free_protein_discount
@@ -202,7 +202,7 @@ bids as ( select * from {{ ref('stg_cc__bids') }} )
         ,round(
             case
                 when (promotion_id not in (18,20,22,35,37) and promotion_source = 'PROMOTION' and promotion_id is not null)
-                or (promotion_id not in (259, 285, 286, 287, 299, 300, 301) and promotion_source = 'PROMOTIONS::PROMOTION' and promotion_id is not null )
+                or (promotion_id not in (157,186,219,253,259, 285, 286, 287, 299, 300, 301, 439, 440, 441, 448, 449) and promotion_source = 'PROMOTIONS::PROMOTION' and promotion_id is not null )
                 then total_order_item_discount + bid_item_credit_usd
                 else 0
             end
