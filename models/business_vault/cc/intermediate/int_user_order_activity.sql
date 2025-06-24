@@ -22,6 +22,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,is_qvc
         ,is_seabear
         ,is_backyard_butchers
+        ,is_alaska_home_pack
         ,count(order_id) as total_order_count
         ,countif(is_completed_order and is_membership_order) as total_completed_membership_orders
         ,countif(is_paid_order and not is_cancelled_order and is_ala_carte_order) as total_paid_ala_carte_order_count
@@ -75,8 +76,10 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
             and (billing_state = 'CA' or order_delivery_state = 'CA')
          ) as total_california_orders
         ,avg(if(is_paid_order and not is_cancelled_order,net_revenue,null)) as user_average_order_value
+        ,sum(if(is_paid_order and not is_cancelled_order and not is_gift_card_order,total_product_weight,0)) as lifetime_product_weight
+        ,safe_divide(sum(if(is_paid_order and not is_cancelled_order,net_product_revenue,0)), sum(if(is_paid_order and not is_cancelled_order and not is_gift_card_order,total_product_weight,0))) as average_spend_per_lb
     from order_info
-    group by 1,2,3,4,5
+    group by 1,2,3,4,5,6
 )
 
 -- CTE to rank discounts of the last orders, excluding specified promotions and buckets
@@ -267,6 +270,8 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,coalesce(user_percentiles.lifetime_paid_order_count_percentile ) as lifetime_paid_order_count_percentile
         ,coalesce(user_percentiles.total_california_orders) as total_california_orders
         ,coalesce(user_percentiles.user_average_order_value) as user_average_order_value
+        ,coalesce(user_percentiles.lifetime_product_weight) as lifetime_product_weight
+        ,coalesce(average_spend_per_lb) as average_spend_per_lb
         ,coalesce(user_order_item_activity.twelve_month_japanese_wagyu_revenue) as twelve_month_japanese_wagyu_revenue
         ,coalesce(user_order_item_activity.lifetime_japanese_wagyu_revenue) as lifetime_japanese_wagyu_revenue
         ,coalesce(user_reward_activity.japanese_buyers_club_revenue) as japanese_buyers_club_revenue

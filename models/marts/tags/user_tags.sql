@@ -414,6 +414,23 @@ employee as (
     where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and lifetime_paid_order_count > 0 and lifetime_paid_order_count <= 3 
 )
 
+,new_meat_collector as (
+    {{ generate_tag('users','user_id','new_meat_collector','user_segment', 'null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and lifetime_paid_order_count > 0 and lifetime_paid_order_count <= 3  and user_average_order_value >= 400 and average_spend_per_lb >= 50 and twelve_month_purchase_count > 0
+)
+,existing_meat_collector as (
+    {{ generate_tag('users','user_id','existing_meat_collector','user_segment', 'null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and lifetime_paid_order_count >= 4  and user_average_order_value >= 400 and average_spend_per_lb >= 50 and twelve_month_purchase_count > 0
+)
+,inactive_meat_collector as (
+    {{ generate_tag('users','user_id','inactive_meat_collector','user_segment', 'null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and lifetime_paid_order_count >= 4  and user_average_order_value >= 400 and average_spend_per_lb >= 50 and twelve_month_purchase_count = 0
+)
+,inactive_new_meat_collector as (
+    {{ generate_tag('users','user_id','inactive_new_meat_collector','user_segment', 'null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE', 'INTERNAL') and lifetime_paid_order_count > 0 and lifetime_paid_order_count <= 3  and user_average_order_value >= 400 and average_spend_per_lb >= 50 and twelve_month_purchase_count = 0
+)
+
 
 ,union_tags as (
 select * from employee
@@ -612,6 +629,15 @@ union all
 select * from new_customer
 union all
 select * from vip_important_relationship
+
+union all 
+select * from new_meat_collector
+union all 
+select * from existing_meat_collector
+union all 
+select * from inactive_meat_collector
+union all 
+select * from inactive_new_meat_collector
 
 )
 
