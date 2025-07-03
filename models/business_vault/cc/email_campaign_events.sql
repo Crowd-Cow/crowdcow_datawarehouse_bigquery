@@ -1,15 +1,39 @@
-{{
-  config(
-        partition_by = {'field': 'ended_at_utc', 'data_type': 'timestamp'},
-        cluster_by = ['email_campaign_id'],
-    )
-}}
+{{ config(
+    materialized='incremental',
+    unique_key='email_campaign_id',
+    partition_by={'field': 'ended_at_utc', 'data_type': 'timestamp'},
+    cluster_by=['email_campaign_id']
+) }}
 
 with
 
-event as ( select * from {{ ref('stg_iterable__events') }} )
-,campaign as ( select * From {{ ref('stg_iterable__campaign_history') }} )
-,user as ( select * from {{ ref('stg_iterable__user_history') }} )
+event as (
+    select
+        event_id,
+        user_email,
+        campaign_id,
+        event_name,
+        created_at_utc
+    from {{ ref('stg_iterable__events') }}
+    where event_name in ('EMAILSEND','EMAILOPEN','EMAILCLICK','EMAILBOUNCE')
+      {% if is_incremental() %}
+        and created_at_utc >= (select max(ended_at_utc) from {{ this }})
+      {% endif %}
+)
+,campaign as ( 
+    select 
+        campaign_id
+        ,campaign_name
+        ,campaign_state
+        ,created_by_user_id
+        ,send_size
+        ,workflow_id
+        ,workflow_name
+        ,campaign_type
+        ,ended_at_utc
+        ,list_name 
+        from {{ ref('stg_iterable__campaign_history') }} )
+,user as ( select user_email, user_token from {{ ref('stg_iterable__user_history') }} )
 ,cc_user as ( select distinct user_token, user_id from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
 
 ,get_user_id as (
@@ -75,4 +99,25 @@ event as ( select * from {{ ref('stg_iterable__events') }} )
     group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14
 )
 
-select * from aggregate_campaigns
+select
+    email_campaign_id,
+    user_email,
+    user_token,
+    user_id,
+    campaign_id,
+    campaign_name,
+    campaign_state,
+    created_by_user_id,
+    send_size,
+    workflow_id,
+    workflow_name,
+    campaign_type,
+    list_name,
+    ended_at_utc,
+    send_count,
+    open_count,
+    click_count,
+    unique_click_count,
+    unique_open_count,
+    bounce_count
+from aggregate_campaigns

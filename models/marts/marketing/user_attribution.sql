@@ -1,6 +1,33 @@
-with 
+{{ config(
+    materialized='incremental',
+    unique_key='visit_id',
+    partition_by={'field': 'started_at_utc', 'data_type': 'timestamp'},
+    cluster_by=['utm_campaign','channel'],
+    on_schema_change = 'sync_all_columns'
+) }}
 
-visits as ( select * from {{ ref('visits') }} )
+with
+visits as (
+  select
+    visit_id,
+    started_at_utc,
+    cast(started_at_utc as date) as started_at_utc_date,
+    utm_source,
+    utm_medium,
+    utm_campaign,
+    utm_content,
+    utm_term,
+    channel,
+    sub_channel,
+    visit_landing_page,
+    visit_landing_page_path,
+    gclid,
+    is_prospect
+  from {{ ref('visits') }}
+  {% if is_incremental() %}
+    where started_at_utc >= (select max(started_at_utc) from {{ this }})
+  {% endif %}
+)
 ,users as ( select user_id, attributed_visit_id from {{ ref('users') }} )
 
 ,attribution_details as (

@@ -1,3 +1,6 @@
+{{ config(
+  enabled=false
+) }}
 with
 
 events as ( select * from {{ ref('events') }} where occurred_at_utc >= '2024-11-21' )
