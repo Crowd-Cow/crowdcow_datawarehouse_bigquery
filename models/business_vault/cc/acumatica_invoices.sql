@@ -40,4 +40,5 @@ select
     ,is_approved_for_payment
     ,bill_date_utc
     ,due_date_utc
+    ,coolant_lbs
 from invoice

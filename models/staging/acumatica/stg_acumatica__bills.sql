@@ -70,6 +70,7 @@ source as ( select * from {{ source('acumatica', 'acumatica_bills') }} )
         line_item_quantity,
         sub_account,
         {{ clean_strings('transaction_description') }} AS transaction_description,
+        SAFE_CAST(REPLACE(REGEXP_EXTRACT(LOWER(transaction_description), r'(\d{1,3}(?:,\d{3})*|\d+)\s*lb[s]?'),',','') AS INT64) AS coolant_lbs,
         unit_cost,
         {{ clean_strings('line_item_note') }} AS line_item_note,
         line_number
