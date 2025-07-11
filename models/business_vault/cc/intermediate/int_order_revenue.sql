@@ -9,6 +9,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
     select 
         order_id
         ,sum(bid_gross_product_revenue) as gross_product_revenue
+        ,sum(bid_price_paid_usd) as bid_price_paid_usd
     from order_item
     group by 1
 )
@@ -40,8 +41,9 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         orders.order_id
         ,orders.order_type
         ,parent_order_id
-        ,coalesce(orders.order_shipping_fee_usd,0) as shipping_revenue
+        ,coalesce(orders.order_shipping_fee_usd,0) + coalesce(order_expedited_shipping_fee_usd,0) as shipping_revenue
         ,coalesce(bid_amounts.gross_product_revenue, 0) as gross_product_revenue
+        ,coalesce(bid_amounts.bid_price_paid_usd, 0) as bid_price_paid_usd
         ,coalesce(discount_amounts.free_shipping_credit_count, 0) as free_shipping_credit_count
         ,coalesce(discount_amounts.free_shipping_discount, 0) * -1 as free_shipping_discount
         ,coalesce(discount_amounts.membership_discount, 0) * -1 as membership_discount
@@ -70,6 +72,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,order_type
         ,shipping_revenue
         ,gross_product_revenue
+        ,bid_price_paid_usd
 
         ,case
             when free_shipping_credit_count > 0 and free_shipping_discount = 0 then shipping_revenue * -1
@@ -94,6 +97,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
     select
         order_id
         ,gross_product_revenue
+        ,bid_price_paid_usd
         ,membership_discount
         ,merch_discount
         ,free_protein_promotion

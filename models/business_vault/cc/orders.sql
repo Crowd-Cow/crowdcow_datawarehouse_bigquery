@@ -86,6 +86,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.billing_postal_code
         ,order_shipment.shipment_postage_carrier
         ,coalesce(order_revenue.gross_product_revenue,0) as gross_product_revenue
+        ,coalesce(order_revenue.bid_price_paid_usd,0) as bid_price_paid_usd
         ,coalesce(order_revenue.membership_discount,0) as membership_discount
         ,coalesce(order_revenue.merch_discount,0) as merch_discount
         ,coalesce(order_revenue.moolah_item_discount,0) as moolah_item_discount
@@ -93,7 +94,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,coalesce(order_revenue.free_protein_promotion,0) as free_protein_promotion
         ,coalesce(order_revenue.item_promotion,0) as item_promotion
         ,coalesce(order_revenue.net_product_revenue,0) as net_product_revenue
-        ,orders.order_shipping_fee_usd as shipping_revenue
+        ,coalesce(order_revenue.shipping_revenue) as shipping_revenue
         ,orders.order_expedited_shipping_fee_usd as expedited_shipping_revenue
         ,coalesce(order_revenue.free_shipping_discount,0) as free_shipping_discount
         ,coalesce(order_revenue.gross_revenue,0) as gross_revenue
