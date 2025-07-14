@@ -43,13 +43,13 @@ with
             ,CAST(_90_day_sub_forecasted_reactivation_rate as INT64) as _90_day_sub_forecasted_reactivation_rate
 
             
-            ,CAST(_180_day_alc_week_start as INT64) as _180_day_alc_week_start
-            ,CAST(_180_day_alc_new as INT64) as _180_day_alc_new
-            ,CAST(_180_day_alc_reactivation as INT64) as _180_day_alc_reactivation
-            ,CAST(_180_day_alc_churned_180_days as INT64) as _180_day_alc_churned_180_days
-            ,CAST(_180_day_alc_week_end as INT64) as _180_day_alc_week_end
-            ,CAST(_180_day_alc_forecasted_churn_rate as INT64) as _180_day_alc_forecasted_churn_rate
-            ,CAST(_180_day_alc_forecasted_reactivation_rate as INT64) as _180_day_alc_forecasted_reactivation_rate
+            ,CAST(_90_day_alc_week_start as INT64) as _90_day_alc_week_start
+            ,CAST(_90_day_alc_new as INT64) as _90_day_alc_new
+            ,CAST(_90_day_alc_reactivation as INT64) as _90_day_alc_reactivation
+            ,CAST(_90_day_alc_churned_90_days as INT64) as _90_day_alc_churned_90_days
+            ,CAST(_90_day_alc_week_end as INT64) as _90_day_alc_week_end
+            ,CAST(_90_day_alc_forecasted_churn_rate as INT64) as _90_day_alc_forecasted_churn_rate
+            ,CAST(_90_day_alc_forecasted_reactivation_rate as INT64) as _90_day_alc_forecasted_reactivation_rate
 
             ,CAST(sms_audience_size_net_of_unsubscribes as INT64) as sms_audience_size
 
@@ -59,6 +59,11 @@ with
             ,CAST(new_customers_from_attentive_leads as INT64) as new_customers_from_attentive_leads
 
             ,CAST(tocc_sales_to_new_customers_units as INT64) as tocc_sales_to_new_customers_units
+            
+            ,CAST(aov as INT64) as aov
+            ,CAST(active_customer_count as INT64) as active_customer_count
+            ,CAST(paid_marketing_spend as INT64) as paid_marketing_spend
+            ,CAST(marginal_cac as INT64) as Marginal_cac
 
 
 
