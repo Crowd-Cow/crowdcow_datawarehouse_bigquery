@@ -1,6 +1,6 @@
 with
 
-invoice as ( select * from {{ ref('stg_acumatica__bills') }} )
+invoice as ( select * from {{ ref('stg_acumatica__bills') }} where vendor = 'V001047' )
 
 select
     bill_item_id

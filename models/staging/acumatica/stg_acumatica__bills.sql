@@ -73,7 +73,16 @@ source as ( select * from {{ source('acumatica', 'acumatica_bills') }} )
         SAFE_CAST(REPLACE(REGEXP_EXTRACT(LOWER(transaction_description), r'(\d{1,3}(?:,\d{3})*|\d+)\s*lb[s]?'),',','') AS INT64) AS coolant_lbs,
         unit_cost,
         {{ clean_strings('line_item_note') }} AS line_item_note,
-        line_number
+        line_number,
+        CASE sub_account 
+            WHEN 600009 THEN "CROWD COW DALLAS"
+            WHEN 600008 THEN "CROWD COW DUNMORE"
+            WHEN 600010 THEN "CROWD COW WATSONVILLE"
+            WHEN 600005 THEN "CROWD COW FOREST GROVE"
+            WHEN 600007 THEN "VALMEYER"
+            WHEN 1 THEN "CROWD COW"
+        ELSE cast(sub_account as string) END AS fc_name
+        
     FROM
         flatten_details
 )
