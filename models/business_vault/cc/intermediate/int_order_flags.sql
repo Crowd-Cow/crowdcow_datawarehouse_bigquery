@@ -130,6 +130,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
         ,orders.order_type = 'QVC' as is_qvc
         ,case when DATE_DIFF(orders.order_paid_at_utc,LEAD(orders.order_paid_at_utc) over (PARTITION BY orders.user_id ORDER BY orders.order_paid_at_utc DESC),DAY) >= 365 then true else false end as is_reactivation
         ,case when DATE_DIFF(orders.order_paid_at_utc,LEAD(orders.order_paid_at_utc) over (PARTITION BY orders.user_id ORDER BY orders.order_paid_at_utc DESC),DAY) >= 180 then true else false end as is_reactivation_180_days
+        ,case when DATE_DIFF(orders.order_paid_at_utc,LEAD(orders.order_paid_at_utc) over (PARTITION BY orders.user_id ORDER BY orders.order_paid_at_utc DESC),DAY) >= 90 then true else false end as is_reactivation_90_days
         ,placed_by_uncancelled_member.order_id is not null as was_member
 
         ,distinct_stuck_order_flag.was_week_out_notification_sent
