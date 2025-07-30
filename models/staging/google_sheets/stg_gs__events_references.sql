@@ -13,6 +13,7 @@ source as ( select * from {{ source('google_sheets', 'events_reporting_reference
         ,{{ clean_strings('name') }} as name
         ,{{ clean_strings('event_type') }} as event_type
         ,year
+        ,is_launch
         ,row_number() over ( partition by id, channel, entry_type, name, event, event_type, year) as rn
     from source
 )
