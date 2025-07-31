@@ -34,8 +34,10 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,countif(completed_order_rank = 1 and not is_paid_order and not is_cancelled_order) as total_completed_unpaid_uncancelled_orders
         ,countif(is_gift_order and is_paid_order and not is_cancelled_order) as total_paid_gift_order_count
         ,sum(if(is_paid_order and not is_cancelled_order and cast(order_paid_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 6 MONTH) ,net_revenue,0)) as six_month_net_revenue
-        ,count(distinct if(is_paid_order and not is_cancelled_order and is_membership_order and cast(order_paid_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 6 MONTH) ,order_id,0)) as six_month_membership_orders
-        ,count(distinct if(is_paid_order and not is_cancelled_order and is_membership_order and cast(order_paid_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 12 MONTH) ,order_id,0)) as twelve_month_month_membership_orders
+        ,countif(is_paid_order and not is_cancelled_order and is_membership_order and cast(order_paid_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 6 MONTH)) as six_month_membership_orders
+        ,countif(is_paid_order and not is_cancelled_order and is_membership_order and cast(order_paid_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 12 MONTH)) as twelve_month_month_membership_orders
+        ,countif(is_paid_order and not is_cancelled_order and is_ala_carte_order and cast(order_paid_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 6 MONTH)) as six_month_alc_orders
+        ,countif(is_paid_order and not is_cancelled_order and is_ala_carte_order and cast(order_paid_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 12 MONTH)) as twelve_month_alc_orders
         ,sum(if(is_paid_order and not is_cancelled_order and cast(order_paid_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 6 MONTH) ,gross_profit,0)) as six_month_gross_profit
         ,sum(if(is_paid_order and not is_cancelled_order and cast(order_paid_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 12 MONTH) ,net_revenue,0)) as twelve_month_net_revenue
         ,sum(if(is_paid_order and not is_cancelled_order and cast(order_paid_at_utc as date) >= DATE_SUB(current_date(),INTERVAL 24 MONTH) ,net_revenue,0)) as twentyfour_month_net_revenue
@@ -301,6 +303,8 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,user_percentiles.most_recent_order_id
         ,user_percentiles.six_month_membership_orders
         ,user_percentiles.twelve_month_month_membership_orders
+        ,user_percentiles.six_month_alc_orders
+        ,user_percentiles.twelve_month_alc_orders
         ,promotion_rank.promotion_id as acquisition_promotion_id
         ,promotion_rank.promotion_source as acquisition_promotion_source
         ,promotion_rank.promotion_name as acquisition_promotion_name
