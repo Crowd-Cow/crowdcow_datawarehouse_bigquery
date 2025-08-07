@@ -1,5 +1,5 @@
 with 
-orders as (select * from {{ ref('orders') }} where order_type = 'E-COMMERCE' and IS_PAID_ORDER and not IS_CANCELLED_ORDER)
+orders as (select * from {{ ref('orders') }} where order_type in ('E-COMMERCE', 'CORP GIFT') and IS_PAID_ORDER and not IS_CANCELLED_ORDER)
 ,plan_data as (select * from {{ ref('marketing_plan_data')}})
 ,fiscal_calendar as (select * from {{ ref('retail_calendar') }}) 
 
