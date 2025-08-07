@@ -1,6 +1,3 @@
-{{ config(
-  enabled=false
-) }}
 with 
     source as (select * from {{ source('google_sheets', 'marketing_plan_data') }} )
 
@@ -28,7 +25,12 @@ with
             ,CAST(new_member_orders as INT64) as new_member_orders
             ,CAST(orders___total_forecast as INT64) as total_orders
 
-
+            ,CAST(new_customer_aov as INT64) as new_customer_aov
+            ,CAST(new_customer_orders as INT64) as new_customer_orders
+            ,CAST(new_customer_revenue	 as INT64) as new_customer_revenue	
+            ,CAST(existing_customer_aov as INT64) as existing_customer_aov
+            ,CAST(existing_customer_orders	 as INT64) as existing_customer_orders	
+            ,CAST(existing_customer_revenue as INT64) as existing_customer_revenue
 
             ,CAST(pdp_prospect_traffic_conversion_rate as FLOAT64) as pdp_prospect_traffic_conversion_rate
             ,CAST(sem_prospect_traffic_conversion_rate as FLOAT64) as sem_prospect_traffic_conversion_rate
