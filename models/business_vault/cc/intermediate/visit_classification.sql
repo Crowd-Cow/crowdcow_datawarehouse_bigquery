@@ -5,7 +5,8 @@
 {{
   config(
         materialized = 'incremental',
-        partition_by = {"field": "started_at_utc", "data_type": "timestamp" },
+        unique_key='visit_id',
+        partition_by = {"field": "started_at_utc", "data_type": "timestamp", "granularity": "day" },
         incremental_strategy = 'insert_overwrite',
         cluster_by = ["visit_id","user_id"],
         partitions = partitions_to_replace,
@@ -255,6 +256,7 @@ base_visits as (
         *
         ,utm_medium in ('OCPM', 'CPC', 'CPCB', 'CPCNB', 'MAXCPA', 'CPM', 'ADS') 
             or utm_source = 'PINTEREST' 
+            or (utm_source = 'BING' and utm_medium = 'SEARCH')
             or utm_source like 'PAID%'
             or utm_medium like 'PAID%'
             or sub_channel in ('FIELD-MARKETING','GEIST','USER REFERRAL','NON-USER REFERRAL','PARTNER','AFFILIATE','AMBASSADOR','INFLUENCER') as is_paid_referrer 
