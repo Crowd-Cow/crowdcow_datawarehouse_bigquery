@@ -9,7 +9,7 @@ orders as ( select * from {{ ref('stg_cc__orders') }} )
     select 
         order_id
         ,sum(bid_gross_product_revenue) as gross_product_revenue
-        ,sum(bid_price_paid_usd) as bid_price_paid_usd
+        ,sum(bid_price_paid_usd * bid_quantity) as bid_price_paid_usd
     from order_item
     group by 1
 )
