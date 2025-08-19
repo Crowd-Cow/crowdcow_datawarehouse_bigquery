@@ -2,6 +2,14 @@ with
 orders as (select * from {{ ref('orders') }} where order_type in ('E-COMMERCE', 'CORP GIFT') and IS_PAID_ORDER and not IS_CANCELLED_ORDER)
 ,plan_data as (select * from {{ ref('marketing_plan_data')}})
 ,fiscal_calendar as (select * from {{ ref('retail_calendar') }}) 
+,params as (
+  SELECT
+    TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 DAY) AS anchor_ts_utc,
+    DATETIME(TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 DAY), 'America/Los_Angeles') AS anchor_dt_la,
+    DATETIME_TRUNC(DATETIME(TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 DAY), 'America/Los_Angeles'), WEEK(SUNDAY)) AS week_start_dt_la,
+    DATETIME_TRUNC(DATETIME(TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 DAY), 'America/Los_Angeles'), MONTH) AS month_start_dt_la,
+    DATETIME_TRUNC(DATETIME(TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 DAY), 'America/Los_Angeles'), QUARTER) AS quarter_start_dt_la
+)
 
 
 -- Current week performance
@@ -140,7 +148,8 @@ order by 1 desc
         ,sum(plan_new_alc_sales_forecast) over ( order by day_of_week asc ) as pw_cumulative_plan_new_alc_sales_forecast
 
     from plan_performance
-    where ((( calendar_date  ) >= ((TIMESTAMP(DATETIME_ADD(DATETIME(TIMESTAMP_TRUNC(TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), DAY), WEEK(SUNDAY))), INTERVAL -1 WEEK)))) AND ( calendar_date  ) < ((TIMESTAMP(DATETIME_ADD(DATETIME(TIMESTAMP(DATETIME_ADD(DATETIME(TIMESTAMP_TRUNC(TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), DAY), WEEK(SUNDAY))), INTERVAL -1 WEEK))), INTERVAL 1 WEEK))))))
+    where calendar_date >= (SELECT TIMESTAMP(DATETIME_SUB(week_start_dt_la, INTERVAL 1 WEEK), 'America/Los_Angeles') FROM params)
+      and calendar_date <  (SELECT TIMESTAMP(week_start_dt_la, 'America/Los_Angeles') FROM params)
 )
 ,performance_last_year as (
     select 
@@ -202,7 +211,8 @@ order by 1 desc
         ,sum(plan_new_memberships_sales_forecast) over ( order by day_of_week asc ) as ly_cumulative_plan_new_memberships_sales_forecast
         ,sum(plan_new_alc_sales_forecast) over ( order by day_of_week asc ) as ly_cumulative_plan_new_alc_sales_forecast
     from plan_performance
-    where ((( calendar_date  ) >= ((TIMESTAMP(DATETIME_ADD(DATETIME(TIMESTAMP_TRUNC(TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), DAY), WEEK(SUNDAY))), INTERVAL -52 WEEK)))) AND ( calendar_date  ) < ((TIMESTAMP(DATETIME_ADD(DATETIME(TIMESTAMP(DATETIME_ADD(DATETIME(TIMESTAMP_TRUNC(TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), DAY), WEEK(SUNDAY))), INTERVAL -52 WEEK))), INTERVAL 1 WEEK))))))
+    where calendar_date >= (SELECT TIMESTAMP(DATETIME_SUB(week_start_dt_la, INTERVAL 52 WEEK), 'America/Los_Angeles') FROM params)
+      and calendar_date <  (SELECT TIMESTAMP(DATETIME_ADD(DATETIME_SUB(week_start_dt_la, INTERVAL 52 WEEK), INTERVAL 1 WEEK), 'America/Los_Angeles') FROM params)
 )
 
 ,performance_current_week as (
@@ -270,8 +280,9 @@ order by 1 desc
         ,sum(plan_new_alc_sales_forecast) over ( order by day_of_week asc ) as cw_cumulative_plan_new_alc_sales_forecast
          
     from plan_performance
-    where (((calendar_date) >= ((TIMESTAMP_TRUNC(TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), DAY), WEEK(SUNDAY)))) AND (calendar_date) < ((TIMESTAMP(DATETIME_ADD(DATETIME(TIMESTAMP_TRUNC(TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), DAY), WEEK(SUNDAY))), INTERVAL 1 WEEK))))))
-    
+    where calendar_date >= (SELECT TIMESTAMP(week_start_dt_la, 'America/Los_Angeles') FROM params)
+      and calendar_date <  (SELECT TIMESTAMP(DATETIME_ADD(week_start_dt_la, INTERVAL 1 WEEK), 'America/Los_Angeles') FROM params)
+      and DATE(calendar_date, 'America/Los_Angeles') <= (SELECT DATE(anchor_dt_la) FROM params)
 )
 
 ,performance_week_to_date as (
@@ -306,7 +317,8 @@ order by 1 desc
         ,sum(plan_new_memberships_sales_forecast)  as wtd_cumulative_plan_new_memberships_sales_forecast
         ,sum(plan_new_alc_sales_forecast)  as wtd_cumulative_plan_new_alc_sales_forecast
     from plan_performance
-    where (((calendar_date) >= ((TIMESTAMP_TRUNC(TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), DAY), WEEK(SUNDAY)))) AND (calendar_date) < ((TIMESTAMP(DATETIME_ADD(DATETIME(TIMESTAMP_TRUNC(TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), DAY), WEEK(SUNDAY))), INTERVAL 1 WEEK))))))
+    where calendar_date >= (SELECT TIMESTAMP(week_start_dt_la, 'America/Los_Angeles') FROM params)
+      and calendar_date <  (SELECT TIMESTAMP(DATETIME_ADD(anchor_dt_la, INTERVAL 1 DAY), 'America/Los_Angeles') FROM params)
     group by 1 
     order by 1 asc
 )
@@ -345,7 +357,8 @@ order by 1 desc
         ,sum(plan_new_alc_sales_forecast)  as mtd_cumulative_plan_new_alc_sales_forecast
          
     from plan_performance
-    where ((( calendar_date  ) >= ((TIMESTAMP_TRUNC(TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), DAY), MONTH))) AND ( calendar_date  ) < ((TIMESTAMP(DATETIME_ADD(DATETIME(TIMESTAMP_TRUNC(TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), DAY), MONTH)), INTERVAL 1 MONTH))))))
+    where calendar_date >= (SELECT TIMESTAMP(month_start_dt_la, 'America/Los_Angeles') FROM params)
+      and calendar_date <  (SELECT TIMESTAMP(DATETIME_ADD(anchor_dt_la, INTERVAL 1 DAY), 'America/Los_Angeles') FROM params)
     group by 1 
     order by 1 asc
 )
@@ -382,7 +395,8 @@ order by 1 desc
         ,sum(plan_new_memberships_sales_forecast)  as qtd_cumulative_plan_new_memberships_sales_forecast
         ,sum(plan_new_alc_sales_forecast)  as qtd_cumulative_plan_new_alc_sales_forecast
  from plan_performance
-    where  ((( calendar_date  ) >= ((TIMESTAMP_TRUNC(TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), DAY), QUARTER))) AND ( calendar_date  ) < ((TIMESTAMP(DATETIME_ADD(DATETIME(TIMESTAMP_TRUNC(TIMESTAMP_TRUNC(TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), DAY), QUARTER), QUARTER)), INTERVAL 3 MONTH))))))
+    where calendar_date >= (SELECT TIMESTAMP(quarter_start_dt_la, 'America/Los_Angeles') FROM params)
+      and calendar_date <  (SELECT TIMESTAMP(DATETIME_ADD(anchor_dt_la, INTERVAL 1 DAY), 'America/Los_Angeles') FROM params)
     group by 1 
     order by 1 asc
 )
