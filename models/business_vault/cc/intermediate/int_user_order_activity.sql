@@ -62,7 +62,8 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,min(if(completed_order_rank = 1,order_id,null)) as first_completed_order_id
         ,min(if(completed_order_rank = 1,order_checkout_completed_at_utc,null)) as first_completed_order_date
         ,min(if(completed_order_rank = 1,visit_id,null)) as first_completed_order_visit_id
-        ,max(if(is_paid_order and not is_cancelled_order,order_token,null)) as most_recent_order
+        ,ARRAY_AGG(if(is_paid_order AND NOT is_cancelled_order, order_token, NULL) IGNORE NULLS ORDER BY order_paid_at_utc DESC)[OFFSET(0)] as most_recent_order
+        ,ARRAY_AGG(if(is_paid_order AND NOT is_cancelled_order, order_token, NULL) IGNORE NULLS ORDER BY delivered_at_utc DESC)[OFFSET(0)] as most_recent_delivered_order_token
         ,max(if(is_paid_order and not is_cancelled_order,order_id,null)) as most_recent_order_id
         ,max(if(is_paid_order and not is_cancelled_order and is_membership_order,order_id,null)) as most_recent_paid_membership_order_id
         ,max(if(is_paid_order and not is_cancelled_order and is_moolah_order,cast(order_paid_at_utc as date),null)) as last_paid_moolah_order_date
@@ -245,6 +246,7 @@ user as ( select * from {{ ref('stg_cc__users') }} where dbt_valid_to is null )
         ,user.created_at_utc
         ,user_percentiles.user_id as order_user_id
         ,user_percentiles.most_recent_order as most_recent_paid_order_token
+        ,user_percentiles.most_recent_delivered_order_token as most_recent_delivered_order_token
         ,coalesce(user_percentiles.total_completed_membership_orders) as total_completed_membership_orders
         ,coalesce(user_percentiles.total_paid_ala_carte_order_count) as total_paid_ala_carte_order_count
         ,coalesce(user_percentiles.total_paid_membership_order_count) as total_paid_membership_order_count
