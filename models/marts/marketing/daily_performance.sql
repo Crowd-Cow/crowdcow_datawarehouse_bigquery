@@ -4,11 +4,11 @@ orders as (select * from {{ ref('orders') }} where order_type in ('E-COMMERCE', 
 ,fiscal_calendar as (select * from {{ ref('retail_calendar') }}) 
 ,params as (
   SELECT
-    TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 DAY) AS anchor_ts_utc,
-    DATETIME(TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 DAY), 'America/Los_Angeles') AS anchor_dt_la,
-    DATETIME_TRUNC(DATETIME(TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 DAY), 'America/Los_Angeles'), WEEK(SUNDAY)) AS week_start_dt_la,
-    DATETIME_TRUNC(DATETIME(TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 DAY), 'America/Los_Angeles'), MONTH) AS month_start_dt_la,
-    DATETIME_TRUNC(DATETIME(TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 DAY), 'America/Los_Angeles'), QUARTER) AS quarter_start_dt_la
+        TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)) AS anchor_ts_utc,
+    DATETIME(TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)), 'America/Los_Angeles') AS anchor_dt_la,
+    DATETIME_TRUNC(DATETIME(TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)), 'America/Los_Angeles'), WEEK(SUNDAY)) AS week_start_dt_la,
+    DATETIME_TRUNC(DATETIME(TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)), 'America/Los_Angeles'), MONTH) AS month_start_dt_la,
+    DATETIME_TRUNC(DATETIME(TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)), 'America/Los_Angeles'), QUARTER) AS quarter_start_dt_la
 )
 
 
@@ -280,9 +280,11 @@ order by 1 desc
         ,sum(plan_new_alc_sales_forecast) over ( order by day_of_week asc ) as cw_cumulative_plan_new_alc_sales_forecast
          
     from plan_performance
-    where calendar_date >= (SELECT TIMESTAMP(week_start_dt_la, 'America/Los_Angeles') FROM params)
+    where calendar_date =  timestamp((DATE_SUB(CURRENT_DATE('America/Los_Angeles'), INTERVAL 1 DAY)))
+
+        /*calendar_date >= (SELECT TIMESTAMP(week_start_dt_la, 'America/Los_Angeles') FROM params)
       and calendar_date <  (SELECT TIMESTAMP(DATETIME_ADD(week_start_dt_la, INTERVAL 1 WEEK), 'America/Los_Angeles') FROM params)
-      and DATE(calendar_date, 'America/Los_Angeles') <= (SELECT DATE(anchor_dt_la) FROM params)
+      and DATE(calendar_date, 'America/Los_Angeles') <= (SELECT DATE(anchor_dt_la) FROM params) */
 )
 
 ,performance_week_to_date as (
