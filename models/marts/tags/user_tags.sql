@@ -24,6 +24,10 @@ employee as (
     {{ generate_tag('users','user_id','vip_frequent','user_segment', 'null') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and twelve_month_purchase_count >= 4
 )
+,vip_frequent_6_months as (
+    {{ generate_tag('users','user_id','vip_frequent_6_months','user_segment', 'null') }}
+    where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and six_month_paid_order_count >= 4
+)
 ,vip_top10_orderhistory as (
     {{ generate_tag('users','user_id','vip_top10_orderhistory','user_segment', 'null') }}
     where user_type in ('CUSTOMER','EMPLOYEE','INTERNAL') and lifetime_paid_order_count >= 4 and lifetime_paid_order_count_percentile > 90
@@ -442,6 +446,8 @@ union all
 select * from vip_superstar
 union all
 select * from vip_frequent
+union all
+select * from vip_frequent_6_months
 union all
 select * from vip_profit
 union all
