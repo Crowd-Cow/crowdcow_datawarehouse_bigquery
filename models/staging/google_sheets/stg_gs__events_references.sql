@@ -14,6 +14,20 @@ source as ( select * from {{ source('google_sheets', 'events_reporting_reference
         ,{{ clean_strings('event_type') }} as event_type
         ,year
         ,is_launch
+        ,plan_revenue  as plan_data
+        ,date_diff(
+            cast(end_date as date),
+            cast(start_date as date),
+            day
+        ) as duration_days
+        ,safe_divide(
+            plan_revenue,
+            date_diff(
+                cast(end_date as date),
+                cast(start_date as date),
+                day
+            )
+        ) as daily_plan_data
         ,row_number() over ( partition by id, channel, entry_type, name, event, event_type, year) as rn
     from source
 )
